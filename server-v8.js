@@ -51,7 +51,6 @@ function syarahSeedUrls(intent) {
   let base="https://syarah.com/en/autos";
   if(intent.brand)base+=`/${slug(intent.brand)}`;
   if(intent.brand&&intent.model)base+=`/${slug(intent.model)}`;
-  if(intent.brand&&intent.model&&intent.minYear)base+=`/${intent.minYear}`;
   const u2=new URL(base);u2.searchParams.set("page","2");
   return [base,u2.href];
 }
@@ -82,11 +81,11 @@ function parseCondition(t="") { const s=norm(t); if(/condition\s*:?\s*used\b|\bu
 function parseCard(text,url,intent,requested) {
   const t=digits(`${text} ${decodeURIComponent(url)}`),year=(t.match(/\b(20\d{2})\b/)||[])[1],km=t.match(/([0-9][\d,]{0,8})\s*(?:km|kilometers?|كم|كيلو)/i);
   const city=/riyadh|الرياض/i.test(t)?"Riyadh":/jeddah|جدة/i.test(t)?"Jeddah":/dammam|الدمام/i.test(t)?"Dammam":null;
-  const condition=parseCondition(t),price=cashPrice(t),brand=detectBrand(t)||intent.brand,model=detectModel(t)||intent.model;
-  return {brand,model,year:year?+year:null,mileage:km?+km[1].replace(/,/g,""):null,city,condition,price};
+  const mileage=km?+km[1].replace(/,/g,""):null;let condition=parseCondition(t);if(!condition&&mileage===0)condition="new";else if(!condition&&mileage>100)condition="used";const price=cashPrice(t),brand=detectBrand(t)||intent.brand,model=detectModel(t)||intent.model;
+  return {brand,model,year:year?+year:null,mileage,city,condition,price};
 }
 function matches(c,i,requested){
-  if(c.condition!==requested)return false;if(i.brand&&c.brand!==i.brand)return false;if(i.model&&c.model!==i.model)return false;if(i.minYear&&(!c.year||c.year<i.minYear))return false;if(i.maxYear&&(!c.year||c.year>i.maxYear))return false;if(i.maxPrice&&(!c.price||c.price>i.maxPrice))return false;if(i.maxMileage&&(c.mileage==null||c.mileage>i.maxMileage))return false;if(i.city&&c.city&&c.city!==i.city)return false;return true;
+  if(c.condition!==requested)return false;if(i.brand&&c.brand!==i.brand)return false;if(i.model&&c.model!==i.model)return false;if(i.minYear&&(!c.year||c.year<i.minYear))return false;if(i.maxYear&&(!c.year||c.year>i.maxYear))return false;if(i.maxPrice&&c.price&&c.price>i.maxPrice)return false;if(i.maxMileage&&(c.mileage==null||c.mileage>i.maxMileage))return false;if(i.city&&c.city&&c.city!==i.city)return false;return true;
 }
 function parseSyarahCatalog(doc,intent,requested){
   if(!doc)return[];const html=doc.html,raw=[];

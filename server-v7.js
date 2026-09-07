@@ -13,8 +13,8 @@ const arabicDigits = s => String(s || "").replace(/[٠-٩]/g, d => "٠١٢٣٤٥
 
 function normalizeHumanNumbers(query = "") {
   let q = arabicDigits(query);
-  q = q.replace(/(\d+(?:\.\d+)?)\s*(?:ألف|الف)\b/gi, (_, n) => String(Math.round(Number(n) * 1000)));
-  q = q.replace(/(\d+(?:\.\d+)?)\s*[kK]\b/g, (_, n) => String(Math.round(Number(n) * 1000)));
+  q = q.replace(/(\d+(?:\.\d+)?)\s*(?:ألف|الف)(?=\s|$|ريال|ر\.?س)/gi, (_, n) => String(Math.round(Number(n) * 1000)));
+  q = q.replace(/(\d+(?:\.\d+)?)\s*[kK](?=\s|$|SAR|ريال|ر\.?س)/g, (_, n) => String(Math.round(Number(n) * 1000)));
   return q;
 }
 

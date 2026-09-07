@@ -5,7 +5,7 @@ const v8Port = Number(process.env.DELILAH_V8_PORT || 3300);
 const v7Port = Number(process.env.DELILAH_V7_PORT_V9 || 3301);
 const v6Port = Number(process.env.DELILAH_V6_PORT_V9 || 3302);
 const FAST_LIMIT = 18;
-const FAST_DEADLINE = 7200;
+const FAST_DEADLINE = 5000;
 const FAST_CACHE_TTL = 5 * 60_000;
 const fastCache = new Map();
 
@@ -28,61 +28,77 @@ function normalizeHumanNumbers(query = "") {
 function counts(listings = []) {
   return listings.reduce((a, c) => ((a[c.source] = (a[c.source] || 0) + 1), a), {});
 }
-function safeFastListing(c) {
-  if (!c || c.source !== "Syarah") return c;
-  // The v7 endpoint already verifies Syarah Cash Price from the exact car page.
-  // If that marker is absent, never expose a potentially misleading number in fast results.
-  if (c.price && c.priceSource !== "syarah_cash_price") {
-    c.price = null;
-    c.priceVerified = false;
-    c.priceSource = null;
-    delete c.previousPrice;
-    delete c.discount;
+function safeFastListing(car) {
+  const c = { ...car };
+  if (c.source === "Syarah") {
+    // v6 is deliberately used for speed because it can build from Syarah's
+    // source catalog without opening every individual detail page. Never show
+    // a Syarah number as a price until v7/full search has verified Cash Price.
+    if (!(c.priceVerified === true && c.priceSource === "syarah_cash_price")) {
+      c.price = null;
+      c.priceVerified = false;
+      c.priceSource = null;
+      delete c.previousPrice;
+      delete c.discount;
+    }
   }
   return c;
 }
-async function fastViaProvenPath(body = {}) {
+function fastCompatible(filters = {}) {
+  if (filters.seller && filters.seller !== "Syarah") return false;
+  if (filters.sourceType && filters.sourceType !== "marketplace") return false;
+  return true;
+}
+async function fastViaCatalog(body = {}) {
   const query = String(body.query || "").trim();
   if (!query) throw Object.assign(new Error("Query is required"), { status: 400 });
   const condition = body.condition === "new" ? "new" : "used";
   const filters = body.filters && typeof body.filters === "object" ? { ...body.filters } : {};
 
-  // If the user explicitly asks for another seller/type, do not show unrelated Syarah results.
-  if ((filters.seller && filters.seller !== "Syarah") || (filters.sourceType && filters.sourceType !== "marketplace")) {
+  if (!fastCompatible(filters)) {
     return { query, condition, listings: [], counts: {}, live: true, partial: true, phase: "fast", provider: "Delilah v9 fast lane", fastSkipped: true };
   }
 
   const normalizedQuery = normalizeHumanNumbers(query);
-  const key = JSON.stringify({ q: normalizedQuery.toLowerCase(), condition, filters: { ...filters, seller: "Syarah" } });
+  const fastFilters = { ...filters, seller: "Syarah" };
+  const key = JSON.stringify({ q: normalizedQuery.toLowerCase(), condition, filters: fastFilters });
   const hit = fastCache.get(key);
   if (hit && Date.now() - hit.at < FAST_CACHE_TTL) return { ...hit.value, cached: true };
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FAST_DEADLINE);
   try {
-    const r = await fetch(`http://127.0.0.1:${v7Port}/api/search`, {
+    // Important: call v6 directly. v7 intentionally opens individual Syarah
+    // pages to verify Cash Price; that is correct for the full result set but
+    // too expensive for first paint. v6 can return strict direct ads from the
+    // already validated Syarah catalog, then the full search replaces/enriches
+    // them with verified prices and deeper metadata.
+    const r = await fetch(`http://127.0.0.1:${v6Port}/api/search`, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ query: normalizedQuery, condition, filters: { ...filters, seller: "Syarah" } }),
+      body: JSON.stringify({ query: normalizedQuery, condition, filters: fastFilters }),
       signal: controller.signal
     });
     if (!r.ok) throw new Error(`Fast source HTTP ${r.status}`);
     const d = await r.json();
-    const listings = (Array.isArray(d.listings) ? d.listings : []).map(safeFastListing).slice(0, FAST_LIMIT);
+    const listings = (Array.isArray(d.listings) ? d.listings : [])
+      .filter(c => c && c.source === "Syarah" && c.saleVerified === true)
+      .map(safeFastListing)
+      .slice(0, FAST_LIMIT);
     const value = {
-      ...d,
       query,
       condition,
+      intent: d.intent,
       listings,
       counts: counts(listings),
       answer: listings.length
         ? `Found ${listings.length} verified cars quickly. Scanning the rest of the Saudi market…`
-        : "Fast source checked. Scanning the wider Saudi market…",
+        : "Fast inventory checked. Scanning the wider Saudi market…",
       live: true,
       cached: false,
       partial: true,
       phase: "fast",
-      provider: "Delilah v9 fast lane — proven Syarah inventory path"
+      provider: "Delilah v9 fast lane — strict Syarah catalog"
     };
     fastCache.set(key, { at: Date.now(), value });
     for (const [k, v] of fastCache) if (Date.now() - v.at > FAST_CACHE_TTL) fastCache.delete(k);
@@ -118,7 +134,7 @@ app.post("/api/search", async (req, res, next) => {
   if (req.body?.phase !== "fast") return next();
   const started = Date.now();
   try {
-    const data = await fastViaProvenPath(req.body);
+    const data = await fastViaCatalog(req.body);
     data.elapsedMs = Date.now() - started;
     return res.json(data);
   } catch (e) {
@@ -136,7 +152,7 @@ app.get("/api/health", async (req, res) => {
   try {
     const r = await fetch(`http://127.0.0.1:${v8Port}/api/health`);
     const d = await r.json();
-    res.json({ ...d, edge: "inventory-v9", fastLane: "proven-source-first", fastDeadlineMs: FAST_DEADLINE });
+    res.json({ ...d, edge: "inventory-v9", fastLane: "strict-catalog-first", fastDeadlineMs: FAST_DEADLINE });
   } catch {
     res.status(503).json({ ok: false, edge: "inventory-v9" });
   }

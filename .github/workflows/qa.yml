@@ -27,7 +27,7 @@ jobs:
       - run: node --check server-v9.js
       - run: node tests/regression.mjs
 
-  fast-path-v8:
+  fast-path-v9:
     needs: regression
     runs-on: ubuntu-latest
     timeout-minutes: 12
@@ -44,7 +44,7 @@ jobs:
         run: node tests/fast-path-v8.mjs
 
   user-path-v7:
-    needs: regression
+    needs: fast-path-v9
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -52,15 +52,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Wait for Render auto-deploy
-        run: sleep 75
       - name: Test Arabic ألف and Syarah cash prices
         env:
           DELILAH_URL: https://delilah-pm5f.onrender.com
         run: node tests/user-path-v7.mjs
 
   live-smoke:
-    needs: regression
+    needs: fast-path-v9
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -68,15 +66,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Wait for Render auto-deploy
-        run: sleep 75
       - name: Run controlled live-search smoke tests
         env:
           DELILAH_URL: https://delilah-pm5f.onrender.com
         run: node tests/live-smoke.mjs
 
   inventory-scale:
-    needs: regression
+    needs: fast-path-v9
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -84,8 +80,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Wait briefly for current production deploy
-        run: sleep 45
       - name: Run 200-car unique inventory scale test
         env:
           DELILAH_URL: https://delilah-pm5f.onrender.com

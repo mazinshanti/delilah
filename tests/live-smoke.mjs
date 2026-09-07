@@ -22,12 +22,13 @@ const health=await fetch(`${base}/api/health`,{signal:timeout(20000)});
 if(!health.ok)throw new Error(`health ${health.status}`);
 const h=await health.json();
 if(!h.ok||!h.search)throw new Error(`health config invalid: ${JSON.stringify(h)}`);
-if(!String(h.logic||'').startsWith('inventory-v5'))throw new Error(`expected inventory-v5, got ${h.logic}`);
+if(!String(h.logic||'').startsWith('inventory-v6'))throw new Error(`expected inventory-v6, got ${h.logic}`);
+if(Number(h.maxResults)<200||h.catalogPaging!==true)throw new Error(`v6 scale config invalid: ${JSON.stringify(h)}`);
 console.log(`health ok; ${h.sources} sources; ${h.logic}; max ${h.maxResults}; ${h.images}`);
 
 for(const t of cases){
  try{
-  const r=await fetch(`${base}/api/search`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query:t.q,condition:t.condition,filters:t.filters||{}}),signal:timeout(140000)});
+  const r=await fetch(`${base}/api/search`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query:t.q,condition:t.condition,filters:t.filters||{}}),signal:timeout(170000)});
   if(!r.ok)throw new Error(`HTTP ${r.status}: ${(await r.text()).slice(0,200)}`);
   const d=await r.json();
   if(!Array.isArray(d.listings))throw new Error('listings not array');
@@ -61,7 +62,7 @@ for(const t of cases){
    if(c.mileage!=null&&(!Number.isFinite(Number(c.mileage))||Number(c.mileage)<0))throw new Error('invalid mileage');
   }
   totalCars+=d.listings.length;totalImages+=images;
-  console.log(`PASS ${t.condition.padEnd(4)} | ${String(d.listings.length).padStart(2)} cars | ${String(images).padStart(2)} images | raw ${String(d.rawCandidates||0).padStart(3)} | ${t.filters?.seller||'all'} | ${t.q}`);pass++;
+  console.log(`PASS ${t.condition.padEnd(4)} | ${String(d.listings.length).padStart(3)} cars | ${String(images).padStart(3)} images | raw ${String(d.rawCandidates||0).padStart(3)} | ${t.filters?.seller||'all'} | ${t.q}`);pass++;
  }catch(e){console.error(`FAIL ${t.condition} | ${t.q} | ${e.message}`);fail++}
 }
 console.log(`live smoke: ${pass} passed, ${fail} failed; ${totalCars} cars; ${totalImages} verified images; relay ${relayPass}/${relayChecks}`);

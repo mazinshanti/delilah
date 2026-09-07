@@ -7,6 +7,8 @@ const FAST_LIMIT = 18;
 const FAST_TIMEOUT = 4800;
 const FAST_CACHE_TTL = 2 * 60_000;
 const fastCache = new Map();
+const braveKey = process.env.BRAVE_SEARCH_API_KEY || "";
+let fastBraveTail = Promise.resolve(), fastBraveLastAt = 0;
 
 process.env.PORT = String(v7Port);
 process.env.DELILAH_INTERNAL_PORT = String(v6Port);
@@ -61,6 +63,26 @@ async function fetchHtml(url) {
     if(!r.ok)return null;const ct=r.headers.get("content-type")||"";if(!ct.includes("text/html"))return null;return {url:r.url||url,html:(await r.text()).slice(0,2_000_000)};
   }catch{return null}finally{clearTimeout(timer)}
 }
+
+function metaContent(html,key){
+  const k=key.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+  const m=new RegExp(`<meta[^>]+(?:property|name)=["']${k}["'][^>]+content=["']([^"']+)["']`,`i`).exec(html)||new RegExp(`<meta[^>]+content=["']([^"']+)["'][^>]+(?:property|name)=["']${k}["']`,`i`).exec(html);
+  return m?m[1].replace(/&amp;/g,"&"):null;
+}
+function directSyarah(url){try{const u=new URL(url);return (u.hostname==="syarah.com"||u.hostname.endsWith(".syarah.com"))&&/^\/(?:(?:en|ar)\/)?cardetail\/[^/]+-\d+\/?$/i.test(u.pathname)}catch{return false}}
+function directHaraj(url){try{const u=new URL(url);return (u.hostname==="haraj.com.sa"||u.hostname.endsWith(".haraj.com.sa"))&&/^\/\d{7,}(?:\/|$)/.test(u.pathname)}catch{return false}}
+async function braveFastNow(q){
+  if(!braveKey)return[];const u=new URL("https://api.search.brave.com/res/v1/web/search");u.searchParams.set("q",q);u.searchParams.set("country","SA");u.searchParams.set("count","20");u.searchParams.set("text_decorations","false");const c=new AbortController(),timer=setTimeout(()=>c.abort(),4000);
+  try{const r=await fetch(u,{signal:c.signal,headers:{Accept:"application/json","X-Subscription-Token":braveKey}});if(!r.ok)return[];const d=await r.json();return d.web?.results||[]}catch{return[]}finally{clearTimeout(timer)}
+}
+function braveFast(q){const job=fastBraveTail.then(async()=>{const wait=Math.max(0,1050-(Date.now()-fastBraveLastAt));if(wait)await sleep(wait);const v=await braveFastNow(q);fastBraveLastAt=Date.now();return v});fastBraveTail=job.catch(()=>{});return job}
+function detailFast(doc,baseResult,intent,requested,source){
+  if(!doc)return null;const text=escText(doc.html).slice(0,120000),title=escText((/<h1[^>]*>([\s\S]*?)<\/h1>/i.exec(doc.html)||[])[1]||metaContent(doc.html,"og:title")||baseResult.title||""),km=text.match(/([0-9][\d,]{0,8})\s*(?:km|kilometers?|كم|كيلو)/i),mileage=km?+km[1].replace(/,/g,""):null;let condition=parseCondition(`${title} ${text}`);if(!condition&&mileage===0)condition="new";else if(!condition&&mileage>100)condition="used";const yearMatch=`${title} ${doc.url}`.match(/\b(20\d{2})\b/),year=yearMatch?+yearMatch[1]:null,city=/riyadh|الرياض/i.test(text)?"Riyadh":/jeddah|جدة/i.test(text)?"Jeddah":/dammam|الدمام/i.test(text)?"Dammam":null,brand=detectBrand(title)||detectBrand(text)||intent.brand,model=detectModel(title)||detectModel(text)||intent.model;let price=null;if(source==="Syarah")price=cashPrice(text);else{const pm=text.match(/(?:السعر|price)[^0-9]{0,30}([1-9][\d,]{3,8})\s*(?:ريال|ر\.?س|SAR)?/i);if(pm){const n=Number(pm[1].replace(/,/g,""));if(n>=1000&&n<=5_000_000)price=n}}const og=metaContent(doc.html,"og:image"),image=og&&!/(logo|icon|placeholder|banner|avatar|favicon)/i.test(og)?absolute(og,doc.url):null;return{title,text,year,mileage,city,brand,model,condition,price,image};
+}
+async function indexedFast(intent,requested){
+  const core=[intent.brand,intent.model,intent.minYear].filter(Boolean).join(" ");if(!core)return[];const conditionPhrase=requested==="used"?'"Condition: Used"':'"Condition: New"';let source="Syarah",rows=await braveFast(`"${core}" ${conditionPhrase} site:syarah.com/en/cardetail`),valid=rows.filter(r=>r.url&&directSyarah(r.url));if(!valid.length){source="Haraj";rows=await braveFast(`${core} ${requested==="used"?"مستعمل":"جديد"} للبيع site:haraj.com.sa`);valid=rows.filter(r=>r.url&&directHaraj(r.url))}valid=valid.slice(0,12);const pages=await Promise.all(valid.map(r=>fetchHtml(r.url)));const out=[];for(let i=0;i<valid.length;i++){const r=valid[i],d=detailFast(pages[i],r,intent,requested,source),combined=`${r.title||""} ${r.description||""}`,fallbackMileage=(combined.match(/([0-9][\d,]{0,8})\s*(?:km|كم)/i)||[])[1],fallbackCondition=parseCondition(combined),condition=d?.condition||fallbackCondition;if(condition!==requested)continue;const brand=d?.brand||detectBrand(combined)||intent.brand,model=d?.model||detectModel(combined)||intent.model,year=d?.year||Number((combined.match(/\b(20\d{2})\b/)||[])[1]||0)||null,mileage=d?.mileage??(fallbackMileage?+fallbackMileage.replace(/,/g,""):null),city=d?.city||(/riyadh|الرياض/i.test(combined)?"Riyadh":/jeddah|جدة/i.test(combined)?"Jeddah":null),price=d?.price||null,c={source,sourceType:"marketplace",seller:source,sourceStrict:true,title:d?.title||r.title||[year,brand,model].filter(Boolean).join(" "),snippet:r.description||"",url:r.url,brand,model,year,mileage,city,price,priceVerified:Boolean(price),priceSource:source==="Syarah"&&price?"syarah_cash_price":price?"listing_page":null,condition,saleVerified:true,image:d?.image||null,imageVerified:Boolean(d?.image),imageSource:d?.image?"listing_page":null,displayImage:d?.image||null,score:88};if(matches(c,intent,requested))out.push(c)}return out;
+}
+
 function cashPrice(text="") {
   const m=String(text).match(/Cash\s*Price\s*(?:\(\s*Includes\s*VAT\s*\))?\s*([0-9][\d,]*)\s*SAR/i)||String(text).match(/السعر\s*النقدي[^0-9]{0,30}([0-9][\d,]*)\s*(?:ر\.?س|ريال)/i);
   if(!m)return null;const n=Number(m[1].replace(/,/g,""));return Number.isFinite(n)&&n>=1000&&n<=5_000_000?n:null;
@@ -106,8 +128,9 @@ async function fastSearch(body={}) {
   if(filters.sourceType&&filters.sourceType!=="marketplace")return {query,condition,intent:intentFrom(query,filters),answer:"Scanning all sources…",listings:[],counts:{},rawCandidates:0,live:true,partial:true,phase:"fast",provider:"Delilah fast lane"};
   const intent=intentFrom(query,filters),key=JSON.stringify({q:query.toLowerCase(),condition,filters});const hit=fastCache.get(key);if(hit&&Date.now()-hit.at<FAST_CACHE_TTL)return {...hit.value,cached:true};
   const docs=await Promise.all(syarahSeedUrls(intent).map(fetchHtml));let listings=[];for(const d of docs)listings.push(...parseSyarahCatalog(d,intent,condition));
+  if(listings.length<6)listings.push(...await indexedFast(intent,condition));
   const seen=new Set();listings=listings.filter(c=>{const k=c.url.replace(/\/$/,"");if(seen.has(k))return false;seen.add(k);return true}).slice(0,FAST_LIMIT);
-  const value={query,condition,intent,answer:listings.length?`Found ${listings.length} quick matches. Scanning the rest of the Saudi market…`:`Scanning the wider Saudi market…`,listings,counts:listings.length?{Syarah:listings.length}:{},rawCandidates:listings.length,live:true,cached:false,partial:true,phase:"fast",provider:"Delilah fast lane — Syarah direct inventory"};fastCache.set(key,{at:Date.now(),value});for(const[k,v]of fastCache)if(Date.now()-v.at>FAST_CACHE_TTL)fastCache.delete(k);return value;
+  const value={query,condition,intent,answer:listings.length?`Found ${listings.length} quick matches. Scanning the rest of the Saudi market…`:`Scanning the wider Saudi market…`,listings,counts:listings.length?{Syarah:listings.length}:{},rawCandidates:listings.length,live:true,cached:false,partial:true,phase:"fast",provider:"Delilah fast lane — direct indexed inventory"};fastCache.set(key,{at:Date.now(),value});for(const[k,v]of fastCache)if(Date.now()-v.at>FAST_CACHE_TTL)fastCache.delete(k);return value;
 }
 async function proxy(req,res){
   const target=`http://127.0.0.1:${v7Port}${req.originalUrl}`,headers={};for(const[k,v]of Object.entries(req.headers))if(!["host","content-length","connection"].includes(k.toLowerCase())&&v!=null)headers[k]=Array.isArray(v)?v.join(","):String(v);

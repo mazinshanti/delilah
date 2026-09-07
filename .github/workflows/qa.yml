@@ -16,6 +16,7 @@ jobs:
           node-version: 22
       - run: npm install --no-audit --no-fund
       - run: node --check server.js
+      - run: node --check server-v5.js
       - run: node tests/regression.mjs
 
   live-smoke:

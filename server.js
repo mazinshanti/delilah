@@ -52,6 +52,20 @@ const SOURCES = [
     isResult:url=>{try{const u=new URL(url);return /(^|\.)halacarly\.com$/i.test(u.hostname)&&u.pathname.toLowerCase().includes("/vehicle-details/")}catch{return false}}
   },
   {
+    name:"Saleh Cars", type:"independent_dealer", seller:"Saleh Cars Group - مجموعة صالح للسيارات", brands:[], conditions:["new"], priority:96,
+    queries:q=>[
+      `${q} site:salehcars.com/cars/ سيارة`,
+      `${q} site:salehcars.com/en/cars/ car price`,
+      `${q} site:salehcars.com "SAR"`
+    ],
+    isResult:url=>{try{
+      const u=new URL(url);if(!/(^|\.)salehcars\.com$/i.test(u.hostname))return false;
+      const p=u.pathname.toLowerCase();
+      if(p==="/cars/all"||p==="/en/cars/all"||p.includes("/offers")||p.includes("/contact-us"))return false;
+      return p.includes("/cars/")&&p.split("/").filter(Boolean).length>=2;
+    }catch{return false}}
+  },
+  {
     name:"Key Used Cars", type:"independent_dealer", seller:"Key Car Rental - Used Car Sales", brands:[], conditions:["used"], priority:95,
     queries:q=>[
       `${q} site:key.sa/en/car-selling-saudi-arabia`,
@@ -158,7 +172,7 @@ function eligibleSources(condition,intent,filters={}){
     list=list.filter(s=>!s.brands.length||s.brands.some(b=>b.toLowerCase()===intent.brand.toLowerCase()));
   }
   list.sort((a,b)=>b.priority-a.priority);
-  if(!intent.brand&&!filters.seller) list=list.slice(0,condition==="new"?10:11);
+  if(!intent.brand&&!filters.seller) list=list.slice(0,condition==="new"?11:11);
   return list;
 }
 

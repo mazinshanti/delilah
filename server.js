@@ -36,6 +36,30 @@ const SOURCES = [
     isResult:url=>deepPage(url,"syarah.com",["/search","/cars","/used-cars","/new-cars"])
   },
   {
+    name:"CarSwitch Saudi", type:"marketplace", seller:"CarSwitch Saudi", brands:[], conditions:["used"], priority:97,
+    queries:q=>[
+      `${q} site:ksa.carswitch.com/en/ used car`,
+      `${q} site:ksa.carswitch.com/ar/ سيارة مستعملة`
+    ],
+    isResult:url=>{try{const u=new URL(url);if(!/(^|\.)carswitch\.com$/i.test(u.hostname))return false;const p=u.pathname.toLowerCase();return p.includes("/used-cars/")&&!p.endsWith("/search")&&!p.endsWith("/used-cars")}catch{return false}}
+  },
+  {
+    name:"Carly", type:"certified_used", seller:"Carly - كارلي", brands:[], conditions:["used","new"], priority:97,
+    queries:(q,c)=>[
+      `${q} ${c==="new"?"new":"used"} site:halacarly.com/en/vehicle-details`,
+      `${q} ${c==="new"?"جديد":"مستعمل"} site:halacarly.com/ar/vehicle-details`
+    ],
+    isResult:url=>{try{const u=new URL(url);return /(^|\.)halacarly\.com$/i.test(u.hostname)&&u.pathname.toLowerCase().includes("/vehicle-details/")}catch{return false}}
+  },
+  {
+    name:"Key Used Cars", type:"independent_dealer", seller:"Key Car Rental - Used Car Sales", brands:[], conditions:["used"], priority:95,
+    queries:q=>[
+      `${q} site:key.sa/en/car-selling-saudi-arabia`,
+      `${q} site:key.sa "Price:" "Kilometers:"`
+    ],
+    isResult:url=>{try{const u=new URL(url);return /(^|\.)key\.sa$/i.test(u.hostname)&&u.pathname.toLowerCase().includes("car-selling-saudi-arabia")}catch{return false}}
+  },
+  {
     name:"Motory", type:"marketplace", seller:"Motory", brands:[], conditions:["new","used"], priority:96,
     queries:(q,c)=>[`${q} ${c==="new"?"new car جديد":"used car مستعمل"} site:ksa.motory.com`],
     isResult:url=>deepPage(url,"motory.com",["/search","/cars-for-sale","/used-cars","/new-cars"])
@@ -134,7 +158,7 @@ function eligibleSources(condition,intent,filters={}){
     list=list.filter(s=>!s.brands.length||s.brands.some(b=>b.toLowerCase()===intent.brand.toLowerCase()));
   }
   list.sort((a,b)=>b.priority-a.priority);
-  if(!intent.brand&&!filters.seller) list=list.slice(0,condition==="new"?10:8);
+  if(!intent.brand&&!filters.seller) list=list.slice(0,condition==="new"?10:11);
   return list;
 }
 
@@ -157,7 +181,7 @@ async function searchAllSources(query,condition,intent,filters){
   const batches=await Promise.allSettled(enabled.map(s=>searchSource(s,query,condition)));
   const all=[];for(const b of batches)if(b.status==="fulfilled")all.push(...b.value);
   const seen=new Set();
-  return all.filter(r=>{const k=(r.url||"").replace(/\/$/,"");if(!k||seen.has(k))return false;seen.add(k);return true}).slice(0,40);
+  return all.filter(r=>{const k=(r.url||"").replace(/\/$/,"");if(!k||seen.has(k))return false;seen.add(k);return true}).slice(0,48);
 }
 
 function sourceImage(r={}){return r.thumbnail?.src||r.thumbnail?.original||null}
@@ -179,7 +203,7 @@ function roughExtract(r){
 async function aiExtract(results){
   if(!openai)return results.map(roughExtract);
   try{
-    const compact=results.slice(0,36).map((r,idx)=>({idx,title:r.title,url:r.url,snippet:r.description,source:r.sourceName,seller:r.seller,sourceType:r.sourceType}));
+    const compact=results.slice(0,40).map((r,idx)=>({idx,title:r.title,url:r.url,snippet:r.description,source:r.sourceName,seller:r.seller,sourceType:r.sourceType}));
     const rsp=await openai.responses.create({model,input:`Return JSON array of real vehicle results only with idx,brand,model,trim,year,price,mileage,city,condition,confidence. condition must be new, used, or null only when supported by the result. New official dealer model/stock pages are valid results. Never invent values. Results: ${JSON.stringify(compact)}`});
     const arr=JSON.parse(rsp.output_text.trim().replace(/^```json\s*/i,"").replace(/```$/,"").trim());
     return arr.map(x=>{const r=results[x.idx]||{};const src=findSource(r.url||"");return{...x,title:r.title||"",snippet:r.description||"",url:r.url||"",source:r.sourceName||src?.name||sourceName(r.url||""),sourceType:r.sourceType||src?.type||"marketplace",seller:r.seller||src?.seller||r.sourceName||"Web",image:sourceImage(r),condition:x.condition==="new"||x.condition==="used"?x.condition:inferCondition(`${r.title||""} ${r.description||""}`,x.mileage,src),imageVerified:false,priceVerified:false}});
@@ -202,8 +226,8 @@ async function enrich(cars){return Promise.all(cars.map(async c=>{const m=await 
 
 function mergedFilters(intent,filters={}){return{...intent,minYear:Number(filters.minYear)||intent.minYear||null,maxYear:Number(filters.maxYear)||intent.maxYear||null,maxPrice:Number(filters.maxPrice)||intent.maxPrice||null,maxMileage:Number(filters.maxMileage)||intent.maxMileage||null,city:filters.city||intent.city||null}}
 function satisfies(c,i,condition){if(condition&&c.condition&&c.condition!==condition)return false;if(i.brand&&c.brand&&c.brand.toLowerCase()!==i.brand.toLowerCase())return false;if(i.model&&c.model&&!c.model.toLowerCase().includes(i.model.toLowerCase()))return false;if(i.minYear&&c.year&&c.year<i.minYear)return false;if(i.maxYear&&c.year&&c.year>i.maxYear)return false;if(i.maxPrice&&c.price&&c.price>i.maxPrice)return false;if(i.maxMileage&&c.mileage&&c.mileage>i.maxMileage)return false;if(i.city&&c.city&&c.city.toLowerCase()!==i.city.toLowerCase())return false;return true}
-function score(c,i){let s=55;if(c.sourceType==="official_dealer"||c.sourceType==="certified_used")s+=4;if(i.brand&&c.brand?.toLowerCase()===i.brand.toLowerCase())s+=12;if(i.model&&c.model?.toLowerCase().includes(i.model.toLowerCase()))s+=12;if(i.minYear&&c.year>=i.minYear)s+=5;if(i.maxPrice&&c.price&&c.price<=i.maxPrice)s+=5;if(i.city&&c.city?.toLowerCase()===i.city.toLowerCase())s+=4;if(c.imageVerified)s+=3;if(c.priceVerified)s+=3;return Math.min(s,99)}
-async function summary(query,cars,condition){if(!cars.length)return detectArabic(query)?`ما لقيت نتائج ${condition==="new"?"جديدة":"مستعملة"} واضحة تطابق طلبك حالياً.`:`I couldn't find clear ${condition} results matching your request.`;const dealerCount=cars.filter(c=>c.sourceType!=="marketplace").length;const c=cars[0];return detectArabic(query)?`لقيت ${cars.length} نتيجة ${condition==="new"?"جديدة":"مستعملة"}${dealerCount?`، منها ${dealerCount} من وكلاء/موزعين`:""}. أقوى نتيجة حالياً من ${c.seller||c.source}.`:`I found ${cars.length} ${condition} results${dealerCount?`, including ${dealerCount} dealer results`:""}. The strongest match is from ${c.seller||c.source}.`}
+function score(c,i){let s=55;if(c.sourceType==="official_dealer"||c.sourceType==="certified_used"||c.sourceType==="independent_dealer")s+=4;if(i.brand&&c.brand?.toLowerCase()===i.brand.toLowerCase())s+=12;if(i.model&&c.model?.toLowerCase().includes(i.model.toLowerCase()))s+=12;if(i.minYear&&c.year>=i.minYear)s+=5;if(i.maxPrice&&c.price&&c.price<=i.maxPrice)s+=5;if(i.city&&c.city?.toLowerCase()===i.city.toLowerCase())s+=4;if(c.imageVerified)s+=3;if(c.priceVerified)s+=3;return Math.min(s,99)}
+async function summary(query,cars,condition){if(!cars.length)return detectArabic(query)?`ما لقيت نتائج ${condition==="new"?"جديدة":"مستعملة"} واضحة تطابق طلبك حالياً.`:`I couldn't find clear ${condition} results matching your request.`;const dealerCount=cars.filter(c=>c.sourceType!=="marketplace").length;const c=cars[0];return detectArabic(query)?`لقيت ${cars.length} نتيجة ${condition==="new"?"جديدة":"مستعملة"}${dealerCount?`، منها ${dealerCount} من وكلاء/تجار`:""}. أقوى نتيجة حالياً من ${c.seller||c.source}.`:`I found ${cars.length} ${condition} results${dealerCount?`, including ${dealerCount} dealer results`:""}. The strongest match is from ${c.seller||c.source}.`}
 
 app.get("/api/sources",(req,res)=>res.json({sources:SOURCES.map(({name,type,seller,brands,conditions})=>({name,type,seller,brands,conditions}))}));
 
@@ -216,8 +240,8 @@ app.post("/api/search",async(req,res)=>{
     const raw=await searchAllSources(query,condition,intent,filters);
     let listings=await aiExtract(raw);
     listings=listings.filter(c=>c.url&&findSource(c.url)&&(c.confidence==null||c.confidence>=35));
-    listings=await enrich(listings.slice(0,24));
-    listings=listings.filter(c=>satisfies(c,intent,condition)).map(c=>({...c,score:score(c,intent)})).sort((a,b)=>b.score-a.score).slice(0,16);
+    listings=await enrich(listings.slice(0,28));
+    listings=listings.filter(c=>satisfies(c,intent,condition)).map(c=>({...c,score:score(c,intent)})).sort((a,b)=>b.score-a.score).slice(0,18);
     const counts=listings.reduce((a,c)=>{a[c.source]=(a[c.source]||0)+1;return a},{});
     res.json({query,condition,intent,answer:await summary(query,listings,condition),listings,counts,live:true,provider:"Saudi marketplace + dealer source registry"});
   }catch(e){console.error(e);res.status(500).json({error:e.message||"Live search failed"})}

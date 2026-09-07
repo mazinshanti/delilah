@@ -4,13 +4,14 @@ const externalPort = Number(process.env.PORT || 3000);
 const v8Port = Number(process.env.DELILAH_V8_PORT || 3300);
 const v7Port = Number(process.env.DELILAH_V7_PORT_V9 || 3301);
 const v6Port = Number(process.env.DELILAH_V6_PORT_V9 || 3302);
-const braveKey = process.env.BRAVE_SEARCH_API_KEY || "";
 const FAST_LIMIT = 12;
-const FAST_DEADLINE = 4800;
 const FAST_CACHE_TTL = 5 * 60_000;
+const FAST_INDEX_MAX = 5000;
+const WARM_TIMEOUT = 25_000;
 const fastCache = new Map();
-let fastBraveTail = Promise.resolve();
-let fastBraveLastAt = 0;
+const inventoryIndex = new Map();
+const warmState = new Map();
+let warmTail = Promise.resolve();
 
 process.env.PORT = String(v8Port);
 process.env.DELILAH_V7_PORT = String(v7Port);
@@ -45,9 +46,12 @@ const MODEL_ALIASES = [
   ["yaris","Yaris"],["يارس","Yaris"],["sunny","Sunny"],["صني","Sunny"],["x5","X5"],["c200","C200"],
   ["tucson","Tucson"],["توسان","Tucson"],["sportage","Sportage"],["سبورتاج","Sportage"],["territory","Territory"],["تيريتوري","Territory"],
   ["tahoe","Tahoe"],["تاهو","Tahoe"],["sonata","Sonata"],["سوناتا","Sonata"],["accent","Accent"],["اكسنت","Accent"],
-  ["elantra","Elantra"],["النترا","Elantra"],["prado","Prado"],["برادو","Prado"],["fortuner","Fortuner"],["فورتشنر","Fortuner"]
+  ["elantra","Elantra"],["النترا","Elantra"],["prado","Prado"],["برادو","Prado"],["fortuner","Fortuner"],["فورتشنر","Fortuner"],
+  ["explorer","Explorer"],["اكسبلورر","Explorer"],["expedition","Expedition"],["grand cherokee","Grand Cherokee"],["جراند شيروكي","Grand Cherokee"],
+  ["cayenne","Cayenne"],["كايين","Cayenne"],["tiguan","Tiguan"],["تيجوان","Tiguan"],["pegas","Pegas"],["بيجاس","Pegas"],
+  ["cerato","Cerato"],["سيراتو","Cerato"],["sorento","Sorento"],["سورينتو","Sorento"],["k5","K5"]
 ];
-const MODEL_BRAND = {Wrangler:"Jeep",Patrol:"Nissan","Land Cruiser":"Toyota",Camry:"Toyota",Corolla:"Toyota",Yaris:"Toyota",Sunny:"Nissan",X5:"BMW",C200:"Mercedes",Tucson:"Hyundai",Sportage:"Kia",Territory:"Ford",Tahoe:"Chevrolet",Sonata:"Hyundai",Accent:"Hyundai",Elantra:"Hyundai",Prado:"Toyota",Fortuner:"Toyota"};
+const MODEL_BRAND = {Wrangler:"Jeep",Patrol:"Nissan","Land Cruiser":"Toyota",Camry:"Toyota",Corolla:"Toyota",Yaris:"Toyota",Sunny:"Nissan",X5:"BMW",C200:"Mercedes",Tucson:"Hyundai",Sportage:"Kia",Territory:"Ford",Tahoe:"Chevrolet",Sonata:"Hyundai",Accent:"Hyundai",Elantra:"Hyundai",Prado:"Toyota",Fortuner:"Toyota",Explorer:"Ford",Expedition:"Ford","Grand Cherokee":"Jeep",Cayenne:"Porsche",Tiguan:"Volkswagen",Pegas:"Kia",Cerato:"Kia",Sorento:"Kia",K5:"Kia"};
 function firstAlias(text, list) { const t = norm(text); for (const [k,v] of list) if (t.includes(k)) return v; return null; }
 function intentFromFast(query, filters = {}) {
   const q = normalizeHumanNumbers(query);
@@ -56,26 +60,22 @@ function intentFromFast(query, filters = {}) {
   const years = [...q.matchAll(/\b(20\d{2})\b/g)].map(x => +x[1]);
   const p = norm(q).match(/(?:under|below|less than|تحت|اقل من|أقل من)\s*(\d{4,7})/i);
   const km = norm(q).match(/(?:under|below|less than|تحت|اقل من|أقل من)\s*(\d{2,7})\s*(?:km|كم|كيلو)/i);
-  return {
-    brand,
-    model,
-    minYear: +filters.minYear || (years.length ? Math.min(...years) : null),
-    maxYear: +filters.maxYear || null,
-    maxPrice: +filters.maxPrice || (p ? +p[1] : null),
-    maxMileage: +filters.maxMileage || (km ? +km[1] : null),
-    city: filters.city || null
-  };
+  let city = filters.city || null;
+  if (!city) {
+    const nq = norm(q);
+    if (/riyadh|الرياض/.test(nq)) city = "Riyadh";
+    else if (/jeddah|جدة/.test(nq)) city = "Jeddah";
+    else if (/dammam|الدمام/.test(nq)) city = "Dammam";
+  }
+  return {brand,model,minYear:+filters.minYear||(years.length?Math.min(...years):null),maxYear:+filters.maxYear||null,maxPrice:+filters.maxPrice||(p?+p[1]:null),maxMileage:+filters.maxMileage||(km?+km[1]:null),city};
 }
 function directSyarah(url, requested) {
   try {
     const u = new URL(url);
     if (!(u.hostname === "syarah.com" || u.hostname.endsWith(".syarah.com"))) return false;
     const m = u.pathname.match(/^\/(?:(?:en|ar)\/)?cardetail\/([^/]+)-(used|new)-(\d+)\/?$/i);
-    return m && (!requested || m[2].toLowerCase() === requested);
+    return Boolean(m && (!requested || m[2].toLowerCase() === requested));
   } catch { return false; }
-}
-function conditionFromUrl(url) {
-  try { return /-(used|new)-\d+\/?$/i.exec(new URL(url).pathname)?.[1]?.toLowerCase() || null; } catch { return null; }
 }
 function cashPrice(text = "") {
   const t = digits(String(text));
@@ -85,159 +85,162 @@ function cashPrice(text = "") {
   const n = Number(m[1].replace(/,/g, ""));
   return Number.isFinite(n) && n >= 1000 && n <= 5_000_000 ? n : null;
 }
-function parseIndexedResult(r, intent, requested) {
-  const url = String(r?.url || "");
-  if (!directSyarah(url, requested)) return null;
-  const text = digits([r.title, r.description, ...(Array.isArray(r.extra_snippets) ? r.extra_snippets : [])].filter(Boolean).join(" "));
-  const path = (() => { try { return decodeURIComponent(new URL(url).pathname); } catch { return ""; } })();
-  const all = `${text} ${path}`;
-  const brand = firstAlias(all, BRAND_ALIASES) || intent.brand;
-  const model = firstAlias(all, MODEL_ALIASES) || intent.model;
-  const y = all.match(/\b(20\d{2})\b/);
-  const km = all.match(/([0-9][\d,]{0,8})\s*(?:KM|KiloMeters?|كم|كيلو)/i);
-  const year = y ? +y[1] : null;
-  const mileage = km ? +km[1].replace(/,/g, "") : null;
-  const price = cashPrice(all);
-  if (intent.brand && brand !== intent.brand) return null;
-  if (intent.model && model !== intent.model) return null;
-  if (intent.minYear && (!year || year < intent.minYear)) return null;
-  if (intent.maxYear && (!year || year > intent.maxYear)) return null;
-  if (intent.maxPrice && (!price || price > intent.maxPrice)) return null;
-  if (intent.maxMileage && (mileage == null || mileage > intent.maxMileage)) return null;
-  return {
-    source: "Syarah",
-    sourceType: "marketplace",
-    seller: "Syarah",
-    sourceStrict: true,
-    title: r.title || [year, brand, model].filter(Boolean).join(" ") || "Syarah car",
-    snippet: r.description || "Open the original Syarah listing for full details.",
-    url,
-    brand,
-    model,
-    year,
-    mileage,
-    city: null,
-    price,
-    priceVerified: Boolean(price),
-    priceSource: price ? "syarah_cash_price_index" : null,
-    condition: conditionFromUrl(url),
-    saleVerified: true,
-    image: null,
-    displayImage: null,
-    imageVerified: false,
-    imageSource: null,
-    score: 82
-  };
+function indexSafeListing(car) {
+  if (!car || car.saleVerified !== true || car.source !== "Syarah" || !directSyarah(car.url, car.condition)) return null;
+  const c = { ...car };
+  const exactCash = c.priceVerified === true && c.priceSource === "syarah_cash_price" ? Number(c.price) : cashPrice(`${c.title||""} ${c.snippet||""}`);
+  c.price = Number.isFinite(exactCash) && exactCash >= 1000 ? exactCash : null;
+  c.priceVerified = Boolean(c.price);
+  c.priceSource = c.price ? (car.priceSource === "syarah_cash_price" ? "syarah_cash_price" : "syarah_cash_price_fast") : null;
+  delete c.previousPrice;
+  delete c.discount;
+  if (!c.imageVerified) { c.image = null; c.displayImage = null; c.imageSource = null; }
+  return c;
+}
+function ingest(listings = []) {
+  let added = 0;
+  for (const raw of listings) {
+    const c = indexSafeListing(raw);
+    if (!c) continue;
+    const key = String(c.url).replace(/\/$/, "");
+    const old = inventoryIndex.get(key);
+    inventoryIndex.set(key, old ? {...old,...c,_indexedAt:Date.now()} : {...c,_indexedAt:Date.now()});
+    added++;
+  }
+  while (inventoryIndex.size > FAST_INDEX_MAX) inventoryIndex.delete(inventoryIndex.keys().next().value);
+  return added;
+}
+function matchesFast(c, intent, condition) {
+  if (!c || c.condition !== condition || c.saleVerified !== true) return false;
+  if (intent.brand && c.brand !== intent.brand) return false;
+  if (intent.model && c.model !== intent.model) return false;
+  if (intent.minYear && (!c.year || c.year < intent.minYear)) return false;
+  if (intent.maxYear && (!c.year || c.year > intent.maxYear)) return false;
+  if (intent.maxPrice && (!c.price || c.price > intent.maxPrice)) return false;
+  if (intent.maxMileage && (c.mileage == null || c.mileage > intent.maxMileage)) return false;
+  if (intent.city && c.city && c.city !== intent.city) return false;
+  return true;
+}
+function localResults(intent, condition) {
+  if (!intent.brand && !intent.model) return [];
+  return [...inventoryIndex.values()]
+    .filter(c => matchesFast(c, intent, condition))
+    .sort((a,b) => (b.score||0)-(a.score||0) || (b._indexedAt||0)-(a._indexedAt||0))
+    .slice(0, FAST_LIMIT)
+    .map(({_indexedAt,...c}) => c);
 }
 function fastCompatible(filters = {}) {
   if (filters.seller && filters.seller !== "Syarah") return false;
   if (filters.sourceType && filters.sourceType !== "marketplace") return false;
   return true;
 }
-async function braveNow(query, signal) {
-  if (!braveKey) return [];
-  const u = new URL("https://api.search.brave.com/res/v1/web/search");
-  u.searchParams.set("q", query);
-  u.searchParams.set("country", "SA");
-  u.searchParams.set("count", "20");
-  u.searchParams.set("text_decorations", "false");
-  const r = await fetch(u, { signal, headers: { Accept: "application/json", "X-Subscription-Token": braveKey } });
-  if (!r.ok) throw new Error(`Fast index HTTP ${r.status}`);
-  const d = await r.json();
-  return d.web?.results || [];
+function warmKey(query, condition) { return `${condition}|${normalizeHumanNumbers(query).toLowerCase()}`; }
+async function warmOne(query, condition = "used") {
+  const key = warmKey(query, condition);
+  const state = warmState.get(key);
+  if (state?.running) return state.promise;
+  if (state?.at && Date.now()-state.at < FAST_CACHE_TTL) return state.count || 0;
+  const task = (async () => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), WARM_TIMEOUT);
+    try {
+      const r = await fetch(`http://127.0.0.1:${v6Port}/api/search`, {
+        method: "POST",
+        headers: {"content-type":"application/json"},
+        body: JSON.stringify({query:normalizeHumanNumbers(query),condition,filters:{seller:"Syarah"}}),
+        signal: controller.signal
+      });
+      if (!r.ok) throw new Error(`warm HTTP ${r.status}`);
+      const d = await r.json();
+      const count = ingest(d.listings || []);
+      warmState.set(key,{running:false,at:Date.now(),count});
+      console.log(`v9 warm ${condition} ${query}: ${count} indexed, total ${inventoryIndex.size}`);
+      return count;
+    } catch (e) {
+      warmState.set(key,{running:false,at:Date.now(),count:0,error:e?.message||String(e)});
+      console.warn(`v9 warm failed ${condition} ${query}:`,e?.message||e);
+      return 0;
+    } finally { clearTimeout(timer); }
+  })();
+  warmState.set(key,{running:true,promise:task,at:state?.at||0,count:state?.count||0});
+  return task;
 }
-function braveFast(query, signal) {
-  const job = fastBraveTail.then(async () => {
-    const wait = Math.max(0, 1100 - (Date.now() - fastBraveLastAt));
-    if (wait) await new Promise(r => setTimeout(r, wait));
-    const rows = await braveNow(query, signal);
-    fastBraveLastAt = Date.now();
-    return rows;
-  });
-  fastBraveTail = job.catch(() => {});
-  return job;
+function enqueueWarm(query, condition) {
+  warmTail = warmTail.then(() => warmOne(query,condition)).catch(() => 0);
+  return warmTail;
 }
-async function fastViaIndex(body = {}) {
-  const query = String(body.query || "").trim();
-  if (!query) throw Object.assign(new Error("Query is required"), { status: 400 });
+async function warmPopular() {
+  // The first item is our latency canary and a very common Saudi search.
+  await warmOne("Toyota Camry","used");
+  const rest = [
+    ["Nissan Patrol","used"],["Toyota Land Cruiser","used"],["Jeep Wrangler","used"],
+    ["Hyundai Tucson","used"],["Kia Sportage","used"],["Mercedes C200","used"],["BMW X5","used"],
+    ["Toyota Land Cruiser 2026","new"],["Nissan Patrol 2026","new"],["Ford Territory 2026","new"],
+    ["Kia Sportage 2026","new"],["Hyundai Tucson 2025","new"],["Chevrolet Tahoe 2026","new"]
+  ];
+  for (const [q,c] of rest) await warmOne(q,c);
+}
+async function fastFromLocal(body = {}) {
+  const query = String(body.query||"").trim();
+  if (!query) throw Object.assign(new Error("Query is required"),{status:400});
   const condition = body.condition === "new" ? "new" : "used";
-  const filters = body.filters && typeof body.filters === "object" ? { ...body.filters } : {};
-  if (!fastCompatible(filters)) return { query, condition, listings: [], counts: {}, live: true, partial: true, phase: "fast", provider: "Delilah v9 fast lane", fastSkipped: true };
-
+  const filters = body.filters && typeof body.filters === "object" ? {...body.filters} : {};
   const normalizedQuery = normalizeHumanNumbers(query);
-  const intent = intentFromFast(normalizedQuery, filters);
-  const key = JSON.stringify({ q: normalizedQuery.toLowerCase(), condition, filters });
-  const hit = fastCache.get(key);
-  if (hit && Date.now() - hit.at < FAST_CACHE_TTL) return { ...hit.value, cached: true };
-
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), FAST_DEADLINE);
-  try {
-    const core = [intent.brand, intent.model, intent.minYear].filter(Boolean).join(" ") || normalizedQuery;
-    let rows = await braveFast(`${core} ${condition} site:syarah.com/en/cardetail`, controller.signal);
-    let listings = rows.map(r => parseIndexedResult(r, intent, condition)).filter(Boolean);
-    if (!listings.length && !controller.signal.aborted) {
-      rows = await braveFast(`${core} site:syarah.com/en/cardetail`, controller.signal);
-      listings = rows.map(r => parseIndexedResult(r, intent, condition)).filter(Boolean);
-    }
-    const seen = new Set();
-    listings = listings.filter(c => { const k = c.url.replace(/\/$/, ""); if (seen.has(k)) return false; seen.add(k); return true; }).slice(0, FAST_LIMIT);
-    const value = {
-      query,
-      condition,
-      intent,
-      listings,
-      counts: counts(listings),
-      answer: listings.length ? `Found ${listings.length} verified cars quickly. Scanning the rest of the Saudi market…` : "Fast index checked. Scanning the wider Saudi market…",
-      live: true,
-      cached: false,
-      partial: true,
-      phase: "fast",
-      provider: "Delilah v9 fast lane — indexed strict direct listings"
-    };
-    fastCache.set(key, { at: Date.now(), value });
-    for (const [k, v] of fastCache) if (Date.now() - v.at > FAST_CACHE_TTL) fastCache.delete(k);
-    return value;
-  } finally { clearTimeout(timer); }
+  const intent = intentFromFast(normalizedQuery,filters);
+  if (!fastCompatible(filters)) return {query,condition,intent,listings:[],counts:{},live:true,partial:true,phase:"fast",provider:"Delilah v9 warm index",fastSkipped:true,indexSize:inventoryIndex.size};
+  const key = JSON.stringify({q:normalizedQuery.toLowerCase(),condition,filters});
+  const cached = fastCache.get(key);
+  if (cached && Date.now()-cached.at < FAST_CACHE_TTL) return {...cached.value,cached:true,indexSize:inventoryIndex.size};
+  const listings = localResults(intent,condition);
+  if (!listings.length) enqueueWarm(normalizedQuery,condition);
+  else enqueueWarm(normalizedQuery,condition); // stale-while-revalidate without blocking the response
+  const value = {query,condition,intent,listings,counts:counts(listings),answer:listings.length?`Found ${listings.length} verified cars instantly. Scanning the rest of the Saudi market…`:"Building this live inventory while the wider Saudi market search continues…",live:true,cached:false,partial:true,phase:"fast",provider:"Delilah v9 warm local inventory index",indexSize:inventoryIndex.size};
+  fastCache.set(key,{at:Date.now(),value});
+  return value;
 }
 
-async function proxy(req, res) {
+async function proxy(req,res) {
   const target = `http://127.0.0.1:${v8Port}${req.originalUrl}`;
   const headers = {};
-  for (const [k, v] of Object.entries(req.headers)) if (!["host", "content-length", "connection"].includes(k.toLowerCase()) && v != null) headers[k] = Array.isArray(v) ? v.join(",") : String(v);
+  for (const [k,v] of Object.entries(req.headers)) if (!["host","content-length","connection"].includes(k.toLowerCase()) && v != null) headers[k] = Array.isArray(v)?v.join(","):String(v);
   let body;
-  if (!["GET", "HEAD"].includes(req.method) && req.is("application/json")) { body = JSON.stringify(req.body || {}); headers["content-type"] = "application/json"; }
+  if (!["GET","HEAD"].includes(req.method) && req.is("application/json")) { body=JSON.stringify(req.body||{}); headers["content-type"]="application/json"; }
   try {
-    const r = await fetch(target, { method: req.method, headers, body, redirect: "manual" });
+    const r = await fetch(target,{method:req.method,headers,body,redirect:"manual"});
+    const ct = r.headers.get("content-type") || "";
+    if (req.path === "/api/search" && ct.includes("application/json")) {
+      const d = await r.json();
+      if (Array.isArray(d.listings)) ingest(d.listings);
+      return res.status(r.status).json(d);
+    }
     const buf = Buffer.from(await r.arrayBuffer());
-    for (const [k, v] of r.headers.entries()) if (!["content-length", "transfer-encoding", "connection"].includes(k.toLowerCase())) res.setHeader(k, v);
+    for (const [k,v] of r.headers.entries()) if (!["content-length","transfer-encoding","connection"].includes(k.toLowerCase())) res.setHeader(k,v);
     return res.status(r.status).send(buf);
   } catch (e) {
-    console.error("v9 proxy error", e);
-    return res.status(502).json({ error: "Delilah upstream unavailable" });
+    console.error("v9 proxy error",e);
+    return res.status(502).json({error:"Delilah upstream unavailable"});
   }
 }
 
-app.post("/api/search", async (req, res, next) => {
+app.post("/api/search",async(req,res,next)=>{
   if (req.body?.phase !== "fast") return next();
-  const started = Date.now();
+  const started=Date.now();
   try {
-    const data = await fastViaIndex(req.body);
-    data.elapsedMs = Date.now() - started;
+    const data=await fastFromLocal(req.body);
+    data.elapsedMs=Date.now()-started;
     return res.json(data);
-  } catch (e) {
-    const timedOut = e?.name === "AbortError";
-    return res.status(timedOut ? 504 : (e.status || 500)).json({ error: timedOut ? "Fast lane deadline reached" : (e.message || "Fast search failed"), partial: true, phase: "fast", elapsedMs: Date.now() - started });
+  } catch(e) {
+    return res.status(e.status||500).json({error:e.message||"Fast search failed",partial:true,phase:"fast",elapsedMs:Date.now()-started});
   }
 });
-
-app.get("/api/health", async (req, res) => {
-  try {
-    const r = await fetch(`http://127.0.0.1:${v8Port}/api/health`);
-    const d = await r.json();
-    res.json({ ...d, edge: "inventory-v9", fastLane: "index-first", fastDeadlineMs: FAST_DEADLINE });
-  } catch { res.status(503).json({ ok: false, edge: "inventory-v9" }); }
+app.get("/api/fast-index",(req,res)=>res.json({ok:true,size:inventoryIndex.size,warm:[...warmState.entries()].map(([key,v])=>({key,running:Boolean(v.running),at:v.at||null,count:v.count||0,error:v.error||null}))}));
+app.get("/api/health",async(req,res)=>{
+  try { const r=await fetch(`http://127.0.0.1:${v8Port}/api/health`); const d=await r.json(); res.json({...d,edge:"inventory-v9",fastLane:"warm-local-index",fastIndex:inventoryIndex.size}); }
+  catch { res.status(503).json({ok:false,edge:"inventory-v9",fastIndex:inventoryIndex.size}); }
 });
-
 app.use(proxy);
-app.listen(externalPort, () => console.log(`Delilah inventory-v9 running at http://localhost:${externalPort}`));
+const server=app.listen(externalPort,()=>{
+  console.log(`Delilah inventory-v9 running at http://localhost:${externalPort}`);
+  setTimeout(()=>warmPopular().catch(e=>console.warn("v9 popular warm failed",e?.message||e)),1200);
+});
+server.keepAliveTimeout=65_000;

@@ -41,12 +41,7 @@ async function parseIntent(query){
   if(!openai) return basicIntent(query);
   const r=await openai.responses.create({
     model,
-    input:`You are Delilah, a Saudi car-search assistant.
-Convert the user query into JSON only with:
-brand, model, minYear, maxYear, maxPrice, maxMileage, city, keywords.
-Use null if unspecified. Normalize brand and Saudi city names into common English.
-Never invent a constraint.
-User: ${JSON.stringify(query)}`
+    input:`You are Delilah, a Saudi car-search assistant.\nConvert the user query into JSON only with:\nbrand, model, minYear, maxYear, maxPrice, maxMileage, city, keywords.\nUse null if unspecified. Normalize brand and Saudi city names into common English.\nNever invent a constraint.\nUser: ${JSON.stringify(query)}`
   });
   const raw=r.output_text.trim().replace(/^```json\s*/i,"").replace(/```$/,"").trim();
   try{return JSON.parse(raw)}catch{return basicIntent(query)}
@@ -75,23 +70,6 @@ async function braveWebSearch(query,count=20){
   return d.web?.results || [];
 }
 
-async function braveImageSearch(query,count=12){
-  if(!braveKey) return [];
-  const u=new URL("https://api.search.brave.com/res/v1/images/search");
-  u.searchParams.set("q",query);
-  u.searchParams.set("country","SA");
-  u.searchParams.set("count",String(Math.min(count,20)));
-  u.searchParams.set("safesearch","strict");
-  const r=await fetch(u,{headers:{
-    "Accept":"application/json",
-    "Accept-Encoding":"gzip",
-    "X-Subscription-Token":braveKey
-  }});
-  if(!r.ok) return [];
-  const d=await r.json();
-  return d.results || [];
-}
-
 function domainName(url=""){
   try{
     const h=new URL(url).hostname.replace(/^www\./,"");
@@ -103,7 +81,11 @@ function domainName(url=""){
   }catch{return "Web";}
 }
 
-function roughExtract(title="",snippet="",url=""){
+function sourceImage(result={}){
+  return result.thumbnail?.src || result.thumbnail?.original || result.profile?.img || null;
+}
+
+function roughExtract(title="",snippet="",url="",image=null){
   const t=`${title} ${snippet}`.replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d));
   const years=[...t.matchAll(/\b(20\d{2})\b/g)].map(x=>Number(x[1]));
   const moneyMatches=[...t.matchAll(/(?:sar|ريال|ر\.س|rs)?\s*([1-9]\d{3,6})/gi)].map(x=>Number(x[1]));
@@ -112,31 +94,22 @@ function roughExtract(title="",snippet="",url=""){
   const city = /riyadh|الرياض/i.test(t) ? "Riyadh" : /jeddah|جدة/i.test(t) ? "Jeddah" : /dammam|الدمام/i.test(t) ? "Dammam" : null;
   const brand = /jeep|جيب/i.test(t)?"Jeep":/toyota|تويوتا|land cruiser|لاندكروزر/i.test(t)?"Toyota":/nissan|نيسان|patrol|باترول/i.test(t)?"Nissan":/lexus|لكزس/i.test(t)?"Lexus":/mercedes|مرسيدس/i.test(t)?"Mercedes":/bmw|بي ام/i.test(t)?"BMW":/porsche|بورش/i.test(t)?"Porsche":null;
   const model=/wrangler|رانجلر/i.test(t)?"Wrangler":/patrol|باترول/i.test(t)?"Patrol":/land cruiser|لاندكروزر/i.test(t)?"Land Cruiser":null;
-  return {source:domainName(url),title,brand,model,year:years[0]||null,price,mileage:kmM?Number(kmM[1]):null,city,url,snippet};
+  return {source:domainName(url),title,brand,model,year:years[0]||null,price,mileage:kmM?Number(kmM[1]):null,city,url,snippet,image,imageVerified:Boolean(image),priceVerified:Boolean(price)};
 }
 
 async function aiExtract(results){
-  if(!openai) return results.map(x=>roughExtract(x.title,x.description,x.url));
+  if(!openai) return results.map(x=>roughExtract(x.title,x.description,x.url,sourceImage(x)));
   const compact=results.slice(0,20).map((r,idx)=>({idx,title:r.title,url:r.url,snippet:r.description}));
   const rsp=await openai.responses.create({
     model,
-    input:`You are Delilah, a Saudi automotive search-result parser.
-From these search results, identify actual individual car listings only.
-Return a JSON array. For each result use:
-idx, brand, model, trim, year, price, mileage, city, source, confidence.
-Rules:
-- Use null for missing facts.
-- Do not invent facts.
-- Keep only results that look like a specific car listing, not category/search pages or general articles.
-- price/mileage/year must be numeric.
-- confidence is 0-100 based on how clearly this is a specific listing.
-Results: ${JSON.stringify(compact)}`
+    input:`You are Delilah, a Saudi automotive search-result parser.\nFrom these search results, identify actual individual car listings only.\nReturn a JSON array. For each result use:\nidx, brand, model, trim, year, price, mileage, city, source, confidence.\nRules:\n- Use null for missing facts.\n- Do not invent facts.\n- Keep only results that look like a specific car listing, not category/search pages or general articles.\n- price/mileage/year must be numeric.\n- Extract price only when it is explicitly present in the indexed title or snippet.\n- confidence is 0-100 based on how clearly this is a specific listing.\nResults: ${JSON.stringify(compact)}`
   });
   const raw=rsp.output_text.trim().replace(/^```json\s*/i,"").replace(/```$/,"").trim();
-  let arr=[]; try{arr=JSON.parse(raw)}catch{return results.map(x=>roughExtract(x.title,x.description,x.url))}
+  let arr=[]; try{arr=JSON.parse(raw)}catch{return results.map(x=>roughExtract(x.title,x.description,x.url,sourceImage(x)))}
   return arr.map(x=>{
     const src=results[x.idx]||{};
-    return {...x,title:src.title||"",snippet:src.description||"",url:src.url||"",source:x.source||domainName(src.url||"")};
+    const image=sourceImage(src);
+    return {...x,title:src.title||"",snippet:src.description||"",url:src.url||"",source:x.source||domainName(src.url||""),image,imageVerified:Boolean(image),priceVerified:Boolean(x.price)};
   });
 }
 
@@ -148,6 +121,8 @@ function intentMatchScore(c,i){
   if(i.maxPrice && c.price && c.price<=i.maxPrice) score+=6;
   if(i.maxMileage && c.mileage && c.mileage<=i.maxMileage) score+=5;
   if(i.city && c.city?.toLowerCase()===i.city.toLowerCase()) score+=5;
+  if(c.imageVerified) score+=2;
+  if(c.priceVerified) score+=2;
   score += Math.round((c.confidence||50)/20);
   return Math.min(score,99);
 }
@@ -163,31 +138,14 @@ function satisfies(c,i){
   return true;
 }
 
-async function attachImages(cars,query){
-  const images=await braveImageSearch(`${query} Saudi car listing`);
-  const unused=[...images];
-  return cars.map(c=>{
-    let image=null;
-    const match=unused.find(img=>{
-      const s=`${img.title||""} ${img.source||""}`.toLowerCase();
-      return (c.brand && s.includes(c.brand.toLowerCase())) || (c.model && s.includes(c.model.toLowerCase()));
-    }) || unused.shift();
-    if(match) image=match.thumbnail?.src || match.properties?.url || null;
-    return {...c,image};
-  });
-}
-
 async function summary(query,cars){
   if(!cars.length) return detectArabic(query)?"ما لقيت نتائج واضحة تطابق طلبك حالياً. جرّب توسّع شرط واحد مثل السعر أو الممشى.":"I couldn't find clear current listings matching every constraint. Try widening one condition such as budget or mileage.";
   if(!openai){
     const c=cars[0];
     return `I found ${cars.length} current listing${cars.length===1?"":"s"}. The strongest match appears to be ${c.year||""} ${c.brand||""} ${c.model||""} from ${c.source}.`;
   }
-  const top=cars.slice(0,5).map(c=>({source:c.source,brand:c.brand,model:c.model,trim:c.trim,year:c.year,price:c.price,mileage:c.mileage,city:c.city,score:c.score,url:c.url}));
-  const r=await openai.responses.create({model,input:`You are Delilah, a concise Saudi car-search assistant.
-User query: ${query}
-Live search listings: ${JSON.stringify(top)}
-Say how many listings were found and name the strongest one, explaining why based only on shown facts. Mention missing data where relevant. Reply in Arabic if the user wrote mainly Arabic.`});
+  const top=cars.slice(0,5).map(c=>({source:c.source,brand:c.brand,model:c.model,trim:c.trim,year:c.year,price:c.price,priceVerified:c.priceVerified,mileage:c.mileage,city:c.city,score:c.score,url:c.url}));
+  const r=await openai.responses.create({model,input:`You are Delilah, a concise Saudi car-search assistant.\nUser query: ${query}\nLive search listings: ${JSON.stringify(top)}\nSay how many listings were found and name the strongest one, explaining why based only on shown facts. Mention when a price is not shown. Reply in Arabic if the user wrote mainly Arabic.`});
   return r.output_text.trim();
 }
 
@@ -200,9 +158,8 @@ app.post("/api/search",async(req,res)=>{
     let listings=await aiExtract(raw);
     listings=listings.filter(c=>c.url && (c.confidence==null || c.confidence>=45)).filter(c=>satisfies(c,intent));
     listings=listings.map(c=>({...c,score:intentMatchScore(c,intent)})).sort((a,b)=>b.score-a.score).slice(0,10);
-    listings=await attachImages(listings,query);
     const answer=await summary(query,listings);
-    res.json({query,intent,answer,listings,live:true,provider:"Brave Search"});
+    res.json({query,intent,answer,listings,live:true,provider:"Brave Search indexed listings"});
   }catch(e){
     console.error(e);
     res.status(500).json({error:e.message||"Live search failed"});

@@ -27,6 +27,7 @@ jobs:
       - run: node --check server-v9.js
       - run: node --check server-v10.js
       - run: node --check server-v11.js
+      - run: node --check server-v12.js
       - run: node tests/regression.mjs
 
   fast-path-v9:
@@ -58,6 +59,20 @@ jobs:
         env:
           DELILAH_URL: https://delilah-pm5f.onrender.com
         run: node tests/catalog-breadth-v11.mjs
+
+  source-breadth-v12:
+    needs: fast-path-v9
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test second broad inventory source
+        env:
+          DELILAH_URL: https://delilah-pm5f.onrender.com
+        run: node tests/source-breadth-v12.mjs
 
   user-path-v7:
     needs: fast-path-v9

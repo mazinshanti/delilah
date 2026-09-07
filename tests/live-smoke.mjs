@@ -22,7 +22,7 @@ const health=await fetch(`${base}/api/health`,{signal:timeout(20000)});
 if(!health.ok)throw new Error(`health ${health.status}`);
 const h=await health.json();
 if(!h.ok||!h.search)throw new Error(`health config invalid: ${JSON.stringify(h)}`);
-if(!String(h.logic||'').startsWith('inventory-v4'))throw new Error(`expected inventory-v4, got ${h.logic}`);
+if(!String(h.logic||'').startsWith('inventory-v5'))throw new Error(`expected inventory-v5, got ${h.logic}`);
 console.log(`health ok; ${h.sources} sources; ${h.logic}; max ${h.maxResults}; ${h.images}`);
 
 for(const t of cases){

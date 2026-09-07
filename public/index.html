@@ -17,7 +17,7 @@
 <body><div class="shell">
 <header><div class="brand"><div class="mark">D</div><div class="wordmark">Delilah <span class="arabic">دليلة</span></div></div><div class="status"><span class="dot"></span>Saudi market LIVE</div></header>
 <section class="hero"><div class="eyebrow">✦ AI car discovery for Saudi Arabia</div><h1>One search.<br><span>The Saudi car market.</span></h1><p>Search marketplaces, official distributors, dealer stock and certified used programs in one place — while keeping new and used inventory completely separate.</p>
-<div class="network"><span>Marketplaces</span><span>Official dealers</span><span>Certified used</span><span>Dealer inventory</span></div>
+<div class="network"><span>Marketplaces</span><span>Official dealers</span><span>Certified used</span><span>Independent dealers</span></div>
 <div class="controls">
 <div class="topControls"><div class="tabs"><button id="usedTab" class="tab active" onclick="setCondition('used')">Used cars</button><button id="newTab" class="tab" onclick="setCondition('new')">New cars</button></div><button class="filterBtn" onclick="toggleFilters()">Filters <b id="filterCount"></b></button></div>
 <div id="searchBox" class="search"><input id="q" autocomplete="off" placeholder="ابي رانجلر 2022 وفوق، بالرياض، تحت 130 ألف"><button onclick="go()">Ask Delilah ✦</button></div>
@@ -28,7 +28,7 @@
 <div class="field"><label>Max price (SAR)</label><input id="maxPrice" type="number" placeholder="150000"></div>
 <div class="field"><label>Max mileage (km)</label><input id="maxMileage" type="number" placeholder="80000"></div>
 <div class="field"><label>City</label><select id="city"><option value="">Any city</option><option>Riyadh</option><option>Jeddah</option><option>Dammam</option></select></div>
-<div class="field"><label>Source type</label><select id="sourceType"><option value="">All sources</option><option value="marketplace">Marketplaces</option><option value="official_dealer">Official dealers</option><option value="certified_used">Certified used</option></select></div>
+<div class="field"><label>Source type</label><select id="sourceType"><option value="">All sources</option><option value="marketplace">Marketplaces</option><option value="official_dealer">Official dealers</option><option value="certified_used">Certified used</option><option value="independent_dealer">Independent dealers</option></select></div>
 <div class="field"><label>Seller / source</label><select id="seller"><option value="">All sellers</option></select></div>
 </div>
 <div class="filterActions"><button class="clear" onclick="clearFilters()">Clear</button><button class="apply" onclick="applyFilters()">Apply filters</button></div></div>
@@ -39,7 +39,7 @@
 <script>
 let listings=[],condition='used',sourceDirectory=[];
 const fmt=n=>n?Number(n).toLocaleString('en-US'):'—';
-function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[m]))}
 function setCondition(v){condition=v;usedTab.classList.toggle('active',v==='used');newTab.classList.toggle('active',v==='new');resultsTitle.textContent=`Best ${v} matches`;modeLabel.textContent=v.toUpperCase()+' ONLY';refreshSellerOptions();if(q.value.trim())go()}
 function toggleFilters(){filters.classList.toggle('show')}
 function getFilters(){return{minYear:minYear.value,maxYear:maxYear.value,maxPrice:maxPrice.value,maxMileage:maxMileage.value,city:city.value,sourceType:sourceType.value,seller:seller.value}}
@@ -47,7 +47,7 @@ function updateFilterCount(){const f=getFilters();let n=['minYear','maxYear','ma
 function clearFilters(){minYear.value='';maxYear.value='';maxPrice.value='';maxMileage.value='';city.value='';sourceType.value='';seller.value='';refreshSellerOptions();updateFilterCount()}
 function applyFilters(){updateFilterCount();filters.classList.remove('show');if(q.value.trim())go()}
 function preset(v){q.value=v;go()}
-function typeLabel(v){return v==='official_dealer'?'Official dealer':v==='certified_used'?'Certified used':'Marketplace'}
+function typeLabel(v){return v==='official_dealer'?'Official dealer':v==='certified_used'?'Certified used':v==='independent_dealer'?'Independent dealer':'Marketplace'}
 function refreshSellerOptions(){const current=seller.value;const type=sourceType.value;const filtered=sourceDirectory.filter(s=>s.conditions.includes(condition)&&(!type||s.type===type));seller.innerHTML='<option value="">All sellers</option>'+filtered.map(s=>`<option value="${esc(s.name)}">${esc(s.name)}</option>`).join('');if(filtered.some(s=>s.name===current))seller.value=current}
 async function loadSources(){try{const r=await fetch('/api/sources');const d=await r.json();sourceDirectory=d.sources||[];refreshSellerOptions()}catch{}}
 function render(){grid.innerHTML='';empty.style.display=listings.length?'none':'block';listings.forEach(c=>{const el=document.createElement('article');el.className='card';const title=[c.year,c.brand,c.model,c.trim].filter(Boolean).join(' ')||c.title||'Car result';const image=c.image?`<img src="${esc(c.image)}" alt="${esc(title)}" onerror="this.outerHTML='<div class=&quot;fallback&quot;>🚘</div>'">`:`<div class="fallback">🚘</div>`;const facts=[c.mileage?`${fmt(c.mileage)} km`:null,c.city||null,typeLabel(c.sourceType)].filter(Boolean).map(x=>`<span class="fact">${esc(x)}</span>`).join('');const safe=(c.url||'').replace(/'/g,"\\'");el.innerHTML=`<div class="photo">${image}<span class="pill score">Delilah <b>${c.score||'—'}</b>/100</span><span class="pill source">${esc(c.source||'Web')}</span><span class="condition">${esc(c.condition||condition)}</span></div><div class="body"><div class="seller">${esc(c.seller||c.source||'Source')}</div><div class="carTitle">${esc(title)}</div><div class="facts">${facts}</div><div class="price">${c.price?fmt(c.price):'Price not shown'} ${c.price?'<span class="currency">SAR</span>':''}</div><div class="snippet">${esc(c.snippet||c.title||'Open the original source for full details.')}</div><button class="open" onclick="window.open('${safe}','_blank','noopener')">View original source ↗</button></div>`;grid.appendChild(el)})}

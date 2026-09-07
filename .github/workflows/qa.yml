@@ -20,6 +20,7 @@ jobs:
       - run: node --check server-v6.js
       - run: node --check server-v7.js
       - run: node --check server-v8.js
+      - run: node --check server-v9.js
       - run: node tests/regression.mjs
 
   fast-path-v8:

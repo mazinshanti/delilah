@@ -18,7 +18,24 @@ jobs:
       - run: node --check server.js
       - run: node --check server-v5.js
       - run: node --check server-v6.js
+      - run: node --check server-v7.js
       - run: node tests/regression.mjs
+
+  user-path-v7:
+    needs: regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Wait for Render auto-deploy
+        run: sleep 75
+      - name: Test Arabic ألف and Syarah cash prices
+        env:
+          DELILAH_URL: https://delilah-pm5f.onrender.com
+        run: node tests/user-path-v7.mjs
 
   live-smoke:
     needs: regression

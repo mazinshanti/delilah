@@ -7,7 +7,9 @@ const v6Port = Number(process.env.DELILAH_V6_PORT_V9 || 3302);
 const FAST_LIMIT = 12;
 const FAST_CACHE_TTL = 5 * 60_000;
 const FAST_INDEX_MAX = 5000;
-const WARM_TIMEOUT = 25_000;
+const WARM_TIMEOUT = 12_000;
+const WARM_ATTEMPTS = 3;
+const FAILED_RETRY_TTL = 5_000;
 const fastCache = new Map();
 const inventoryIndex = new Map();
 const warmState = new Map();
@@ -24,6 +26,7 @@ app.use(express.json({ limit: "1mb" }));
 
 const digits = s => String(s || "").replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
 const norm = s => digits(s).toLowerCase();
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 function normalizeHumanNumbers(query = "") {
   let q = digits(query);
   q = q.replace(/(\d+(?:\.\d+)?)\s*(?:ألف|الف)(?=\s|$|ريال|ر\.?س)/gi, (_, n) => String(Math.round(Number(n) * 1000)));
@@ -135,32 +138,47 @@ function fastCompatible(filters = {}) {
   return true;
 }
 function warmKey(query, condition) { return `${condition}|${normalizeHumanNumbers(query).toLowerCase()}`; }
+async function fetchWarmOnce(query, condition) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), WARM_TIMEOUT);
+  try {
+    const r = await fetch(`http://127.0.0.1:${v6Port}/api/search`, {
+      method: "POST",
+      headers: {"content-type":"application/json"},
+      body: JSON.stringify({query:normalizeHumanNumbers(query),condition,filters:{seller:"Syarah"}}),
+      signal: controller.signal
+    });
+    if (!r.ok) throw new Error(`warm HTTP ${r.status}`);
+    const d = await r.json();
+    return ingest(d.listings || []);
+  } finally { clearTimeout(timer); }
+}
 async function warmOne(query, condition = "used") {
   const key = warmKey(query, condition);
   const state = warmState.get(key);
   if (state?.running) return state.promise;
-  if (state?.at && Date.now()-state.at < FAST_CACHE_TTL) return state.count || 0;
+  if (state?.at && state.count > 0 && Date.now()-state.at < FAST_CACHE_TTL) return state.count;
+  if (state?.at && !state.count && Date.now()-state.at < FAILED_RETRY_TTL) return 0;
   const task = (async () => {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), WARM_TIMEOUT);
-    try {
-      const r = await fetch(`http://127.0.0.1:${v6Port}/api/search`, {
-        method: "POST",
-        headers: {"content-type":"application/json"},
-        body: JSON.stringify({query:normalizeHumanNumbers(query),condition,filters:{seller:"Syarah"}}),
-        signal: controller.signal
-      });
-      if (!r.ok) throw new Error(`warm HTTP ${r.status}`);
-      const d = await r.json();
-      const count = ingest(d.listings || []);
-      warmState.set(key,{running:false,at:Date.now(),count});
-      console.log(`v9 warm ${condition} ${query}: ${count} indexed, total ${inventoryIndex.size}`);
-      return count;
-    } catch (e) {
-      warmState.set(key,{running:false,at:Date.now(),count:0,error:e?.message||String(e)});
-      console.warn(`v9 warm failed ${condition} ${query}:`,e?.message||e);
-      return 0;
-    } finally { clearTimeout(timer); }
+    let lastError = null;
+    for (let attempt = 1; attempt <= WARM_ATTEMPTS; attempt++) {
+      try {
+        const count = await fetchWarmOnce(query, condition);
+        if (count > 0) {
+          warmState.set(key,{running:false,at:Date.now(),count,attempt});
+          console.log(`v9 warm ${condition} ${query}: ${count} indexed, total ${inventoryIndex.size}, attempt ${attempt}`);
+          return count;
+        }
+        lastError = "no matching cars";
+      } catch (e) {
+        lastError = e?.message || String(e);
+        console.warn(`v9 warm attempt ${attempt} failed ${condition} ${query}:`,lastError);
+      }
+      if (attempt < WARM_ATTEMPTS) await sleep(2000 * attempt);
+    }
+    warmState.set(key,{running:false,at:Date.now(),count:0,error:lastError,attempt:WARM_ATTEMPTS});
+    console.warn(`v9 warm failed ${condition} ${query}:`,lastError);
+    return 0;
   })();
   warmState.set(key,{running:true,promise:task,at:state?.at||0,count:state?.count||0});
   return task;
@@ -170,7 +188,6 @@ function enqueueWarm(query, condition) {
   return warmTail;
 }
 async function warmPopular() {
-  // The first item is our latency canary and a very common Saudi search.
   await warmOne("Toyota Camry","used");
   const rest = [
     ["Nissan Patrol","used"],["Toyota Land Cruiser","used"],["Jeep Wrangler","used"],
@@ -192,8 +209,7 @@ async function fastFromLocal(body = {}) {
   const cached = fastCache.get(key);
   if (cached && Date.now()-cached.at < FAST_CACHE_TTL) return {...cached.value,cached:true,indexSize:inventoryIndex.size};
   const listings = localResults(intent,condition);
-  if (!listings.length) enqueueWarm(normalizedQuery,condition);
-  else enqueueWarm(normalizedQuery,condition); // stale-while-revalidate without blocking the response
+  enqueueWarm(normalizedQuery,condition);
   const value = {query,condition,intent,listings,counts:counts(listings),answer:listings.length?`Found ${listings.length} verified cars instantly. Scanning the rest of the Saudi market…`:"Building this live inventory while the wider Saudi market search continues…",live:true,cached:false,partial:true,phase:"fast",provider:"Delilah v9 warm local inventory index",indexSize:inventoryIndex.size};
   fastCache.set(key,{at:Date.now(),value});
   return value;
@@ -233,7 +249,7 @@ app.post("/api/search",async(req,res,next)=>{
     return res.status(e.status||500).json({error:e.message||"Fast search failed",partial:true,phase:"fast",elapsedMs:Date.now()-started});
   }
 });
-app.get("/api/fast-index",(req,res)=>res.json({ok:true,size:inventoryIndex.size,warm:[...warmState.entries()].map(([key,v])=>({key,running:Boolean(v.running),at:v.at||null,count:v.count||0,error:v.error||null}))}));
+app.get("/api/fast-index",(req,res)=>res.json({ok:true,size:inventoryIndex.size,warm:[...warmState.entries()].map(([key,v])=>({key,running:Boolean(v.running),at:v.at||null,count:v.count||0,error:v.error||null,attempt:v.attempt||null}))}));
 app.get("/api/health",async(req,res)=>{
   try { const r=await fetch(`http://127.0.0.1:${v8Port}/api/health`); const d=await r.json(); res.json({...d,edge:"inventory-v9",fastLane:"warm-local-index",fastIndex:inventoryIndex.size}); }
   catch { res.status(503).json({ok:false,edge:"inventory-v9",fastIndex:inventoryIndex.size}); }
@@ -242,5 +258,6 @@ app.use(proxy);
 const server=app.listen(externalPort,()=>{
   console.log(`Delilah inventory-v9 running at http://localhost:${externalPort}`);
   setTimeout(()=>warmPopular().catch(e=>console.warn("v9 popular warm failed",e?.message||e)),1200);
+  setInterval(()=>warmOne("Toyota Camry","used").catch(()=>{}),60_000).unref();
 });
 server.keepAliveTimeout=65_000;

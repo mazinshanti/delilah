@@ -19,7 +19,24 @@ jobs:
       - run: node --check server-v5.js
       - run: node --check server-v6.js
       - run: node --check server-v7.js
+      - run: node --check server-v8.js
       - run: node tests/regression.mjs
+
+  fast-path-v8:
+    needs: regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Wait for Render auto-deploy
+        run: sleep 75
+      - name: Test first-results latency
+        env:
+          DELILAH_URL: https://delilah-pm5f.onrender.com
+        run: node tests/fast-path-v8.mjs
 
   user-path-v7:
     needs: regression

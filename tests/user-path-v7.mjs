@@ -10,19 +10,24 @@ console.log(`PASS Arabic 130 ألف: ${arabic.listings.length} cars, maxPrice=${
 
 const syarah=await search({query:'Toyota Camry 2025 Saudi',condition:'used',filters:{seller:'Syarah'}});
 if(!Array.isArray(syarah.listings)||syarah.listings.length<1)throw new Error(`Syarah returned no Camry cars; raw=${syarah.rawCandidates||0}`);
-let checked=0;
+let verified=0;
 for(const c of syarah.listings){
+ if(c.price!=null){
+   if(c.priceSource!=='syarah_cash_price'||c.priceVerified!==true)throw new Error(`Unverified Syarah number displayed as price: ${c.price}, ${c.url}`);
+   if(!Number.isFinite(Number(c.price))||Number(c.price)<20000)throw new Error(`Suspicious Syarah cash price: ${c.price}, ${c.url}`);
+   verified++;
+ }
  const text=`${c.title||''} ${c.snippet||''}`.replace(/\s+/g,' ');
  const m=text.match(/Cash\s*Price\s*(?:\(\s*Includes\s*VAT\s*\))?\s*([0-9][\d,]*)\s*SAR/i);
- if(!m)continue;
- const cash=Number(m[1].replace(/,/g,''));
- if(Number(c.price)!==cash)throw new Error(`Wrong Syarah price: displayed ${c.price}, cash price ${cash}, ${c.url}`);
- if(/(?:discount|save)\s*([0-9][\d,]*)\s*SAR/i.test(text)){
-   const disc=Number(text.match(/(?:discount|save)\s*([0-9][\d,]*)\s*SAR/i)[1].replace(/,/g,''));
-   if(Number(c.price)===disc)throw new Error(`Discount leaked as price: ${disc}, ${c.url}`);
+ if(m&&c.price!=null){
+   const cash=Number(m[1].replace(/,/g,''));
+   if(Number(c.price)!==cash)throw new Error(`Wrong Syarah price: displayed ${c.price}, card cash price ${cash}, ${c.url}`);
  }
- if(c.priceSource!=='syarah_cash_price')throw new Error(`Syarah price not marked as cash-price verified: ${c.url}`);
- checked++;
+ const dm=text.match(/(?:discount|save)\s*([0-9][\d,]*)\s*SAR/i);
+ if(dm&&c.price!=null){
+   const discount=Number(dm[1].replace(/,/g,''));
+   if(Number(c.price)===discount)throw new Error(`Discount leaked as car price: ${discount}, ${c.url}`);
+ }
 }
-if(checked<1)throw new Error('No Syarah Cash Price cards were verifiable');
-console.log(`PASS Syarah cash prices: ${checked}/${syarah.listings.length} checked`);
+if(verified<1)throw new Error(`No exact-page Syarah cash prices verified across ${syarah.listings.length} cars`);
+console.log(`PASS Syarah exact cash prices: ${verified}/${syarah.listings.length} verified; unknown prices hidden`);

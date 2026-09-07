@@ -1,122 +1,51 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Delilah — Find the right car</title>
-<meta name="theme-color" content="#0b0b0c">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Delilah — Find the right car</title><meta name="theme-color" content="#0b0b0c">
 <style>
-:root{
-  --bg:#0a0a0b;--panel:#111214;--panel2:#17181b;--card:#151619;--line:#292b30;
-  --text:#f5f3ee;--muted:#9d9fa7;--soft:#c9c7c0;--accent:#d6ff52;--accent2:#9fff7a;
-  --danger:#ff8f8f;--shadow:0 30px 90px rgba(0,0,0,.35)
-}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-x:hidden}
-button,input{font:inherit}.shell{max-width:1320px;margin:auto;padding:0 26px 90px}
-header{height:82px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.07)}
-.brand{display:flex;align-items:center;gap:12px}.mark{width:39px;height:39px;border-radius:12px;background:var(--accent);color:#0c0c0c;display:grid;place-items:center;font-weight:950;font-size:19px;box-shadow:0 0 0 1px rgba(255,255,255,.08) inset}.wordmark{font-size:24px;font-weight:900;letter-spacing:-.8px}.arabic{font-size:14px;color:var(--muted);margin-left:5px;font-weight:700}.status{display:flex;align-items:center;gap:8px;color:#cfcfcf;font-size:12px;padding:9px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.025)}.dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);box-shadow:0 0 14px var(--accent2)}
-.hero{padding:76px 0 42px;position:relative}.hero:before{content:"";position:absolute;width:600px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(214,255,82,.11),transparent 68%);top:-120px;right:-170px;pointer-events:none}.eyebrow{display:inline-flex;gap:8px;align-items:center;color:var(--accent);font-size:12px;font-weight:850;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:20px}.hero h1{font-size:clamp(54px,8vw,106px);line-height:.91;letter-spacing:-5px;max-width:1000px;margin:0;font-weight:950}.hero h1 span{color:var(--muted)}.hero p{font-size:18px;line-height:1.65;color:var(--muted);max-width:760px;margin:24px 0 0}
-.searchWrap{margin-top:36px;max-width:1020px}.search{display:grid;grid-template-columns:1fr auto;gap:10px;background:#111214;border:1px solid #34363b;border-radius:24px;padding:9px;box-shadow:var(--shadow);transition:.2s}.search:focus-within{border-color:#555941;box-shadow:0 0 0 4px rgba(214,255,82,.05),var(--shadow)}.search input{width:100%;background:transparent;border:0;outline:0;color:#fff;font-size:17px;padding:18px 16px}.search input::placeholder{color:#73767e}.search button{border:0;background:var(--accent);color:#0a0a0a;border-radius:16px;padding:0 24px;font-weight:900;cursor:pointer;min-height:56px;transition:.18s}.search button:hover{transform:translateY(-1px);filter:brightness(1.03)}
-.examples{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.examples button{border:1px solid #2a2c31;background:#111214;color:#aeb0b8;border-radius:999px;padding:8px 11px;font-size:12px;cursor:pointer}.examples button:hover{border-color:#484b51;color:#fff}
-.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:28px;max-width:760px}.metric{border:1px solid #23252a;border-radius:16px;background:rgba(255,255,255,.018);padding:14px}.metric b{display:block;font-size:16px}.metric span{font-size:11px;color:var(--muted)}
-.answer{display:none;margin-top:26px;max-width:1020px;border:1px solid #2d3034;background:linear-gradient(145deg,#141619,#101113);border-radius:22px;padding:20px 22px}.answer.show{display:block}.answerTop{display:flex;align-items:center;gap:9px;font-size:11px;color:var(--accent);font-weight:900;letter-spacing:1px;text-transform:uppercase}.spark{width:26px;height:26px;border-radius:9px;background:rgba(214,255,82,.12);display:grid;place-items:center}.answer p{font-size:16px;line-height:1.65;color:#e5e3dc;margin:12px 0 0}
-.resultsHead{display:flex;align-items:end;justify-content:space-between;gap:18px;margin:48px 0 16px}.resultsHead h2{font-size:30px;letter-spacing:-1px;margin:0}.resultsHead .sub{font-size:13px;color:var(--muted);margin-top:5px}.resultsTag{font-size:11px;color:#a6a8af;border:1px solid #2a2c31;border-radius:999px;padding:8px 10px}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.card{background:var(--card);border:1px solid #27292e;border-radius:22px;overflow:hidden;transition:.22s;position:relative}.card:hover{transform:translateY(-3px);border-color:#3b3e44;box-shadow:0 24px 60px rgba(0,0,0,.32)}
-.photo{height:230px;background:linear-gradient(145deg,#1d1f23,#101114);overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center}.photo:after{content:"";position:absolute;inset:auto 0 0;height:45%;background:linear-gradient(transparent,rgba(0,0,0,.52));pointer-events:none}.photo img{width:100%;height:100%;object-fit:cover;transition:.35s}.card:hover .photo img{transform:scale(1.025)}.fallback{font-size:70px;filter:grayscale(1);opacity:.65}.pill{position:absolute;z-index:2;top:12px;border-radius:999px;padding:7px 9px;font-size:10px;font-weight:850;backdrop-filter:blur(12px)}.score{left:12px;background:rgba(10,10,10,.78);color:#fff;border:1px solid rgba(255,255,255,.1)}.score b{color:var(--accent)}.source{right:12px;background:rgba(245,245,245,.9);color:#111}.body{padding:17px 17px 18px}.carTitle{font-size:19px;line-height:1.25;font-weight:900;letter-spacing:-.3px}.facts{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.fact{font-size:11px;color:#c3c5cb;padding:6px 8px;background:#1e2024;border-radius:9px}.priceRow{display:flex;justify-content:space-between;align-items:end;margin-top:17px;gap:10px}.priceLabel{font-size:10px;text-transform:uppercase;color:#747780;letter-spacing:.8px}.price{font-size:25px;font-weight:950;letter-spacing:-.7px;margin-top:2px}.currency{font-size:12px;color:#8d9098;font-weight:700;margin-left:3px}.liveBadge{font-size:10px;color:#9fc85a;background:#182014;border:1px solid #2d3a22;border-radius:999px;padding:6px 8px;white-space:nowrap}.snippet{font-size:12px;line-height:1.5;color:#898c94;margin-top:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:36px}.open{width:100%;margin-top:14px;padding:13px;border:1px solid #34373c;border-radius:13px;background:#1b1d21;color:#fff;font-weight:850;cursor:pointer;transition:.16s}.open:hover{background:var(--accent);color:#0b0b0b;border-color:var(--accent)}
-.empty{border:1px dashed #2f3136;border-radius:20px;padding:42px 20px;text-align:center;color:#777a82;background:rgba(255,255,255,.012)}.loading{opacity:.55;pointer-events:none}.err{color:var(--danger)}
-footer{margin-top:70px;padding-top:24px;border-top:1px solid #1f2125;color:#666a72;font-size:11px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
-@media(max-width:980px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero h1{letter-spacing:-4px}}
-@media(max-width:660px){.shell{padding:0 14px 70px}header{height:70px}.status{padding:8px 10px}.status span:last-child{display:none}.hero{padding:48px 0 28px}.hero h1{font-size:54px;letter-spacing:-3px}.hero p{font-size:15px}.search{grid-template-columns:1fr;border-radius:19px}.search button{min-height:50px}.metrics{grid-template-columns:1fr 1fr}.metric:nth-child(3){display:none}.resultsHead{align-items:start;flex-direction:column;margin-top:38px}.resultsTag{display:none}.grid{grid-template-columns:1fr}.photo{height:235px}}
+:root{--bg:#0a0a0b;--panel:#111214;--panel2:#17181b;--card:#151619;--line:#292b30;--text:#f5f3ee;--muted:#9d9fa7;--accent:#d6ff52;--accent2:#9fff7a;--danger:#ff8f8f;--shadow:0 30px 90px rgba(0,0,0,.35)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}button,input,select{font:inherit}.shell{max-width:1320px;margin:auto;padding:0 26px 90px}header{height:82px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.07)}.brand{display:flex;align-items:center;gap:12px}.mark{width:39px;height:39px;border-radius:12px;background:var(--accent);color:#0c0c0c;display:grid;place-items:center;font-weight:950}.wordmark{font-size:24px;font-weight:900}.arabic{font-size:14px;color:var(--muted);margin-left:5px}.status{display:flex;align-items:center;gap:8px;font-size:12px;padding:9px 12px;border:1px solid var(--line);border-radius:999px}.dot{width:7px;height:7px;border-radius:50%;background:var(--accent2)}
+.hero{padding:70px 0 36px}.eyebrow{color:var(--accent);font-size:12px;font-weight:850;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:20px}.hero h1{font-size:clamp(54px,8vw,106px);line-height:.91;letter-spacing:-5px;max-width:1000px;margin:0;font-weight:950}.hero h1 span{color:var(--muted)}.hero p{font-size:18px;line-height:1.65;color:var(--muted);max-width:760px;margin:24px 0 0}
+.controls{margin-top:34px;max-width:1050px}.topControls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.tabs{display:inline-flex;background:#111214;border:1px solid #303238;border-radius:16px;padding:4px}.tab{border:0;background:transparent;color:#8f929a;border-radius:12px;padding:11px 18px;font-weight:850;cursor:pointer}.tab.active{background:var(--accent);color:#0b0b0b}.filterBtn{border:1px solid #34363b;background:#151619;color:#e6e6e6;border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer}.filterBtn b{color:var(--accent)}
+.search{display:grid;grid-template-columns:1fr auto;gap:10px;background:#111214;border:1px solid #34363b;border-radius:24px;padding:9px;box-shadow:var(--shadow)}.search input{width:100%;background:transparent;border:0;outline:0;color:#fff;font-size:17px;padding:18px 16px}.search input::placeholder{color:#73767e}.search button{border:0;background:var(--accent);color:#0a0a0a;border-radius:16px;padding:0 24px;font-weight:900;cursor:pointer;min-height:56px}.examples{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.examples button{border:1px solid #2a2c31;background:#111214;color:#aeb0b8;border-radius:999px;padding:8px 11px;font-size:12px;cursor:pointer}
+.filters{display:none;margin-top:12px;background:#111214;border:1px solid #303238;border-radius:22px;padding:18px}.filters.show{display:block}.filterGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.field label{display:block;font-size:10px;color:#777a82;text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px}.field input,.field select{width:100%;background:#17181b;color:#fff;border:1px solid #303238;border-radius:11px;padding:11px;outline:0}.sourceRow{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.sourceChip{display:flex;align-items:center;gap:7px;border:1px solid #303238;background:#17181b;border-radius:999px;padding:8px 11px;font-size:12px;color:#bbb}.filterActions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}.filterActions button{border-radius:11px;padding:10px 14px;font-weight:800;cursor:pointer}.clear{background:transparent;color:#aaa;border:1px solid #303238}.apply{background:var(--accent);color:#0b0b0b;border:0}
+.answer{display:none;margin-top:26px;max-width:1050px;border:1px solid #2d3034;background:#131518;border-radius:22px;padding:20px}.answer.show{display:block}.answerTop{font-size:11px;color:var(--accent);font-weight:900;text-transform:uppercase}.answer p{font-size:16px;line-height:1.65;color:#e5e3dc;margin:10px 0 0}.resultsHead{display:flex;justify-content:space-between;align-items:end;margin:46px 0 16px}.resultsHead h2{font-size:30px;margin:0}.sub{font-size:13px;color:var(--muted);margin-top:5px}.modeLabel{font-size:11px;border:1px solid #2e3034;border-radius:999px;padding:8px 10px;color:#aaa}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:var(--card);border:1px solid #27292e;border-radius:22px;overflow:hidden}.photo{height:230px;background:#17181b;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}.photo img{width:100%;height:100%;object-fit:cover}.fallback{font-size:70px;opacity:.6}.pill{position:absolute;top:12px;border-radius:999px;padding:7px 9px;font-size:10px;font-weight:850}.score{left:12px;background:rgba(10,10,10,.82);color:#fff}.score b{color:var(--accent)}.source{right:12px;background:rgba(255,255,255,.92);color:#111}.condition{position:absolute;left:12px;bottom:12px;background:var(--accent);color:#0b0b0b;border-radius:999px;padding:7px 9px;font-size:10px;font-weight:900;text-transform:uppercase}.body{padding:17px}.carTitle{font-size:19px;font-weight:900}.facts{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.fact{font-size:11px;color:#c3c5cb;padding:6px 8px;background:#1e2024;border-radius:9px}.price{font-size:25px;font-weight:950;margin-top:16px}.currency{font-size:12px;color:#888}.snippet{font-size:12px;color:#898c94;line-height:1.5;margin-top:10px;min-height:36px}.open{width:100%;margin-top:14px;padding:13px;border:1px solid #34373c;border-radius:13px;background:#1b1d21;color:#fff;font-weight:850;cursor:pointer}.open:hover{background:var(--accent);color:#0b0b0b}.empty{border:1px dashed #2f3136;border-radius:20px;padding:42px 20px;text-align:center;color:#777a82}.loading{opacity:.55;pointer-events:none}.err{color:var(--danger)}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.filterGrid{grid-template-columns:repeat(2,1fr)}}@media(max-width:620px){.shell{padding:0 14px 70px}.hero h1{font-size:53px;letter-spacing:-3px}.search{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.filterGrid{grid-template-columns:1fr 1fr}.resultsHead{align-items:start;flex-direction:column;gap:10px}.modeLabel{display:none}}
 </style>
 </head>
-<body>
-<div class="shell">
-<header>
-  <div class="brand"><div class="mark">D</div><div class="wordmark">Delilah <span class="arabic">دليلة</span></div></div>
-  <div class="status"><span class="dot"></span><span>Saudi market search</span><span>LIVE</span></div>
-</header>
-
-<section class="hero">
-  <div class="eyebrow">✦ AI car discovery for Saudi Arabia</div>
-  <h1>Find the right car.<br><span>Not just a car.</span></h1>
-  <p>Tell Delilah exactly what you want — model, year, budget, mileage and city. We search current public listings, pull out the useful facts and rank the strongest matches.</p>
-
-  <div class="searchWrap">
-    <div id="searchBox" class="search">
-      <input id="q" autocomplete="off" placeholder="ابي رانجلر 2022 وفوق، بالرياض، تحت 130 ألف">
-      <button onclick="go()">Ask Delilah ✦</button>
-    </div>
-    <div class="examples">
-      <button onclick="preset('ابي رانجلر 2022 وفوق تحت 130000 بالرياض')">رانجلر تحت 130 ألف</button>
-      <button onclick="preset('ابي باترول 2022 وفوق تحت 170000 بالرياض')">باترول تحت 170 ألف</button>
-      <button onclick="preset('Land Cruiser 2022+, under 180000, Riyadh')">Land Cruiser under 180k</button>
-    </div>
-    <div class="metrics">
-      <div class="metric"><b>Live listings</b><span>Current indexed ads</span></div>
-      <div class="metric"><b>AI ranked</b><span>Best matches first</span></div>
-      <div class="metric"><b>Original source</b><span>No fake inventory</span></div>
-    </div>
-  </div>
-
-  <div id="answerBox" class="answer">
-    <div class="answerTop"><span class="spark">✦</span> Delilah's take</div>
-    <p id="answer"></p>
-  </div>
-</section>
-
-<section>
-  <div class="resultsHead">
-    <div><h2>Best matches</h2><div class="sub" id="sub">Search the Saudi market to see current listings.</div></div>
-    <div class="resultsTag">Ranked by relevance</div>
-  </div>
-  <div id="grid" class="grid"></div>
-  <div id="empty" class="empty">Tell Delilah what you want and the market results will appear here.</div>
-</section>
-
-<footer><span>Delilah searches publicly indexed listings and links back to the original source.</span><span>دليلة — Find the right one.</span></footer>
+<body><div class="shell">
+<header><div class="brand"><div class="mark">D</div><div class="wordmark">Delilah <span class="arabic">دليلة</span></div></div><div class="status"><span class="dot"></span>Saudi market LIVE</div></header>
+<section class="hero"><div class="eyebrow">✦ AI car discovery for Saudi Arabia</div><h1>Find the right car.<br><span>Not just a car.</span></h1><p>Search new or used inventory separately, then narrow the market by year, budget, mileage, city and marketplace.</p>
+<div class="controls">
+<div class="topControls"><div class="tabs"><button id="usedTab" class="tab active" onclick="setCondition('used')">Used cars</button><button id="newTab" class="tab" onclick="setCondition('new')">New cars</button></div><button class="filterBtn" onclick="toggleFilters()">Filters <b id="filterCount"></b></button></div>
+<div id="searchBox" class="search"><input id="q" autocomplete="off" placeholder="ابي رانجلر 2022 وفوق، بالرياض، تحت 130 ألف"><button onclick="go()">Ask Delilah ✦</button></div>
+<div class="examples"><button onclick="preset('ابي رانجلر 2022 وفوق تحت 130000 بالرياض')">رانجلر تحت 130 ألف</button><button onclick="preset('ابي باترول 2022 وفوق تحت 170000 بالرياض')">باترول تحت 170 ألف</button><button onclick="preset('Land Cruiser 2022+, under 180000, Riyadh')">Land Cruiser under 180k</button></div>
+<div id="filters" class="filters"><div class="filterGrid">
+<div class="field"><label>Min year</label><input id="minYear" type="number" placeholder="2022"></div>
+<div class="field"><label>Max year</label><input id="maxYear" type="number" placeholder="2026"></div>
+<div class="field"><label>Max price (SAR)</label><input id="maxPrice" type="number" placeholder="150000"></div>
+<div class="field"><label>Max mileage (km)</label><input id="maxMileage" type="number" placeholder="80000"></div>
+<div class="field"><label>City</label><select id="city"><option value="">Any city</option><option>Riyadh</option><option>Jeddah</option><option>Dammam</option></select></div>
+</div>
+<div class="sourceRow"><label class="sourceChip"><input class="src" type="checkbox" value="Haraj" checked>Haraj</label><label class="sourceChip"><input class="src" type="checkbox" value="Syarah" checked>Syarah</label><label class="sourceChip"><input class="src" type="checkbox" value="Motory" checked>Motory</label><label class="sourceChip"><input class="src" type="checkbox" value="OpenSooq" checked>OpenSooq</label></div>
+<div class="filterActions"><button class="clear" onclick="clearFilters()">Clear</button><button class="apply" onclick="applyFilters()">Apply filters</button></div></div>
+<div id="answerBox" class="answer"><div class="answerTop">✦ Delilah's take</div><p id="answer"></p></div>
+</div></section>
+<section><div class="resultsHead"><div><h2 id="resultsTitle">Best used matches</h2><div class="sub" id="sub">Search the Saudi market to see current listings.</div></div><div class="modeLabel" id="modeLabel">USED ONLY</div></div><div id="grid" class="grid"></div><div id="empty" class="empty">Tell Delilah what you want and the matching listings will appear here.</div></section>
 </div>
 <script>
-let listings=[];
+let listings=[],condition='used';
 const fmt=n=>n?Number(n).toLocaleString('en-US'):'—';
-function preset(v){q.value=v;go()}
 function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function render(){
-  grid.innerHTML='';
-  empty.style.display=listings.length?'none':'block';
-  listings.forEach(c=>{
-    const el=document.createElement('article');el.className='card';
-    const title=[c.year,c.brand,c.model,c.trim].filter(Boolean).join(' ')||c.title||'Car listing';
-    const image=c.image?`<img src="${esc(c.image)}" alt="${esc(title)}" onerror="this.outerHTML='<div class=&quot;fallback&quot;>🚘</div>'">`:`<div class="fallback">🚘</div>`;
-    const facts=[c.mileage?`${fmt(c.mileage)} km`:null,c.city||null].filter(Boolean).map(x=>`<span class="fact">${esc(x)}</span>`).join('');
-    const safeUrl=(c.url||'').replace(/'/g,"\\'");
-    el.innerHTML=`
-      <div class="photo">${image}<span class="pill score">Delilah <b>${c.score||'—'}</b>/100</span><span class="pill source">${esc(c.source||'Web')}</span></div>
-      <div class="body">
-        <div class="carTitle">${esc(title)}</div>
-        <div class="facts">${facts||'<span class="fact">Details limited</span>'}</div>
-        <div class="priceRow">
-          <div><div class="priceLabel">Asking price</div><div class="price">${c.price?fmt(c.price):'Not shown'}${c.price?'<span class="currency">SAR</span>':''}</div></div>
-          <span class="liveBadge">Live result</span>
-        </div>
-        <div class="snippet">${esc(c.snippet||c.title||'Open the original listing for full details.')}</div>
-        <button class="open" onclick="window.open('${safeUrl}','_blank','noopener')">View original listing ↗</button>
-      </div>`;
-    grid.appendChild(el);
-  });
-}
-async function go(){
-  const query=q.value.trim();if(!query)return;
-  searchBox.classList.add('loading');answerBox.classList.add('show');answer.textContent='Searching the Saudi market…';empty.textContent='Searching live listings…';
-  try{
-    const r=await fetch('/api/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query})});
-    const d=await r.json();if(!r.ok)throw new Error(d.error||'Search failed');
-    listings=d.listings||[];answer.textContent=d.answer||'Search complete.';sub.textContent=`${listings.length} current result${listings.length===1?'':'s'} ranked from live web search.`;empty.textContent=listings.length?'':'No clear matching listings found.';render();
-  }catch(e){
-    listings=[];render();answer.innerHTML=`<span class="err">${esc(e.message)}</span>`;sub.textContent='Live search needs attention.';empty.textContent='Search could not run. Check the server environment and try again.';
-  }finally{searchBox.classList.remove('loading')}
-}
-q.addEventListener('keydown',e=>{if(e.key==='Enter')go()});
-render();
-</script>
-</body>
-</html>
+function setCondition(v){condition=v;usedTab.classList.toggle('active',v==='used');newTab.classList.toggle('active',v==='new');resultsTitle.textContent=`Best ${v} matches`;modeLabel.textContent=v.toUpperCase()+' ONLY';if(q.value.trim())go()}
+function toggleFilters(){filters.classList.toggle('show')}
+function getFilters(){const sources=[...document.querySelectorAll('.src:checked')].map(x=>x.value);return{minYear:minYear.value,maxYear:maxYear.value,maxPrice:maxPrice.value,maxMileage:maxMileage.value,city:city.value,sources}}
+function updateFilterCount(){const f=getFilters();let n=['minYear','maxYear','maxPrice','maxMileage','city'].filter(k=>f[k]).length;if(f.sources.length<4)n++;filterCount.textContent=n?`(${n})`:''}
+function clearFilters(){minYear.value='';maxYear.value='';maxPrice.value='';maxMileage.value='';city.value='';document.querySelectorAll('.src').forEach(x=>x.checked=true);updateFilterCount()}
+function applyFilters(){updateFilterCount();filters.classList.remove('show');if(q.value.trim())go()}
+function preset(v){q.value=v;go()}
+function render(){grid.innerHTML='';empty.style.display=listings.length?'none':'block';listings.forEach(c=>{const el=document.createElement('article');el.className='card';const title=[c.year,c.brand,c.model,c.trim].filter(Boolean).join(' ')||c.title||'Car listing';const image=c.image?`<img src="${esc(c.image)}" alt="${esc(title)}" onerror="this.outerHTML='<div class=&quot;fallback&quot;>🚘</div>'">`:`<div class="fallback">🚘</div>`;const facts=[c.mileage?`${fmt(c.mileage)} km`:null,c.city||null].filter(Boolean).map(x=>`<span class="fact">${esc(x)}</span>`).join('');const safe=(c.url||'').replace(/'/g,"\\'");el.innerHTML=`<div class="photo">${image}<span class="pill score">Delilah <b>${c.score||'—'}</b>/100</span><span class="pill source">${esc(c.source||'Web')}</span><span class="condition">${esc(c.condition||condition)}</span></div><div class="body"><div class="carTitle">${esc(title)}</div><div class="facts">${facts||'<span class="fact">Details limited</span>'}</div><div class="price">${c.price?fmt(c.price):'Price not shown'} ${c.price?'<span class="currency">SAR</span>':''}</div><div class="snippet">${esc(c.snippet||c.title||'Open the original listing for full details.')}</div><button class="open" onclick="window.open('${safe}','_blank','noopener')">View original listing ↗</button></div>`;grid.appendChild(el)})}
+async function go(){const query=q.value.trim();if(!query)return;searchBox.classList.add('loading');answerBox.classList.add('show');answer.textContent=`Searching ${condition} cars only…`;empty.textContent='Searching live listings…';try{const r=await fetch('/api/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query,condition,filters:getFilters()})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Search failed');listings=d.listings||[];answer.textContent=d.answer||'Search complete.';sub.textContent=`${listings.length} ${condition} listing${listings.length===1?'':'s'} found. New and used are kept separate.`;empty.textContent=listings.length?'':`No clear ${condition} listings found.`;render()}catch(e){listings=[];render();answer.innerHTML=`<span class="err">${esc(e.message)}</span>`;sub.textContent='Search needs attention.';empty.textContent='Search could not run.'}finally{searchBox.classList.remove('loading')}}
+q.addEventListener('keydown',e=>{if(e.key==='Enter')go()});document.querySelectorAll('.src,input,select').forEach(x=>x.addEventListener('change',updateFilterCount));render();
+</script></body></html>

@@ -11,6 +11,7 @@ process.env.PORT = String(externalPort);
 
 const app = express();
 app.use(express.json({ limit: "1mb" }));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 function directSyarah(url) {
   try {
@@ -88,9 +89,9 @@ async function verifyFallbackPrices(listings = []) {
 function counts(listings = []) {
   return listings.reduce((a, c) => ((a[c.source] = (a[c.source] || 0) + 1), a), {});
 }
-async function fastFallback(body) {
+async function fastFallbackOnce(body) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 3500);
+  const timer = setTimeout(() => controller.abort(), 2500);
   try {
     const r = await fetch(`http://127.0.0.1:${v9Port}/api/search`, {
       method: "POST",
@@ -103,6 +104,17 @@ async function fastFallback(body) {
     return Array.isArray(d.listings) ? d.listings : [];
   } catch { return []; }
   finally { clearTimeout(timer); }
+}
+async function fastFallback(body) {
+  // The first miss tells v9 to start warming this exact query. Poll briefly so
+  // an upstream zero-result/transient failure can recover from the local index
+  // instead of telling the user there are no cars.
+  for (let attempt = 0; attempt < 7; attempt++) {
+    const listings = await fastFallbackOnce(body);
+    if (listings.length) return listings;
+    if (attempt < 6) await sleep(1400);
+  }
+  return [];
 }
 async function repairEmptySearch(data, body) {
   if (!data || !Array.isArray(data.listings) || data.listings.length) return data;

@@ -12,9 +12,9 @@ const cases=[
   {q:'Kia Sportage 2026 Jeddah',condition:'new'},
   {q:'Hyundai Tucson 2025 Jeddah',condition:'new'},
   {q:'Chevrolet Tahoe 2026 Riyadh',condition:'new'},
-  {q:'Kia Pegas 2023 Saudi',condition:'used',filters:{seller:'Syarah'}},
-  {q:'Jetour X70 2026 Riyadh',condition:'new',filters:{seller:'Motory'}},
-  {q:'Hyundai Sonata 2026 Saudi',condition:'new',filters:{seller:'Saleh Cars'}}
+  {q:'Kia Pegas 2023 Saudi',condition:'used',filters:{seller:'Syarah'},min:1},
+  {q:'Jetour X70 2026 Riyadh',condition:'new',filters:{seller:'Motory'},min:1},
+  {q:'Hyundai Sonata 2026 Saudi',condition:'new',filters:{seller:'Saleh Cars'},min:1}
 ];
 const timeout=ms=>AbortSignal.timeout(ms);
 let pass=0,fail=0,totalCars=0,totalImages=0,relayChecks=0,relayPass=0;
@@ -22,7 +22,7 @@ const health=await fetch(`${base}/api/health`,{signal:timeout(20000)});
 if(!health.ok)throw new Error(`health ${health.status}`);
 const h=await health.json();
 if(!h.ok||!h.search)throw new Error(`health config invalid: ${JSON.stringify(h)}`);
-if(h.logic!=='inventory-v3')throw new Error(`expected inventory-v3, got ${h.logic}`);
+if(!String(h.logic||'').startsWith('inventory-v3'))throw new Error(`expected inventory-v3.x, got ${h.logic}`);
 console.log(`health ok; ${h.sources} sources; ${h.logic}; ${h.images}`);
 
 for(const t of cases){

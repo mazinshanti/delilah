@@ -1,0 +1,36 @@
+name: Delilah QA
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node --check server.js
+      - run: node tests/regression.mjs
+
+  live-smoke:
+    needs: regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Wait for Render auto-deploy
+        run: sleep 75
+      - name: Run controlled live-search smoke tests
+        env:
+          DELILAH_URL: https://delilah-pm5f.onrender.com
+        run: node tests/live-smoke.mjs

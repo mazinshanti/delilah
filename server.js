@@ -48,16 +48,37 @@ async function parseIntent(query){
   try{return JSON.parse(raw)}catch{return basicIntent(query)}
 }
 
-function makeSearchQuery(query){
-  const domains=["haraj.com.sa","ksa.motory.com","syarah.com","opensooq.com"];
-  const sites=domains.map(d=>`site:${d}`).join(" OR ");
-  return `${query} (${sites})`;
-}
+const MARKETPLACES=[
+  {name:"Haraj",host:"haraj.com.sa",query:q=>`${q} site:haraj.com.sa`,isListing:url=>{
+    try{return /^\/\d{8,}(?:\/|$)/.test(new URL(url).pathname)}catch{return false}
+  }},
+  {name:"Syarah",host:"syarah.com",query:q=>`${q} site:syarah.com`,isListing:url=>{
+    try{
+      const p=new URL(url).pathname.toLowerCase();
+      if(p==="/"||/\/(search|used-cars|new-cars|cars)\/?$/.test(p)) return false;
+      return p.split("/").filter(Boolean).length>=2;
+    }catch{return false}
+  }},
+  {name:"Motory",host:"ksa.motory.com",query:q=>`${q} site:ksa.motory.com`,isListing:url=>{
+    try{
+      const p=new URL(url).pathname.toLowerCase();
+      if(p==="/"||/\/(cars-for-sale|used-cars|new-cars|search)\/?$/.test(p)) return false;
+      return p.split("/").filter(Boolean).length>=3;
+    }catch{return false}
+  }},
+  {name:"OpenSooq",host:"opensooq.com",query:q=>`${q} site:opensooq.com Saudi cars`,isListing:url=>{
+    try{
+      const p=new URL(url).pathname.toLowerCase();
+      if(p==="/"||/\/(cars|cars-for-sale|vehicles)\/?$/.test(p)) return false;
+      return p.split("/").filter(Boolean).length>=3;
+    }catch{return false}
+  }}
+];
 
-async function braveWebSearch(query,count=20){
+async function braveSearchRaw(searchQuery,count=12){
   if(!braveKey) throw new Error("BRAVE_SEARCH_API_KEY is missing");
   const u=new URL("https://api.search.brave.com/res/v1/web/search");
-  u.searchParams.set("q",makeSearchQuery(query));
+  u.searchParams.set("q",searchQuery);
   u.searchParams.set("country","SA");
   u.searchParams.set("count",String(Math.min(count,20)));
   u.searchParams.set("text_decorations","false");
@@ -65,6 +86,31 @@ async function braveWebSearch(query,count=20){
   if(!r.ok) throw new Error(`Search provider error ${r.status}`);
   const d=await r.json();
   return d.web?.results || [];
+}
+
+async function searchMarketplace(market,query){
+  const results=await braveSearchRaw(market.query(query),12);
+  const hostMatches=results.filter(r=>{
+    try{return new URL(r.url).hostname.toLowerCase().includes(market.host.replace(/^www\./,""))}catch{return false}
+  });
+  const listingMatches=hostMatches.filter(r=>market.isListing(r.url));
+  const selected=listingMatches.length?listingMatches:hostMatches.filter(r=>{
+    const t=`${r.title||""} ${r.description||""}`.toLowerCase();
+    return /20\d{2}|ريال|sar|km|كيلو|ممشى/.test(t);
+  });
+  return selected.slice(0,8).map(r=>({...r,marketplace:market.name}));
+}
+
+async function braveMarketplaceSearch(query){
+  const settled=await Promise.allSettled(MARKETPLACES.map(m=>searchMarketplace(m,query)));
+  const combined=[];
+  for(const s of settled) if(s.status==="fulfilled") combined.push(...s.value);
+  const seen=new Set();
+  return combined.filter(r=>{
+    const key=(r.url||"").replace(/\/$/,"");
+    if(!key||seen.has(key)) return false;
+    seen.add(key);return true;
+  }).slice(0,28);
 }
 
 function domainName(url=""){
@@ -94,16 +140,16 @@ function roughExtract(title="",snippet="",url="",image=null){
 
 async function aiExtract(results){
   if(!openai) return results.map(x=>roughExtract(x.title,x.description,x.url,sourceImage(x)));
-  const compact=results.slice(0,20).map((r,idx)=>({idx,title:r.title,url:r.url,snippet:r.description}));
+  const compact=results.slice(0,28).map((r,idx)=>({idx,title:r.title,url:r.url,snippet:r.description,marketplace:r.marketplace}));
   const rsp=await openai.responses.create({
     model,
-    input:`You are Delilah, a Saudi automotive search-result parser.\nFrom these search results, identify actual individual car listings only.\nReturn a JSON array. For each result use:\nidx, brand, model, trim, year, price, mileage, city, source, confidence.\nRules:\n- Use null for missing facts.\n- Do not invent facts.\n- Keep only results that look like a specific car listing, not category/search pages or general articles.\n- price/mileage/year must be numeric.\n- Extract price only when explicitly present in the indexed title or snippet.\n- confidence is 0-100 based on how clearly this is a specific listing.\nResults: ${JSON.stringify(compact)}`
+    input:`You are Delilah, a Saudi automotive search-result parser.\nFrom these marketplace-specific search results, identify actual individual car listings only.\nReturn a JSON array. For each result use:\nidx, brand, model, trim, year, price, mileage, city, source, confidence.\nRules:\n- Use null for missing facts.\n- Do not invent facts.\n- Keep only results that look like a specific individual vehicle listing, not category/search pages or general articles.\n- price/mileage/year must be numeric.\n- Extract price only when explicitly present in the indexed title or snippet.\n- confidence is 0-100 based on how clearly this is a specific listing.\nResults: ${JSON.stringify(compact)}`
   });
   const raw=rsp.output_text.trim().replace(/^```json\s*/i,"").replace(/```$/,"").trim();
   let arr=[]; try{arr=JSON.parse(raw)}catch{return results.map(x=>roughExtract(x.title,x.description,x.url,sourceImage(x)))}
   return arr.map(x=>{
     const src=results[x.idx]||{};
-    return {...x,title:src.title||"",snippet:src.description||"",url:src.url||"",source:x.source||domainName(src.url||""),image:sourceImage(src),imageVerified:false,priceVerified:false};
+    return {...x,title:src.title||"",snippet:src.description||"",url:src.url||"",source:x.source||src.marketplace||domainName(src.url||""),image:sourceImage(src),imageVerified:false,priceVerified:false};
   });
 }
 
@@ -172,13 +218,8 @@ async function fetchListingMetadata(url){
     if(!type.includes("text/html")) return null;
     const html=(await r.text()).slice(0,900000);
     const json=jsonLdMetadata(html,url);
-    const image=absoluteUrl(
-      metaValue(html,"og:image")||metaValue(html,"twitter:image")||metaValue(html,"image")||json.image,
-      url
-    );
-    const price=numericPrice(
-      metaValue(html,"product:price:amount")||metaValue(html,"og:price:amount")||metaValue(html,"price")||json.price
-    );
+    const image=absoluteUrl(metaValue(html,"og:image")||metaValue(html,"twitter:image")||metaValue(html,"image")||json.image,url);
+    const price=numericPrice(metaValue(html,"product:price:amount")||metaValue(html,"og:price:amount")||metaValue(html,"price")||json.price);
     return {image,price};
   }catch{return null}
   finally{clearTimeout(timer)}
@@ -188,14 +229,7 @@ async function enrichFromOriginalPages(cars){
   return Promise.all(cars.map(async c=>{
     const meta=await fetchListingMetadata(c.url);
     if(!meta) return c;
-    return {
-      ...c,
-      image:meta.image||c.image||null,
-      price:meta.price||c.price||null,
-      imageVerified:Boolean(meta.image),
-      priceVerified:Boolean(meta.price),
-      sourceMetadata:Boolean(meta.image||meta.price)
-    };
+    return {...c,image:meta.image||c.image||null,price:meta.price||c.price||null,imageVerified:Boolean(meta.image),priceVerified:Boolean(meta.price),sourceMetadata:Boolean(meta.image||meta.price)};
   }));
 }
 
@@ -240,19 +274,20 @@ app.post("/api/search",async(req,res)=>{
     const query=String(req.body?.query||"").trim();
     if(!query) return res.status(400).json({error:"Query is required"});
     const intent=await parseIntent(query);
-    const raw=await braveWebSearch(query,20);
+    const raw=await braveMarketplaceSearch(query);
     let listings=await aiExtract(raw);
-    listings=listings.filter(c=>c.url && (c.confidence==null || c.confidence>=45)).slice(0,10);
+    listings=listings.filter(c=>c.url && (c.confidence==null || c.confidence>=40)).slice(0,16);
     listings=await enrichFromOriginalPages(listings);
     listings=listings.filter(c=>satisfies(c,intent));
-    listings=listings.map(c=>({...c,score:intentMatchScore(c,intent)})).sort((a,b)=>b.score-a.score).slice(0,10);
+    listings=listings.map(c=>({...c,score:intentMatchScore(c,intent)})).sort((a,b)=>b.score-a.score).slice(0,12);
     const answer=await summary(query,listings);
-    res.json({query,intent,answer,listings,live:true,provider:"Brave Search + original public listing metadata"});
+    const counts=Object.fromEntries(MARKETPLACES.map(m=>[m.name,listings.filter(x=>x.source===m.name).length]));
+    res.json({query,intent,answer,listings,live:true,counts,provider:"Marketplace-specific Brave search + original public listing metadata"});
   }catch(e){
     console.error(e);
     res.status(500).json({error:e.message||"Live search failed"});
   }
 });
 
-app.get("/api/health",(req,res)=>res.json({ok:true,search:Boolean(braveKey),ai:Boolean(openai),model:openai?model:null}));
+app.get("/api/health",(req,res)=>res.json({ok:true,search:Boolean(braveKey),ai:Boolean(openai),model:openai?model:null,sources:MARKETPLACES.map(x=>x.name)}));
 app.listen(port,()=>console.log(`Delilah Live Search running at http://localhost:${port}`));

@@ -34,3 +34,18 @@ jobs:
         env:
           DELILAH_URL: https://delilah-pm5f.onrender.com
         run: node tests/live-smoke.mjs
+
+  inventory-scale:
+    needs: [regression, live-smoke]
+    if: always() && needs.regression.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run 200-car unique inventory scale test
+        env:
+          DELILAH_URL: https://delilah-pm5f.onrender.com
+        run: node tests/inventory-scale.mjs

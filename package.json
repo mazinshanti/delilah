@@ -1,12 +1,12 @@
 {
   "name": "dalelah-live-search",
-  "version": "1.4.0-beta.1",
+  "version": "1.4.1-ai-beta",
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node boot-v14-qa.js",
-    "dev": "node --watch server-v1.4.js",
-    "check": "node --check server-v1.4.js && node --check boot-v14-qa.js && node --check public/v14-progress.js"
+    "start": "node server-v1.4-ai.js",
+    "dev": "node --watch server-v1.4-ai.js",
+    "check": "node --check server-v1.4.js && node --check server-v1.4-ai.js && node --check public/v14-progress.js"
   },
   "dependencies": {
     "dotenv": "^16.4.7",

@@ -7,6 +7,7 @@ const INDEX_CACHE_TTL = 10 * 60_000;
 const EXTRA_TTL = 15 * 60_000;
 const FETCH_TIMEOUT = 6500;
 const MAX_EXTRA_RESULTS = 160;
+const INDEX_PAGES = 2;
 
 process.env.PORT = String(v20Port);
 await import("./server-v20.js");
@@ -158,14 +159,15 @@ function plansFor(body = {}) {
   ];
   return (condition==="new"?allNew:allUsed).filter(p => (!f.seller || f.seller===p.name || f.seller===p.seller) && (!f.sourceType || f.sourceType===p.type));
 }
-async function brave(query) {
-  if (!braveKey) return [];
-  const hit=indexCache.get(query); if(hit&&Date.now()-hit.at<INDEX_CACHE_TTL)return hit.results;
+async function brave(query,offset=0) {
+  if (!braveKey) return {results:[],more:false};
+  const cacheKey=`${offset}:${query}`;
+  const hit=indexCache.get(cacheKey); if(hit&&Date.now()-hit.at<INDEX_CACHE_TTL)return hit.page;
   const task=async()=>{
     const wait=Math.max(0,1150-(Date.now()-braveLastAt)); if(wait)await sleep(wait); braveLastAt=Date.now();
-    const u=new URL("https://api.search.brave.com/res/v1/web/search"); u.searchParams.set("q",query); u.searchParams.set("country","SA"); u.searchParams.set("count","20");
+    const u=new URL("https://api.search.brave.com/res/v1/web/search"); u.searchParams.set("q",query); u.searchParams.set("country","SA"); u.searchParams.set("count","20"); u.searchParams.set("offset",String(offset));
     const r=await fetch(u,{headers:{Accept:"application/json","X-Subscription-Token":braveKey},signal:AbortSignal.timeout(10000)}); if(!r.ok)throw new Error(`Brave HTTP ${r.status}`);
-    const d=await r.json(); const results=d.web?.results||[]; indexCache.set(query,{at:Date.now(),results}); return results;
+    const d=await r.json(); const page={results:d.web?.results||[],more:Boolean(d.query?.more_results_available)}; indexCache.set(cacheKey,{at:Date.now(),page}); return page;
   };
   const p=braveTail.then(task,task); braveTail=p.catch(()=>{}); return p;
 }
@@ -199,17 +201,24 @@ async function scanIndexed(body, job) {
   const plans=plansFor(body),f=requestFilters(body),condition=body.condition==="new"?"new":"used";
   for(const plan of plans) {
     try {
-      const rs=await brave(plan.q),cards=[];
-      for(const r of rs) { const c=cardFromIndex(plan,r,body); if(c)cards.push(c); }
-      const selected=cards.slice(0,20);
+      const raw=[],seen=new Set();let pages=0;
+      for(let offset=0;offset<INDEX_PAGES;offset++){
+        const page=await brave(plan.q,offset);pages++;
+        for(const r of page.results){const key=canonical(r.url||'');if(!key||seen.has(key))continue;seen.add(key);raw.push(r)}
+        if(!page.more)break;
+      }
+      const cards=[];
+      for(const r of raw) { const c=cardFromIndex(plan,r,body); if(c)cards.push(c); }
+      const selected=cards.slice(0,40);
       let enriched=selected;
       if(["Syarah","ArabWheels"].includes(plan.name)) {
-        const first=selected.slice(0,5),rest=selected.slice(5),out=[]; let next=0;
+        const first=selected.slice(0,8),rest=selected.slice(8),out=[]; let next=0;
         async function worker(){for(;;){const i=next++;if(i>=first.length)return;out[i]=await enrichExact(first[i]);}}
-        await Promise.all(Array.from({length:Math.min(2,first.length||1)},worker)); enriched=[...out.filter(Boolean),...rest];
+        await Promise.all(Array.from({length:Math.min(3,first.length||1)},worker)); enriched=[...out.filter(Boolean),...rest];
       }
       for(const c of enriched) if(matches(c,f,condition))job.listings.set(canonical(c.url),c);
-      job.diagnostics.push({source:plan.name,indexedReturned:rs.length,exactKept:enriched.length});
+      job.diagnostics.push({source:plan.name,indexedReturned:raw.length,pages,exactKept:enriched.length});
+      if(job.listings.size>=MAX_EXTRA_RESULTS)break;
     } catch(e) { job.diagnostics.push({source:plan.name,error:e?.message||String(e)}); }
   }
 }
@@ -245,7 +254,7 @@ app.get("/api/search/progress/:id",async(req,res)=>{
   } catch(e) { return res.status(502).json({error:e?.message||"Search progress unavailable"}); }
 });
 app.get("/api/health",async(req,res)=>{
-  try { const {r,d}=await upstreamJson("/api/health",{signal:AbortSignal.timeout(5000)}); if(!r.ok)throw new Error("upstream health"); return res.json({...d,edge:"inventory-v21",logic:"progressive-market-scan-v21",indexedExactFallback:true,frontendProgressPolling:true,accessibleSourceScan:true}); }
+  try { const {r,d}=await upstreamJson("/api/health",{signal:AbortSignal.timeout(5000)}); if(!r.ok)throw new Error("upstream health"); return res.json({...d,edge:"inventory-v21",logic:"progressive-market-scan-v21",indexedExactFallback:true,frontendProgressPolling:true,accessibleSourceScan:true,indexPages:INDEX_PAGES}); }
   catch { return res.status(503).json({ok:false,edge:"inventory-v21"}); }
 });
 app.get("/api/source-plugins",async(req,res)=>{

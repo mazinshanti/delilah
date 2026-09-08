@@ -44,29 +44,32 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Wait for current Dalelah 1.5 build to reach production
+      - name: Wait for exact Dalelah 1.5 commit to reach production
         env:
           DELILAH_URL: https://delilah-pm5f.onrender.com
+          EXPECTED_GIT_COMMIT: ${{ github.sha }}
         run: |
           node --input-type=module <<'NODE'
           const base=process.env.DELILAH_URL.replace(/\/$/,'');
+          const expected=String(process.env.EXPECTED_GIT_COMMIT||'').trim();
           const sleep=ms=>new Promise(r=>setTimeout(r,ms));
           let last='';
           for(let i=0;i<100;i++){
             try{
               const [home,health]=await Promise.all([
-                fetch(`${base}/`,{signal:AbortSignal.timeout(7000)}),
-                fetch(`${base}/api/health`,{signal:AbortSignal.timeout(7000)})
+                fetch(`${base}/`,{signal:AbortSignal.timeout(7000),headers:{'cache-control':'no-cache'}}),
+                fetch(`${base}/api/health`,{signal:AbortSignal.timeout(7000),headers:{'cache-control':'no-cache'}})
               ]);
               const html=await home.text();
               const h=await health.json().catch(()=>({}));
               const currentUi=html.includes('async function pollSearch')&&html.includes("seller:$('source').value");
-              last=JSON.stringify({home:home.status,health:health.status,edge:h.edge||null,currentUi});
-              if(home.ok&&health.ok&&currentUi){console.log('PASS Dalelah 1.5 build detected',last);process.exit(0)}
+              const exactCommit=Boolean(expected)&&String(h.renderGitCommit||'')===expected;
+              last=JSON.stringify({home:home.status,health:health.status,edge:h.edge||null,productVersion:h.productVersion||null,renderGitCommit:h.renderGitCommit||null,expected,currentUi,exactCommit});
+              if(home.ok&&health.ok&&currentUi&&h.productVersion==='1.5'&&exactCommit){console.log('PASS exact Dalelah 1.5 commit detected',last);process.exit(0)}
             }catch(e){last=e.message}
             await sleep(5000);
           }
-          throw new Error(`Dalelah 1.5 production build not observed: ${last}`);
+          throw new Error(`Exact Dalelah 1.5 production commit not observed: ${last}`);
           NODE
 
   production-qa:
@@ -75,6 +78,7 @@ jobs:
     timeout-minutes: 20
     env:
       DELILAH_URL: https://delilah-pm5f.onrender.com
+      EXPECTED_GIT_COMMIT: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

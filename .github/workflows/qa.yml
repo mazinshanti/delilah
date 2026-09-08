@@ -77,18 +77,46 @@ jobs:
         with:
           node-version: 22
       - name: Probe public seller sources
+        id: probe
+        continue-on-error: true
         run: node tests/source-probe-v15.mjs
       - name: Test fast first results
+        id: fast
+        continue-on-error: true
         run: node tests/fast-path-v8.mjs
       - name: Test Arabic parsing and Syarah cash prices
+        id: userpath
+        continue-on-error: true
         run: node tests/user-path-v7.mjs
       - name: Test deterministic seller plugins
+        id: plugins
+        continue-on-error: true
         run: node tests/seller-plugins-v16.mjs
       - name: Test progressive market scan
+        id: progressive
+        continue-on-error: true
         run: node tests/progressive-market-v20.mjs
       - name: Test Genesis certified inventory
+        id: genesis
+        continue-on-error: true
         run: node tests/genesis-wallan-v17.mjs
       - name: Test 200-car inventory scale
+        id: scale
+        continue-on-error: true
         run: node tests/inventory-scale.mjs
       - name: Run fast live smoke matrix
+        id: smoke
+        continue-on-error: true
         run: node tests/live-smoke.mjs
+      - name: Fail if production QA has failures
+        if: always()
+        run: |
+          echo "probe=${{ steps.probe.outcome }} fast=${{ steps.fast.outcome }} userpath=${{ steps.userpath.outcome }} plugins=${{ steps.plugins.outcome }} progressive=${{ steps.progressive.outcome }} genesis=${{ steps.genesis.outcome }} scale=${{ steps.scale.outcome }} smoke=${{ steps.smoke.outcome }}"
+          test "${{ steps.probe.outcome }}" = success
+          test "${{ steps.fast.outcome }}" = success
+          test "${{ steps.userpath.outcome }}" = success
+          test "${{ steps.plugins.outcome }}" = success
+          test "${{ steps.progressive.outcome }}" = success
+          test "${{ steps.genesis.outcome }}" = success
+          test "${{ steps.scale.outcome }}" = success
+          test "${{ steps.smoke.outcome }}" = success

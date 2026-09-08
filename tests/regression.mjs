@@ -74,8 +74,15 @@ assert.match(marketLayer,/async function scanMotory\(/,'Dalelah 1.5 must scan Mo
 assert.match(marketLayer,/motory_source_native_catalog/,'Motory native listings must be tagged with source-native discovery');checks++;
 assert.match(marketLayer,/bodyFromSearchId\(/,'Motory overlay must survive process restarts by reconstructing search bodies');checks++;
 
+const harajLayer=await readFile(new URL('../server-v15-haraj.js',import.meta.url),'utf8');
+assert.match(harajLayer,/function directHaraj\(/,'Dalelah 1.5 must validate direct Haraj ad URLs');checks++;
+assert.match(harajLayer,/async function scanHaraj\(/,'Dalelah 1.5 must scan the native Haraj search page');checks++;
+assert.match(harajLayer,/haraj_source_native_search/,'Haraj native listings must be tagged as source-native discovery');checks++;
+assert.match(harajLayer,/const PARTS_RE=/,'Haraj native retrieval must filter obvious parts/accessory ads');checks++;
+assert.match(harajLayer,/bodyFromSearchId\(/,'Haraj overlay must survive process restarts by reconstructing search bodies');checks++;
+
 const pkg=JSON.parse(await readFile(new URL('../package.json',import.meta.url),'utf8'));
 assert.equal(pkg.version,'1.5.0');checks++;
-assert.equal(pkg.scripts.start,'node server-v15-market.js');checks++;
+assert.equal(pkg.scripts.start,'node server-v15-haraj.js');checks++;
 
 console.log(`PASS: ${checks.toLocaleString()} regression assertions`);

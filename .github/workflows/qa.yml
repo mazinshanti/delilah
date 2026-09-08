@@ -30,7 +30,20 @@ jobs:
       - run: node --check server-v12.js
       - run: node --check server-v13.js
       - run: node --check server-v14.js
+      - run: node --check server-v15.js
       - run: node tests/regression.mjs
+
+  source-probe-v15:
+    needs: regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Probe seller source public HTML
+        run: node tests/source-probe-v15.mjs
 
   fast-path-v9:
     needs: regression

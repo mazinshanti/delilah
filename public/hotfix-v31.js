@@ -1,5 +1,5 @@
 (()=>{
-  const ready=()=>window.dom&&dom.searchBox&&document.getElementById('smartHint28');
+  const ready=()=>typeof dom!=='undefined'&&dom?.searchBox&&document.getElementById('smartHint28');
   function init(){
     if(!ready())return setTimeout(init,120);
     if(document.getElementById('browseCompact31'))return;
@@ -50,7 +50,7 @@
       go();
     }
     document.getElementById('browseGo31').onclick=run;
-    document.getElementById('browseReset31').onclick=()=>{cat.value='';brand.value='';source.value='';const hidden=document.getElementById('sourceQuickRail28');const all=hidden?.querySelector('[data-source=""]');if(all)all.click();else{dom.q.value='';clearFilters?.()}};
+    document.getElementById('browseReset31').onclick=()=>{cat.value='';brand.value='';source.value='';const hidden=document.getElementById('sourceQuickRail28');const all=hidden?.querySelector('[data-source=""]');if(all)all.click();else{dom.q.value='';if(typeof clearFilters==='function')clearFilters()}};
     [cat,brand,source].forEach(el=>el.addEventListener('keydown',e=>{if(e.key==='Enter')run()}));
   }
   init();

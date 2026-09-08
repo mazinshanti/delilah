@@ -63,9 +63,28 @@ function counts(xs){return xs.reduce((a,c)=>(a[c.source]=(a[c.source]||0)+1,a),{
 function hasExplicitYearFilters(body={}){return Boolean(body?.filters?.minYear||body?.filters?.maxYear);}
 function exactListings(xs,y){return enforceExactYear(xs,y,{requireEvidence:true});}
 function exactBodyFor(state={}){return state.exactYear?{...state.body,filters:{...(state.body?.filters||{}),minYear:state.exactYear,maxYear:state.exactYear}}:state.body||{};}
-function edgeId(){return `edge-${globalThis.crypto.randomUUID().replace(/-/g,'').slice(0,20)}`;}
 function filtered(xs=[],state={}){const cleanList=(xs||[]).map(clean);return state.exactYear?exactListings(cleanList,state.exactYear):cleanList;}
 function combinedListings(base=[],state={}){let xs=merge([filtered(base,state),state.edgeListings||[]]);if(state.exactYear)xs=exactListings(xs,state.exactYear);return xs.slice(0,500);}
+function safeFilters(raw={}){
+  const out={};
+  for(const k of['minYear','maxYear','maxPrice','maxMileage','city','seller','sourceType','sort'])if(raw&&raw[k]!=null&&String(raw[k]).length<=120)out[k]=raw[k];
+  return out;
+}
+function makeSearchId(state={}){
+  const payload={v:1,q:String(state.body?.query||'').slice(0,300),c:state.body?.condition==='new'?'new':'used',f:safeFilters(state.body?.filters||{}),y:state.exactYear||null,u:state.internalSearchId||null};
+  return `d15.${Buffer.from(JSON.stringify(payload),'utf8').toString('base64url')}`;
+}
+function stateFromSearchId(externalId=''){
+  if(!String(externalId).startsWith('d15.')||String(externalId).length>1800)return null;
+  try{
+    const raw=Buffer.from(String(externalId).slice(4),'base64url').toString('utf8');
+    const p=JSON.parse(raw);
+    if(p?.v!==1||typeof p.q!=='string'||p.q.length>300||!['used','new'].includes(p.c))return null;
+    const body={query:p.q,condition:p.c,filters:safeFilters(p.f||{})};
+    const y=Number(p.y)||null;
+    return{body,exactYear:y,internalSearchId:p.u?String(p.u):null,externalId:String(externalId),initialListings:[],edgeListings:[],fanoutQueries:fanoutQueries(p.q),edgeRecoveryComplete:false,edgeRecoveryStarted:false,exactRecovery:false,at:Date.now(),recoveries:0,reconstructed:true};
+  }catch{return null;}
+}
 function decorate(d={},state={},extra={}){
   const base=Array.isArray(d.listings)?d.listings:[];
   const listings=combinedListings(base,state);
@@ -84,10 +103,13 @@ function decorate(d={},state={},extra={}){
     exactYearFiltered:state.exactYear?Math.max(0,base.length-filtered(base,state).length):0,
     recoveryFanout:{active:Boolean(state.fanoutQueries?.length),queries:state.fanoutQueries?.length||0,total:listings.length,pending:state.edgeRecoveryComplete===false},
     searchRecoveryCount:state.recoveries||0,
+    searchStateReconstructed:Boolean(state.reconstructed),
     product:{...(d.product||{}),recovery:'v25-progressive'}
   };
 }
 async function runEdgeRecovery(state){
+  if(state.edgeRecoveryStarted)return;
+  state.edgeRecoveryStarted=true;
   state.edgeRecoveryComplete=false;
   state.at=Date.now();
   try{
@@ -120,8 +142,24 @@ async function runEdgeRecovery(state){
     state.edgeListings=edge.slice(0,500);
   }finally{
     state.edgeRecoveryComplete=true;
+    state.edgeRecoveryStarted=false;
     state.at=Date.now();
   }
+}
+async function restartState(state){
+  const restarted=await upstreamSearch(exactBodyFor(state));
+  if(!restarted.r.ok)return restarted;
+  state.recoveries=(state.recoveries||0)+1;
+  state.at=Date.now();
+  state.internalSearchId=restarted.d.searchId?String(restarted.d.searchId):null;
+  state.initialListings=filtered(restarted.d.listings||[],state);
+  state.edgeListings=[];
+  state.edgeRecoveryStarted=false;
+  const needsEdgeRecovery=Boolean((state.exactYear&&state.initialListings.length===0)||(state.initialListings.length<100&&state.fanoutQueries.length));
+  state.edgeRecoveryComplete=!needsEdgeRecovery;
+  if(needsEdgeRecovery)runEdgeRecovery(state).catch(()=>{state.edgeRecoveryComplete=true;state.edgeRecoveryStarted=false;state.at=Date.now();});
+  searchState.set(state.externalId,state);
+  return restarted;
 }
 
 app.get('/api/health',async(req,res)=>{
@@ -129,8 +167,8 @@ app.get('/api/health',async(req,res)=>{
     const r=await fetch(`http://127.0.0.1:${upstreamPort}/api/health`,{signal:AbortSignal.timeout(7000)});
     const text=await r.text();let d;try{d=JSON.parse(text)}catch{d={}};
     if(!r.ok)return res.status(r.status).json(d);
-    return res.json({...d,edge:'dalelah-v15',productVersion:'1.5',renderGitCommit:process.env.RENDER_GIT_COMMIT||null,progressiveEdgeRecovery:true,exactYearEdgeGuard:true});
-  }catch(e){return res.status(503).json({ok:false,edge:'dalelah-v15',productVersion:'1.5',renderGitCommit:process.env.RENDER_GIT_COMMIT||null,error:e?.message||'health unavailable'});}
+    return res.json({...d,edge:'dalelah-v15',productVersion:'1.5',renderGitCommit:process.env.RENDER_GIT_COMMIT||null,progressiveEdgeRecovery:true,exactYearEdgeGuard:true,restartSafeSearchIds:true});
+  }catch(e){return res.status(503).json({ok:false,edge:'dalelah-v15',productVersion:'1.5',renderGitCommit:process.env.RENDER_GIT_COMMIT||null,restartSafeSearchIds:true,error:e?.message||'health unavailable'});}
 });
 app.post('/api/search',async(req,res)=>{
   const body=req.body||{},q=String(body.query||'');
@@ -141,34 +179,30 @@ app.post('/api/search',async(req,res)=>{
     const initial=filtered(first.d.listings||[],{exactYear:y});
     const fq=fanoutQueries(q);
     const needsEdgeRecovery=Boolean((y&&initial.length===0)||(initial.length<100&&fq.length));
-    const externalId=String(first.d.searchId|| (needsEdgeRecovery?edgeId():''));
-    const state={
-      body,
-      exactYear:y,
-      internalSearchId:first.d.searchId?String(first.d.searchId):null,
-      externalId:externalId||null,
-      initialListings:initial,
-      edgeListings:[],
-      fanoutQueries:fq,
-      edgeRecoveryComplete:!needsEdgeRecovery,
-      exactRecovery:false,
-      at:Date.now(),
-      recoveries:0
-    };
-    if(externalId){searchState.set(externalId,state);if(needsEdgeRecovery)runEdgeRecovery(state).catch(()=>{state.edgeRecoveryComplete=true;state.at=Date.now();});}
+    const needsProgress=Boolean(first.d.searchId||first.d.complete===false||first.d.marketScanComplete===false||needsEdgeRecovery);
+    const state={body:{...body,condition:body.condition==='new'?'new':'used',filters:safeFilters(body.filters||{})},exactYear:y,internalSearchId:first.d.searchId?String(first.d.searchId):null,externalId:null,initialListings:initial,edgeListings:[],fanoutQueries:fq,edgeRecoveryComplete:!needsEdgeRecovery,edgeRecoveryStarted:false,exactRecovery:false,at:Date.now(),recoveries:0,reconstructed:false};
+    if(needsProgress){state.externalId=makeSearchId(state);searchState.set(state.externalId,state);if(needsEdgeRecovery)runEdgeRecovery(state).catch(()=>{state.edgeRecoveryComplete=true;state.edgeRecoveryStarted=false;state.at=Date.now();});}
     const out=decorate({...first.d,listings:initial},state);
+    if(!needsProgress)delete out.searchId;
     return res.json(out);
   }catch(e){return res.status(502).json({error:e?.message||'Dalelah recovery search unavailable'})}
 });
 app.get('/api/search/progress/:id',async(req,res)=>{
   try{
-    const externalId=String(req.params.id),state=searchState.get(externalId);
-    if(!state)return res.status(404).json({error:'Search expired'});
+    const externalId=String(req.params.id);
+    let state=searchState.get(externalId);
+    if(!state){
+      state=stateFromSearchId(externalId);
+      if(!state)return res.status(404).json({error:'Search expired'});
+      searchState.set(externalId,state);
+      if(state.edgeRecoveryComplete===false)runEdgeRecovery(state).catch(()=>{state.edgeRecoveryComplete=true;state.edgeRecoveryStarted=false;state.at=Date.now();});
+    }
     state.at=Date.now();
 
     if(!state.internalSearchId){
-      const snapshot={listings:state.initialListings,complete:true,marketScanComplete:true};
-      return res.json(decorate(snapshot,state));
+      const restarted=await restartState(state);
+      if(!restarted.r.ok)return res.status(restarted.r.status).json(restarted.d);
+      return res.json(decorate(restarted.d,state,{searchRecovered:true}));
     }
 
     const internalId=String(state.internalSearchId);
@@ -178,15 +212,10 @@ app.get('/api/search/progress/:id',async(req,res)=>{
     let d;try{d=JSON.parse(text)}catch{d={error:text.slice(0,300)}};
 
     const expired=r.status===404&&/search expired/i.test(String(d?.error||''));
-    if(expired&&state.recoveries<2){
-      const restarted=await upstreamSearch(exactBodyFor(state));
-      if(restarted.r.ok){
-        state.recoveries++;
-        state.at=Date.now();
-        state.internalSearchId=restarted.d.searchId?String(restarted.d.searchId):state.internalSearchId;
-        searchState.set(externalId,state);
-        return res.json(decorate(restarted.d,state,{searchRecovered:true}));
-      }
+    if(expired&&state.recoveries<3){
+      const restarted=await restartState(state);
+      if(restarted.r.ok)return res.json(decorate(restarted.d,state,{searchRecovered:true}));
+      return res.status(restarted.r.status).json(restarted.d);
     }
 
     if(!contentType.includes('application/json'))return res.status(r.status).type(contentType).send(text);
@@ -199,4 +228,4 @@ app.get('/api/search/progress/:id',async(req,res)=>{
 async function proxy(req,res){try{const headers={};for(const[k,v]of Object.entries(req.headers))if(!['host','content-length','connection'].includes(k.toLowerCase())&&v!=null)headers[k]=Array.isArray(v)?v.join(','):String(v);let body;if(!['GET','HEAD'].includes(req.method)){body=JSON.stringify(req.body||{});headers['content-type']='application/json'}const r=await fetch(`http://127.0.0.1:${upstreamPort}${req.originalUrl}`,{method:req.method,headers,body,redirect:'manual',signal:AbortSignal.timeout(30000)});const buf=Buffer.from(await r.arrayBuffer());for(const[k,v]of r.headers.entries())if(!['content-length','transfer-encoding','connection'].includes(k.toLowerCase()))res.setHeader(k,v);res.status(r.status).send(buf)}catch(e){res.status(502).json({error:e?.message||'upstream unavailable'})}}
 app.use(proxy);
 setInterval(()=>{const now=Date.now();for(const[k,v]of searchState)if(now-v.at>SEARCH_STATE_TTL)searchState.delete(k);},60_000).unref();
-app.listen(externalPort,()=>console.log(`Dalelah recovery-v25 progressive fanout + native UI running at http://localhost:${externalPort} -> v24 ${upstreamPort}`));
+app.listen(externalPort,()=>console.log(`Dalelah recovery-v25 progressive fanout + restart-safe search IDs running at http://localhost:${externalPort} -> v24 ${upstreamPort}`));

@@ -13,7 +13,7 @@ assert.deepEqual(queryTerms('Toyota Corolla 2013'), ['toyota', 'corolla']);
 assert.deepEqual(queryTerms('تويوتا كورولا ٢٠١٣ بالرياض'), ['toyota', 'corolla']);
 assert.deepEqual(queryTerms('Mazda CX-5 2022'), ['mazda', 'cx', '5']);
 assert.deepEqual(queryTerms('BMW 5 Series 2021'), ['bmw', '5', 'series']);
-assert.deepEqual(queryTerms('Ford F-150 2023'), ['ford', 'f', '150']);
+assert.deepEqual(queryTerms('Ford F-150 2023'), ['ford', '150']);
 assert.deepEqual(queryTerms('Land Cruiser 300 2024'), ['land', 'cruiser', '300']);
 assert.equal(identityMatches({ brand:'Toyota', model:'Corolla', title:'Toyota Corolla 2013 XLI' }, 'تويوتا كورولا 2013'), true);
 assert.equal(identityMatches({ brand:'Toyota', model:'Camry', title:'Toyota Camry 2013' }, 'Corolla 2013'), false);

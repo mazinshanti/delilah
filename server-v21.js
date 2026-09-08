@@ -149,6 +149,7 @@ function plansFor(body = {}) {
     {name:"Saudi Sale",seller:"Saudi Sale",type:"marketplace",q:`site:cars.saudisale.com/en/listings \"${searchPhrase}\"`,condition:"used"},
     {name:"YallaMotor",seller:"YallaMotor",type:"marketplace",q:`site:ksa.yallamotor.com/used-cars \"${searchPhrase}\"`,condition:"used"},
     {name:"CarSwitch Saudi",seller:"CarSwitch Saudi",type:"marketplace",q:`site:ksa.carswitch.com/used-cars \"${searchPhrase}\"`,condition:"used"},
+    {name:"Motory",seller:"Motory",type:"marketplace",q:`site:ksa.motory.com/en/cars-for-sale \"${searchPhrase}\"`,condition:"used"},
     {name:"Carly",seller:"Carly - كارلي",type:"certified_used",q:`site:halacarly.com/vehicle-details \"${searchPhrase}\"`,condition:"used"}
   ];
   const allNew=[
@@ -260,7 +261,7 @@ app.get("/api/health",async(req,res)=>{
 app.get("/api/source-plugins",async(req,res)=>{
   try {
     const {r,d}=await upstreamJson("/api/source-plugins",{signal:AbortSignal.timeout(7000)}); if(!r.ok)return res.status(r.status).json(d);
-    const status={Syarah:"active-deterministic+indexed",ArabWheels:"active-indexed+exact",Haraj:"active-search+indexed",YallaMotor:"indexed-fallback-direct-blocked","Saudi Sale":"active-public-html+indexed","CarSwitch Saudi":"active-search+indexed","Jetour KSA":"indexed-fallback-direct-blocked"};
+    const status={Syarah:"active-deterministic+indexed",ArabWheels:"active-indexed+exact",Haraj:"active-search+indexed",YallaMotor:"indexed-fallback-direct-blocked","Saudi Sale":"active-public-html+indexed","CarSwitch Saudi":"active-search+indexed",Motory:"active-indexed+verified-url","Jetour KSA":"indexed-fallback-direct-blocked"};
     const plugins=(d.plugins||[]).map(p=>status[p.name]?{...p,status:status[p.name]}:p); const active=plugins.filter(p=>String(p.status||"").startsWith("active")||String(p.status||"").includes("indexed-fallback")).length;
     return res.json({...d,plugins,active,total:plugins.length,edge:"inventory-v21"});
   } catch(e) { return res.status(502).json({error:e?.message||"Plugin registry unavailable"}); }

@@ -1,5 +1,4 @@
 (()=>{
-  const oldMerge=window.mergeByUrl;
   window.mergeByUrl=function(a=[],b=[]){
     const m=new Map();
     for(const c of [...a,...b]){
@@ -16,12 +15,14 @@
     }
     return [...m.values()];
   };
+  const esc25=s=>String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const oldStats=window.statsFrom;
   if(oldStats)window.statsFrom=function(d={},scanning=false){
     oldStats(d,scanning);
-    const u=d.understanding;
-    if(!u||!window.dom?.stats)return;
-    const bits=[u.brand,u.model,u.minYear?`${u.minYear}+`:null,u.maxPrice?`≤ ${Number(u.maxPrice).toLocaleString()} SAR`:null,u.city].filter(Boolean);
-    if(bits.length)window.dom.stats.insertAdjacentHTML('afterbegin',`<span class="stat ok">AI understood: ${bits.map(window.esc||String).join(' · ')}</span>`);
+    const u=d.understanding,host=document.querySelector('.stats');
+    if(!u||!host)return;
+    const year=u.minYear&&u.maxYear?`${u.minYear}–${u.maxYear}`:u.minYear?`${u.minYear}+`:u.maxYear?`≤ ${u.maxYear}`:null;
+    const bits=[u.brand,u.model,year,u.maxPrice?`≤ ${Number(u.maxPrice).toLocaleString()} SAR`:null,u.maxMileage?`≤ ${Number(u.maxMileage).toLocaleString()} km`:null,u.city].filter(Boolean);
+    if(bits.length)host.insertAdjacentHTML('afterbegin',`<span class="stat ok">AI understood: ${bits.map(esc25).join(' · ')}</span>`);
   };
 })();

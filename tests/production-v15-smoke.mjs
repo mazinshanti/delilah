@@ -18,7 +18,30 @@ assert.equal(typeof health, 'object', 'health response must be JSON');
 assert.ok(!health.error, `health returned an error: ${health.error}`);
 assert.equal(health.productVersion, '1.5', `unexpected product version: ${JSON.stringify(health)}`);
 assert.equal(health.restartSafeSearchIds, true, `restart-safe search IDs are not enabled: ${JSON.stringify(health)}`);
+assert.equal(health.motoryNativeCatalog, true, `Motory native catalogue is not enabled: ${JSON.stringify(health)}`);
 if (expectedCommit) assert.equal(health.renderGitCommit, expectedCommit, `production is not running the commit under test: expected ${expectedCommit}, got ${health.renderGitCommit}`);
+
+function diagnostics(query, first, latest, listings) {
+  return {
+    query,
+    searchId:first.searchId||null,
+    firstListings:Array.isArray(first.listings)?first.listings.length:null,
+    latestListings:listings.length,
+    counts:latest.counts||{},
+    complete:latest.complete??latest.marketScanComplete??null,
+    exactYearIntent:latest.exactYearIntent??first.exactYearIntent??null,
+    searchRecoveryCount:latest.searchRecoveryCount??null,
+    searchStateReconstructed:Boolean(latest.searchStateReconstructed),
+    motoryNativeCatalog:latest.motoryNativeCatalog??first.motoryNativeCatalog??null,
+    motoryNativeComplete:latest.motoryNativeComplete??first.motoryNativeComplete??null,
+    motoryNativeListings:latest.motoryNativeListings??first.motoryNativeListings??null,
+    motoryNativeError:latest.motoryNativeError??first.motoryNativeError??null,
+    indexedFallbackComplete:latest.indexedFallbackComplete??null,
+    indexedFallbackDiagnostics:latest.indexedFallbackDiagnostics??null,
+    recoveryFanout:latest.recoveryFanout??null,
+    sample:listings.slice(0,3).map(x=>({source:x.source,title:x.title,year:x.year,url:x.url}))
+  };
+}
 
 async function exactYearCase({query, year, requireResults = true}) {
   const first = await json(`${base}/api/search`, {
@@ -50,9 +73,11 @@ async function exactYearCase({query, year, requireResults = true}) {
   }
 
   const listings = Array.isArray(latest.listings) ? latest.listings : [];
+  const diag=diagnostics(query,first,latest,listings);
+  console.log('CASE_DIAGNOSTIC '+JSON.stringify(diag));
   const wrong = listings.filter(car => Number(car?.year) !== year);
-  assert.equal(wrong.length, 0, `${query}: exact-year leakage detected: ${JSON.stringify(wrong.slice(0, 5).map(x => ({title:x.title, year:x.year, source:x.source, url:x.url})))}`);
-  if (requireResults) assert.ok(listings.length > 0, `${query}: no verified ${year} listings were returned from the live Saudi-market scan`);
+  assert.equal(wrong.length, 0, `${query}: exact-year leakage detected: ${JSON.stringify({...diag,wrong:wrong.slice(0,5).map(x=>({title:x.title,year:x.year,source:x.source,url:x.url}))})}`);
+  if (requireResults) assert.ok(listings.length > 0, `${query}: no verified ${year} listings were returned from the live Saudi-market scan: ${JSON.stringify(diag)}`);
 
   return {
     query,
@@ -62,7 +87,8 @@ async function exactYearCase({query, year, requireResults = true}) {
     sourceCounts:latest.counts || {},
     complete:latest.complete ?? latest.marketScanComplete ?? null,
     searchRecoveryCount:latest.searchRecoveryCount ?? null,
-    reconstructed:Boolean(latest.searchStateReconstructed)
+    reconstructed:Boolean(latest.searchStateReconstructed),
+    motoryNativeListings:latest.motoryNativeListings??null
   };
 }
 

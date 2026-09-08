@@ -24,7 +24,9 @@ jobs:
       - run: node --check server-v26.js
       - run: node --check server-v27.js
       - run: node --check server-v30.js
+      - run: node --check server-v31.js
       - run: node --check public/hotfix-v28.js
+      - run: node --check public/hotfix-v31.js
       - run: node --check tests/smart-search-v28.mjs
       - run: node --check tests/semantic-v25.mjs
       - run: node --check tests/universal-identity-v26.mjs
@@ -40,7 +42,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Wait for stable smart-search production build
+      - name: Wait for stable compact-browse production build
         env:
           DELILAH_URL: https://delilah-pm5f.onrender.com
         run: |
@@ -53,14 +55,14 @@ jobs:
               const r=await fetch(`${base}/api/health`,{signal:AbortSignal.timeout(7000)});
               if(r.ok){
                 const d=await r.json();
-                last=JSON.stringify({edge:d.edge,smartSearchBar:d.smartSearchBar,sourceAwareSearch:d.sourceAwareSearch,sourceBrowse:d.sourceBrowse,universalTypoCorrection:d.universalTypoCorrection,numericModelProtection:d.numericModelProtection,similarOfferings:d.similarOfferings,vehicleHistoryIntegration:d.vehicleHistoryIntegration});
-                const ready=d.edge==='product-v30'&&d.smartSearchBar===true&&d.sourceAwareSearch===true&&d.sourceBrowse===true&&d.universalTypoCorrection===true&&d.numericModelProtection===true&&d.similarOfferings===true&&d.vehicleHistoryIntegration===true;
-                if(ready){observed++;if(observed>=3){console.log('PASS stable v30 deploy',last);process.exit(0)}}else observed=0;
+                last=JSON.stringify({edge:d.edge,smartSearchBar:d.smartSearchBar,numericModelProtection:d.numericModelProtection,compactBrowseDropdowns:d.compactBrowseDropdowns,categoryDropdown:d.categoryDropdown,brandDropdown:d.brandDropdown,sourceDropdown:d.sourceDropdown});
+                const ready=d.edge==='product-v31'&&d.smartSearchBar===true&&d.numericModelProtection===true&&d.compactBrowseDropdowns===true&&d.categoryDropdown===true&&d.brandDropdown===true&&d.sourceDropdown===true;
+                if(ready){observed++;if(observed>=3){console.log('PASS stable v31 deploy',last);process.exit(0)}}else observed=0;
               }
             }catch(e){last=e.message;observed=0}
             await sleep(3000);
           }
-          throw new Error(`Production v30 not ready: ${last}`);
+          throw new Error(`Production v31 not ready: ${last}`);
           NODE
 
   production-qa:
@@ -74,7 +76,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Test smart search, source filters, typos, numeric models, similar and history
+      - name: Test smart search and compact browse UI
         run: node tests/smart-search-v28.mjs
       - name: Test universal manufacturer, model and localization identity
         run: node tests/universal-identity-v26.mjs

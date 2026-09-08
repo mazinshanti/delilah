@@ -17,47 +17,68 @@ const health = await json(`${base}/api/health`);
 assert.equal(typeof health, 'object', 'health response must be JSON');
 assert.ok(!health.error, `health returned an error: ${health.error}`);
 assert.equal(health.productVersion, '1.5', `unexpected product version: ${JSON.stringify(health)}`);
+assert.equal(health.restartSafeSearchIds, true, `restart-safe search IDs are not enabled: ${JSON.stringify(health)}`);
 if (expectedCommit) assert.equal(health.renderGitCommit, expectedCommit, `production is not running the commit under test: expected ${expectedCommit}, got ${health.renderGitCommit}`);
 
-const first = await json(`${base}/api/search`, {
-  method: 'POST',
-  headers: {'content-type': 'application/json'},
-  body: JSON.stringify({query: 'Toyota Corolla 2013', condition: 'used', filters: {}})
-});
+async function exactYearCase({query, year, requireResults = true}) {
+  const first = await json(`${base}/api/search`, {
+    method: 'POST',
+    headers: {'content-type': 'application/json'},
+    body: JSON.stringify({query, condition: 'used', filters: {}})
+  });
 
-assert.equal(first.exactYearIntent, 2013, `production did not enforce exact-year intent: ${JSON.stringify({exactYearIntent:first.exactYearIntent, edge:health.edge, renderGitCommit:health.renderGitCommit})}`);
+  assert.equal(first.exactYearIntent, year, `${query}: production did not enforce exact-year intent: ${JSON.stringify({exactYearIntent:first.exactYearIntent, edge:health.edge, renderGitCommit:health.renderGitCommit})}`);
+  if (first.searchId) assert.ok(String(first.searchId).startsWith('d15.'), `${query}: production did not emit a restart-safe Dalelah 1.5 search ID: ${first.searchId}`);
 
-let latest = first;
-if (first.searchId && first.complete !== true && first.marketScanComplete !== true) {
-  let lastProgressError = null;
-  for (let i = 0; i < 16; i++) {
-    await sleep(i === 0 ? 800 : 1500);
-    try {
-      latest = await json(`${base}/api/search/progress/${encodeURIComponent(first.searchId)}`);
-      lastProgressError = null;
-    } catch (error) {
-      lastProgressError = error;
-      if (!/HTTP 404:.*Search expired/i.test(String(error?.message || ''))) throw error;
-      if (i < 3) continue;
-      throw error;
+  let latest = first;
+  if (first.searchId && first.complete !== true && first.marketScanComplete !== true) {
+    let lastProgressError = null;
+    for (let i = 0; i < 16; i++) {
+      await sleep(i === 0 ? 800 : 1500);
+      try {
+        latest = await json(`${base}/api/search/progress/${encodeURIComponent(first.searchId)}`);
+        lastProgressError = null;
+      } catch (error) {
+        lastProgressError = error;
+        if (!/HTTP 404:.*Search expired/i.test(String(error?.message || ''))) throw error;
+        if (i < 3) continue;
+        throw error;
+      }
+      if (latest.complete === true || latest.marketScanComplete === true) break;
     }
-    if (latest.complete === true || latest.marketScanComplete === true) break;
+    if (lastProgressError) throw lastProgressError;
   }
-  if (lastProgressError) throw lastProgressError;
+
+  const listings = Array.isArray(latest.listings) ? latest.listings : [];
+  const wrong = listings.filter(car => Number(car?.year) !== year);
+  assert.equal(wrong.length, 0, `${query}: exact-year leakage detected: ${JSON.stringify(wrong.slice(0, 5).map(x => ({title:x.title, year:x.year, source:x.source, url:x.url})))}`);
+  if (requireResults) assert.ok(listings.length > 0, `${query}: no verified ${year} listings were returned from the live Saudi-market scan`);
+
+  return {
+    query,
+    year,
+    listings:listings.length,
+    sources:Object.keys(latest.counts || {}).length,
+    sourceCounts:latest.counts || {},
+    complete:latest.complete ?? latest.marketScanComplete ?? null,
+    searchRecoveryCount:latest.searchRecoveryCount ?? null,
+    reconstructed:Boolean(latest.searchStateReconstructed)
+  };
 }
 
-const listings = Array.isArray(latest.listings) ? latest.listings : [];
-const wrong = listings.filter(car => Number(car?.year) !== 2013);
-assert.equal(wrong.length, 0, `exact-year leakage detected: ${JSON.stringify(wrong.slice(0, 5).map(x => ({title:x.title, year:x.year, source:x.source, url:x.url})))}`);
+const cases = [
+  {query:'Toyota Corolla 2013', year:2013, requireResults:true},
+  {query:'Nissan Patrol 2020', year:2020, requireResults:true},
+  {query:'Jeep Wrangler 2021', year:2021, requireResults:true},
+  {query:'كورولا ٢٠١٣', year:2013, requireResults:true}
+];
+
+const results=[];
+for (const c of cases) results.push(await exactYearCase(c));
 
 console.log(JSON.stringify({
-  ok: true,
-  healthEdge: health.edge || null,
-  renderGitCommit: health.renderGitCommit || null,
-  exactYearIntent: latest.exactYearIntent || first.exactYearIntent,
-  searchId: first.searchId || null,
-  listings: listings.length,
-  sources: Object.keys(latest.counts || {}).length,
-  complete: latest.complete ?? latest.marketScanComplete ?? null,
-  searchRecoveryCount: latest.searchRecoveryCount ?? null
+  ok:true,
+  healthEdge:health.edge || null,
+  renderGitCommit:health.renderGitCommit || null,
+  cases:results
 }, null, 2));

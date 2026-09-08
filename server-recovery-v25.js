@@ -11,6 +11,8 @@ process.env.PORT=String(externalPort);
 const app=express();
 app.use(express.json({limit:'1mb'}));
 app.use(express.static(path.join(process.cwd(),'public')));
+const searchState=new Map();
+const SEARCH_STATE_TTL=20*60_000;
 const norm=s=>String(s||'').toLowerCase().replace(/[^a-z0-9\u0600-\u06ff]+/g,' ').replace(/\s+/g,' ').trim();
 const canonical=v=>{try{const u=new URL(v);u.hash='';return u.href.replace(/\/$/,'')}catch{return String(v||'')}};
 const BRAND_MODELS={
@@ -92,10 +94,27 @@ app.post('/api/search',async(req,res)=>{
     }
 
     const out={...first.d,listings,counts:counts(listings),recoveryFanout:{active:Boolean(fq.length),queries:fq.length,total:listings.length},exactYearIntent:y,exactRecovery,exactYearFiltered:y?Math.max(0,initial.length-enforceExactYear(initial,y).length):0,product:{...(first.d.product||{}),recovery:'v25-fanout'}};
+    if(out.searchId)searchState.set(String(out.searchId),{body,exactYear:y,at:Date.now()});
     return res.json(out);
   }catch(e){return res.status(502).json({error:e?.message||'Dalelah recovery search unavailable'})}
 });
-app.get('/api/search/progress/:id',async(req,res)=>{try{const r=await fetch(`http://127.0.0.1:${upstreamPort}${req.originalUrl}`,{signal:AbortSignal.timeout(20000)});const t=await r.text();res.status(r.status).type(r.headers.get('content-type')||'application/json').send(t)}catch(e){res.status(502).json({error:e?.message||'progress unavailable'})}});
+app.get('/api/search/progress/:id',async(req,res)=>{
+  try{
+    const r=await fetch(`http://127.0.0.1:${upstreamPort}${req.originalUrl}`,{signal:AbortSignal.timeout(20000)});
+    const text=await r.text();
+    const contentType=r.headers.get('content-type')||'application/json';
+    if(!contentType.includes('application/json'))return res.status(r.status).type(contentType).send(text);
+    let d;try{d=JSON.parse(text)}catch{d={error:text.slice(0,300)}};
+    const state=searchState.get(String(req.params.id));
+    if(r.ok&&state?.exactYear){
+      const before=Array.isArray(d.listings)?d.listings.map(clean):[];
+      const listings=enforceExactYear(before,state.exactYear);
+      d={...d,listings,counts:counts(listings),exactYearIntent:state.exactYear,exactYearFiltered:Math.max(0,before.length-listings.length)};
+    }
+    return res.status(r.status).json(d);
+  }catch(e){res.status(502).json({error:e?.message||'progress unavailable'})}
+});
 async function proxy(req,res){try{const headers={};for(const[k,v]of Object.entries(req.headers))if(!['host','content-length','connection'].includes(k.toLowerCase())&&v!=null)headers[k]=Array.isArray(v)?v.join(','):String(v);let body;if(!['GET','HEAD'].includes(req.method)){body=JSON.stringify(req.body||{});headers['content-type']='application/json'}const r=await fetch(`http://127.0.0.1:${upstreamPort}${req.originalUrl}`,{method:req.method,headers,body,redirect:'manual',signal:AbortSignal.timeout(30000)});const buf=Buffer.from(await r.arrayBuffer());for(const[k,v]of r.headers.entries())if(!['content-length','transfer-encoding','connection'].includes(k.toLowerCase()))res.setHeader(k,v);res.status(r.status).send(buf)}catch(e){res.status(502).json({error:e?.message||'upstream unavailable'})}}
 app.use(proxy);
+setInterval(()=>{const now=Date.now();for(const[k,v]of searchState)if(now-v.at>SEARCH_STATE_TTL)searchState.delete(k);},60_000).unref();
 app.listen(externalPort,()=>console.log(`Dalelah recovery-v25 fanout + native UI running at http://localhost:${externalPort} -> v24 ${upstreamPort}`));

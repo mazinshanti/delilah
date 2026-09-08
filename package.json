@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node boot-v14-ai-qa.js",
+    "start": "node server-v1.4-ai.js",
     "dev": "node --watch server-v1.4-ai.js",
     "check": "node --check server-v1.4.js && node --check server-v1.4-ai.js && node --check boot-v14-ai-qa.js && node --check public/v14-progress.js"
   },

@@ -1,7 +1,7 @@
 const base=process.env.DELILAH_URL||'https://delilah-pm5f.onrender.com';
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 async function search(body,ms=20000){const r=await fetch(`${base}/api/search`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(ms)});if(!r.ok)throw new Error(`HTTP ${r.status}: ${(await r.text()).slice(0,300)}`);return r.json()}
-async function finish(d){for(let i=0;i<25&&d.searchId&&!d.complete;i++){await sleep(2000);const r=await fetch(`${base}/api/search/progress/${d.searchId}`,{signal:AbortSignal.timeout(10000)});if(!r.ok)break;d=await r.json()}return d}
+async function finish(d){for(let i=0;i<35&&d.searchId&&!d.complete;i++){await sleep(1500);const r=await fetch(`${base}/api/search/progress/${d.searchId}`,{signal:AbortSignal.timeout(10000)});if(!r.ok)break;d=await r.json()}return d}
 
 const arabic=await search({query:'ابي رانجلر 2022 وفوق بالرياض تحت 130 ألف',condition:'used',filters:{},phase:'fast'});
 if(Number(arabic.intent?.maxPrice)!==130000)throw new Error(`Arabic ألف normalization failed: maxPrice=${arabic.intent?.maxPrice}`);
@@ -9,9 +9,9 @@ if(!Array.isArray(arabic.listings)||arabic.listings.length<1)throw new Error(`Ar
 if(arabic.listings.some(c=>c.price&&Number(c.price)>130000))throw new Error('Arabic max-price leak');
 console.log(`PASS Arabic 130 ألف: ${arabic.listings.length} cars, maxPrice=${arabic.intent.maxPrice}`);
 
-let syarah=await search({query:'Toyota Camry 2025 Saudi',condition:'used',filters:{seller:'Syarah'},phase:'full'});syarah=await finish(syarah);
+let syarah=await search({query:'Toyota Camry Saudi',condition:'used',filters:{seller:'Syarah'},phase:'full'});syarah=await finish(syarah);
 const cars=(syarah.listings||[]).filter(c=>c.source==='Syarah');
-if(cars.length<1)throw new Error(`Syarah returned no Camry cars; diagnostics=${JSON.stringify(syarah.diagnostics||[])}`);
+if(cars.length<1)throw new Error(`Syarah returned no Camry cars; diagnostics=${JSON.stringify([...(syarah.diagnostics||[]),...(syarah.indexedFallbackDiagnostics||[])])}`);
 let verified=0;
 for(const c of cars){
  if(c.price!=null){

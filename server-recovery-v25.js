@@ -55,6 +55,7 @@ function merge(groups=[]){const m=new Map();for(const g of groups)for(const raw 
 function fanoutQueries(q){const n=norm(q);if(/\bsuv\b|دفع رباعي|جيب/.test(n))return SUV;for(const [b,models] of Object.entries(BRAND_MODELS))if(n===b||n===b+' cars'||n.includes(' '+b+' ')||n.startsWith(b+' '))return models.map(m=>`${b} ${m}`);if(/used cars|cars riyadh|سيارات مستعمل/.test(n))return GENERAL;return[];}
 function counts(xs){return xs.reduce((a,c)=>(a[c.source]=(a[c.source]||0)+1,a),{});}
 function hasExplicitYearFilters(body={}){return Boolean(body?.filters?.minYear||body?.filters?.maxYear);}
+function exactListings(xs,y){return enforceExactYear(xs,y,{requireEvidence:true});}
 
 app.post('/api/search',async(req,res)=>{
   const body=req.body||{},q=String(body.query||'');
@@ -63,7 +64,7 @@ app.post('/api/search',async(req,res)=>{
     const exactBody=y?{...body,filters:{...(body.filters||{}),minYear:y,maxYear:y}}:body;
     const first=await upstreamSearch(exactBody);if(!first.r.ok)return res.status(first.r.status).json(first.d);
     const initial=Array.isArray(first.d.listings)?first.d.listings.map(clean):[];
-    let listings=y?enforceExactYear(initial,y):initial;
+    let listings=y?exactListings(initial,y):initial;
     let exactRecovery=false;
     let relaxed='';
 
@@ -72,7 +73,7 @@ app.post('/api/search',async(req,res)=>{
       if(relaxed){
         const z=await upstreamSearch({...body,query:relaxed,filters:{...(body.filters||{}),minYear:'',maxYear:''}}).catch(()=>null);
         if(z?.r?.ok){
-          listings=enforceExactYear(merge([z.d.listings||[]]),y);
+          listings=exactListings(merge([z.d.listings||[]]),y);
           exactRecovery=true;
         }
       }
@@ -85,15 +86,15 @@ app.post('/api/search',async(req,res)=>{
         const part=fq.slice(i,i+6);
         const settled=await Promise.all(part.map(x=>upstreamSearch({...body,query:x,filters:{...(body.filters||{}),...(y?{minYear:y,maxYear:y}:{})}}).then(z=>z.r.ok?(z.d.listings||[]).map(clean):[]).catch(()=>[])));
         batches.push(...settled);
-        const merged=y?enforceExactYear(merge([listings,...batches]),y):merge([listings,...batches]);
+        const merged=y?exactListings(merge([listings,...batches]),y):merge([listings,...batches]);
         if(merged.length>=400)break;
       }
       listings=merge([listings,...batches]);
-      if(y)listings=enforceExactYear(listings,y);
+      if(y)listings=exactListings(listings,y);
       listings=listings.slice(0,500);
     }
 
-    const out={...first.d,listings,counts:counts(listings),recoveryFanout:{active:Boolean(fq.length),queries:fq.length,total:listings.length},exactYearIntent:y,exactRecovery,exactYearFiltered:y?Math.max(0,initial.length-enforceExactYear(initial,y).length):0,product:{...(first.d.product||{}),recovery:'v25-fanout'}};
+    const out={...first.d,listings,counts:counts(listings),recoveryFanout:{active:Boolean(fq.length),queries:fq.length,total:listings.length},exactYearIntent:y,exactRecovery,exactYearFiltered:y?Math.max(0,initial.length-exactListings(initial,y).length):0,product:{...(first.d.product||{}),recovery:'v25-fanout'}};
     if(out.searchId)searchState.set(String(out.searchId),{body,exactYear:y,at:Date.now()});
     return res.json(out);
   }catch(e){return res.status(502).json({error:e?.message||'Dalelah recovery search unavailable'})}
@@ -108,7 +109,7 @@ app.get('/api/search/progress/:id',async(req,res)=>{
     const state=searchState.get(String(req.params.id));
     if(r.ok&&state?.exactYear){
       const before=Array.isArray(d.listings)?d.listings.map(clean):[];
-      const listings=enforceExactYear(before,state.exactYear);
+      const listings=exactListings(before,state.exactYear);
       d={...d,listings,counts:counts(listings),exactYearIntent:state.exactYear,exactYearFiltered:Math.max(0,before.length-listings.length)};
     }
     return res.status(r.status).json(d);

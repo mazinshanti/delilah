@@ -40,7 +40,10 @@ jobs:
       - run: node --check server-v22.js
       - run: node --check server-v23.js
       - run: node --check server-v24.js
+      - run: node --check server-v25.js
       - run: node --check public/hotfix-v24.js
+      - run: node --check public/hotfix-v25.js
+      - run: node --check tests/semantic-v25.mjs
       - run: node tests/product-shell-v24.mjs
       - run: node tests/regression.mjs
 
@@ -63,18 +66,18 @@ jobs:
           let last='';
           for(let i=0;i<90;i++){
             try{
-              const r=await fetch(`${base}/api/health`,{signal:AbortSignal.timeout(6000)});
+              const r=await fetch(`${base}/api/health`,{signal:AbortSignal.timeout(7000)});
               if(r.ok){
                 const d=await r.json();
-                last=JSON.stringify({edge:d.edge,fullProduct:d.fullProduct,strictVerifiedFilters:d.strictVerifiedFilters,frontend:d.frontend,harajExactPages:d.harajExactPages});
-                if(d.edge==='product-v24'&&d.fullProduct===true&&d.strictVerifiedFilters===true&&d.frontend==='product-v24'&&d.harajExactPages===true){
+                last=JSON.stringify({edge:d.edge,fullProduct:d.fullProduct,aiSearchUnderstanding:d.aiSearchUnderstanding,exactModelIdentity:d.exactModelIdentity,syarahOriginalPricePolicy:d.syarahOriginalPricePolicy,harajExactPages:d.harajExactPages});
+                if(d.edge==='product-v25'&&d.fullProduct===true&&d.aiSearchUnderstanding===true&&d.exactModelIdentity===true&&d.syarahOriginalPricePolicy===true&&d.harajExactPages===true){
                   console.log('PASS deploy ready',last);process.exit(0)
                 }
               }
             }catch(e){last=e.message}
             await sleep(2000);
           }
-          throw new Error(`Production v24 not ready: ${last}`);
+          throw new Error(`Production v25 not ready: ${last}`);
           NODE
 
   production-qa:
@@ -96,6 +99,10 @@ jobs:
         id: ui
         continue-on-error: true
         run: node tests/product-ui-v21.mjs
+      - name: Test semantic model identity and Syarah original prices
+        id: semantic
+        continue-on-error: true
+        run: node tests/semantic-v25.mjs
       - name: Test exact Haraj listing pages
         id: haraj
         continue-on-error: true
@@ -104,7 +111,7 @@ jobs:
         id: fast
         continue-on-error: true
         run: node tests/fast-path-v8.mjs
-      - name: Test Arabic parsing and Syarah cash prices
+      - name: Test Arabic understanding and Syarah original prices
         id: userpath
         continue-on-error: true
         run: node tests/user-path-v7.mjs
@@ -135,9 +142,10 @@ jobs:
       - name: Fail if production QA has failures
         if: always()
         run: |
-          echo "probe=${{ steps.probe.outcome }} ui=${{ steps.ui.outcome }} haraj=${{ steps.haraj.outcome }} fast=${{ steps.fast.outcome }} userpath=${{ steps.userpath.outcome }} plugins=${{ steps.plugins.outcome }} progressive=${{ steps.progressive.outcome }} arbitrary=${{ steps.arbitrary.outcome }} genesis=${{ steps.genesis.outcome }} scale=${{ steps.scale.outcome }} smoke=${{ steps.smoke.outcome }}"
+          echo "probe=${{ steps.probe.outcome }} ui=${{ steps.ui.outcome }} semantic=${{ steps.semantic.outcome }} haraj=${{ steps.haraj.outcome }} fast=${{ steps.fast.outcome }} userpath=${{ steps.userpath.outcome }} plugins=${{ steps.plugins.outcome }} progressive=${{ steps.progressive.outcome }} arbitrary=${{ steps.arbitrary.outcome }} genesis=${{ steps.genesis.outcome }} scale=${{ steps.scale.outcome }} smoke=${{ steps.smoke.outcome }}"
           test "${{ steps.probe.outcome }}" = success
           test "${{ steps.ui.outcome }}" = success
+          test "${{ steps.semantic.outcome }}" = success
           test "${{ steps.haraj.outcome }}" = success
           test "${{ steps.fast.outcome }}" = success
           test "${{ steps.userpath.outcome }}" = success

@@ -29,3 +29,16 @@ test('exact-year enforcement rejects wrong and unknown years',()=>{
   ];
   assert.deepEqual(enforceExactYear(cars,2013).map(x=>x.title),['Corolla 2013','Corolla string year']);
 });
+
+test('evidence mode rejects a year copied from the search filter',()=>{
+  const cars=[
+    {title:'Toyota Corolla for sale',snippet:'Clean car in Riyadh',url:'https://example.com/listing/abc',year:2013},
+    {title:'Toyota Corolla 2013 for sale',snippet:'Clean car in Riyadh',url:'https://example.com/listing/def',year:2013},
+    {title:'Toyota Corolla for sale',snippet:'Model 2013, clean car',url:'https://example.com/listing/ghi',year:2013},
+    {title:'Haraj Corolla',snippet:'',url:'https://haraj.com.sa/12345678',year:2013,harajExactVerified:true}
+  ];
+  assert.deepEqual(
+    enforceExactYear(cars,2013,{requireEvidence:true}).map(x=>x.url),
+    ['https://example.com/listing/def','https://example.com/listing/ghi','https://haraj.com.sa/12345678']
+  );
+});

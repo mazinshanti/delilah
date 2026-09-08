@@ -2,9 +2,9 @@ import "dotenv/config";
 import express from "express";
 import crypto from "node:crypto";
 import {
-  BRAIN_VERSION, norm, detectAutomotiveIntent, buildRetrievalQueries,
+  BRAIN_VERSION, detectAutomotiveIntent, buildRetrievalQueries,
   knowledgePrompt, prepareResults, resultSummary
-} from "./car-brain-v1.4.js";
+} from "./car-brain-v1.4.3.js";
 
 const externalPort=Number(process.env.PORT||3000);
 const upstreamPort=Number(process.env.DALELAH_V14_CORE_PORT||6200);
@@ -61,6 +61,7 @@ function mergeAIWithDetected(ai,detected){
   if(explicit.has("maxMileage"))out.maxMileage=detected.maxMileage;
   if(explicit.has("city"))out.city=detected.city;
   if(explicit.has("condition"))out.condition=detected.condition;
+  out.partsRequested=detected.partsRequested===true;
   out.needs=[...new Set([...(detected.needs||[]),...(ai.needs||[])])];
   out.explicit=detected.explicit||[];
   out.preferredBrands=[...new Set(ai.preferredBrands||[])].slice(0,8);
@@ -90,8 +91,6 @@ async function aiIntent(body={}){
 }
 
 function retrievalBody(body,q,intent){
-  // Retrieval stays broad. Hard metadata constraints are verified by the automotive brain
-  // after candidates are retrieved, so missing Haraj price/city does not incorrectly erase a car.
   const source=body?.filters?.source||"";
   return {query:q,condition:intent.condition||body.condition||"used",filters:source?{source}:{}};
 }
@@ -108,9 +107,9 @@ function sortResults(listings,intent){
 }
 
 async function runSearch(body){
-  const intent=await aiIntent(body),allQueries=buildRetrievalQueries(intent,String(body.query||""));
-  // Keep first response fast; four focused retrieval plans are enough for the first screen.
-  const queries=allQueries.slice(0,4),condition=intent.condition||body.condition||"used";
+  const intent=await aiIntent(body),allQueries=buildRetrievalQueries(intent,String(body.query||"")),condition=intent.condition||body.condition||"used";
+  if(intent.partsRequested){const summary=resultSummary([],intent);return{intent,queries:[],allQueries:[],condition,listings:[],upstreamJobs:[],summary};}
+  const queries=allQueries.slice(0,4);
   const settled=await Promise.allSettled(queries.map(q=>upstreamSearch(retrievalBody(body,q,intent))));
   const groups=[],upstreamJobs=[];
   for(const x of settled)if(x.status==="fulfilled"&&x.value.r.ok){groups.push(x.value.d.listings||[]);if(x.value.d.searchId)upstreamJobs.push(x.value.d.searchId);}
@@ -129,12 +128,7 @@ app.post("/api/search",async(req,res)=>{
   const id=crypto.randomUUID();
   try{
     const result=await runSearch(body),job={at:Date.now(),...result,body};jobs.set(id,job);
-    res.json({
-      query,condition:result.condition,intent:result.intent,listings:result.listings,counts:counts(result.listings),
-      verifiedCount:result.summary.verified,possibleCount:result.summary.possible,summary:result.summary.text,
-      searchId:id,partial:result.upstreamJobs.length>0,background:true,responseMode:"automotive-brain-index",
-      aiEnabled:Boolean(openaiKey),vehicleOnly:true,brainVersion:BRAIN_VERSION,retrievalQueries:result.queries,plannedQueries:result.allQueries
-    });
+    res.json({query,condition:result.condition,intent:result.intent,listings:result.listings,counts:counts(result.listings),verifiedCount:result.summary.verified,possibleCount:result.summary.possible,summary:result.summary.text,searchId:id,partial:result.upstreamJobs.length>0,background:true,responseMode:"automotive-brain-index",aiEnabled:Boolean(openaiKey),vehicleOnly:true,brainVersion:BRAIN_VERSION,retrievalQueries:result.queries,plannedQueries:result.allQueries});
   }catch(e){res.status(502).json({error:e?.message||"Dalelah automotive search unavailable"});}
 });
 app.get("/api/search/progress/:id",async(req,res)=>{

@@ -20,7 +20,20 @@ function strip(s=""){return decode(String(s)).replace(/<script[\s\S]*?<\/script>
 function first(re,s=""){return re.exec(String(s))?.[1]||null;}
 function abs(v,base){try{return new URL(decode(v),base).href}catch{return null}}
 function safeUrl(v){try{const u=new URL(v);return /^https?:$/.test(u.protocol)?u:null}catch{return null}}
-function sourceName(url){try{const h=new URL(url).hostname.replace(/^www\./,"");return h.split(".").slice(-2).join(".")}catch{return"Web"}}
+function sourceName(url){
+  try{
+    const h=new URL(url).hostname.replace(/^www\./,"");
+    if(/(^|\.)haraj\.com\.sa$/i.test(h))return"Haraj";
+    if(/(^|\.)syarah\.com$/i.test(h))return"Syarah";
+    if(/(^|\.)saudisale\.com$/i.test(h))return"Saudi Sale";
+    if(/(^|\.)arabwheels\.sa$/i.test(h))return"ArabWheels";
+    if(/(^|\.)yallamotor\.com$/i.test(h))return"YallaMotor";
+    if(/(^|\.)carswitch\.com$/i.test(h))return"CarSwitch Saudi";
+    if(/(^|\.)motory\.com$/i.test(h))return"Motory";
+    if(/(^|\.)salehcars\.com$/i.test(h))return"Saleh Cars";
+    return h;
+  }catch{return"Web"}
+}
 function titleFrom(html,url){return strip(first(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)/i,html)||first(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:title["']/i,html)||first(/<title[^>]*>([\s\S]*?)<\/title>/i,html)||"")||sourceName(url)+" car";}
 function imageFrom(html,url){const x=first(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)/i,html)||first(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i,html);return x?abs(x,url):null;}
 function yearFrom(text=""){const y=[...String(text).matchAll(/\b(19\d{2}|20\d{2})\b/g)].map(m=>Number(m[1])).find(x=>x>=1980&&x<=2030);return y||null;}
@@ -32,6 +45,7 @@ function conditionFrom(text=""){if(/\bnew\b|جديد|زيرو|اصفار|أصف�
 function modelIdentity(text=""){const low=String(text).toLowerCase();for(const full of [...SAUDI_POPULAR_MODELS].sort((a,b)=>b.length-a.length)){if(low.includes(full.toLowerCase())){const [brand,...rest]=full.split(" ");return{brand,model:rest.join(" ")}}}return{brand:null,model:null};}
 function directEnough(u,title,text){
   if(BLOCK_PATH.test(u.pathname)||CATEGORY_PATH.test(u.pathname)||u.searchParams.has("page"))return false;
+  if(/syarah\.com$/i.test(u.hostname)&&/^\/autos\/[^/]+\/[^/]+(?:\/(?:19|20)\d{2})?\/?$/i.test(u.pathname))return false;
   if(WANTED.test(`${title} ${text}`)||PART_WORDS.test(`${title} ${text}`))return false;
   if(knownDirect.some(fn=>fn(u)))return true;
   const seg=u.pathname.split("/").filter(Boolean),hasListingId=/(?:^|[-_/])\d{4,}(?:[-_/]|$)/.test(u.pathname),hasYear=/(?:19|20)\d{2}/.test(u.pathname);

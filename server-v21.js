@@ -94,8 +94,9 @@ function requestFilters(body = {}) {
 }
 function matches(c, f, condition) {
   if (!c?.url || c.saleVerified !== true || c.condition !== condition) return false;
-  if (f.minYear && c.year && Number(c.year) < f.minYear) return false;
-  if (f.maxYear && c.year && Number(c.year) > f.maxYear) return false;
+  if ((f.minYear || f.maxYear) && !c.year) return false;
+  if (f.minYear && Number(c.year) < f.minYear) return false;
+  if (f.maxYear && Number(c.year) > f.maxYear) return false;
   if (f.maxPrice && c.price && Number(c.price) > f.maxPrice) return false;
   if (f.maxMileage && c.mileage != null && Number(c.mileage) > f.maxMileage) return false;
   if (f.city && c.city && c.city !== f.city) return false;
@@ -138,20 +139,22 @@ const validators = {
 };
 function plansFor(body = {}) {
   const id=identity(body.query),f=requestFilters(body),condition=body.condition==="new"?"new":"used",phrase=id.phrase;
+  const exactYear=f.minYear&&f.maxYear&&Number(f.minYear)===Number(f.maxYear)?Number(f.minYear):null;
+  const searchPhrase=[phrase,exactYear].filter(Boolean).join(" ");
   const allUsed=[
-    {name:"Syarah",seller:"Syarah",type:"marketplace",q:`site:syarah.com/en/cardetail \"${phrase}\"`,condition},
-    {name:"ArabWheels",seller:"ArabWheels",type:"marketplace",q:`site:arabwheels.sa/en/used-cars \"${phrase}\" Saudi`,condition:"used"},
-    {name:"Haraj",seller:"Haraj",type:"marketplace",q:`site:haraj.com.sa \"${phrase}\" سيارات`,condition},
-    {name:"Saudi Sale",seller:"Saudi Sale",type:"marketplace",q:`site:cars.saudisale.com/en/listings \"${phrase}\"`,condition:"used"},
-    {name:"YallaMotor",seller:"YallaMotor",type:"marketplace",q:`site:ksa.yallamotor.com/used-cars \"${phrase}\"`,condition:"used"},
-    {name:"CarSwitch Saudi",seller:"CarSwitch Saudi",type:"marketplace",q:`site:ksa.carswitch.com/used-cars \"${phrase}\"`,condition:"used"},
-    {name:"Carly",seller:"Carly - كارلي",type:"certified_used",q:`site:halacarly.com/vehicle-details \"${phrase}\"`,condition:"used"}
+    {name:"Syarah",seller:"Syarah",type:"marketplace",q:`site:syarah.com/en/cardetail \"${searchPhrase}\"`,condition},
+    {name:"ArabWheels",seller:"ArabWheels",type:"marketplace",q:`site:arabwheels.sa/en/used-cars \"${searchPhrase}\" Saudi`,condition:"used"},
+    {name:"Haraj",seller:"Haraj",type:"marketplace",q:`site:haraj.com.sa \"${searchPhrase}\" سيارات`,condition},
+    {name:"Saudi Sale",seller:"Saudi Sale",type:"marketplace",q:`site:cars.saudisale.com/en/listings \"${searchPhrase}\"`,condition:"used"},
+    {name:"YallaMotor",seller:"YallaMotor",type:"marketplace",q:`site:ksa.yallamotor.com/used-cars \"${searchPhrase}\"`,condition:"used"},
+    {name:"CarSwitch Saudi",seller:"CarSwitch Saudi",type:"marketplace",q:`site:ksa.carswitch.com/used-cars \"${searchPhrase}\"`,condition:"used"},
+    {name:"Carly",seller:"Carly - كارلي",type:"certified_used",q:`site:halacarly.com/vehicle-details \"${searchPhrase}\"`,condition:"used"}
   ];
   const allNew=[
-    {name:"Syarah",seller:"Syarah",type:"marketplace",q:`site:syarah.com/en/cardetail \"${phrase}\" new`,condition:"new"},
-    {name:"Jetour KSA",seller:"Jetour KSA / National Motors Supplies",type:"official_dealer",q:`site:jetourksa.com/en/inventory/new-cars \"${phrase}\"`,condition:"new"},
-    {name:"Saleh Cars",seller:"Saleh Cars Group",type:"independent_dealer",q:`site:salehcars.com/cars \"${phrase}\"`,condition:"new"},
-    {name:"Motory",seller:"Motory",type:"marketplace",q:`site:ksa.motory.com/en/cars-for-sale \"${phrase}\"`,condition:"new"}
+    {name:"Syarah",seller:"Syarah",type:"marketplace",q:`site:syarah.com/en/cardetail \"${searchPhrase}\" new`,condition:"new"},
+    {name:"Jetour KSA",seller:"Jetour KSA / National Motors Supplies",type:"official_dealer",q:`site:jetourksa.com/en/inventory/new-cars \"${searchPhrase}\"`,condition:"new"},
+    {name:"Saleh Cars",seller:"Saleh Cars Group",type:"independent_dealer",q:`site:salehcars.com/cars \"${searchPhrase}\"`,condition:"new"},
+    {name:"Motory",seller:"Motory",type:"marketplace",q:`site:ksa.motory.com/en/cars-for-sale \"${searchPhrase}\"`,condition:"new"}
   ];
   return (condition==="new"?allNew:allUsed).filter(p => (!f.seller || f.seller===p.name || f.seller===p.seller) && (!f.sourceType || f.sourceType===p.type));
 }
@@ -189,7 +192,7 @@ async function enrichExact(card) {
 function cardFromIndex(plan,r,body) {
   const url=canonical(r.url||""); if(!validators[plan.name]?.(url))return null;
   const text=`${r.title||""} ${r.description||""}`,id=identity(body.query),f=requestFilters(body),condition=plan.condition;
-  const c={source:plan.name,sourceType:plan.type,seller:plan.seller,sourceStrict:true,title:r.title||`${id.phrase} listing`,snippet:r.description||"Publicly indexed individual vehicle listing",url,brand:id.brand||null,model:id.model?titleCase(id.model):null,year:yearOf(text)||f.minYear||null,mileage:mileageOf(text),city:cityOf(text),price:null,priceVerified:false,priceSource:null,condition,saleVerified:true,saleEvidence:["direct_listing_url","public_search_index"],image:null,displayImage:null,imageVerified:false,imageSource:null,score:82,discovery:"public_index_exact_listing"};
+  const c={source:plan.name,sourceType:plan.type,seller:plan.seller,sourceStrict:true,title:r.title||`${id.phrase} listing`,snippet:r.description||"Publicly indexed individual vehicle listing",url,brand:id.brand||null,model:id.model?titleCase(id.model):null,year:yearOf(text)||null,mileage:mileageOf(text),city:cityOf(text),price:null,priceVerified:false,priceSource:null,condition,saleVerified:true,saleEvidence:["direct_listing_url","public_search_index"],image:null,displayImage:null,imageVerified:false,imageSource:null,score:82,discovery:"public_index_exact_listing"};
   return matches(c,f,body.condition==="new"?"new":"used")?c:null;
 }
 async function scanIndexed(body, job) {

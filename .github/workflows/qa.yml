@@ -23,6 +23,9 @@ jobs:
       - run: node --check server-v25.js
       - run: node --check server-v26.js
       - run: node --check server-v27.js
+      - run: node --check server-v28.js
+      - run: node --check public/hotfix-v28.js
+      - run: node --check tests/smart-search-v28.mjs
       - run: node --check tests/semantic-v25.mjs
       - run: node --check tests/universal-identity-v26.mjs
       - run: node tests/product-shell-v24.mjs
@@ -31,13 +34,13 @@ jobs:
   deploy-ready:
     needs: regression
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Wait for stable universal production build
+      - name: Wait for stable smart-search production build
         env:
           DELILAH_URL: https://delilah-pm5f.onrender.com
         run: |
@@ -45,19 +48,19 @@ jobs:
           const base=process.env.DELILAH_URL;
           const sleep=ms=>new Promise(r=>setTimeout(r,ms));
           let last='',observed=0;
-          for(let i=0;i<90;i++){
+          for(let i=0;i<110;i++){
             try{
               const r=await fetch(`${base}/api/health`,{signal:AbortSignal.timeout(7000)});
               if(r.ok){
                 const d=await r.json();
-                last=JSON.stringify({edge:d.edge,universalVehicleIdentity:d.universalVehicleIdentity,unknownMakeFallback:d.unknownMakeFallback,queryExpansion:d.queryExpansion,identityNormalization:d.identityNormalization,exactModelIdentity:d.exactModelIdentity});
-                const ready=d.edge==='product-v27'&&d.universalVehicleIdentity===true&&d.unknownMakeFallback===true&&d.queryExpansion===true&&d.identityNormalization===true&&d.exactModelIdentity===true;
-                if(ready){observed++;if(observed>=3){console.log('PASS stable v27 deploy',last);process.exit(0)}}else observed=0;
+                last=JSON.stringify({edge:d.edge,smartSearchBar:d.smartSearchBar,sourceAwareSearch:d.sourceAwareSearch,universalTypoCorrection:d.universalTypoCorrection,similarOfferings:d.similarOfferings,vehicleHistoryIntegration:d.vehicleHistoryIntegration});
+                const ready=d.edge==='product-v28'&&d.smartSearchBar===true&&d.sourceAwareSearch===true&&d.universalTypoCorrection===true&&d.similarOfferings===true&&d.vehicleHistoryIntegration===true;
+                if(ready){observed++;if(observed>=3){console.log('PASS stable v28 deploy',last);process.exit(0)}}else observed=0;
               }
             }catch(e){last=e.message;observed=0}
             await sleep(3000);
           }
-          throw new Error(`Production v27 not ready: ${last}`);
+          throw new Error(`Production v28 not ready: ${last}`);
           NODE
 
   production-qa:
@@ -71,6 +74,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Test smart search, source filters, typos, similar and history
+        id: smart
+        continue-on-error: true
+        run: node tests/smart-search-v28.mjs
       - name: Test universal manufacturer, model and localization identity
         id: universal
         continue-on-error: true
@@ -95,13 +102,18 @@ jobs:
         id: scale
         continue-on-error: true
         run: node tests/inventory-scale.mjs
-      - name: Fail if universal production QA has failures
+      - name: Fail if production QA has failures
         if: always()
+        env:
+          SMART: ${{ steps.smart.outcome }}
+          UNIVERSAL: ${{ steps.universal.outcome }}
+          SEMANTIC: ${{ steps.semantic.outcome }}
+          FAST: ${{ steps.fast.outcome }}
+          PLUGINS: ${{ steps.plugins.outcome }}
+          ARBITRARY: ${{ steps.arbitrary.outcome }}
+          SCALE: ${{ steps.scale.outcome }}
         run: |
-          echo "universal=${{ steps.universal.outcome }} semantic=${{ steps.semantic.outcome }} fast=${{ steps.fast.outcome }} plugins=${{ steps.plugins.outcome }} arbitrary=${{ steps.arbitrary.outcome }} scale=${{ steps.scale.outcome }}"
-          test "${{ steps.universal.outcome }}" = success
-          test "${{ steps.semantic.outcome }}" = success
-          test "${{ steps.fast.outcome }}" = success
-          test "${{ steps.plugins.outcome }}" = success
-          test "${{ steps.arbitrary.outcome }}" = success
-          test "${{ steps.scale.outcome }}" = success
+          echo "smart=$SMART universal=$UNIVERSAL semantic=$SEMANTIC fast=$FAST plugins=$PLUGINS arbitrary=$ARBITRARY scale=$SCALE"
+          for outcome in "$SMART" "$UNIVERSAL" "$SEMANTIC" "$FAST" "$PLUGINS" "$ARBITRARY" "$SCALE"; do
+            if [ "$outcome" != "success" ]; then exit 1; fi
+          done

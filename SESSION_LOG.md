@@ -20,3 +20,15 @@
 - Added production QA `tests/genesis-wallan-v17.mjs` to require direct Genesis inventory URLs, certified-used separation, numeric verified prices when present, and **no non-actual Genesis gallery image exposure**.
 - Product boundary retained: real individual sale pages only; no category/model/search pages; New/Used separation; no anti-bot bypass; no fabricated listing fields.
 - Next targets in order: validate Genesis v17 live deployment; then Audi SAMACO stock; Geely Wallan transactional stock; Honda Abdullah Hashim; Hyundai three-distributor coverage; Changan / Peugeot Almajdouie; Jetour; Haval; GAC. Only activate a seller when Delilah can point to a real individual car page or a verifiably transactional stock unit.
+
+## 2026-09-08 — Full product v24
+
+- Activated the previously staged v23 edge so exact Syarah cash-price verification and the ArabWheels direct-new-stock fallback are part of the production chain.
+- Added `server-v24.js` as the customer-product edge. It preserves the verified inventory/search architecture while applying strict user-facing filters, canonical URL de-duplication, product completeness scoring and sorting.
+- Hard-filter behavior is now explicit: when the user sets a maximum price, Delilah only returns listings with a verified numeric price inside that budget; year, mileage and city filters similarly exclude listings whose required value is unknown. This prevents uncertain data from silently violating a search constraint.
+- Added `public/product-v24.html`, replacing the engineering-style search shell with a responsive product experience: New/Used tabs, Arabic/English natural-language search, filters, progressive scan feedback, verified listing cards, source counts, sorting, Saved Cars, three-car Compare, source directory and mobile layouts.
+- Saved Cars and Compare currently use browser-local state; no user account is required.
+- Listing cards continue to open the original seller page. Delilah does not claim ownership of third-party inventory and does not fabricate missing prices or images.
+- Added the v24 source-drawer hotfix for graceful source-registry failures.
+- Updated product UI and live-smoke QA to expect the v24 production edge and updated the GitHub Actions deploy-ready gate to require `product-v24`, `fullProduct`, `strictVerifiedFilters` and the v24 frontend marker.
+- Render production startup verified successfully: `server-v24.js` launches the existing inventory chain through v23 and exposes `Delilah product-v24` on the service port at the primary Render URL.

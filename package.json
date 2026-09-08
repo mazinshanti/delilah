@@ -1,12 +1,12 @@
 {
   "name": "dalelah-live-search",
-  "version": "1.4.4-car-brain-beta",
+  "version": "1.4.5-car-brain-qa",
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node server-v1.4-ai.js",
+    "start": "node boot-v14-ai-qa.js",
     "dev": "node --watch server-v1.4-ai.js",
-    "check": "node --check server-v1.4.js && node --check server-v1.4-ai.js && node --check car-brain-v1.4.js && node --check car-brain-v1.4.3.js && node --check car-brain-v1.4.4.js && node --check public/v14-progress.js"
+    "check": "node --check server-v1.4.js && node --check server-v1.4-ai.js && node --check car-brain-v1.4.js && node --check car-brain-v1.4.3.js && node --check car-brain-v1.4.4.js && node --check boot-v14-ai-qa.js && node --check public/v14-progress.js"
   },
   "dependencies": {
     "dotenv": "^16.4.7",

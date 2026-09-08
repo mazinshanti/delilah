@@ -37,6 +37,7 @@ jobs:
       - run: node --check server-v19.js
       - run: node --check server-v20.js
       - run: node --check server-v21.js
+      - run: node --check server-v22.js
       - run: node tests/regression.mjs
 
   deploy-ready:
@@ -59,11 +60,11 @@ jobs:
           for(let i=0;i<90;i++){
             try{
               const r=await fetch(`${base}/api/health`,{signal:AbortSignal.timeout(6000)});
-              if(r.ok){const d=await r.json();last=JSON.stringify({edge:d.edge,progressiveSearch:d.progressiveSearch,indexedExactFallback:d.indexedExactFallback});if(d.edge==='inventory-v21'&&d.progressiveSearch===true&&d.indexedExactFallback===true){console.log('PASS deploy ready',last);process.exit(0)}}
+              if(r.ok){const d=await r.json();last=JSON.stringify({edge:d.edge,progressiveSearch:d.progressiveSearch,sourceNativeAdapters:d.sourceNativeAdapters});if(d.edge==='inventory-v22'&&d.progressiveSearch===true&&Array.isArray(d.sourceNativeAdapters)){console.log('PASS deploy ready',last);process.exit(0)}}
             }catch(e){last=e.message}
             await sleep(2000);
           }
-          throw new Error(`Production v21 not ready: ${last}`);
+          throw new Error(`Production v22 not ready: ${last}`);
           NODE
 
   production-qa:
@@ -93,7 +94,7 @@ jobs:
         id: userpath
         continue-on-error: true
         run: node tests/user-path-v7.mjs
-      - name: Test deterministic and indexed seller plugins
+      - name: Test source-native seller plugins
         id: plugins
         continue-on-error: true
         run: node tests/seller-plugins-v16.mjs

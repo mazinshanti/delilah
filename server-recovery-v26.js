@@ -85,6 +85,78 @@ async function jsonPost(port, pathname, body, timeout = 45000) {
   return { r, d };
 }
 
+function decodeHtml(s = '') { return String(s).replace(/&amp;/gi, '&').replace(/&quot;/gi, '"').replace(/&#39;|&apos;/gi, "'").replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/&nbsp;|&#160;/gi, ' '); }
+function stripHtml(s = '') { return decodeHtml(String(s)).replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<style[\s\S]*?<\/style>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(); }
+function absolute(v, base) { try { return new URL(decodeHtml(v), base).href; } catch { return null; } }
+function htmlMeta(html, key) {
+  const k = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`<meta[^>]+(?:property|name)=["']${k}["'][^>]+content=["']([^"']+)["'][^>]*>`, 'i').exec(html)?.[1]
+    || new RegExp(`<meta[^>]+content=["']([^"']+)["'][^>]+(?:property|name)=["']${k}["'][^>]*>`, 'i').exec(html)?.[1] || null;
+}
+function titleFromHtml(html = '') {
+  const h1 = /<h1\b[^>]*>([\s\S]*?)<\/h1>/i.exec(html)?.[1];
+  const title = /<title\b[^>]*>([\s\S]*?)<\/title>/i.exec(html)?.[1];
+  return stripHtml(h1 || htmlMeta(html, 'og:title') || title || '').slice(0, 220);
+}
+async function fetchHtml(url, timeout = 9000) {
+  const r = await fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(timeout), headers: { 'User-Agent': 'Mozilla/5.0 (compatible; DalelahCoverage/2.6; +https://www.dalelah.co)', Accept: 'text/html,application/xhtml+xml' } });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  const ct = (r.headers.get('content-type') || '').toLowerCase(); if (!ct.includes('text/html')) throw new Error(`Unexpected ${ct}`);
+  return { html: (await r.text()).slice(0, 3_500_000), url: r.url || url };
+}
+function yallaInfo(url = '') {
+  try {
+    const u = new URL(url); if (!(u.hostname === 'ksa.yallamotor.com' || u.hostname.endsWith('.yallamotor.com'))) return null;
+    const p = u.pathname.match(/^\/used-cars\/([^/]+)\/([^/]+)\/(20\d{2})\/((?:used|new)-[^/]+-\d+)\/?$/i);
+    return p ? { brandSlug: p[1], modelSlug: p[2], year: Number(p[3]), condition: p[4].toLowerCase().startsWith('new-') ? 'new' : 'used' } : null;
+  } catch { return null; }
+}
+function yallaLinks(html, base, year) {
+  const out = new Set();
+  for (const m of String(html).matchAll(/href=["']([^"']+)["']/gi)) {
+    const u = absolute(m[1], base), info = yallaInfo(u || '');
+    if (u && info && (!year || info.year === year)) out.add(canonical(u));
+  }
+  return [...out];
+}
+function numberFrom(v, min = 0, max = 5_000_000) { const n = Number(String(v || '').replace(/[^0-9.]/g, '')); return Number.isFinite(n) && n >= min && n <= max ? n : null; }
+function digitsForFields(s = '') { return String(s || '').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)); }
+function yallaPrice(text = '') {
+  const t = digitsForFields(text), m = t.match(/(?:^|\s)([0-9][\d,]{2,9})\s*SAR\b/i) || t.match(/\bSAR\s*([0-9][\d,]{2,9})/i);
+  return m ? numberFrom(m[1], 1000, 5_000_000) : null;
+}
+function yallaMileage(text = '') { const m = digitsForFields(text).match(/(?:Kilometers?|Mileage)\s*([0-9][\d,]{0,8})\s*(?:KM|km)/i) || digitsForFields(text).match(/([0-9][\d,]{0,8})\s*(?:KM|km)\b/i); return m ? numberFrom(m[1], 0, 1_500_000) : null; }
+function cityFromText(text = '') { const t = norm(text); if (/riyadh|الرياض/.test(t)) return 'Riyadh'; if (/jeddah|جده/.test(t)) return 'Jeddah'; if (/dammam|الدمام/.test(t)) return 'Dammam'; if (/khobar|الخبر/.test(t)) return 'Khobar'; if (/makkah|mecca|مكه/.test(t)) return 'Makkah'; if (/madinah|medina|المدينه/.test(t)) return 'Madinah'; if (/hail|حايل|حائل/.test(t)) return 'Hail'; if (/tabuk|تبوك/.test(t)) return 'Tabuk'; return null; }
+function titleCaseSlug(s = '') { return decodeURIComponent(s).split('-').filter(Boolean).map(x => x ? x[0].toUpperCase() + x.slice(1) : x).join(' '); }
+async function yallaDetail(url, expectedYear) {
+  const info = yallaInfo(url); if (!info || (expectedYear && info.year !== expectedYear)) return null;
+  const d = await fetchHtml(url, 8500); const finalInfo = yallaInfo(d.url); if (!finalInfo || (expectedYear && finalInfo.year !== expectedYear)) return null;
+  const text = stripHtml(d.html).slice(0, 40000), title = titleFromHtml(d.html) || `${titleCaseSlug(finalInfo.brandSlug)} ${titleCaseSlug(finalInfo.modelSlug)} ${finalInfo.year}`;
+  const price = yallaPrice(text), mileage = yallaMileage(text), img = absolute(htmlMeta(d.html, 'og:image') || htmlMeta(d.html, 'twitter:image'), d.url);
+  return { source: 'YallaMotor', sourceType: 'marketplace', seller: 'YallaMotor', sourceStrict: true, title, snippet: text.slice(0, 700), url: canonical(d.url), brand: titleCaseSlug(finalInfo.brandSlug), model: titleCaseSlug(finalInfo.modelSlug), year: finalInfo.year, mileage, city: cityFromText(text), price, priceVerified: Boolean(price), condition: finalInfo.condition, saleVerified: true, saleEvidence: ['direct_listing_url', 'listing_page_verified'], image: img, displayImage: img, imageVerified: Boolean(img), imageSource: img ? 'listing_page' : null, score: Math.min(98, 86 + (price ? 4 : 0) + (mileage != null ? 3 : 0) + (img ? 3 : 0)), discovery: 'yallamotor_native_exact_year' };
+}
+async function mapLimit(items, limit, fn) {
+  const out = new Array(items.length); let next = 0;
+  async function worker() { for (;;) { const i = next++; if (i >= items.length) return; try { out[i] = await fn(items[i], i); } catch { out[i] = null; } } }
+  await Promise.all(Array.from({ length: Math.min(limit, items.length || 1) }, worker)); return out.filter(Boolean);
+}
+async function nativeYallaExact(seedListings, y) {
+  if (!y) return { listings: [], pages: 0, links: 0 };
+  const seed = (seedListings || []).find(c => c.source === 'YallaMotor' && yallaInfo(c.url)); if (!seed) return { listings: [], pages: 0, links: 0 };
+  const info = yallaInfo(seed.url), base = `https://ksa.yallamotor.com/used-cars/${info.brandSlug}/${info.modelSlug}/yr_${y}_${y}`;
+  const links = new Set(); let pages = 0;
+  for (let p = 1; p <= 6; p++) {
+    try {
+      const d = await fetchHtml(p === 1 ? base : `${base}?page=${p}`, 9000), xs = yallaLinks(d.html, d.url, y); pages++;
+      const before = links.size; for (const u of xs) links.add(u);
+      if (!xs.length || (p > 1 && links.size === before)) break;
+      if (xs.length < 18 && p > 1) break;
+    } catch { break; }
+  }
+  const all = [...links].slice(0, 140), details = await mapLimit(all, 10, u => yallaDetail(u, y));
+  return { listings: details, pages, links: all.length };
+}
+
 const USED_COVERAGE = ['YallaMotor', 'Saudi Sale', 'Mstaml', 'Dubizzle KSA', 'Kayishha', 'ArabWheels'];
 const NEW_COVERAGE = ['Saudi Sale', 'Mstaml', 'Dubizzle KSA', 'Saleh Cars', 'ArabWheels', 'CARTAL'];
 async function supplementalScan(body) {
@@ -102,6 +174,11 @@ async function supplementalScan(body) {
       diagnostics.push({ source, ok: r.ok, returned: xs.length, error: r.ok ? null : d.error || `HTTP ${r.status}` });
     } catch (e) { diagnostics.push({ source, ok: false, returned: 0, error: e?.message || String(e) }); }
   }));
+  if ((!requested || requested === 'YallaMotor') && body.condition === 'used') {
+    const native = await nativeYallaExact(results, exactYear(body.query));
+    if (native.listings.length) results.push(...native.listings);
+    diagnostics.push({ source: 'YallaMotor native', ok: true, returned: native.listings.length, pages: native.pages, links: native.links });
+  }
   return { listings: results, diagnostics, attempted: sources };
 }
 

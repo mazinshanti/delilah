@@ -31,6 +31,7 @@ jobs:
       - run: node --check server-v13.js
       - run: node --check server-v14.js
       - run: node --check server-v15.js
+      - run: node --check server-v16.js
       - run: node tests/regression.mjs
 
   source-probe-v15:
@@ -60,6 +61,20 @@ jobs:
         env:
           DELILAH_URL: https://delilah-pm5f.onrender.com
         run: node tests/fast-path-v8.mjs
+
+  seller-plugins-v16:
+    needs: fast-path-v9
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test strict seller plugins in production
+        env:
+          DELILAH_URL: https://delilah-pm5f.onrender.com
+        run: node tests/seller-plugins-v16.mjs
 
   catalog-breadth-v11:
     needs: fast-path-v9

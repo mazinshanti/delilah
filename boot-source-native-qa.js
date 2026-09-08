@@ -1,4 +1,4 @@
-import './server-v21.js';
+import './server-v24.js';
 
 const port=Number(process.env.PORT||3000);
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -15,5 +15,5 @@ async function probe(query,condition='used',filters={}){
   }
 }
 
-await sleep(7000);
+await sleep(9000);
 for(const q of ['Toyota','used cars Riyadh','SUV','Patrol','Corolla 2013']) await probe(q,'used',{});

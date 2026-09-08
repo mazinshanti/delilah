@@ -23,7 +23,7 @@ app.get('/',async(_req,res)=>{
     const r=await fetch(`http://127.0.0.1:${v30Port}/`,{signal:AbortSignal.timeout(10000)});
     const html=await r.text();
     res.setHeader('cache-control','no-store');
-    return res.type('html').send(html.replace('</body>','<script src="/hotfix-v31.js"></script></body>'));
+    return res.type('html').send(html.replace('</body>','<script src="/hotfix-v31.js?v=2"></script></body>'));
   }catch{return res.status(502).send('Delilah frontend unavailable')}
 });
 

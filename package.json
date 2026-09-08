@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node server-v29.js",
-    "dev": "node --watch server-v29.js"
+    "start": "node server-v30.js",
+    "dev": "node --watch server-v30.js"
   },
   "dependencies": {
     "dotenv": "^16.4.7",

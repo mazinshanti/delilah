@@ -22,8 +22,7 @@ jobs:
       - run: node --check server-v24.js
       - run: node --check server-v25.js
       - run: node --check server-v26.js
-      - run: node --check public/hotfix-v24.js
-      - run: node --check public/hotfix-v25.js
+      - run: node --check server-v27.js
       - run: node --check tests/semantic-v25.mjs
       - run: node --check tests/universal-identity-v26.mjs
       - run: node tests/product-shell-v24.mjs
@@ -51,14 +50,14 @@ jobs:
               const r=await fetch(`${base}/api/health`,{signal:AbortSignal.timeout(7000)});
               if(r.ok){
                 const d=await r.json();
-                last=JSON.stringify({edge:d.edge,universalVehicleIdentity:d.universalVehicleIdentity,unknownMakeFallback:d.unknownMakeFallback,exactModelIdentity:d.exactModelIdentity,syarahOriginalPricePolicy:d.syarahOriginalPricePolicy});
-                const ready=d.edge==='product-v26'&&d.universalVehicleIdentity===true&&d.unknownMakeFallback===true&&d.exactModelIdentity===true&&d.syarahOriginalPricePolicy===true;
-                if(ready){observed++;if(observed>=3){console.log('PASS stable v26 deploy',last);process.exit(0)}}else observed=0;
+                last=JSON.stringify({edge:d.edge,universalVehicleIdentity:d.universalVehicleIdentity,unknownMakeFallback:d.unknownMakeFallback,queryExpansion:d.queryExpansion,identityNormalization:d.identityNormalization,exactModelIdentity:d.exactModelIdentity});
+                const ready=d.edge==='product-v27'&&d.universalVehicleIdentity===true&&d.unknownMakeFallback===true&&d.queryExpansion===true&&d.identityNormalization===true&&d.exactModelIdentity===true;
+                if(ready){observed++;if(observed>=3){console.log('PASS stable v27 deploy',last);process.exit(0)}}else observed=0;
               }
             }catch(e){last=e.message;observed=0}
             await sleep(3000);
           }
-          throw new Error(`Production v26 not ready: ${last}`);
+          throw new Error(`Production v27 not ready: ${last}`);
           NODE
 
   production-qa:
@@ -72,7 +71,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Test universal manufacturer and model identity
+      - name: Test universal manufacturer, model and localization identity
         id: universal
         continue-on-error: true
         run: node tests/universal-identity-v26.mjs
@@ -88,7 +87,7 @@ jobs:
         id: plugins
         continue-on-error: true
         run: node tests/seller-plugins-v16.mjs
-      - name: Test arbitrary model discovery
+      - name: Test arbitrary model spelling discovery
         id: arbitrary
         continue-on-error: true
         run: node tests/arbitrary-models-v21.mjs

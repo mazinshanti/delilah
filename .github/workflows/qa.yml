@@ -56,28 +56,28 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Wait for current production build
+      - name: Wait for stable production build
         env:
           DELILAH_URL: https://delilah-pm5f.onrender.com
         run: |
           node --input-type=module <<'NODE'
           const base=process.env.DELILAH_URL;
           const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-          let last='';
+          let last='',settled=false;
           for(let i=0;i<90;i++){
             try{
               const r=await fetch(`${base}/api/health`,{signal:AbortSignal.timeout(7000)});
               if(r.ok){
                 const d=await r.json();
                 last=JSON.stringify({edge:d.edge,fullProduct:d.fullProduct,aiSearchUnderstanding:d.aiSearchUnderstanding,exactModelIdentity:d.exactModelIdentity,syarahOriginalPricePolicy:d.syarahOriginalPricePolicy,harajExactPages:d.harajExactPages});
-                if(d.edge==='product-v25'&&d.fullProduct===true&&d.aiSearchUnderstanding===true&&d.exactModelIdentity===true&&d.syarahOriginalPricePolicy===true&&d.harajExactPages===true){
-                  console.log('PASS deploy ready',last);process.exit(0)
-                }
+                const ready=d.edge==='product-v25'&&d.fullProduct===true&&d.aiSearchUnderstanding===true&&d.exactModelIdentity===true&&d.syarahOriginalPricePolicy===true&&d.harajExactPages===true;
+                if(ready&&!settled){settled=true;console.log('v25 observed; allowing Render deploy swap to settle',last);await sleep(70000);continue}
+                if(ready&&settled){console.log('PASS stable deploy ready',last);process.exit(0)}
               }
             }catch(e){last=e.message}
             await sleep(2000);
           }
-          throw new Error(`Production v25 not ready: ${last}`);
+          throw new Error(`Production v25 not stably ready: ${last}`);
           NODE
 
   production-qa:

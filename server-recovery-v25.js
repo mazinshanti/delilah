@@ -29,27 +29,53 @@ async function upstreamSearch(body){
   const r=await fetch(`http://127.0.0.1:${upstreamPort}/api/search`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(35000)});
   const text=await r.text();let d;try{d=JSON.parse(text)}catch{d={error:text.slice(0,300)}};return{r,d};
 }
-function merge(groups=[]){const m=new Map();for(const g of groups)for(const c of(g||[])){if(!c?.url)continue;const k=canonical(c.url);const o=m.get(k);m.set(k,o?{...c,...o,image:o.image||c.image,displayImage:o.displayImage||c.displayImage,price:o.price??c.price??null}:c)}return[...m.values()];}
+function titleFromUrl(c){
+  try{
+    const u=new URL(c.url||'');
+    let slug=u.pathname.split('/').filter(Boolean).pop()||'';
+    slug=slug.replace(/-(?:used|new)-\d+$/i,'').replace(/-for-sale-in-[^-]+-\d+$/i,'').replace(/-\d+$/,'');
+    const words=slug.split('-').filter(Boolean).map(x=>x.length<=3?x.toUpperCase():x[0].toUpperCase()+x.slice(1));
+    return words.join(' ');
+  }catch{return''}
+}
+function clean(c){
+  if(!c)return c;
+  const t=String(c.title||'').trim();
+  const bad=!t||/^\d[\d,\.]*\s*(?:sar|ريال|ر\.?س)?$/i.test(t)||/^(call for price|price on request)$/i.test(t);
+  if(!bad)return c;
+  const derived=titleFromUrl(c);
+  return derived?{...c,title:derived}:c;
+}
+function merge(groups=[]){const m=new Map();for(const g of groups)for(const raw of(g||[])){if(!raw?.url)continue;const c=clean(raw),k=canonical(c.url),o=m.get(k);m.set(k,o?{...c,...o,image:o.image||c.image,displayImage:o.displayImage||c.displayImage,price:o.price??c.price??null,title:clean(o).title||clean(c).title}:c)}return[...m.values()];}
 function fanoutQueries(q){const n=norm(q);if(/\bsuv\b|دفع رباعي|جيب/.test(n))return SUV;for(const [b,models] of Object.entries(BRAND_MODELS))if(n===b||n===b+' cars'||n.includes(' '+b+' ')||n.startsWith(b+' '))return models.map(m=>`${b} ${m}`);if(/used cars|cars riyadh|سيارات مستعمل/.test(n))return GENERAL;return[];}
+function exactYear(q){const m=String(q||'').match(/\b(20\d{2})\b/);return m?Number(m[1]):null;}
 function counts(xs){return xs.reduce((a,c)=>(a[c.source]=(a[c.source]||0)+1,a),{});}
 
 app.post('/api/search',async(req,res)=>{
   const body=req.body||{},q=String(body.query||'');
   try{
     const first=await upstreamSearch(body);if(!first.r.ok)return res.status(first.r.status).json(first.d);
-    let listings=Array.isArray(first.d.listings)?first.d.listings:[];
+    let listings=Array.isArray(first.d.listings)?first.d.listings.map(clean):[];
+    const y=exactYear(q);
+    if(y&&listings.length===0){
+      const relaxed=q.replace(String(y),'').replace(/\s+/g,' ').trim();
+      if(relaxed){
+        const z=await upstreamSearch({...body,query:relaxed,filters:{...(body.filters||{}),minYear:'',maxYear:''}}).catch(()=>null);
+        if(z?.r?.ok)listings=merge([z.d.listings||[]]).filter(c=>Number(c.year)===y);
+      }
+    }
     const fq=fanoutQueries(q);
     if(listings.length<100&&fq.length){
       const batches=[];
       for(let i=0;i<fq.length;i+=6){
         const part=fq.slice(i,i+6);
-        const settled=await Promise.all(part.map(x=>upstreamSearch({...body,query:x,filters:{...(body.filters||{})}}).then(z=>z.r.ok?z.d.listings||[]:[]).catch(()=>[])));
+        const settled=await Promise.all(part.map(x=>upstreamSearch({...body,query:x,filters:{...(body.filters||{})}}).then(z=>z.r.ok?(z.d.listings||[]).map(clean):[]).catch(()=>[])));
         batches.push(...settled);
         if(merge([listings,...batches]).length>=400)break;
       }
       listings=merge([listings,...batches]).slice(0,500);
     }
-    const out={...first.d,listings,counts:counts(listings),recoveryFanout:{active:Boolean(fq.length),queries:fq.length,total:listings.length},product:{...(first.d.product||{}),recovery:'v25-fanout'}};
+    const out={...first.d,listings,counts:counts(listings),recoveryFanout:{active:Boolean(fq.length),queries:fq.length,total:listings.length},exactRecovery:Boolean(y&&first.d.listings?.length===0),product:{...(first.d.product||{}),recovery:'v25-fanout'}};
     return res.json(out);
   }catch(e){return res.status(502).json({error:e?.message||'Dalelah recovery search unavailable'})}
 });

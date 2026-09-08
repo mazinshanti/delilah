@@ -1,12 +1,12 @@
 {
   "name": "dalelah-live-search",
-  "version": "1.2.4-recovery",
+  "version": "1.2.6-market-coverage",
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node server-recovery-v25.js",
-    "dev": "node --watch server-recovery-v25.js",
-    "check": "node --check server-recovery-v25.js"
+    "start": "node server-recovery-v26.js",
+    "dev": "node --watch server-recovery-v26.js",
+    "check": "node --check server-recovery-v26.js && node --check lib/search-semantics-v26.js && node tests/market-coverage-v26.mjs"
   },
   "dependencies": {
     "dotenv": "^16.4.7",

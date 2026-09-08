@@ -1,15 +1,17 @@
 const base=process.env.DELILAH_URL||'https://delilah-pm5f.onrender.com';
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 let stats=null;
-for(let i=0;i<20;i++){
-  const sr=await fetch(`${base}/api/catalog/stats`,{signal:AbortSignal.timeout(10000)});
-  if(sr.ok){stats=await sr.json();if(Number(stats.indexed||stats.syarahIndexed)>=100&&(stats.samples?.length||stats.motorySamples?.length))break}
+for(let i=0;i<60;i++){
+  try{
+    const sr=await fetch(`${base}/api/catalog/stats`,{signal:AbortSignal.timeout(10000)});
+    if(sr.ok){stats=await sr.json();const candidates=[...(stats.samples||[]),...(stats.motorySamples||[]),...(stats.extendedSamples||[])];if(Number(stats.indexed||stats.syarahIndexed||stats.totalBroadIndexed)>=50&&candidates.length)break}
+  }catch{}
   await sleep(2000);
 }
 if(!stats)throw new Error('No broad inventory stats for fast-path test');
-const candidates=[...(stats.samples||[]),...(stats.motorySamples||[])];
+const candidates=[...(stats.samples||[]),...(stats.motorySamples||[]),...(stats.extendedSamples||[])];
 let sample=candidates.find(x=>x.condition==='used')||candidates[0];
-if(!sample)throw new Error('No live catalog sample available');
+if(!sample)throw new Error(`No live catalog sample available after warmup; indexed=${stats.indexed||stats.totalBroadIndexed||0}, refreshing=${stats.refreshRunning||stats.extendedRefreshing||false}, error=${stats.lastRefreshError||stats.extendedLastRefreshError||'none'}`);
 let query='',condition=sample.condition||'used',listingId='';
 let m=String(sample.url||'').match(/\/cardetail\/([^/]+)-(used|new)-(\d+)/i);
 if(m){query=m[1].replace(/-/g,' ');condition=m[2].toLowerCase();listingId=m[3]}
@@ -32,4 +34,4 @@ if(hit.saleVerified!==true)throw new Error(`Unverified sale result: ${hit.url}`)
 if(hit.condition!==condition)throw new Error(`Condition leak: wanted ${condition}, got ${hit.condition}`);
 if(hit.price!=null&&hit.priceVerified!==true)throw new Error(`Unverified price exposed: ${hit.price} ${hit.url}`);
 if(hit.image!=null&&hit.imageVerified!==true)throw new Error(`Unverified image exposed: ${hit.url}`);
-console.log(`PASS fast path: dynamic '${query}' recovered in ${elapsed}ms from ${hit.source}; broad index ${stats.totalIndexed||stats.indexed||'n/a'}`);
+console.log(`PASS fast path: dynamic '${query}' recovered in ${elapsed}ms from ${hit.source}; broad index ${stats.totalBroadIndexed||stats.indexed||'n/a'}`);

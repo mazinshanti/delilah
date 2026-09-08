@@ -23,7 +23,7 @@ jobs:
       - run: node --check server-v25.js
       - run: node --check server-v26.js
       - run: node --check server-v27.js
-      - run: node --check server-v28.js
+      - run: node --check server-v29.js
       - run: node --check public/hotfix-v28.js
       - run: node --check tests/smart-search-v28.mjs
       - run: node --check tests/semantic-v25.mjs
@@ -53,14 +53,14 @@ jobs:
               const r=await fetch(`${base}/api/health`,{signal:AbortSignal.timeout(7000)});
               if(r.ok){
                 const d=await r.json();
-                last=JSON.stringify({edge:d.edge,smartSearchBar:d.smartSearchBar,sourceAwareSearch:d.sourceAwareSearch,universalTypoCorrection:d.universalTypoCorrection,similarOfferings:d.similarOfferings,vehicleHistoryIntegration:d.vehicleHistoryIntegration});
-                const ready=d.edge==='product-v28'&&d.smartSearchBar===true&&d.sourceAwareSearch===true&&d.universalTypoCorrection===true&&d.similarOfferings===true&&d.vehicleHistoryIntegration===true;
-                if(ready){observed++;if(observed>=3){console.log('PASS stable v28 deploy',last);process.exit(0)}}else observed=0;
+                last=JSON.stringify({edge:d.edge,smartSearchBar:d.smartSearchBar,sourceAwareSearch:d.sourceAwareSearch,sourceBrowse:d.sourceBrowse,universalTypoCorrection:d.universalTypoCorrection,similarOfferings:d.similarOfferings,vehicleHistoryIntegration:d.vehicleHistoryIntegration});
+                const ready=d.edge==='product-v29'&&d.smartSearchBar===true&&d.sourceAwareSearch===true&&d.sourceBrowse===true&&d.universalTypoCorrection===true&&d.similarOfferings===true&&d.vehicleHistoryIntegration===true;
+                if(ready){observed++;if(observed>=3){console.log('PASS stable v29 deploy',last);process.exit(0)}}else observed=0;
               }
             }catch(e){last=e.message;observed=0}
             await sleep(3000);
           }
-          throw new Error(`Production v28 not ready: ${last}`);
+          throw new Error(`Production v29 not ready: ${last}`);
           NODE
 
   production-qa:

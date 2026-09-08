@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server-recovery-v25.js",
     "dev": "node --watch server-recovery-v25.js",
-    "check": "node --check server-recovery-v25.js"
+    "check": "node --check server-recovery-v25.js",
+    "test:exact-year": "node --test tests/exact-year-v15.test.mjs"
   },
   "dependencies": {
     "dotenv": "^16.4.7",

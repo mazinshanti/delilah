@@ -4,12 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node server-v20.js",
-    "dev": "node --watch server-v20.js"
+    "start": "node server-v21.js",
+    "dev": "node --watch server-v21.js"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
-    "express": "^5.1.0",
-    "openai": "^5.12.2"
+    "express": "^5.1.0"
   }
 }

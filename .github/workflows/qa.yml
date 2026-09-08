@@ -25,6 +25,7 @@ jobs:
       - run: node --check server-v27.js
       - run: node --check server-v30.js
       - run: node --check server-v31.js
+      - run: node --check server-v34.js
       - run: node --check public/hotfix-v28.js
       - run: node --check public/hotfix-v31.js
       - run: node --check tests/smart-search-v28.mjs
@@ -42,7 +43,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Wait for stable compact-browse production build
+      - name: Wait for stable AI-search production build
         env:
           DELILAH_URL: https://delilah-pm5f.onrender.com
         run: |
@@ -55,14 +56,14 @@ jobs:
               const r=await fetch(`${base}/api/health`,{signal:AbortSignal.timeout(7000)});
               if(r.ok){
                 const d=await r.json();
-                last=JSON.stringify({edge:d.edge,smartSearchBar:d.smartSearchBar,numericModelProtection:d.numericModelProtection,compactBrowseDropdowns:d.compactBrowseDropdowns,categoryDropdown:d.categoryDropdown,brandDropdown:d.brandDropdown,sourceDropdown:d.sourceDropdown});
-                const ready=d.edge==='product-v31'&&d.smartSearchBar===true&&d.numericModelProtection===true&&d.compactBrowseDropdowns===true&&d.categoryDropdown===true&&d.brandDropdown===true&&d.sourceDropdown===true;
-                if(ready){observed++;if(observed>=3){console.log('PASS stable v31 deploy',last);process.exit(0)}}else observed=0;
+                last=JSON.stringify({edge:d.edge,aiSearch:d.aiSearch,aiArchitecture:d.aiArchitecture,smartSearchBar:d.smartSearchBar,numericModelProtection:d.numericModelProtection,compactBrowseDropdowns:d.compactBrowseDropdowns,categoryDropdown:d.categoryDropdown,brandDropdown:d.brandDropdown,sourceDropdown:d.sourceDropdown});
+                const ready=d.edge==='product-v34'&&d.smartSearchBar===true&&d.numericModelProtection===true&&d.compactBrowseDropdowns===true&&d.categoryDropdown===true&&d.brandDropdown===true&&d.sourceDropdown===true;
+                if(ready){observed++;if(observed>=3){console.log('PASS stable v34 deploy',last);process.exit(0)}}else observed=0;
               }
             }catch(e){last=e.message;observed=0}
             await sleep(3000);
           }
-          throw new Error(`Production v31 not ready: ${last}`);
+          throw new Error(`Production v34 not ready: ${last}`);
           NODE
 
   production-qa:

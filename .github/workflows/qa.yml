@@ -38,6 +38,9 @@ jobs:
       - run: node --check server-v20.js
       - run: node --check server-v21.js
       - run: node --check server-v22.js
+      - run: node --check server-v23.js
+      - run: node --check server-v24.js
+      - run: node --check public/hotfix-v24.js
       - run: node tests/regression.mjs
 
   deploy-ready:
@@ -60,11 +63,17 @@ jobs:
           for(let i=0;i<90;i++){
             try{
               const r=await fetch(`${base}/api/health`,{signal:AbortSignal.timeout(6000)});
-              if(r.ok){const d=await r.json();last=JSON.stringify({edge:d.edge,progressiveSearch:d.progressiveSearch,sourceNativeAdapters:d.sourceNativeAdapters});if(d.edge==='inventory-v22'&&d.progressiveSearch===true&&Array.isArray(d.sourceNativeAdapters)){console.log('PASS deploy ready',last);process.exit(0)}}
+              if(r.ok){
+                const d=await r.json();
+                last=JSON.stringify({edge:d.edge,fullProduct:d.fullProduct,strictVerifiedFilters:d.strictVerifiedFilters,frontend:d.frontend});
+                if(d.edge==='product-v24'&&d.fullProduct===true&&d.strictVerifiedFilters===true&&d.frontend==='product-v24'){
+                  console.log('PASS deploy ready',last);process.exit(0)
+                }
+              }
             }catch(e){last=e.message}
             await sleep(2000);
           }
-          throw new Error(`Production v22 not ready: ${last}`);
+          throw new Error(`Production v24 not ready: ${last}`);
           NODE
 
   production-qa:
@@ -82,7 +91,7 @@ jobs:
         id: probe
         continue-on-error: true
         run: node tests/source-probe-v15.mjs
-      - name: Test complete progressive UI wiring
+      - name: Test complete product UI wiring
         id: ui
         continue-on-error: true
         run: node tests/product-ui-v21.mjs

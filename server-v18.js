@@ -111,13 +111,12 @@ async function exhaustive(body) {
     } catch (e) { diagnostics.push({ label, error: e?.message || String(e) }); return null; }
   };
 
-  const original = await call(String(body.query || ""), body.filters || {}, "original");
+  await call(String(body.query || ""), body.filters || {}, "original");
   const broad = await call(core, discoveryFilters(body), "core");
   const broadCount = Array.isArray(broad?.listings) ? broad.listings.length : 0;
 
   if (broadCount >= UPSTREAM_CAP && calls < MAX_SCAN_CALLS) {
-    let lo = Math.max(2000, i.minYear || 2000), hi = Math.min(currentYear + 1, i.maxYear || currentYear + 1);
-    const queue = [[lo, hi]];
+    const lo = Math.max(2000, i.minYear || 2000), hi = Math.min(currentYear + 1, i.maxYear || currentYear + 1), queue = [[lo, hi]];
     while (queue.length && calls < MAX_SCAN_CALLS) {
       const [a, b] = queue.shift();
       const d = await call(core, discoveryFilters(body, a, b), `years-${a}-${b}`);
@@ -143,15 +142,15 @@ async function exhaustive(body) {
 
 app.post("/api/search", async (req, res) => {
   const body = req.body || {};
-  if (body.phase !== "all") {
-    try {
-      const r = await fetch(`http://127.0.0.1:${v17Port}/api/search`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body), signal: AbortSignal.timeout(120000) });
-      const buf = Buffer.from(await r.arrayBuffer());
-      res.status(r.status); for (const [k, v] of r.headers.entries()) if (!["content-length","transfer-encoding","connection"].includes(k.toLowerCase())) res.setHeader(k, v); return res.send(buf);
-    } catch (e) { return res.status(502).json({ error: e?.message || "Delilah upstream unavailable" }); }
+  if (body.phase === "full" || body.phase === "all") {
+    try { const d = await exhaustive(body); return res.json({ ...d, phase: body.phase === "all" ? "all" : "full" }); }
+    catch (e) { return res.status(502).json({ error: e?.message || "Exhaustive scan failed" }); }
   }
-  try { return res.json(await exhaustive(body)); }
-  catch (e) { return res.status(502).json({ error: e?.message || "Exhaustive scan failed" }); }
+  try {
+    const r = await fetch(`http://127.0.0.1:${v17Port}/api/search`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body), signal: AbortSignal.timeout(120000) });
+    const buf = Buffer.from(await r.arrayBuffer());
+    res.status(r.status); for (const [k, v] of r.headers.entries()) if (!["content-length","transfer-encoding","connection"].includes(k.toLowerCase())) res.setHeader(k, v); return res.send(buf);
+  } catch (e) { return res.status(502).json({ error: e?.message || "Delilah upstream unavailable" }); }
 });
 app.get("/api/health", async (req, res) => {
   try { const r = await fetch(`http://127.0.0.1:${v17Port}/api/health`), d = await r.json(); res.json({ ...d, edge: "inventory-v18", exhaustiveSearch: true, exhaustiveMaxResults: MAX_ALL_RESULTS, exhaustiveMaxCalls: MAX_SCAN_CALLS }); }

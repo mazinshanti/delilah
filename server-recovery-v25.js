@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import {exactYearIntent,enforceExactYear} from './lib/search-intent.js';
 
 const externalPort=Number(process.env.PORT||3000);
 const upstreamPort=Number(process.env.DALELAH_V24_PORT||6100);
@@ -50,34 +51,47 @@ function clean(c){
 }
 function merge(groups=[]){const m=new Map();for(const g of groups)for(const raw of(g||[])){if(!raw?.url)continue;const c=clean(raw),k=canonical(c.url),o=m.get(k);m.set(k,o?{...c,...o,image:o.image||c.image,displayImage:o.displayImage||c.displayImage,price:o.price??c.price??null,title:clean(o).title||clean(c).title}:c)}return[...m.values()];}
 function fanoutQueries(q){const n=norm(q);if(/\bsuv\b|دفع رباعي|جيب/.test(n))return SUV;for(const [b,models] of Object.entries(BRAND_MODELS))if(n===b||n===b+' cars'||n.includes(' '+b+' ')||n.startsWith(b+' '))return models.map(m=>`${b} ${m}`);if(/used cars|cars riyadh|سيارات مستعمل/.test(n))return GENERAL;return[];}
-function exactYear(q){const m=String(q||'').match(/\b(20\d{2})\b/);return m?Number(m[1]):null;}
 function counts(xs){return xs.reduce((a,c)=>(a[c.source]=(a[c.source]||0)+1,a),{});}
+function hasExplicitYearFilters(body={}){return Boolean(body?.filters?.minYear||body?.filters?.maxYear);}
 
 app.post('/api/search',async(req,res)=>{
   const body=req.body||{},q=String(body.query||'');
   try{
-    const first=await upstreamSearch(body);if(!first.r.ok)return res.status(first.r.status).json(first.d);
-    let listings=Array.isArray(first.d.listings)?first.d.listings.map(clean):[];
-    const y=exactYear(q);
+    const y=hasExplicitYearFilters(body)?null:exactYearIntent(q);
+    const exactBody=y?{...body,filters:{...(body.filters||{}),minYear:y,maxYear:y}}:body;
+    const first=await upstreamSearch(exactBody);if(!first.r.ok)return res.status(first.r.status).json(first.d);
+    const initial=Array.isArray(first.d.listings)?first.d.listings.map(clean):[];
+    let listings=y?enforceExactYear(initial,y):initial;
+    let exactRecovery=false;
+    let relaxed='';
+
     if(y&&listings.length===0){
-      const relaxed=q.replace(String(y),'').replace(/\s+/g,' ').trim();
+      relaxed=q.replace(new RegExp(`\\b${y}\\b`),'').replace(/\s+/g,' ').trim();
       if(relaxed){
         const z=await upstreamSearch({...body,query:relaxed,filters:{...(body.filters||{}),minYear:'',maxYear:''}}).catch(()=>null);
-        if(z?.r?.ok)listings=merge([z.d.listings||[]]).filter(c=>Number(c.year)===y);
+        if(z?.r?.ok){
+          listings=enforceExactYear(merge([z.d.listings||[]]),y);
+          exactRecovery=true;
+        }
       }
     }
+
     const fq=fanoutQueries(q);
     if(listings.length<100&&fq.length){
       const batches=[];
       for(let i=0;i<fq.length;i+=6){
         const part=fq.slice(i,i+6);
-        const settled=await Promise.all(part.map(x=>upstreamSearch({...body,query:x,filters:{...(body.filters||{})}}).then(z=>z.r.ok?(z.d.listings||[]).map(clean):[]).catch(()=>[])));
+        const settled=await Promise.all(part.map(x=>upstreamSearch({...body,query:x,filters:{...(body.filters||{}),...(y?{minYear:y,maxYear:y}:{})}}).then(z=>z.r.ok?(z.d.listings||[]).map(clean):[]).catch(()=>[])));
         batches.push(...settled);
-        if(merge([listings,...batches]).length>=400)break;
+        const merged=y?enforceExactYear(merge([listings,...batches]),y):merge([listings,...batches]);
+        if(merged.length>=400)break;
       }
-      listings=merge([listings,...batches]).slice(0,500);
+      listings=merge([listings,...batches]);
+      if(y)listings=enforceExactYear(listings,y);
+      listings=listings.slice(0,500);
     }
-    const out={...first.d,listings,counts:counts(listings),recoveryFanout:{active:Boolean(fq.length),queries:fq.length,total:listings.length},exactRecovery:Boolean(y&&first.d.listings?.length===0),product:{...(first.d.product||{}),recovery:'v25-fanout'}};
+
+    const out={...first.d,listings,counts:counts(listings),recoveryFanout:{active:Boolean(fq.length),queries:fq.length,total:listings.length},exactYearIntent:y,exactRecovery,exactYearFiltered:y?Math.max(0,initial.length-enforceExactYear(initial,y).length):0,product:{...(first.d.product||{}),recovery:'v25-fanout'}};
     return res.json(out);
   }catch(e){return res.status(502).json({error:e?.message||'Dalelah recovery search unavailable'})}
 });

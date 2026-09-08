@@ -1,6 +1,6 @@
 const base=process.env.DELILAH_URL||'https://delilah-pm5f.onrender.com';
 const h=await fetch(`${base}/api/health`,{signal:AbortSignal.timeout(10000)});if(!h.ok)throw new Error(`health HTTP ${h.status}`);const health=await h.json();
-if(health.edge!=='product-v24'||health.fullProduct!==true||health.strictVerifiedFilters!==true||health.frontend!=='product-v24')throw new Error(`v24 product edge not live: ${JSON.stringify(health)}`);
-const r=await fetch(`${base}/`,{signal:AbortSignal.timeout(10000)});if(!r.ok)throw new Error(`home HTTP ${r.status}`);const html=await r.text();if(!html.includes('Search the car.')||!html.includes('Saved cars')||!html.includes('Compare cars')||!html.includes('/hotfix-v24.js'))throw new Error('v24 product shell missing');
+if(health.edge!=='product-v25'||health.fullProduct!==true||health.aiSearchUnderstanding!==true||health.exactModelIdentity!==true||health.syarahOriginalPricePolicy!==true||health.frontend!=='product-v24')throw new Error(`v25 semantic product edge not live: ${JSON.stringify(health)}`);
+const r=await fetch(`${base}/`,{signal:AbortSignal.timeout(10000)});if(!r.ok)throw new Error(`home HTTP ${r.status}`);const html=await r.text();if(!html.includes('Search the car.')||!html.includes('Saved cars')||!html.includes('Compare cars')||!html.includes('/hotfix-v24.js')||!html.includes('/hotfix-v25.js'))throw new Error('v25 semantic product shell missing');
 const sr=await fetch(`${base}/api/source-plugins`,{signal:AbortSignal.timeout(10000)});if(!sr.ok)throw new Error(`sources HTTP ${sr.status}`);const sources=await sr.json();if(!Array.isArray(sources.plugins)||sources.plugins.length<20)throw new Error('source registry missing');
-console.log('PASS v24 product UI: search + saved + compare + sources + strict verified filters wired');
+console.log('PASS v25 product UI: semantic understanding + search + saved + compare + sources wired');

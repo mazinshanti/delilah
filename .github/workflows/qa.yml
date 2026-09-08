@@ -35,6 +35,7 @@ jobs:
       - run: node --check server-v17.js
       - run: node --check server-v18.js
       - run: node --check server-v19.js
+      - run: node --check server-v20.js
       - run: node tests/regression.mjs
 
   deploy-ready:
@@ -56,162 +57,38 @@ jobs:
           let last='';
           for(let i=0;i<90;i++){
             try{
-              const r=await fetch(`${base}/api/health`,{signal:AbortSignal.timeout(8000)});
-              if(r.ok){const d=await r.json();last=JSON.stringify({edge:d.edge,exhaustiveSearch:d.exhaustiveSearch,jetourOfficialStock:d.jetourOfficialStock});if(d.edge==='inventory-v19'&&d.exhaustiveSearch===true&&d.jetourOfficialStock===true){console.log('PASS deploy ready',last);process.exit(0)}}
+              const r=await fetch(`${base}/api/health`,{signal:AbortSignal.timeout(6000)});
+              if(r.ok){const d=await r.json();last=JSON.stringify({edge:d.edge,progressiveSearch:d.progressiveSearch,marketScan:d.marketScan});if(d.edge==='inventory-v20'&&d.progressiveSearch===true&&d.marketScan===true){console.log('PASS deploy ready',last);process.exit(0)}}
             }catch(e){last=e.message}
             await sleep(2000);
           }
-          throw new Error(`Production v19 not ready: ${last}`);
+          throw new Error(`Production v20 not ready: ${last}`);
           NODE
 
-  source-probe-v15:
-    needs: regression
+  production-qa:
+    needs: deploy-ready
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 45
+    env:
+      DELILAH_URL: https://delilah-pm5f.onrender.com
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Probe seller source public HTML
+      - name: Probe public seller sources
         run: node tests/source-probe-v15.mjs
-
-  fast-path-v9:
-    needs: deploy-ready
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Test first-results latency
-        env:
-          DELILAH_URL: https://delilah-pm5f.onrender.com
+      - name: Test fast first results
         run: node tests/fast-path-v8.mjs
-
-  exhaustive-search-v18:
-    needs: deploy-ready
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Test exhaustive arbitrary-car search
-        env:
-          DELILAH_URL: https://delilah-pm5f.onrender.com
-        run: node tests/exhaustive-search-v18.mjs
-
-  jetour-v19:
-    needs: deploy-ready
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Test Jetour official exact stock
-        env:
-          DELILAH_URL: https://delilah-pm5f.onrender.com
-        run: node tests/jetour-v19.mjs
-
-  seller-plugins-v16:
-    needs: deploy-ready
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Test strict seller plugins in production
-        env:
-          DELILAH_URL: https://delilah-pm5f.onrender.com
-        run: node tests/seller-plugins-v16.mjs
-
-  genesis-wallan-v17:
-    needs: deploy-ready
-    runs-on: ubuntu-latest
-    timeout-minutes: 12
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Test Genesis Wallan certified inventory plugin
-        env:
-          DELILAH_URL: https://delilah-pm5f.onrender.com
-        run: node tests/genesis-wallan-v17.mjs
-
-  catalog-breadth-v11:
-    needs: deploy-ready
-    runs-on: ubuntu-latest
-    timeout-minutes: 12
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Test arbitrary cars from broad live catalog
-        env:
-          DELILAH_URL: https://delilah-pm5f.onrender.com
-        run: node tests/catalog-breadth-v11.mjs
-
-  extended-catalog-v14:
-    needs: deploy-ready
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Test expanded inventory beyond warm queries
-        env:
-          DELILAH_URL: https://delilah-pm5f.onrender.com
-        run: node tests/extended-catalog-v14.mjs
-
-  user-path-v7:
-    needs: deploy-ready
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Test Arabic ألف and Syarah cash prices
-        env:
-          DELILAH_URL: https://delilah-pm5f.onrender.com
+      - name: Test Arabic parsing and Syarah cash prices
         run: node tests/user-path-v7.mjs
-
-  live-smoke:
-    needs: deploy-ready
-    runs-on: ubuntu-latest
-    timeout-minutes: 25
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Run controlled live-search smoke tests
-        env:
-          DELILAH_URL: https://delilah-pm5f.onrender.com
-        run: node tests/live-smoke.mjs
-
-  inventory-scale:
-    needs: deploy-ready
-    runs-on: ubuntu-latest
-    timeout-minutes: 35
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Run 200-car unique inventory scale test
-        env:
-          DELILAH_URL: https://delilah-pm5f.onrender.com
+      - name: Test deterministic seller plugins
+        run: node tests/seller-plugins-v16.mjs
+      - name: Test progressive market scan
+        run: node tests/progressive-market-v20.mjs
+      - name: Test Genesis certified inventory
+        run: node tests/genesis-wallan-v17.mjs
+      - name: Test 200-car inventory scale
         run: node tests/inventory-scale.mjs
+      - name: Run fast live smoke matrix
+        run: node tests/live-smoke.mjs

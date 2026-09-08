@@ -21,6 +21,7 @@ jobs:
       - run: npm install --no-audit --no-fund
       - name: Syntax-check current Dalelah 1.5 search chain
         run: |
+          node --check server-v15-market.js
           node --check server-recovery-v25.js
           node --check server-v24.js
           node --check server-v23.js
@@ -64,12 +65,13 @@ jobs:
               const h=await health.json().catch(()=>({}));
               const currentUi=html.includes('async function pollSearch')&&html.includes("seller:$('source').value");
               const exactCommit=Boolean(expected)&&String(h.renderGitCommit||'')===expected;
-              last=JSON.stringify({home:home.status,health:health.status,edge:h.edge||null,productVersion:h.productVersion||null,renderGitCommit:h.renderGitCommit||null,expected,currentUi,exactCommit});
-              if(home.ok&&health.ok&&currentUi&&h.productVersion==='1.5'&&exactCommit){console.log('PASS exact Dalelah 1.5 commit detected',last);process.exit(0)}
+              const currentMarketEdge=h.motoryNativeCatalog===true&&h.restartSafeSearchIds===true;
+              last=JSON.stringify({home:home.status,health:health.status,edge:h.edge||null,productVersion:h.productVersion||null,renderGitCommit:h.renderGitCommit||null,expected,currentUi,currentMarketEdge,exactCommit});
+              if(home.ok&&health.ok&&currentUi&&currentMarketEdge&&h.productVersion==='1.5'&&exactCommit){console.log('PASS exact Dalelah 1.5 market commit detected',last);process.exit(0)}
             }catch(e){last=e.message}
             await sleep(5000);
           }
-          throw new Error(`Exact Dalelah 1.5 production commit not observed: ${last}`);
+          throw new Error(`Exact Dalelah 1.5 market commit not observed: ${last}`);
           NODE
 
   production-qa:
@@ -84,5 +86,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Verify exact-year integrity through the live market scan
+      - name: Verify exact-year integrity and live market coverage
         run: node tests/production-v15-smoke.mjs

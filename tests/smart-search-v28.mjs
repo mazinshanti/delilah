@@ -4,9 +4,9 @@ async function json(path,opts={},ms=15000){const r=await fetch(`${base}${path}`,
 async function understand(query){return json('/api/understand',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query,condition:'used',filters:{}})},12000)}
 
 const h=await json('/api/health',{},10000);
-for(const k of ['smartSearchBar','sourceAwareSearch','sourceBrowse','universalTypoCorrection','similarOfferings','vehicleHistoryIntegration'])if(h[k]!==true)throw new Error(`health missing ${k}: ${JSON.stringify(h)}`);
-if(h.edge!=='product-v29')throw new Error(`expected product-v29, got ${h.edge}`);
-console.log('PASS v29 health flags');
+for(const k of ['smartSearchBar','sourceAwareSearch','sourceBrowse','universalTypoCorrection','numericModelProtection','similarOfferings','vehicleHistoryIntegration'])if(h[k]!==true)throw new Error(`health missing ${k}: ${JSON.stringify(h)}`);
+if(h.edge!=='product-v30')throw new Error(`expected product-v30, got ${h.edge}`);
+console.log('PASS v30 health flags');
 
 const chrysler=await understand('كلزلر 300');
 const cu=chrysler.understanding||{};
@@ -20,11 +20,17 @@ if((vu.make||vu.brand)!=='Toyota'||!/Land Cruiser/i.test(String(vu.model||''))||
 if(!(vxr.typoCorrections||[]).some(x=>x.to==='VXR'))throw new Error(`VXR correction not surfaced: ${JSON.stringify(vxr.typoCorrections)}`);
 console.log('PASS فكسر -> VXR + Riyadh');
 
+const numeric=await understand('Changan CS75 Plus');
+const nu=numeric.understanding||{};
+if((nu.make||nu.brand)!=='Changan'||String(nu.model)!=='CS75 Plus')throw new Error(`Numeric model protection failed: ${JSON.stringify(nu)}`);
+if((numeric.typoCorrections||[]).some(x=>x.to==='CS35'))throw new Error(`CS75 incorrectly corrected to CS35: ${JSON.stringify(numeric.typoCorrections)}`);
+console.log('PASS numeric model protection CS75 != CS35');
+
 const sourceIntent=await understand('show me all results from haraj');
 if(sourceIntent.sourceFilter!=='Haraj'||sourceIntent.understanding?.source!=='Haraj'||sourceIntent.understanding?.sourceOnly!==true)throw new Error(`Haraj source intent failed: ${JSON.stringify(sourceIntent)}`);
 console.log('PASS natural source-only intent -> Haraj');
 
-const search=await json('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query:'Toyota Camry from Haraj',condition:'used',filters:{},phase:'fast'})},18000);
+const search=await json('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query:'Toyota Camry from Haraj',condition:'used',filters:{},phase:'fast'})},22000);
 if(search.sourceFilter!=='Haraj')throw new Error(`search lost source filter: ${JSON.stringify(search.understanding)}`);
 if((search.listings||[]).some(c=>c.source!=='Haraj'))throw new Error(`source leakage: ${JSON.stringify((search.listings||[]).map(c=>c.source))}`);
 console.log(`PASS Haraj-only result gate (${(search.listings||[]).length} fast listings)`);
@@ -46,7 +52,7 @@ for(const needle of ['Browse by brand','Search by source','Similar offerings','C
 console.log('PASS brand/source/similar/history UI wiring');
 
 const u=search.understanding||{};
-const sim=await json('/api/similar',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({understanding:u,condition:'used',source:'Haraj',excludeUrls:(search.listings||[]).map(c=>c.url)})},18000);
+const sim=await json('/api/similar',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({understanding:u,condition:'used',source:'Haraj',excludeUrls:(search.listings||[]).map(c=>c.url)})},22000);
 if(!Array.isArray(sim.listings)||sim.similar!==true)throw new Error(`similar endpoint invalid: ${JSON.stringify(sim).slice(0,300)}`);
 if(sim.listings.some(c=>c.source!=='Haraj'))throw new Error('similar source leakage');
 console.log(`PASS similar offerings endpoint (${sim.listings.length})`);

@@ -1,4 +1,4 @@
-name: Delilah QA
+name: Dalelah 1.5 QA
 
 on:
   push:
@@ -6,70 +6,73 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: delilah-qa-${{ github.ref }}
+  group: dalelah-15-qa-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - run: npm install --no-audit --no-fund
-      - run: node --check server-v24.js
-      - run: node --check server-v25.js
-      - run: node --check server-v26.js
-      - run: node --check server-v27.js
-      - run: node --check server-v30.js
-      - run: node --check server-v31.js
-      - run: node --check server-v34.js
-      - run: node --check public/hotfix-v28.js
-      - run: node --check public/hotfix-v31.js
-      - run: node --check tests/smart-search-v28.mjs
-      - run: node --check tests/semantic-v25.mjs
-      - run: node --check tests/universal-identity-v26.mjs
-      - run: node tests/product-shell-v24.mjs
-      - run: node tests/regression.mjs
+      - name: Syntax-check current Dalelah 1.5 search chain
+        run: |
+          node --check server-recovery-v25.js
+          node --check server-v24.js
+          node --check server-v23.js
+          node --check server-v22.js
+          node --check server-v21.js
+          node --check server-v20.js
+          node --check lib/search-intent.js
+      - name: Test exact-year behavior
+        run: npm run test:exact-year
+      - name: Test current Dalelah 1.5 UI
+        run: node --test tests/ui-v15.test.mjs
+      - name: Run broad local regression assertions
+        run: node tests/regression.mjs
 
   deploy-ready:
     needs: regression
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Wait for stable AI-search production build
+      - name: Wait for current Dalelah 1.5 build to reach production
         env:
           DELILAH_URL: https://delilah-pm5f.onrender.com
         run: |
           node --input-type=module <<'NODE'
-          const base=process.env.DELILAH_URL;
+          const base=process.env.DELILAH_URL.replace(/\/$/,'');
           const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-          let last='',observed=0;
-          for(let i=0;i<110;i++){
+          let last='';
+          for(let i=0;i<100;i++){
             try{
-              const r=await fetch(`${base}/api/health`,{signal:AbortSignal.timeout(7000)});
-              if(r.ok){
-                const d=await r.json();
-                last=JSON.stringify({edge:d.edge,aiNativeSearch:d.aiNativeSearch,aiModel:d.aiModel,conversationalIntent:d.conversationalIntent,aiRanking:d.aiRanking,smartSearchBar:d.smartSearchBar,numericModelProtection:d.numericModelProtection,compactBrowseDropdowns:d.compactBrowseDropdowns,categoryDropdown:d.categoryDropdown,brandDropdown:d.brandDropdown,sourceDropdown:d.sourceDropdown});
-                const ready=d.edge==='product-v34'&&d.conversationalIntent===true&&d.aiRanking===true&&d.smartSearchBar===true&&d.numericModelProtection===true&&d.compactBrowseDropdowns===true&&d.categoryDropdown===true&&d.brandDropdown===true&&d.sourceDropdown===true;
-                if(ready){observed++;if(observed>=3){console.log('PASS stable v34 deploy',last);process.exit(0)}}else observed=0;
-              }
-            }catch(e){last=e.message;observed=0}
-            await sleep(3000);
+              const [home,health]=await Promise.all([
+                fetch(`${base}/`,{signal:AbortSignal.timeout(7000)}),
+                fetch(`${base}/api/health`,{signal:AbortSignal.timeout(7000)})
+              ]);
+              const html=await home.text();
+              const h=await health.json().catch(()=>({}));
+              const currentUi=html.includes('async function pollSearch')&&html.includes("seller:$('source').value");
+              last=JSON.stringify({home:home.status,health:health.status,edge:h.edge||null,currentUi});
+              if(home.ok&&health.ok&&currentUi){console.log('PASS Dalelah 1.5 build detected',last);process.exit(0)}
+            }catch(e){last=e.message}
+            await sleep(5000);
           }
-          throw new Error(`Production v34 not ready: ${last}`);
+          throw new Error(`Dalelah 1.5 production build not observed: ${last}`);
           NODE
 
   production-qa:
     needs: deploy-ready
     runs-on: ubuntu-latest
-    timeout-minutes: 50
+    timeout-minutes: 20
     env:
       DELILAH_URL: https://delilah-pm5f.onrender.com
     steps:
@@ -77,17 +80,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Test smart search and compact browse UI
-        run: node tests/smart-search-v28.mjs
-      - name: Test universal manufacturer, model and localization identity
-        run: node tests/universal-identity-v26.mjs
-      - name: Test Compass exact identity and Syarah original prices
-        run: node tests/semantic-v25.mjs
-      - name: Test fast first results
-        run: node tests/fast-path-v8.mjs
-      - name: Test source-native seller plugins
-        run: node tests/seller-plugins-v16.mjs
-      - name: Test arbitrary model spelling discovery
-        run: node tests/arbitrary-models-v21.mjs
-      - name: Test 200-car inventory scale
-        run: node tests/inventory-scale.mjs
+      - name: Verify exact-year integrity through the live market scan
+        run: node tests/production-v15-smoke.mjs

@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 
 const externalPort=Number(process.env.PORT||3000);
 const upstreamPort=Number(process.env.DALELAH_V24_PORT||6100);
@@ -8,6 +9,7 @@ process.env.PORT=String(externalPort);
 
 const app=express();
 app.use(express.json({limit:'1mb'}));
+app.use(express.static(path.join(process.cwd(),'public')));
 const norm=s=>String(s||'').toLowerCase().replace(/[^a-z0-9\u0600-\u06ff]+/g,' ').replace(/\s+/g,' ').trim();
 const canonical=v=>{try{const u=new URL(v);u.hash='';return u.href.replace(/\/$/,'')}catch{return String(v||'')}};
 const BRAND_MODELS={
@@ -82,4 +84,4 @@ app.post('/api/search',async(req,res)=>{
 app.get('/api/search/progress/:id',async(req,res)=>{try{const r=await fetch(`http://127.0.0.1:${upstreamPort}${req.originalUrl}`,{signal:AbortSignal.timeout(20000)});const t=await r.text();res.status(r.status).type(r.headers.get('content-type')||'application/json').send(t)}catch(e){res.status(502).json({error:e?.message||'progress unavailable'})}});
 async function proxy(req,res){try{const headers={};for(const[k,v]of Object.entries(req.headers))if(!['host','content-length','connection'].includes(k.toLowerCase())&&v!=null)headers[k]=Array.isArray(v)?v.join(','):String(v);let body;if(!['GET','HEAD'].includes(req.method)){body=JSON.stringify(req.body||{});headers['content-type']='application/json'}const r=await fetch(`http://127.0.0.1:${upstreamPort}${req.originalUrl}`,{method:req.method,headers,body,redirect:'manual',signal:AbortSignal.timeout(30000)});const buf=Buffer.from(await r.arrayBuffer());for(const[k,v]of r.headers.entries())if(!['content-length','transfer-encoding','connection'].includes(k.toLowerCase()))res.setHeader(k,v);res.status(r.status).send(buf)}catch(e){res.status(502).json({error:e?.message||'upstream unavailable'})}}
 app.use(proxy);
-app.listen(externalPort,()=>console.log(`Dalelah recovery-v25 fanout running at http://localhost:${externalPort} -> v24 ${upstreamPort}`));
+app.listen(externalPort,()=>console.log(`Dalelah recovery-v25 fanout + native UI running at http://localhost:${externalPort} -> v24 ${upstreamPort}`));

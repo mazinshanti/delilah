@@ -16,7 +16,7 @@ async function search(name,query,condition='used',filters={}){
     const d=await r.json();
     const listings=Array.isArray(d.listings)?d.listings:[];
     const partHits=listings.filter(x=>partRe.test(`${x.title||''} ${(()=>{try{return decodeURIComponent(new URL(x.url).pathname)}catch{return''}})()}`));
-    const result={name,query,status:r.status,ms:Date.now()-t,count:listings.length,counts:d.counts||{},haraj:(d.counts||{}).Haraj||0,aiEnabled:d.aiEnabled,aiUsed:Boolean(d.intent?.ai),aiError:d.intent?.aiError||null,vehicleOnly:d.vehicleOnly,retrievalQueries:d.retrievalQueries||[],partHits:partHits.length,sample:listings.slice(0,3).map(x=>({source:x.source,title:x.title,year:x.year,price:x.price,url:x.url}))};
+    const result={name,query,status:r.status,ms:Date.now()-t,count:listings.length,counts:d.counts||{},haraj:(d.counts||{}).Haraj||0,aiEnabled:d.aiEnabled,aiUsed:Boolean(d.intent?.ai),aiError:d.intent?.aiError||null,intent:d.intent||null,vehicleOnly:d.vehicleOnly,retrievalQueries:d.retrievalQueries||[],partHits:partHits.length,sample:listings.slice(0,5).map(x=>({source:x.source,title:x.title,year:x.year,price:x.price,city:x.city,matchTier:x.matchTier,missingData:x.missingData,url:x.url}))};
     console.log('V14_AI_QA',JSON.stringify(result));
     return result;
   }catch(e){const result={name,query,error:e?.message||String(e),ms:Date.now()-t};console.log('V14_AI_QA',JSON.stringify(result));return result;}
@@ -29,12 +29,8 @@ try{
 }catch(e){console.log('V14_AI_QA_STATE_ERROR',e?.message||String(e));}
 
 const tests=[
+  ['arabic_budget_family','افكر اشتري سيارة ليه و لزوجتي و عندنا طفلين معاية ٣٠٠٠٠ ريال و اعيش بالرياض','used',{}],
   ['broad_toyota','Toyota','used',{}],
-  ['broad_riyadh','used cars Riyadh','used',{}],
-  ['exact_corolla','Toyota Corolla 2023','used',{}],
-  ['arabic_camry','تويوتا كامري 2024','used',{}],
-  ['natural_family_suv','Japanese family SUV under 120000 in Riyadh','used',{}],
-  ['parts_english','Toyota Corolla bumper','used',{}],
   ['parts_arabic','صدام كامري','used',{}]
 ];
 for(const [n,q,c,f] of tests){await search(n,q,c,f);await sleep(500);}

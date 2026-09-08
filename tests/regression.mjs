@@ -68,4 +68,14 @@ assert.match(edgeLayer,/function makeSearchId\(/,'Dalelah 1.5 must emit restart-
 assert.match(edgeLayer,/function stateFromSearchId\(/,'Dalelah 1.5 must reconstruct search state after restart');checks++;
 assert.match(edgeLayer,/restartSafeSearchIds:true/,'Dalelah health must advertise restart-safe search IDs');checks++;
 
+const marketLayer=await readFile(new URL('../server-v15-market.js',import.meta.url),'utf8');
+assert.match(marketLayer,/function directMotory\(/,'Dalelah 1.5 must validate direct Motory listing URLs');checks++;
+assert.match(marketLayer,/async function scanMotory\(/,'Dalelah 1.5 must scan Motory source-native catalogue pages');checks++;
+assert.match(marketLayer,/motory_source_native_catalog/,'Motory native listings must be tagged with source-native discovery');checks++;
+assert.match(marketLayer,/bodyFromSearchId\(/,'Motory overlay must survive process restarts by reconstructing search bodies');checks++;
+
+const pkg=JSON.parse(await readFile(new URL('../package.json',import.meta.url),'utf8'));
+assert.equal(pkg.version,'1.5.0');checks++;
+assert.equal(pkg.scripts.start,'node server-v15-market.js');checks++;
+
 console.log(`PASS: ${checks.toLocaleString()} regression assertions`);

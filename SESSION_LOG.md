@@ -30,5 +30,8 @@
 - Saved Cars and Compare currently use browser-local state; no user account is required.
 - Listing cards continue to open the original seller page. Delilah does not claim ownership of third-party inventory and does not fabricate missing prices or images.
 - Added the v24 source-drawer hotfix for graceful source-registry failures.
-- Updated product UI and live-smoke QA to expect the v24 production edge and updated the GitHub Actions deploy-ready gate to require `product-v24`, `fullProduct`, `strictVerifiedFilters` and the v24 frontend marker.
-- Render production startup verified successfully: `server-v24.js` launches the existing inventory chain through v23 and exposes `Delilah product-v24` on the service port at the primary Render URL.
+- Added frontend product-shell QA that parses the actual inline JavaScript, verifies the core UI surfaces, and catches syntax failures before deploy.
+- Haraj full/progressive results now re-check individual Haraj ad pages rather than trusting discovery metadata alone. Exact-page enrichment can replace title, year, mileage, city, price and image; verified Haraj prices use `haraj_exact_listing_price`, verified images use `haraj_exact_listing_page`, and exact pages identified as sold are removed.
+- Added `tests/haraj-exact-v24.mjs` and made exact Haraj verification part of the production gate. The live production test passed, proving the current service can return direct individual Haraj ads and verify at least one result from its exact page.
+- Updated product UI and live-smoke QA to expect the v24 production edge and updated the GitHub Actions deploy-ready gate to require `product-v24`, `fullProduct`, `strictVerifiedFilters`, the v24 frontend marker and Haraj exact-page support.
+- Render production startup and deployment verified successfully: `server-v24.js` launches the existing inventory chain through v23 and exposes `Delilah product-v24` on the primary Render URL.

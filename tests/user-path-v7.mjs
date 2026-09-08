@@ -6,11 +6,16 @@ async function finish(d){for(let i=0;i<35&&d.searchId&&!d.complete;i++){await sl
 const arabic=await search({query:'ابي رانجلر 2022 وفوق بالرياض تحت 130 ألف',condition:'used',filters:{},phase:'fast'});
 const understood=arabic.understanding||arabic.intent||{};
 if(Number(understood.maxPrice)!==130000)throw new Error(`Arabic ألف normalization failed: maxPrice=${understood.maxPrice}`);
-if(understood.model!=='Wrangler')throw new Error(`Arabic model understanding failed: ${JSON.stringify(understood)}`);
-if(!Array.isArray(arabic.listings)||arabic.listings.length<1)throw new Error(`Arabic user path returned no cars; raw=${arabic.rawCandidates||0}`);
+if(understood.model!=='Wrangler'||understood.brand!=='Jeep'||understood.minYear!==2022||understood.city!=='Riyadh')throw new Error(`Arabic intent understanding failed: ${JSON.stringify(understood)}`);
+if(!Array.isArray(arabic.listings))throw new Error('Arabic listings missing');
 if(arabic.listings.some(c=>c.price&&Number(c.price)>130000))throw new Error('Arabic max-price leak');
-if(arabic.listings.some(c=>!/wrangler|رانجلر/i.test(`${c.title||''} ${c.url||''}`)))throw new Error('Arabic Wrangler cross-model leak');
-console.log(`PASS Arabic intent: ${arabic.listings.length} exact Wrangler cars, maxPrice=${understood.maxPrice}`);
+if(arabic.listings.some(c=>!/wrangler|رانجلر/i.test(`${c.title||''} ${decodeURIComponent(c.url||'')}`)))throw new Error('Arabic Wrangler cross-model leak');
+console.log(`PASS Arabic intent: Jeep Wrangler 2022+ Riyadh <=130k understood; ${arabic.listings.length} exact live matches currently available`);
+
+let wrangler=await search({query:'Jeep Wrangler',condition:'used',filters:{seller:'Syarah'},phase:'full'},45000);wrangler=await finish(wrangler);
+const wranglers=(wrangler.listings||[]).filter(c=>c.source==='Syarah');
+if(!wranglers.length)throw new Error('Broad exact Wrangler query returned no Syarah inventory');
+if(wranglers.some(c=>!/wrangler/i.test(`${c.title||''} ${decodeURIComponent(c.url||'')}`)))throw new Error('Broad Wrangler cross-model leak');
 
 let syarah=await search({query:'Toyota Camry Saudi',condition:'used',filters:{seller:'Syarah'},phase:'full'},45000);syarah=await finish(syarah);
 const cars=(syarah.listings||[]).filter(c=>c.source==='Syarah');

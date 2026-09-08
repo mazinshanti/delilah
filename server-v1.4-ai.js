@@ -12,7 +12,7 @@ const externalPort=Number(process.env.PORT||3000);
 const upstreamPort=Number(process.env.DALELAH_V14_CORE_PORT||6200);
 const openaiKey=process.env.OPENAI_API_KEY||"";
 const openaiModel=process.env.OPENAI_MODEL||"gpt-5.6-luna";
-const AI_TIMEOUT=Number(process.env.DALELAH_AI_TIMEOUT||2500);
+const AI_TIMEOUT=Math.max(4500,Number(process.env.DALELAH_AI_TIMEOUT||4500));
 const WEB_DISCOVERY=process.env.DALELAH_WEB_DISCOVERY!=="off";
 const WEB_DISCOVERY_THRESHOLD=Number(process.env.DALELAH_WEB_DISCOVERY_THRESHOLD||8);
 
@@ -78,6 +78,7 @@ async function aiIntent(body={}){
   const system=`You are the intent-planning layer inside Dalelah, a Saudi automotive search engine.\n${knowledgePrompt(detected,query)}\nReturn search intent only. Do not answer the user conversationally and do not invent inventory. A direct make/model explicitly typed by the user is literal. Lifestyle needs may expand to suitable models. Keep retrievalQueries short and diverse.`;
   const payload={
     model:openaiModel,
+    reasoning:{effort:"none"},
     input:[
       {role:"system",content:[{type:"input_text",text:system}]},
       {role:"user",content:[{type:"input_text",text:JSON.stringify({query:body.query,condition:body.condition||null,filters:body.filters||{},detected})}]}

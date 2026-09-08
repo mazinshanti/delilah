@@ -4,7 +4,7 @@ import crypto from "node:crypto";
 import {
   BRAIN_VERSION, detectAutomotiveIntent, buildRetrievalQueries,
   knowledgePrompt, prepareResults, resultSummary
-} from "./car-brain-v1.4.3.js";
+} from "./car-brain-v1.4.4.js";
 
 const externalPort=Number(process.env.PORT||3000);
 const upstreamPort=Number(process.env.DALELAH_V14_CORE_PORT||6200);

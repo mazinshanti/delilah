@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
 
 function normalizeDigits(s=''){return String(s).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d))}
 function basicIntent(query=''){
@@ -56,5 +57,15 @@ for(let n=0;n<2000;n++){
   const m=mergedFilters({minYear:2020,maxPrice:200000,city:null},{minYear:'2023',maxPrice:'150000',city:'Jeddah'});
   assert.equal(m.minYear,2023);assert.equal(m.maxPrice,150000);assert.equal(m.city,'Jeddah');checks+=3;
 }
+
+const sourceLayer=await readFile(new URL('../server-v21.js',import.meta.url),'utf8');
+assert.match(sourceLayer,/const allUsed=\[[\s\S]*?\{name:"Motory",seller:"Motory",type:"marketplace"[\s\S]*?condition:"used"\}/,'Motory must remain in the used-car indexed scan');checks++;
+assert.match(sourceLayer,/Motory:\"active-indexed\+verified-url\"/,'Motory must remain active in the source registry');checks++;
+assert.match(sourceLayer,/Motory: u =>[\s\S]*?cars-for-sale/,'Motory individual-listing validation must remain enabled');checks++;
+
+const edgeLayer=await readFile(new URL('../server-recovery-v25.js',import.meta.url),'utf8');
+assert.match(edgeLayer,/function makeSearchId\(/,'Dalelah 1.5 must emit restart-safe search IDs');checks++;
+assert.match(edgeLayer,/function stateFromSearchId\(/,'Dalelah 1.5 must reconstruct search state after restart');checks++;
+assert.match(edgeLayer,/restartSafeSearchIds:true/,'Dalelah health must advertise restart-safe search IDs');checks++;
 
 console.log(`PASS: ${checks.toLocaleString()} regression assertions`);

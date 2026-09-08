@@ -41,6 +41,7 @@ jobs:
       - run: node --check server-v23.js
       - run: node --check server-v24.js
       - run: node --check public/hotfix-v24.js
+      - run: node tests/product-shell-v24.mjs
       - run: node tests/regression.mjs
 
   deploy-ready:

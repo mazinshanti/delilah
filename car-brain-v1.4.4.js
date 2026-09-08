@@ -1,7 +1,8 @@
 import * as base from "./car-brain-v1.4.3.js";
 import { norm } from "./car-brain-v1.4.js";
+import { saudiKnowledgePrompt } from "./saudi-auto-knowledge-v1.5.js";
 
-export const BRAIN_VERSION="1.4.5-car-brain";
+export const BRAIN_VERSION="1.5-saudi-auto-brain";
 const EXTRA=/(?:^|\s)(?:car key|key fob|key shell|remote key|remote control|مفتاح|مفاتيح|ريموت|ريموتات|شاشه|شاشة|مسجل|dashcam|داش كام|دعاسات|شاحن|charger|بطاريه|بطارية|battery|حساس|sensor|فلتر|filter|زيت|oil)(?:\s|$)/i;
 const FAMILY_CONTEXT=/(?:^|\s)(?:طفل|طفلين|اطفال|أطفال|اولاد|أولاد|زوجتي|زوجي|عائلتي|اسرتي|أسرتي|family|kids?|children|wife|husband)(?:\s|$)/i;
 
@@ -30,8 +31,8 @@ export function buildRetrievalQueries(intent,original=""){
   return out.slice(0,10);
 }
 
-export function knowledgePrompt(intent={}){
-  return `${base.knowledgePrompt(intent)}\n- Keys, remotes, screens, stereos, dashcams, chargers, batteries, sensors, filters, oils and similar accessories/consumables are outside the current product.\n- Family does NOT automatically mean SUV. A couple with one or two children can be well served by a sedan, hatchback or crossover.\n- Budget is a major recommendation constraint. For low budgets, prioritize realistic affordable used cars rather than expensive SUVs.\n- When the user gives a total budget such as 30,000 SAR, search vehicles plausibly available within that budget and keep known higher-priced vehicles out.\n- If the user mentions spouse, children or kids, infer family use unless they explicitly say otherwise.`;
+export function knowledgePrompt(intent={},query=""){
+  return `${base.knowledgePrompt(intent)}\n- Keys, remotes, screens, stereos, dashcams, chargers, batteries, sensors, filters, oils and similar accessories/consumables are outside the current product.\n- Family does NOT automatically mean SUV. A couple with one or two children can be well served by a sedan, hatchback or crossover.\n- Budget is a major recommendation constraint. For low budgets, prioritize realistic affordable used cars rather than expensive SUVs.\n- When the user gives a total budget such as 30,000 SAR, search vehicles plausibly available within that budget and keep known higher-priced vehicles out.\n- If the user mentions spouse, children or kids, infer family use unless they explicitly say otherwise.\n${saudiKnowledgePrompt(query,intent)}`;
 }
 
 export function prepareResults(groups,intent,limit=500){

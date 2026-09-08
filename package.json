@@ -1,12 +1,12 @@
 {
   "name": "dalelah-live-search",
-  "version": "1.2.2-recovery",
+  "version": "1.2.3-recovery-qa",
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node server-v24.js",
-    "dev": "node --watch server-v24.js",
-    "check": "node --check server-v24.js"
+    "start": "node boot-source-native-qa.js",
+    "dev": "node --watch boot-source-native-qa.js",
+    "check": "node --check server-v24.js && node --check boot-source-native-qa.js"
   },
   "dependencies": {
     "dotenv": "^16.4.7",

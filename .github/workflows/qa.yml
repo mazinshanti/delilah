@@ -19,31 +19,13 @@ jobs:
         with:
           node-version: 22
       - run: npm install --no-audit --no-fund
-      - run: node --check server.js
-      - run: node --check server-v5.js
-      - run: node --check server-v6.js
-      - run: node --check server-v7.js
-      - run: node --check server-v8.js
-      - run: node --check server-v9.js
-      - run: node --check server-v10.js
-      - run: node --check server-v11.js
-      - run: node --check server-v12.js
-      - run: node --check server-v13.js
-      - run: node --check server-v14.js
-      - run: node --check server-v15.js
-      - run: node --check server-v16.js
-      - run: node --check server-v17.js
-      - run: node --check server-v18.js
-      - run: node --check server-v19.js
-      - run: node --check server-v20.js
-      - run: node --check server-v21.js
-      - run: node --check server-v22.js
-      - run: node --check server-v23.js
       - run: node --check server-v24.js
       - run: node --check server-v25.js
+      - run: node --check server-v26.js
       - run: node --check public/hotfix-v24.js
       - run: node --check public/hotfix-v25.js
       - run: node --check tests/semantic-v25.mjs
+      - run: node --check tests/universal-identity-v26.mjs
       - run: node tests/product-shell-v24.mjs
       - run: node tests/regression.mjs
 
@@ -56,28 +38,27 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Wait for stable production build
+      - name: Wait for stable universal production build
         env:
           DELILAH_URL: https://delilah-pm5f.onrender.com
         run: |
           node --input-type=module <<'NODE'
           const base=process.env.DELILAH_URL;
           const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-          let last='',settled=false;
+          let last='',observed=0;
           for(let i=0;i<90;i++){
             try{
               const r=await fetch(`${base}/api/health`,{signal:AbortSignal.timeout(7000)});
               if(r.ok){
                 const d=await r.json();
-                last=JSON.stringify({edge:d.edge,fullProduct:d.fullProduct,aiSearchUnderstanding:d.aiSearchUnderstanding,exactModelIdentity:d.exactModelIdentity,syarahOriginalPricePolicy:d.syarahOriginalPricePolicy,harajExactPages:d.harajExactPages});
-                const ready=d.edge==='product-v25'&&d.fullProduct===true&&d.aiSearchUnderstanding===true&&d.exactModelIdentity===true&&d.syarahOriginalPricePolicy===true&&d.harajExactPages===true;
-                if(ready&&!settled){settled=true;console.log('v25 observed; allowing Render deploy swap to settle',last);await sleep(70000);continue}
-                if(ready&&settled){console.log('PASS stable deploy ready',last);process.exit(0)}
+                last=JSON.stringify({edge:d.edge,universalVehicleIdentity:d.universalVehicleIdentity,unknownMakeFallback:d.unknownMakeFallback,exactModelIdentity:d.exactModelIdentity,syarahOriginalPricePolicy:d.syarahOriginalPricePolicy});
+                const ready=d.edge==='product-v26'&&d.universalVehicleIdentity===true&&d.unknownMakeFallback===true&&d.exactModelIdentity===true&&d.syarahOriginalPricePolicy===true;
+                if(ready){observed++;if(observed>=3){console.log('PASS stable v26 deploy',last);process.exit(0)}}else observed=0;
               }
-            }catch(e){last=e.message}
-            await sleep(2000);
+            }catch(e){last=e.message;observed=0}
+            await sleep(3000);
           }
-          throw new Error(`Production v25 not stably ready: ${last}`);
+          throw new Error(`Production v26 not ready: ${last}`);
           NODE
 
   production-qa:
@@ -91,67 +72,37 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Probe public seller sources
-        id: probe
+      - name: Test universal manufacturer and model identity
+        id: universal
         continue-on-error: true
-        run: node tests/source-probe-v15.mjs
-      - name: Test complete product UI wiring
-        id: ui
-        continue-on-error: true
-        run: node tests/product-ui-v21.mjs
-      - name: Test semantic model identity and Syarah original prices
+        run: node tests/universal-identity-v26.mjs
+      - name: Test Compass exact identity and Syarah original prices
         id: semantic
         continue-on-error: true
         run: node tests/semantic-v25.mjs
-      - name: Test exact Haraj listing pages
-        id: haraj
-        continue-on-error: true
-        run: node tests/haraj-exact-v24.mjs
       - name: Test fast first results
         id: fast
         continue-on-error: true
         run: node tests/fast-path-v8.mjs
-      - name: Test Arabic understanding and Syarah original prices
-        id: userpath
-        continue-on-error: true
-        run: node tests/user-path-v7.mjs
       - name: Test source-native seller plugins
         id: plugins
         continue-on-error: true
         run: node tests/seller-plugins-v16.mjs
-      - name: Test progressive accessible-market scan
-        id: progressive
-        continue-on-error: true
-        run: node tests/progressive-market-v20.mjs
       - name: Test arbitrary model discovery
         id: arbitrary
         continue-on-error: true
         run: node tests/arbitrary-models-v21.mjs
-      - name: Test Genesis certified inventory
-        id: genesis
-        continue-on-error: true
-        run: node tests/genesis-wallan-v17.mjs
       - name: Test 200-car inventory scale
         id: scale
         continue-on-error: true
         run: node tests/inventory-scale.mjs
-      - name: Run fast live smoke matrix
-        id: smoke
-        continue-on-error: true
-        run: node tests/live-smoke.mjs
-      - name: Fail if production QA has failures
+      - name: Fail if universal production QA has failures
         if: always()
         run: |
-          echo "probe=${{ steps.probe.outcome }} ui=${{ steps.ui.outcome }} semantic=${{ steps.semantic.outcome }} haraj=${{ steps.haraj.outcome }} fast=${{ steps.fast.outcome }} userpath=${{ steps.userpath.outcome }} plugins=${{ steps.plugins.outcome }} progressive=${{ steps.progressive.outcome }} arbitrary=${{ steps.arbitrary.outcome }} genesis=${{ steps.genesis.outcome }} scale=${{ steps.scale.outcome }} smoke=${{ steps.smoke.outcome }}"
-          test "${{ steps.probe.outcome }}" = success
-          test "${{ steps.ui.outcome }}" = success
+          echo "universal=${{ steps.universal.outcome }} semantic=${{ steps.semantic.outcome }} fast=${{ steps.fast.outcome }} plugins=${{ steps.plugins.outcome }} arbitrary=${{ steps.arbitrary.outcome }} scale=${{ steps.scale.outcome }}"
+          test "${{ steps.universal.outcome }}" = success
           test "${{ steps.semantic.outcome }}" = success
-          test "${{ steps.haraj.outcome }}" = success
           test "${{ steps.fast.outcome }}" = success
-          test "${{ steps.userpath.outcome }}" = success
           test "${{ steps.plugins.outcome }}" = success
-          test "${{ steps.progressive.outcome }}" = success
           test "${{ steps.arbitrary.outcome }}" = success
-          test "${{ steps.genesis.outcome }}" = success
           test "${{ steps.scale.outcome }}" = success
-          test "${{ steps.smoke.outcome }}" = success

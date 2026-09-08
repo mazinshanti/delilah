@@ -19,6 +19,7 @@ assert.ok(!health.error, `health returned an error: ${health.error}`);
 assert.equal(health.productVersion, '1.5', `unexpected product version: ${JSON.stringify(health)}`);
 assert.equal(health.restartSafeSearchIds, true, `restart-safe search IDs are not enabled: ${JSON.stringify(health)}`);
 assert.equal(health.motoryNativeCatalog, true, `Motory native catalogue is not enabled: ${JSON.stringify(health)}`);
+assert.equal(health.harajNativeSearch, true, `Haraj native search is not enabled: ${JSON.stringify(health)}`);
 if (expectedCommit) assert.equal(health.renderGitCommit, expectedCommit, `production is not running the commit under test: expected ${expectedCommit}, got ${health.renderGitCommit}`);
 
 function diagnostics(query, first, latest, listings) {
@@ -32,6 +33,11 @@ function diagnostics(query, first, latest, listings) {
     exactYearIntent:latest.exactYearIntent??first.exactYearIntent??null,
     searchRecoveryCount:latest.searchRecoveryCount??null,
     searchStateReconstructed:Boolean(latest.searchStateReconstructed),
+    harajNativeSearch:latest.harajNativeSearch??first.harajNativeSearch??null,
+    harajNativeComplete:latest.harajNativeComplete??first.harajNativeComplete??null,
+    harajNativeListings:latest.harajNativeListings??first.harajNativeListings??null,
+    harajNativeError:latest.harajNativeError??first.harajNativeError??null,
+    harajNativeQuery:latest.harajNativeQuery??first.harajNativeQuery??null,
     motoryNativeCatalog:latest.motoryNativeCatalog??first.motoryNativeCatalog??null,
     motoryNativeComplete:latest.motoryNativeComplete??first.motoryNativeComplete??null,
     motoryNativeListings:latest.motoryNativeListings??first.motoryNativeListings??null,
@@ -39,7 +45,7 @@ function diagnostics(query, first, latest, listings) {
     indexedFallbackComplete:latest.indexedFallbackComplete??null,
     indexedFallbackDiagnostics:latest.indexedFallbackDiagnostics??null,
     recoveryFanout:latest.recoveryFanout??null,
-    sample:listings.slice(0,3).map(x=>({source:x.source,title:x.title,year:x.year,url:x.url}))
+    sample:listings.slice(0,5).map(x=>({source:x.source,title:x.title,year:x.year,city:x.city,price:x.price,url:x.url}))
   };
 }
 
@@ -88,6 +94,7 @@ async function exactYearCase({query, year, requireResults = true}) {
     complete:latest.complete ?? latest.marketScanComplete ?? null,
     searchRecoveryCount:latest.searchRecoveryCount ?? null,
     reconstructed:Boolean(latest.searchStateReconstructed),
+    harajNativeListings:latest.harajNativeListings??null,
     motoryNativeListings:latest.motoryNativeListings??null
   };
 }

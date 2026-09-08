@@ -5,12 +5,16 @@ import {
   BRAIN_VERSION, detectAutomotiveIntent, buildRetrievalQueries,
   knowledgePrompt, prepareResults, resultSummary
 } from "./car-brain-v1.4.4.js";
+import { discoverPublicCarListings } from "./internet-discovery-v1.5.js";
+import { SAUDI_KNOWLEDGE_VERSION, parseTyreSize } from "./saudi-auto-knowledge-v1.5.js";
 
 const externalPort=Number(process.env.PORT||3000);
 const upstreamPort=Number(process.env.DALELAH_V14_CORE_PORT||6200);
 const openaiKey=process.env.OPENAI_API_KEY||"";
 const openaiModel=process.env.OPENAI_MODEL||"gpt-5.6-luna";
-const AI_TIMEOUT=Number(process.env.DALELAH_AI_TIMEOUT||1400);
+const AI_TIMEOUT=Number(process.env.DALELAH_AI_TIMEOUT||2500);
+const WEB_DISCOVERY=process.env.DALELAH_WEB_DISCOVERY!=="off";
+const WEB_DISCOVERY_THRESHOLD=Number(process.env.DALELAH_WEB_DISCOVERY_THRESHOLD||8);
 
 process.env.PORT=String(upstreamPort);
 await import("./server-v1.4.js");
@@ -69,9 +73,9 @@ function mergeAIWithDetected(ai,detected){
   return out;
 }
 async function aiIntent(body={}){
-  const detected=detectAutomotiveIntent(String(body.query||""),body),fallback=fallbackIntent(body);
+  const query=String(body.query||""),detected=detectAutomotiveIntent(query,body),fallback=fallbackIntent(body);
   if(!openaiKey)return fallback;
-  const system=`You are the intent-planning layer inside Dalelah, a Saudi automotive search engine.\n${knowledgePrompt(detected)}\nReturn search intent only. Do not answer the user conversationally and do not invent inventory. A direct make/model explicitly typed by the user is literal. Lifestyle needs may expand to suitable models. Keep retrievalQueries short and diverse.`;
+  const system=`You are the intent-planning layer inside Dalelah, a Saudi automotive search engine.\n${knowledgePrompt(detected,query)}\nReturn search intent only. Do not answer the user conversationally and do not invent inventory. A direct make/model explicitly typed by the user is literal. Lifestyle needs may expand to suitable models. Keep retrievalQueries short and diverse.`;
   const payload={
     model:openaiModel,
     input:[
@@ -107,37 +111,42 @@ function sortResults(listings,intent){
 }
 
 async function runSearch(body){
-  const intent=await aiIntent(body),allQueries=buildRetrievalQueries(intent,String(body.query||"")),condition=intent.condition||body.condition||"used";
-  if(intent.partsRequested){const summary=resultSummary([],intent);return{intent,queries:[],allQueries:[],condition,listings:[],upstreamJobs:[],summary};}
+  const query=String(body.query||""),intent=await aiIntent(body),allQueries=buildRetrievalQueries(intent,query),condition=intent.condition||body.condition||"used";
+  if(intent.partsRequested){const summary=resultSummary([],intent);return{intent,queries:[],allQueries:[],condition,listings:[],upstreamJobs:[],summary,webPromise:null};}
   const queries=allQueries.slice(0,4);
   const settled=await Promise.allSettled(queries.map(q=>upstreamSearch(retrievalBody(body,q,intent))));
   const groups=[],upstreamJobs=[];
   for(const x of settled)if(x.status==="fulfilled"&&x.value.r.ok){groups.push(x.value.d.listings||[]);if(x.value.d.searchId)upstreamJobs.push(x.value.d.searchId);}
   let listings=prepareResults(groups,intent,500);sortResults(listings,intent);
+  const sourceFilter=String(body?.filters?.source||"").trim();
+  const shouldResearch=WEB_DISCOVERY&&Boolean(openaiKey)&&!sourceFilter&&listings.length<WEB_DISCOVERY_THRESHOLD;
+  const webPromise=shouldResearch?discoverPublicCarListings({query,intent,apiKey:openaiKey,model:openaiModel,timeout:7500,maxCandidates:8}):null;
   const summary=resultSummary(listings,intent);
-  return{intent,queries,allQueries,condition,listings,upstreamJobs,summary};
+  return{intent,queries,allQueries,condition,listings,upstreamJobs,summary,webPromise};
 }
 
 app.post("/api/understand",async(req,res)=>{
   const query=String(req.body?.query||"").trim();if(!query)return res.status(400).json({error:"Query is required"});
   const detected=detectAutomotiveIntent(query,req.body||{}),intent=await aiIntent(req.body||{}),queries=buildRetrievalQueries(intent,query);
-  res.json({ok:true,brainVersion:BRAIN_VERSION,detected,intent,retrievalQueries:queries,aiEnabled:Boolean(openaiKey)});
+  res.json({ok:true,brainVersion:BRAIN_VERSION,knowledgeVersion:SAUDI_KNOWLEDGE_VERSION,detected,intent,retrievalQueries:queries,tyre:parseTyreSize(query),aiEnabled:Boolean(openaiKey),webDiscovery:WEB_DISCOVERY&&Boolean(openaiKey)});
 });
+app.get("/api/knowledge",(req,res)=>res.json({ok:true,brainVersion:BRAIN_VERSION,knowledgeVersion:SAUDI_KNOWLEDGE_VERSION,market:"Saudi Arabia",languages:["Arabic","English"],domains:["makes/models","Saudi terminology","cities","body styles","powertrains","family/use-case reasoning","tyres/wheels","listing verification","public web discovery"],webDiscovery:WEB_DISCOVERY&&Boolean(openaiKey),vehicleOnly:true}));
 app.post("/api/search",async(req,res)=>{
   const body=req.body||{},query=String(body.query||"").trim();if(!query)return res.status(400).json({error:"Query is required"});
   const id=crypto.randomUUID();
   try{
-    const result=await runSearch(body),job={at:Date.now(),...result,body};jobs.set(id,job);
-    res.json({query,condition:result.condition,intent:result.intent,listings:result.listings,counts:counts(result.listings),verifiedCount:result.summary.verified,possibleCount:result.summary.possible,summary:result.summary.text,searchId:id,partial:result.upstreamJobs.length>0,background:true,responseMode:"automotive-brain-index",aiEnabled:Boolean(openaiKey),vehicleOnly:true,brainVersion:BRAIN_VERSION,retrievalQueries:result.queries,plannedQueries:result.allQueries});
+    const result=await runSearch(body),job={at:Date.now(),...result,body,webListings:[],webDone:!result.webPromise};jobs.set(id,job);
+    if(result.webPromise)result.webPromise.then(xs=>{job.webListings=Array.isArray(xs)?xs:[];job.webDone=true;}).catch(()=>{job.webDone=true;});
+    res.json({query,condition:result.condition,intent:result.intent,listings:result.listings,counts:counts(result.listings),verifiedCount:result.summary.verified,possibleCount:result.summary.possible,summary:result.summary.text,searchId:id,partial:result.upstreamJobs.length>0||Boolean(result.webPromise),background:true,responseMode:"saudi-automotive-brain-index",aiEnabled:Boolean(openaiKey),webDiscovery:WEB_DISCOVERY&&Boolean(openaiKey),vehicleOnly:true,brainVersion:BRAIN_VERSION,knowledgeVersion:SAUDI_KNOWLEDGE_VERSION,retrievalQueries:result.queries,plannedQueries:result.allQueries});
   }catch(e){res.status(502).json({error:e?.message||"Dalelah automotive search unavailable"});}
 });
 app.get("/api/search/progress/:id",async(req,res)=>{
   const job=jobs.get(req.params.id);if(!job)return res.status(404).json({error:"Search expired"});
-  const groups=[job.listings],settled=await Promise.allSettled(job.upstreamJobs.map(id=>fetch(`http://127.0.0.1:${upstreamPort}/api/search/progress/${encodeURIComponent(id)}`,{signal:AbortSignal.timeout(3000)}).then(r=>r.ok?r.json():null)));
-  let done=true;for(const x of settled)if(x.status==="fulfilled"&&x.value){groups.push(x.value.listings||[]);if(!x.value.done)done=false;}
+  const groups=[job.listings,job.webListings||[]],settled=await Promise.allSettled(job.upstreamJobs.map(id=>fetch(`http://127.0.0.1:${upstreamPort}/api/search/progress/${encodeURIComponent(id)}`,{signal:AbortSignal.timeout(3000)}).then(r=>r.ok?r.json():null)));
+  let coreDone=true;for(const x of settled)if(x.status==="fulfilled"&&x.value){groups.push(x.value.listings||[]);if(!x.value.done)coreDone=false;}
   let listings=prepareResults(groups,job.intent,500);sortResults(listings,job.intent);job.listings=listings;
-  const summary=resultSummary(listings,job.intent);
-  res.json({query:job.body.query,condition:job.condition,intent:job.intent,listings,counts:counts(listings),verifiedCount:summary.verified,possibleCount:summary.possible,summary:summary.text,searchId:req.params.id,done,partial:!done,vehicleOnly:true,aiEnabled:Boolean(openaiKey),brainVersion:BRAIN_VERSION});
+  const done=coreDone&&job.webDone,summary=resultSummary(listings,job.intent);
+  res.json({query:job.body.query,condition:job.condition,intent:job.intent,listings,counts:counts(listings),verifiedCount:summary.verified,possibleCount:summary.possible,summary:summary.text,searchId:req.params.id,done,partial:!done,vehicleOnly:true,aiEnabled:Boolean(openaiKey),webDiscovery:WEB_DISCOVERY&&Boolean(openaiKey),webDiscovered:(job.webListings||[]).length,brainVersion:BRAIN_VERSION,knowledgeVersion:SAUDI_KNOWLEDGE_VERSION});
 });
 
 async function proxy(req,res){
@@ -146,12 +155,12 @@ async function proxy(req,res){
     let body;if(!["GET","HEAD"].includes(req.method)){body=JSON.stringify(req.body||{});headers["content-type"]="application/json";}
     const r=await fetch(`http://127.0.0.1:${upstreamPort}${req.originalUrl}`,{method:req.method,headers,body,redirect:"manual",signal:AbortSignal.timeout(30000)});
     let data;if((r.headers.get("content-type")||"").includes("application/json")){
-      const d=await r.json();data=Buffer.from(JSON.stringify(req.path==="/api/health"?{...d,aiSearch:true,aiEnabled:Boolean(openaiKey),vehicleOnly:true,aiModel:openaiKey?openaiModel:null,brainVersion:BRAIN_VERSION}:d));res.setHeader("content-type","application/json");
+      const d=await r.json();data=Buffer.from(JSON.stringify(req.path==="/api/health"?{...d,aiSearch:true,aiEnabled:Boolean(openaiKey),webDiscovery:WEB_DISCOVERY&&Boolean(openaiKey),vehicleOnly:true,aiModel:openaiKey?openaiModel:null,brainVersion:BRAIN_VERSION,knowledgeVersion:SAUDI_KNOWLEDGE_VERSION}:d));res.setHeader("content-type","application/json");
     }else data=Buffer.from(await r.arrayBuffer());
     for(const[k,v]of r.headers.entries())if(!["content-length","transfer-encoding","connection","content-type"].includes(k.toLowerCase()))res.setHeader(k,v);
     res.status(r.status).send(data);
   }catch(e){res.status(502).json({error:e?.message||"Dalelah core unavailable"});}
 }
 app.use(proxy);
-app.listen(externalPort,()=>console.log(`Dalelah ${BRAIN_VERSION} running at http://localhost:${externalPort} -> core ${upstreamPort}; AI ${openaiKey?"enabled":"fallback"}; automotive knowledge + vehicle-only gate enabled`));
+app.listen(externalPort,()=>console.log(`Dalelah ${BRAIN_VERSION} running at http://localhost:${externalPort} -> core ${upstreamPort}; AI ${openaiKey?"enabled":"fallback"}; web discovery ${WEB_DISCOVERY&&openaiKey?"enabled":"off"}; Saudi automotive knowledge + vehicle-only gate enabled`));
 setInterval(()=>{const now=Date.now();for(const[k,v]of jobs)if(now-v.at>15*60_000)jobs.delete(k)},60_000).unref();

@@ -70,6 +70,9 @@ const BRAND_ALIAS = new Map([
 const MODEL_ALIAS = new Map([
   ["رانجلر","wrangler"],["باترول","patrol"],["لاند كروزر","land-cruiser"],["لاندكروزر","land-cruiser"],["كامري","camry"],["كورولا","corolla"],["يارس","yaris"],["توسان","tucson"],["سبورتاج","sportage"],["تاهو","tahoe"],["سوناتا","sonata"],["اكسنت","accent"],["النترا","elantra"],["برادو","prado"],["فورتشنر","fortuner"],["اكسبلورر","explorer"],["جراند شيروكي","grand-cherokee"],["كايين","cayenne"],["تيجوان","tiguan"],["بيجاس","pegas"],["سيراتو","cerato"],["سورينتو","sorento"]
 ]);
+const MODEL_BRAND = new Map([
+  ["wrangler","jeep"],["patrol","nissan"],["land-cruiser","toyota"],["camry","toyota"],["corolla","toyota"],["yaris","toyota"],["tucson","hyundai"],["sportage","kia"],["tahoe","chevrolet"],["sonata","hyundai"],["accent","hyundai"],["elantra","hyundai"],["prado","toyota"],["fortuner","toyota"],["explorer","ford"],["grand-cherokee","jeep"],["cayenne","porsche"],["tiguan","volkswagen"],["pegas","kia"],["cerato","kia"],["sorento","kia"]
+]);
 const BRANDS = ["mercedes-benz","land-rover","range-rover","volkswagen","chevrolet","mitsubishi","genesis","hyundai","toyota","nissan","lexus","porsche","ford","lincoln","kia","mazda","honda","geely","changan","jetour","haval","audi","bmw","gmc","dodge","suzuki","peugeot","renault","chery","tesla","lucid","jeep"];
 const STOP = new Set(norm("ابي ابغى اريد سيارة سياره سيارات car cars vehicle vehicles used new مستعمل مستعملة مستعمله جديد جديده جديدة موديل model سنة سنه year years وفوق فوق واكثر وأكثر تحت اقل أقل من الى إلى في بالرياض الرياض بجدة بجده جدة جده بالدمام الدمام السعودية السعوديه saudi arabia ksa riyadh jeddah dammam under below less than above over more than around about budget ريال sar km كيلو كم").split(" "));
 function identityFromQuery(query = "") {
@@ -77,11 +80,11 @@ function identityFromQuery(query = "") {
   for (const [ar, en] of [...BRAND_ALIAS.entries()].sort((a,b)=>b[0].length-a[0].length)) q = q.replaceAll(norm(ar), en.replace(/-/g," "));
   for (const [ar, en] of [...MODEL_ALIAS.entries()].sort((a,b)=>b[0].length-a[0].length)) q = q.replaceAll(norm(ar), en.replace(/-/g," "));
   const compact = q.replace(/\s+/g, " ");
-  let brand = null;
+  let brand = null, model = null;
   for (const b of BRANDS) if (compact.includes(b.replace(/-/g," "))) { brand = b; break; }
+  for (const [m,b] of MODEL_BRAND) if (compact.includes(m.replace(/-/g," "))) { model = m; if (!brand) brand = b; break; }
   const tokens = compact.split(" ").filter(Boolean);
-  let model = null;
-  if (brand) {
+  if (brand && !model) {
     const bw = brand.replace(/-/g," ").split(" "), i = tokens.findIndex((_, idx) => bw.every((x,j)=>tokens[idx+j]===x));
     const rest = (i >= 0 ? tokens.slice(i + bw.length) : tokens).filter(t => !STOP.has(t) && !/^\d+(?:\.\d+)?$/.test(t) && !/^(?:20\d{2}|riyadh|jeddah|dammam|saudi|arabia|sar|km)$/.test(t));
     if (rest.length) model = rest.slice(0, 3).join("-");
@@ -104,10 +107,17 @@ function matchesFilters(c, f, condition) {
   return true;
 }
 async function fetchText(url, timeout = FETCH_TIMEOUT) {
-  const r = await fetch(url, { signal: AbortSignal.timeout(timeout), redirect:"follow", headers:{"User-Agent":"Mozilla/5.0 (compatible; DelilahCatalog/5.0)", Accept:"text/html,application/xhtml+xml"} });
-  if (!r.ok) throw new Error(`HTTP ${r.status}`);
-  const ct = (r.headers.get("content-type") || "").toLowerCase(); if (!ct.includes("text/html")) throw new Error(`Unexpected ${ct}`);
-  return { html:(await r.text()).slice(0,3_500_000), url:r.url||url };
+  let last;
+  for (let attempt=0; attempt<3; attempt++) {
+    try {
+      const r = await fetch(url, { signal: AbortSignal.timeout(timeout), redirect:"follow", headers:{"User-Agent":"Mozilla/5.0 (compatible; DelilahCatalog/5.1)", Accept:"text/html,application/xhtml+xml"} });
+      if ((r.status===429 || r.status>=500) && attempt<2) { last=new Error(`HTTP ${r.status}`); await sleep(650*(attempt+1)); continue; }
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const ct = (r.headers.get("content-type") || "").toLowerCase(); if (!ct.includes("text/html")) throw new Error(`Unexpected ${ct}`);
+      return { html:(await r.text()).slice(0,3_500_000), url:r.url||url };
+    } catch(e) { last=e; if (attempt<2) { await sleep(500*(attempt+1)); continue; } }
+  }
+  throw last || new Error("Fetch failed");
 }
 function syarahInfo(url = "") { const u=safeUrl(url),m=u?.pathname.match(/^\/(?:(?:en|ar)\/)?cardetail\/([^/]+)-(used|new)-(\d+)\/?$/i); return m?{slug:m[1],condition:m[2].toLowerCase(),id:m[3]}:null; }
 function syarahCash(text = "") { const t=digits(text); const m=t.match(/Cash\s*Price\s*(?:\(\s*Includes\s*VAT\s*\))?[^0-9]{0,40}([0-9][\d,]*)\s*SAR/i)||t.match(/السعر\s*النقدي[^0-9]{0,50}([0-9][\d,]*)\s*(?:ر\.?س|ريال)/i); return m?number(m[1],1000,5_000_000):null; }
@@ -128,8 +138,12 @@ async function syarahCatalog(body, maxPages = 8) {
   if((f.seller&&f.seller!=="Syarah")||(f.sourceType&&f.sourceType!=="marketplace"))return[];
   const base=`https://syarah.com/en/autos/${id.brand}/${id.model}`;
   const key=`syarah|${base}|${condition}`; const hit=sourceCache.get(key); if(hit&&Date.now()-hit.at<SOURCE_CACHE_TTL)return hit.listings.filter(c=>matchesFilters(c,f,condition));
-  const pages=Array.from({length:maxPages},(_,i)=>i+1),all=[];
-  for(let i=0;i<pages.length;i+=4){const batch=pages.slice(i,i+4);const rs=await Promise.allSettled(batch.map(p=>fetchText(p===1?base:`${base}?page=${p}`)));let added=0;for(const r of rs)if(r.status==="fulfilled"){const xs=parseSyarahPage(r.value.html,r.value.url,id);all.push(...xs);added+=xs.length}if(i>=4&&added===0)break}
+  const all=[];
+  for(let p=1;p<=maxPages;p++){
+    try { const d=await fetchText(p===1?base:`${base}?page=${p}`); const xs=parseSyarahPage(d.html,d.url,id); all.push(...xs); if(p>1&&xs.length===0)break; }
+    catch(e) { if(p===1) throw e; if(/HTTP 429/.test(e?.message||"")) break; }
+    if(p<maxPages) await sleep(350);
+  }
   const merged=merge(all); sourceCache.set(key,{at:Date.now(),listings:merged}); return merged.filter(c=>matchesFilters(c,f,condition));
 }
 function directArab(url = "") { const u=safeUrl(url); return !!u && (u.hostname==="arabwheels.sa"||u.hostname==="www.arabwheels.sa") && /^\/(?:en\/)?used-cars\/[^/]+-for-sale-in-[^/]+-\d+\/?$/i.test(u.pathname); }
@@ -151,7 +165,7 @@ function ensureJob(body){const id=jobId(body),now=Date.now();let j=jobs.get(id);
 async function waitQuick(j,ms=13000){const end=Date.now()+ms;while(!j.quickReady&&!j.complete&&Date.now()<end)await sleep(120);return publicJob(j)}
 setInterval(()=>{const now=Date.now();for(const[id,j]of jobs)if(now-j.createdAt>JOB_TTL)jobs.delete(id);for(const[k,v]of sourceCache)if(now-v.at>SOURCE_CACHE_TTL*2)sourceCache.delete(k)},60000).unref();
 
-app.post("/api/search",async(req,res)=>{const body=req.body||{};if(body.phase==="fast"){try{return res.json(await upstream(body,"fast",9000))}catch{const xs=await deterministic(body,false).catch(()=>[]);return res.json({query:body.query,condition:body.condition==="new"?"new":"used",listings:xs.slice(0,18),counts:counts(xs.slice(0,18)),live:true,phase:"fast",partial:true,fallback:"deterministic_sources"})}}const j=ensureJob(body);return res.json(await waitQuick(j))});
+app.post("/api/search",async(req,res)=>{const body=req.body||{};if(body.phase==="fast"){let d=null;try{d=await upstream(body,"fast",9000);if(Array.isArray(d.listings)&&d.listings.length)return res.json(d)}catch{}const xs=await deterministic(body,false).catch(()=>[]);if(xs.length)return res.json({query:body.query,condition:body.condition==="new"?"new":"used",listings:xs.slice(0,18),counts:counts(xs.slice(0,18)),live:true,phase:"fast",partial:true,fallback:"deterministic_sources",intent:{...requestFilters(body)}});if(d)return res.json(d);return res.json({query:body.query,condition:body.condition==="new"?"new":"used",listings:[],counts:{},live:true,phase:"fast",partial:true,fallback:"no_fast_results",intent:{...requestFilters(body)}})}const j=ensureJob(body);return res.json(await waitQuick(j))});
 app.get("/api/search/progress/:id",(req,res)=>{const j=jobs.get(req.params.id);if(!j)return res.status(404).json({error:"Search expired"});return res.json(publicJob(j))});
 app.get("/api/health",(req,res)=>res.json({ok:true,edge:"inventory-v20",logic:"progressive-market-scan-v20",search:Boolean(braveKey),marketScan:true,progressiveSearch:true,fastFirst:true,maxResults:MAX_RESULTS,deterministicSources:["Syarah","ArabWheels"],blockedSourceFallbacks:["Jetour KSA via public index when direct crawl is unavailable"]}));
 app.get("/api/catalog/stats",async(req,res)=>{try{const r=await fetch(`http://127.0.0.1:${v19Port}/api/catalog/stats`,{signal:AbortSignal.timeout(5000)});if(r.ok){const d=await r.json();return res.json({...d,edge:"inventory-v20",progressiveSearch:true})}}catch{}return res.json({ok:true,edge:"inventory-v20",progressiveSearch:true,indexed:0,models:0,samples:[],note:"upstream catalog stats temporarily unavailable; search remains available"})});

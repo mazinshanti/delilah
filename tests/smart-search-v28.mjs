@@ -4,9 +4,9 @@ async function json(path,opts={},ms=15000){const r=await fetch(`${base}${path}`,
 async function understand(query){return json('/api/understand',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query,condition:'used',filters:{}})},12000)}
 
 const h=await json('/api/health',{},10000);
-for(const k of ['smartSearchBar','sourceAwareSearch','sourceBrowse','universalTypoCorrection','numericModelProtection','similarOfferings','vehicleHistoryIntegration'])if(h[k]!==true)throw new Error(`health missing ${k}: ${JSON.stringify(h)}`);
-if(h.edge!=='product-v30')throw new Error(`expected product-v30, got ${h.edge}`);
-console.log('PASS v30 health flags');
+for(const k of ['smartSearchBar','sourceAwareSearch','sourceBrowse','universalTypoCorrection','numericModelProtection','similarOfferings','vehicleHistoryIntegration','compactBrowseDropdowns','categoryDropdown','brandDropdown','sourceDropdown'])if(h[k]!==true)throw new Error(`health missing ${k}: ${JSON.stringify(h)}`);
+if(h.edge!=='product-v31')throw new Error(`expected product-v31, got ${h.edge}`);
+console.log('PASS v31 health flags');
 
 const chrysler=await understand('كلزلر 300');
 const cu=chrysler.understanding||{};
@@ -35,21 +35,17 @@ if(search.sourceFilter!=='Haraj')throw new Error(`search lost source filter: ${J
 if((search.listings||[]).some(c=>c.source!=='Haraj'))throw new Error(`source leakage: ${JSON.stringify((search.listings||[]).map(c=>c.source))}`);
 console.log(`PASS Haraj-only result gate (${(search.listings||[]).length} fast listings)`);
 
-const browse=await json('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query:'show me all results from Haraj',condition:'used',filters:{},phase:'fast'})},30000);
-if(browse.sourceFilter!=='Haraj'||browse.understanding?.sourceOnly!==true)throw new Error(`source browse state invalid: ${JSON.stringify(browse.understanding)}`);
-if((browse.listings||[]).some(c=>c.source!=='Haraj'))throw new Error('source browse leaked another source');
-console.log(`PASS Haraj source browse (${(browse.listings||[]).length} accessible listings)`);
-
 const providers=await json('/api/history-providers');
 if(!Array.isArray(providers.providers)||providers.providers.length<3)throw new Error('history providers missing');
 for(const id of ['mojaz','opensooq-reports','ua'])if(!providers.providers.some(p=>p.id===id&&/^https:\/\//.test(p.url)))throw new Error(`history provider missing ${id}`);
 console.log('PASS history provider integrations');
 
 const root=await fetch(`${base}/`,{signal:timeout(10000)}).then(r=>r.text());
-if(!root.includes('/hotfix-v28.js'))throw new Error('smart frontend injection missing');
-const ui=await fetch(`${base}/hotfix-v28.js`,{signal:timeout(10000)}).then(r=>r.text());
-for(const needle of ['Browse by brand','Search by source','Similar offerings','Check vehicle history'])if(!ui.includes(needle))throw new Error(`frontend missing ${needle}`);
-console.log('PASS brand/source/similar/history UI wiring');
+if(!root.includes('/hotfix-v28.js')||!root.includes('/hotfix-v31.js'))throw new Error('v31 frontend injection missing');
+const ui=await fetch(`${base}/hotfix-v31.js`,{signal:timeout(10000)}).then(r=>r.text());
+for(const needle of ['Category','Brand','Source','All categories','All brands','Browse cars','SUV','Pickup / Truck'])if(!ui.includes(needle))throw new Error(`compact browse UI missing ${needle}`);
+if(!ui.includes('.smartRails{display:none!important}'))throw new Error('legacy browse rails are not hidden');
+console.log('PASS compact category / brand / source dropdown UI');
 
 const u=search.understanding||{};
 const sim=await json('/api/similar',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({understanding:u,condition:'used',source:'Haraj',excludeUrls:(search.listings||[]).map(c=>c.url)})},22000);

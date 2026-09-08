@@ -1,12 +1,12 @@
 {
   "name": "dalelah-live-search",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node server-v1.2.js",
-    "dev": "node --watch server-v1.2.js",
-    "check": "node --check server-v1.2.js"
+    "start": "node boot-v1.2.js",
+    "dev": "node --watch boot-v1.2.js",
+    "check": "node --check server-v1.2.js && node --check boot-v1.2.js"
   },
   "dependencies": {
     "dotenv": "^16.4.7",

@@ -14,7 +14,12 @@
 
   function renderBrain(){
     const g=document.getElementById('grid'); if(!g)return;
-    if(!listings.length){g.innerHTML='<div class="empty">No current indexed car can be confirmed against those constraints yet. Dalelah will keep refreshing the market.</div>';return}
+    if(!listings.length){
+      g.innerHTML=window.__dalelahStillSearching
+        ? '<div class="empty">Searching the Saudi market and wider public web… validated cars will appear here as Dalelah finds them.</div>'
+        : '<div class="empty">No current car can be confirmed against those constraints yet. Try broadening the year, budget, city or model.</div>';
+      return;
+    }
     g.innerHTML=listings.map(c=>{
       const p=c.presentation||{},title=p.headline||c.title||[c.year,c.brand,c.model].filter(Boolean).join(' ')||'Car listing',img=c.displayImage||c.image;
       const tier=c.matchTier||'possible',score=c.matchScore||c.aiScore||c.score||'—';
@@ -40,42 +45,52 @@
 
   function describe(d){
     const v=Number(d.verifiedCount||0),p=Number(d.possibleCount||0),sources=Object.keys(d.counts||{}).length;
-    return `${v} verified · ${p} possible · ${sources} source${sources===1?'':'s'}`;
+    const web=Number(d.webDiscovered||0);
+    return `${v} verified · ${p} possible · ${sources} source${sources===1?'':'s'}${web?` · ${web} web-discovered`:''}`;
   }
   async function poll(searchId, token){
-    for(let i=0;i<5;i++){
-      await new Promise(r=>setTimeout(r,1400));
+    for(let i=0;i<20;i++){
+      await new Promise(r=>setTimeout(r,i<4?900:1250));
       if(window.__dalelahSearchToken!==token)return;
       try{
-        const r=await fetch(`/api/search/progress/${encodeURIComponent(searchId)}`); if(!r.ok)return;
+        const r=await fetch(`/api/search/progress/${encodeURIComponent(searchId)}`,{cache:'no-store'}); if(!r.ok)return;
         const d=await r.json(); if(window.__dalelahSearchToken!==token)return;
         listings=d.listings||[];
+        window.__dalelahStillSearching=!d.done;
         const sub=document.getElementById('sub'), ans=document.getElementById('answerText');
         if(sub)sub.textContent=describe(d);
-        if(ans)ans.textContent=d.summary||(d.done?'Market scan complete.':'More sources are still refreshing…');
+        if(ans)ans.textContent=d.summary||(d.done?'Market scan complete.':'Searching more Saudi sources and the wider public web…');
         renderBrain();
         if(d.done){loadSources();return}
       }catch{return}
+    }
+    if(window.__dalelahSearchToken===token){
+      window.__dalelahStillSearching=false;
+      const ans=document.getElementById('answerText');
+      if(ans)ans.textContent=listings.length?'Showing the strongest cars found so far.':'No confirmed cars found after the extended market scan.';
+      renderBrain();
     }
   }
 
   async function runV14(){
     const query=document.getElementById('q').value.trim(); if(!query)return;
-    const token=Date.now(); window.__dalelahSearchToken=token;
+    const token=Date.now(); window.__dalelahSearchToken=token; window.__dalelahStillSearching=true;
     const searchBox=document.getElementById('search'), ask=document.getElementById('ask'), answer=document.getElementById('answer'), answerText=document.getElementById('answerText'), sub=document.getElementById('sub');
     searchBox?.classList.add('loading'); if(ask)ask.textContent='Searching…'; answer?.classList.add('show');
     if(answerText)answerText.textContent='Understanding your request and checking real Saudi car inventory…'; if(sub)sub.textContent='Loading the strongest matches first…';
+    listings=[]; renderBrain();
     try{
-      const r=await fetch('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query,condition,filters:filters(),phase:'fast'})});
+      const r=await fetch('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query,condition,filters:filters(),phase:'fast'}),cache:'no-store'});
       const d=await r.json(); if(!r.ok)throw new Error(d.error||'Search failed');
       if(window.__dalelahSearchToken!==token)return;
       listings=d.listings||[];
-      if(answerText)answerText.textContent=d.summary||`${listings.length} matching cars found.`;
+      window.__dalelahStillSearching=Boolean(d.partial);
+      if(answerText)answerText.textContent=d.summary||(d.partial?'Strongest matches loaded. Searching wider…':`${listings.length} matching cars found.`);
       if(sub)sub.textContent=describe(d);
       renderBrain();
-      if(d.searchId&&d.partial)poll(d.searchId,token);
+      if(d.searchId&&d.partial)poll(d.searchId,token); else window.__dalelahStillSearching=false;
       loadSources();
-    }catch(e){if(answerText)answerText.textContent=e.message; listings=[]; renderBrain();}
+    }catch(e){if(answerText)answerText.textContent=e.message; listings=[]; window.__dalelahStillSearching=false; renderBrain();}
     finally{searchBox?.classList.remove('loading'); if(ask)ask.textContent='Ask Dalelah ✦';}
   }
 

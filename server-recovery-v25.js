@@ -124,6 +124,14 @@ async function runEdgeRecovery(state){
   }
 }
 
+app.get('/api/health',async(req,res)=>{
+  try{
+    const r=await fetch(`http://127.0.0.1:${upstreamPort}/api/health`,{signal:AbortSignal.timeout(7000)});
+    const text=await r.text();let d;try{d=JSON.parse(text)}catch{d={}};
+    if(!r.ok)return res.status(r.status).json(d);
+    return res.json({...d,edge:'dalelah-v15',productVersion:'1.5',renderGitCommit:process.env.RENDER_GIT_COMMIT||null,progressiveEdgeRecovery:true,exactYearEdgeGuard:true});
+  }catch(e){return res.status(503).json({ok:false,edge:'dalelah-v15',productVersion:'1.5',renderGitCommit:process.env.RENDER_GIT_COMMIT||null,error:e?.message||'health unavailable'});}
+});
 app.post('/api/search',async(req,res)=>{
   const body=req.body||{},q=String(body.query||'');
   try{
@@ -163,10 +171,10 @@ app.get('/api/search/progress/:id',async(req,res)=>{
       return res.json(decorate(snapshot,state));
     }
 
-    let internalId=String(state.internalSearchId);
-    let r=await fetch(`http://127.0.0.1:${upstreamPort}/api/search/progress/${encodeURIComponent(internalId)}`,{signal:AbortSignal.timeout(20000)});
-    let text=await r.text();
-    let contentType=r.headers.get('content-type')||'application/json';
+    const internalId=String(state.internalSearchId);
+    const r=await fetch(`http://127.0.0.1:${upstreamPort}/api/search/progress/${encodeURIComponent(internalId)}`,{signal:AbortSignal.timeout(20000)});
+    const text=await r.text();
+    const contentType=r.headers.get('content-type')||'application/json';
     let d;try{d=JSON.parse(text)}catch{d={error:text.slice(0,300)}};
 
     const expired=r.status===404&&/search expired/i.test(String(d?.error||''));

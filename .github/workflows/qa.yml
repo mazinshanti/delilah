@@ -32,6 +32,7 @@ jobs:
       - run: node --check server-v14.js
       - run: node --check server-v15.js
       - run: node --check server-v16.js
+      - run: node --check server-v17.js
       - run: node tests/regression.mjs
 
   source-probe-v15:
@@ -75,6 +76,20 @@ jobs:
         env:
           DELILAH_URL: https://delilah-pm5f.onrender.com
         run: node tests/seller-plugins-v16.mjs
+
+  genesis-wallan-v17:
+    needs: fast-path-v9
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test Genesis Wallan certified inventory plugin
+        env:
+          DELILAH_URL: https://delilah-pm5f.onrender.com
+        run: node tests/genesis-wallan-v17.mjs
 
   catalog-breadth-v11:
     needs: fast-path-v9

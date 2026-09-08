@@ -121,7 +121,7 @@ async function runSearch(body){
   let listings=prepareResults(groups,intent,500);sortResults(listings,intent);
   const sourceFilter=String(body?.filters?.source||"").trim();
   const shouldResearch=WEB_DISCOVERY&&Boolean(openaiKey)&&!sourceFilter&&listings.length<WEB_DISCOVERY_THRESHOLD;
-  const webPromise=shouldResearch?discoverPublicCarListings({query,intent,apiKey:openaiKey,model:openaiModel,timeout:7500,maxCandidates:8}):null;
+  const webPromise=shouldResearch?discoverPublicCarListings({query,intent,apiKey:openaiKey,model:openaiModel,timeout:15000,maxCandidates:8}):null;
   const summary=resultSummary(listings,intent);
   return{intent,queries,allQueries,condition,listings,upstreamJobs,summary,webPromise};
 }

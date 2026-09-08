@@ -34,6 +34,7 @@ jobs:
       - run: node --check server-v16.js
       - run: node --check server-v17.js
       - run: node --check server-v18.js
+      - run: node --check server-v19.js
       - run: node tests/regression.mjs
 
   deploy-ready:
@@ -56,11 +57,11 @@ jobs:
           for(let i=0;i<90;i++){
             try{
               const r=await fetch(`${base}/api/health`,{signal:AbortSignal.timeout(8000)});
-              if(r.ok){const d=await r.json();last=JSON.stringify({edge:d.edge,exhaustiveSearch:d.exhaustiveSearch});if(d.edge==='inventory-v18'&&d.exhaustiveSearch===true){console.log('PASS deploy ready',last);process.exit(0)}}
+              if(r.ok){const d=await r.json();last=JSON.stringify({edge:d.edge,exhaustiveSearch:d.exhaustiveSearch,jetourOfficialStock:d.jetourOfficialStock});if(d.edge==='inventory-v19'&&d.exhaustiveSearch===true&&d.jetourOfficialStock===true){console.log('PASS deploy ready',last);process.exit(0)}}
             }catch(e){last=e.message}
             await sleep(2000);
           }
-          throw new Error(`Production v18 not ready: ${last}`);
+          throw new Error(`Production v19 not ready: ${last}`);
           NODE
 
   source-probe-v15:
@@ -102,6 +103,20 @@ jobs:
         env:
           DELILAH_URL: https://delilah-pm5f.onrender.com
         run: node tests/exhaustive-search-v18.mjs
+
+  jetour-v19:
+    needs: deploy-ready
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test Jetour official exact stock
+        env:
+          DELILAH_URL: https://delilah-pm5f.onrender.com
+        run: node tests/jetour-v19.mjs
 
   seller-plugins-v16:
     needs: deploy-ready

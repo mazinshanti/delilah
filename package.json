@@ -4,14 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node server-v15-opensooq.js",
-    "dev": "node --watch server-v15-opensooq.js",
-    "check": "node --check server-v15-opensooq.js && node --check lib/opensooq-source.js && node --check lib/inventory-normalizer.js && node --check lib/deal-score.js && node --check server-v15-new-fast.js && node --check server-v15-volume-quality.js && node --check server-v15-volume.js && node --check server-v15-ux.js && node --check server-v15-carswitch.js && node --check server-v15-saleh.js && node --check server-v15-quality.js && node --check server-v15-haraj.js && node --check server-v15-market.js && node --check server-recovery-v25.js",
+    "start": "node server-v15-marketplace.js",
+    "dev": "node --watch server-v15-marketplace.js",
+    "check": "node --check server-v15-marketplace.js && node --check lib/market-valuation.js && node --check lib/saudi-seller-store.js && node --check server-v15-opensooq.js && node --check lib/opensooq-source.js && node --check lib/inventory-normalizer.js && node --check lib/deal-score.js && node --check server-v15-new-fast.js && node --check server-v15-volume-quality.js && node --check server-v15-volume.js && node --check server-v15-ux.js && node --check server-v15-carswitch.js && node --check server-v15-saleh.js && node --check server-v15-quality.js && node --check server-v15-haraj.js && node --check server-v15-market.js && node --check server-recovery-v25.js",
     "test:exact-year": "node --test tests/exact-year-v15.test.mjs",
     "test:marketplace": "node --test tests/marketplace-foundation.test.mjs"
   },
   "dependencies": {
     "dotenv":"^16.4.7",
-    "express":"^5.1.0"
+    "express":"^5.1.0",
+    "pg":"^8.16.3"
   }
 }

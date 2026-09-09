@@ -21,6 +21,7 @@ jobs:
       - run: npm install --no-audit --no-fund
       - name: Syntax-check Dalelah 1.5 volume chain
         run: |
+          node --check server-v15-volume-quality.js
           node --check server-v15-volume.js
           node --check server-v15-ux.js
           node --check server-v15-carswitch.js
@@ -44,13 +45,16 @@ jobs:
           import {readFile} from 'node:fs/promises';
           const pkg=JSON.parse(await readFile('package.json','utf8'));
           const v=await readFile('server-v15-volume.js','utf8');
-          assert.equal(pkg.scripts.start,'node server-v15-volume.js');
+          const q=await readFile('server-v15-volume-quality.js','utf8');
+          assert.equal(pkg.scripts.start,'node server-v15-volume-quality.js');
           assert.match(v,/const MAX_RESULTS=500/);
           assert.match(v,/const USED_QUERIES=\[/);
           assert.match(v,/__all_cars__/);
           assert.match(v,/volumeBrowse:true/);
           assert.match(v,/mergeInto\(/);
-          console.log('PASS volume architecture guards');
+          assert.match(q,/volumeQualityGate:true/);
+          assert.match(q,/جنط/);
+          console.log('PASS volume architecture + quality guards');
           NODE
 
   deploy-ready:
@@ -79,13 +83,13 @@ jobs:
                 fetch(`${base}/api/health`,{signal:AbortSignal.timeout(8000),headers:{'cache-control':'no-cache'}})
               ]);
               const html=await home.text();const h=await health.json().catch(()=>({}));
-              const ok=home.ok&&health.ok&&h.productVersion==='1.5'&&h.edge==='dalelah-v15-volume'&&h.volumeBrowse===true&&h.renderGitCommit===expected&&html.includes('__all_cars__')&&html.includes('async function pollSearch');
-              last=JSON.stringify({home:home.status,health:health.status,edge:h.edge,commit:h.renderGitCommit,expected,volume:h.volumeBrowse});
-              if(ok){console.log('PASS exact Dalelah volume commit',last);process.exit(0)}
+              const ok=home.ok&&health.ok&&h.productVersion==='1.5'&&h.edge==='dalelah-v15-volume'&&h.volumeBrowse===true&&h.volumeQualityGate===true&&h.renderGitCommit===expected&&html.includes('__all_cars__')&&html.includes('async function pollSearch');
+              last=JSON.stringify({home:home.status,health:health.status,edge:h.edge,commit:h.renderGitCommit,expected,volume:h.volumeBrowse,quality:h.volumeQualityGate});
+              if(ok){console.log('PASS exact Dalelah clean-volume commit',last);process.exit(0)}
             }catch(e){last=e.message}
             await sleep(5000);
           }
-          throw new Error(`Volume commit not observed: ${last}`);
+          throw new Error(`Clean volume commit not observed: ${last}`);
           NODE
 
   production-qa:
@@ -100,7 +104,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Verify hundreds-of-cars broad market volume
+      - name: Verify hundreds-of-cars clean broad market volume
         run: node tests/volume-market-v15.mjs
       - name: Verify core searches across multiple cars
         run: node tests/production-core-v15.mjs

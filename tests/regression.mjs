@@ -81,8 +81,14 @@ assert.match(harajLayer,/haraj_source_native_search/,'Haraj native listings must
 assert.match(harajLayer,/const PARTS_RE=/,'Haraj native retrieval must filter obvious parts/accessory ads');checks++;
 assert.match(harajLayer,/bodyFromSearchId\(/,'Haraj overlay must survive process restarts by reconstructing search bodies');checks++;
 
+const qualityLayer=await readFile(new URL('../server-v15-quality.js',import.meta.url),'utf8');
+assert.match(qualityLayer,/const PARTS_RE=.*شبك/,'Final quality gate must reject grille/part ads such as شبك');checks++;
+assert.match(qualityLayer,/const NON_SALE_RE=/,'Final quality gate must reject rental/service/non-sale results');checks++;
+assert.match(qualityLayer,/function acceptable\(/,'Final quality gate must revalidate each listing before display');checks++;
+assert.match(qualityLayer,/qualityGate:true/,'Dalelah health/results must advertise the final quality gate');checks++;
+
 const pkg=JSON.parse(await readFile(new URL('../package.json',import.meta.url),'utf8'));
 assert.equal(pkg.version,'1.5.0');checks++;
-assert.equal(pkg.scripts.start,'node server-v15-haraj.js');checks++;
+assert.equal(pkg.scripts.start,'node server-v15-quality.js');checks++;
 
 console.log(`PASS: ${checks.toLocaleString()} regression assertions`);

@@ -4,7 +4,8 @@ const externalPort=Number(process.env.PORT||3000);
 const innerPort=Number(process.env.DALELAH_VOLUME_INNER_PORT||7000);
 const JOB_TTL=25*60_000;
 const MAX_RESULTS=500;
-const FANOUT_CONCURRENCY=4;
+const FANOUT_CONCURRENCY=6;
+const FETCH_TIMEOUT=9000;
 process.env.PORT=String(innerPort);
 await import('./server-v15-ux.js');
 process.env.PORT=String(externalPort);
@@ -15,11 +16,13 @@ const jobs=new Map();
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
 const USED_QUERIES=[
-  'Toyota Corolla','Toyota Camry','Toyota Yaris','Toyota Land Cruiser','Toyota Prado','Toyota Fortuner',
-  'Nissan Patrol','Nissan Sunny','Nissan Altima','Nissan X-Trail',
-  'Hyundai Elantra','Hyundai Sonata','Hyundai Tucson','Hyundai Accent',
-  'Kia Sportage','Kia Cerato','Kia K5','Jeep Wrangler','Chevrolet Tahoe','Ford Territory',
-  'Lexus ES','Lexus RX','BMW X5','Mercedes E-Class','Geely Coolray','Changan CS75','Haval H6','MG 5'
+  {q:'تويوتا كورولا',brand:'Toyota',model:'Corolla'},{q:'تويوتا كامري',brand:'Toyota',model:'Camry'},{q:'تويوتا يارس',brand:'Toyota',model:'Yaris'},{q:'تويوتا لاندكروزر',brand:'Toyota',model:'Land Cruiser'},{q:'تويوتا برادو',brand:'Toyota',model:'Prado'},{q:'تويوتا فورتشنر',brand:'Toyota',model:'Fortuner'},
+  {q:'نيسان باترول',brand:'Nissan',model:'Patrol'},{q:'نيسان صني',brand:'Nissan',model:'Sunny'},{q:'نيسان التيما',brand:'Nissan',model:'Altima'},{q:'نيسان اكستريل',brand:'Nissan',model:'X-Trail'},
+  {q:'هيونداي النترا',brand:'Hyundai',model:'Elantra'},{q:'هيونداي سوناتا',brand:'Hyundai',model:'Sonata'},{q:'هيونداي توسان',brand:'Hyundai',model:'Tucson'},{q:'هيونداي اكسنت',brand:'Hyundai',model:'Accent'},
+  {q:'كيا سبورتاج',brand:'Kia',model:'Sportage'},{q:'كيا سيراتو',brand:'Kia',model:'Cerato'},{q:'كيا K5',brand:'Kia',model:'K5'},{q:'جيب رانجلر',brand:'Jeep',model:'Wrangler'},
+  {q:'شفروليه تاهو',brand:'Chevrolet',model:'Tahoe'},{q:'فورد تيريتوري',brand:'Ford',model:'Territory'},{q:'لكزس ES',brand:'Lexus',model:'ES'},{q:'لكزس RX',brand:'Lexus',model:'RX'},
+  {q:'بي ام دبليو X5',brand:'BMW',model:'X5'},{q:'مرسيدس E',brand:'Mercedes',model:'E-Class'},{q:'جيلي كولراي',brand:'Geely',model:'Coolray'},{q:'شانجان CS75',brand:'Changan',model:'CS75'},
+  {q:'هافال H6',brand:'Haval',model:'H6'},{q:'ام جي MG5',brand:'MG',model:'MG 5'},{q:'GMC يوكن',brand:'GMC',model:'Yukon'},{q:'مازدا CX5',brand:'Mazda',model:'CX-5'}
 ];
 const NEW_QUERIES=[
   'Toyota Corolla 2026','Toyota Yaris 2026','Toyota Camry 2026','Toyota Land Cruiser 2026',
@@ -27,51 +30,31 @@ const NEW_QUERIES=[
   'Geely Preface 2026','Geely Coolray 2026','Changan Eado 2026','Changan CS75 2026',
   'Haval H6 2026','Jetour T2 2026','MG 5 2026','BYD Song Plus 2026'
 ];
+const PARTS=/(?:قطع\s*غيار|مكين[هة]|محرك|ايرباق|ارباق|طبلون|كمبروسر|دينمو|رديتر|صدام|شبك|شمعة|شمعات|انوار|أنوار|رفرف|كبوت|باب\s*(?:يمين|يسار|امامي|خلفي)|جنوط|كفرات|فلتر|طرمب[هة]|حساس|اصطب|اسطب|كشاف|مراي[هة]|مرآة|تشليح|للتشليح|للايجار|للإيجار|تاجير|تأجير)/i;
+const CITIES=[['الرياض','Riyadh'],['جدة','Jeddah'],['جده','Jeddah'],['الدمام','Dammam'],['الخبر','Khobar'],['مكة','Makkah'],['مكه','Makkah'],['المدينة','Madinah'],['المدينه','Madinah'],['الطائف','Taif'],['تبوك','Tabuk'],['حائل','Hail'],['بريدة','Buraidah']];
 
+function decode(s=''){return String(s).replace(/&nbsp;|&#160;/gi,' ').replace(/&amp;/gi,'&').replace(/&quot;|&#34;/gi,'"').replace(/&#39;|&apos;/gi,"'").replace(/&lt;/gi,'<').replace(/&gt;/gi,'>')}
+function strip(s=''){return decode(String(s)).replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim()}
 function canonical(v=''){try{const u=new URL(v);u.hash='';for(const k of[...u.searchParams.keys()])if(/^utm_|^(fbclid|gclid)$/i.test(k))u.searchParams.delete(k);return u.href.replace(/\/$/,'')}catch{return String(v||'')}}
 function mergeInto(map,items=[]){for(const c of items||[]){if(!c?.url)continue;const k=canonical(c.url),old=map.get(k);map.set(k,old?{...old,...c,image:c.image||old.image,displayImage:c.displayImage||old.displayImage,price:c.price??old.price??null}:c);if(map.size>=MAX_RESULTS)break}}
 function counts(items=[]){const out={};for(const x of items)out[x.source||'Source']=(out[x.source||'Source']||0)+1;return out}
 function broadIntent(body={}){const q=String(body.query||'').trim().toLowerCase();const f=body.filters||{};return q==='__all_cars__'||q==='all cars'||q==='cars'||q==='سيارات'||(!q&&!f.seller&&!f.city&&!f.minYear&&!f.maxYear&&!f.maxPrice&&!f.maxMileage)}
+function directHaraj(url=''){try{const u=new URL(url);return /(^|\.)haraj\.com\.sa$/i.test(u.hostname)&&/^\/\d{8,}(?:\/[^/?#]+)?\/?$/i.test(u.pathname)}catch{return false}}
+function yearFrom(s=''){const ys=[...String(s).matchAll(/\b(20\d{2})\b/g)].map(x=>Number(x[1])).filter(y=>y>=2000&&y<=2035);return ys[0]||null}
+function cityFrom(s=''){for(const[a,b]of CITIES)if(String(s).includes(a))return b;return null}
+function priceFrom(s='',year=null){const nums=[...String(s).replace(/,/g,'').matchAll(/\b([1-9][0-9]{3,6})\b/g)].map(x=>Number(x[1])).filter(n=>n!==year&&n>=5000&&n<=2_000_000);return nums.length?nums[nums.length-1]:null}
+function imageFrom(seg='',base=''){for(const m of String(seg).matchAll(/<img\b[^>]*(?:src|data-src)=["']([^"']+)["'][^>]*>/gi)){try{const u=new URL(m[1].replace(/&amp;/g,'&'),base).href;if(!/(logo|icon|avatar|placeholder|banner)/i.test(u))return u}catch{}}return null}
+async function fetchHaraj(query){const url=`https://haraj.com.sa/search/${encodeURIComponent(query)}/`;const r=await fetch(url,{redirect:'follow',signal:AbortSignal.timeout(FETCH_TIMEOUT),headers:{'User-Agent':'Dalelah/1.5 (+https://dalelah.co; vehicle-search-index)','Accept':'text/html,application/xhtml+xml','Accept-Language':'ar-SA,ar;q=0.9,en;q=0.7'}});if(!r.ok)throw new Error(`Haraj HTTP ${r.status}`);return{html:(await r.text()).slice(0,5_000_000),url:r.url||url}}
+function parseHarajVolume(html='',base='',meta={}){const raw=[];for(const m of String(html).matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi)){let url;try{url=canonical(new URL(m[1].replace(/&amp;/g,'&'),base).href)}catch{continue}if(!directHaraj(url))continue;const title=strip(m[2]);if(!title||title.length<5||PARTS.test(title))continue;raw.push({url,title,index:m.index||0})}const out=[],seen=new Set();for(let i=0;i<raw.length;i++){const x=raw[i];if(seen.has(x.url))continue;seen.add(x.url);const next=raw[i+1]?.index||Math.min(String(html).length,x.index+6500),seg=String(html).slice(x.index,Math.min(next,x.index+6500)),text=strip(seg);if(PARTS.test(text.slice(0,220)))continue;const year=yearFrom(`${x.title} ${text.slice(0,300)}`),price=priceFrom(text.slice(0,1200),year),city=cityFrom(text.slice(0,1200)),image=imageFrom(seg,base);out.push({source:'Haraj',sourceType:'marketplace',seller:'Haraj',sourceStrict:true,title:x.title,snippet:text.slice(0,500),url:x.url,brand:meta.brand,model:meta.model,year,mileage:null,city,price,priceVerified:false,condition:'used',saleVerified:true,saleEvidence:['haraj_direct_ad_url','haraj_volume_search_page'],image:image||null,displayImage:image||null,imageVerified:Boolean(image),score:84,discovery:'haraj_direct_volume_search',volumeVerified:true});if(out.length>=35)break}return out}
+async function scanHarajVolume(meta){const d=await fetchHaraj(meta.q);return parseHarajVolume(d.html,d.url,meta)}
 async function inner(pathname,opts={}){const r=await fetch(`http://127.0.0.1:${innerPort}${pathname}`,{...opts,signal:opts.signal||AbortSignal.timeout(50000)});const text=await r.text();let d;try{d=JSON.parse(text)}catch{d={error:text.slice(0,400)}};return{r,d}}
-async function scanOne(query,condition,filters,map,job){
-  try{
-    const sourceFilters={...filters,seller:condition==='new'?'Saleh Cars':'Haraj'};
-    const {r,d}=await inner('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query,condition,filters:sourceFilters}),signal:AbortSignal.timeout(50000)});
-    if(!r.ok){job.errors.push(`${query}:HTTP ${r.status}`);return}
-    mergeInto(map,d.listings||[]);
-    job.completedQueries++;
-    if(d.searchId&&d.complete!==true&&d.marketScanComplete!==true){
-      const polls=condition==='new'?12:6;
-      for(let i=0;i<polls;i++){
-        await sleep(i===0?400:700);
-        const p=await inner(`/api/search/progress/${encodeURIComponent(d.searchId)}`,{signal:AbortSignal.timeout(35000)});
-        if(!p.r.ok)break;mergeInto(map,p.d.listings||[]);
-        if(p.d.complete===true||p.d.marketScanComplete===true)break;
-      }
-    }
-  }catch(e){job.errors.push(`${query}:${e?.message||e}`)}
-}
-function ensureJob(id,body){
-  let j=jobs.get(id);if(j)return j;
-  const queries=body.condition==='new'?NEW_QUERIES:USED_QUERIES;
-  j={id,body,createdAt:Date.now(),complete:false,completedQueries:0,totalQueries:queries.length,listings:[],errors:[]};jobs.set(id,j);
-  (async()=>{
-    const map=new Map();
-    for(let i=0;i<queries.length;i+=FANOUT_CONCURRENCY){
-      const batch=queries.slice(i,i+FANOUT_CONCURRENCY);
-      await Promise.all(batch.map(q=>scanOne(q,body.condition||'used',body.filters||{},map,j)));
-      j.listings=[...map.values()].slice(0,MAX_RESULTS);
-      if(j.listings.length>=MAX_RESULTS)break;
-    }
-    j.listings=[...map.values()].slice(0,MAX_RESULTS);j.complete=true;j.finishedAt=Date.now();
-  })();
-  return j;
-}
+async function scanNew(query,filters,map,job){try{const sourceFilters={...filters,seller:'Saleh Cars'};const {r,d}=await inner('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query,condition:'new',filters:sourceFilters}),signal:AbortSignal.timeout(50000)});if(!r.ok){job.errors.push(`${query}:HTTP ${r.status}`);return}mergeInto(map,d.listings||[]);job.completedQueries++;if(d.searchId&&d.complete!==true&&d.marketScanComplete!==true){for(let i=0;i<12;i++){await sleep(i===0?400:700);const p=await inner(`/api/search/progress/${encodeURIComponent(d.searchId)}`,{signal:AbortSignal.timeout(35000)});if(!p.r.ok)break;mergeInto(map,p.d.listings||[]);if(p.d.complete===true||p.d.marketScanComplete===true)break}}}catch(e){job.errors.push(`${query}:${e?.message||e}`)}}
+function ensureJob(id,body){let j=jobs.get(id);if(j)return j;const used=body.condition!=='new',queries=used?USED_QUERIES:NEW_QUERIES;j={id,body,createdAt:Date.now(),complete:false,completedQueries:0,totalQueries:queries.length,listings:[],errors:[]};jobs.set(id,j);(async()=>{const map=new Map();for(let i=0;i<queries.length;i+=FANOUT_CONCURRENCY){const batch=queries.slice(i,i+FANOUT_CONCURRENCY);if(used){await Promise.all(batch.map(async meta=>{try{mergeInto(map,await scanHarajVolume(meta));j.completedQueries++}catch(e){j.errors.push(`${meta.q}:${e?.message||e}`)}}))}else{await Promise.all(batch.map(q=>scanNew(q,body.filters||{},map,j)))}j.listings=[...map.values()].slice(0,MAX_RESULTS);if(j.listings.length>=MAX_RESULTS)break}j.listings=[...map.values()].slice(0,MAX_RESULTS);j.complete=true;j.finishedAt=Date.now()})();return j}
 function publicJob(j){return{searchId:j.id,listings:j.listings,counts:counts(j.listings),complete:j.complete,marketScanComplete:j.complete,volumeBrowse:true,volumeBrowseListings:j.listings.length,volumeQueriesComplete:j.completedQueries,volumeQueriesTotal:j.totalQueries,volumeErrors:j.errors.slice(0,12),answer:j.complete?`${j.listings.length} verified cars found across the Saudi market.`:`${j.listings.length} verified cars found so far. Dalelah is scanning the market.`}}
 function idFor(body){return `vol.${Buffer.from(JSON.stringify({q:body.query||'',c:body.condition||'used',f:body.filters||{},t:Date.now()})).toString('base64url')}`}
 
 app.get('/',async(req,res)=>{try{const r=await fetch(`http://127.0.0.1:${innerPort}/`,{signal:AbortSignal.timeout(10000)});let html=await r.text();html=html.replace("function browse(){const q=[selectedBrand,$('model').value,$('category').value].filter(Boolean).join(' ');$('q').value=q;run()}","function browse(){const q=[selectedBrand,$('model').value,$('category').value].filter(Boolean).join(' ')||'__all_cars__';$('q').value=q==='__all_cars__'?'':q;run(q)}");html=html.replace("async function run(){const query=$('q').value.trim();if(!query)return;", "async function run(forcedQuery){const query=String(forcedQuery??$('q').value).trim();if(!query)return;");return res.status(r.status).type('html').send(html)}catch(e){return res.status(502).send(`Dalelah UI unavailable: ${e?.message||e}`)}});
-app.get('/api/health',async(req,res)=>{try{const {r,d}=await inner('/api/health',{signal:AbortSignal.timeout(8000)});return res.status(r.status).json({...d,edge:'dalelah-v15-volume',productVersion:'1.5',renderGitCommit:process.env.RENDER_GIT_COMMIT||d.renderGitCommit||null,volumeBrowse:true,volumeBrowseMaxResults:MAX_RESULTS,volumeUsedSource:'Haraj',volumeNewSource:'Saleh Cars'})}catch(e){return res.status(503).json({ok:false,edge:'dalelah-v15-volume',productVersion:'1.5',volumeBrowse:true,error:e?.message||'health unavailable'})}});
+app.get('/api/health',async(req,res)=>{try{const {r,d}=await inner('/api/health',{signal:AbortSignal.timeout(8000)});return res.status(r.status).json({...d,edge:'dalelah-v15-volume',productVersion:'1.5',renderGitCommit:process.env.RENDER_GIT_COMMIT||d.renderGitCommit||null,volumeBrowse:true,volumeBrowseMaxResults:MAX_RESULTS,volumeUsedSource:'Haraj-direct',volumeNewSource:'Saleh Cars'})}catch(e){return res.status(503).json({ok:false,edge:'dalelah-v15-volume',productVersion:'1.5',volumeBrowse:true,error:e?.message||'health unavailable'})}});
 app.post('/api/search',async(req,res)=>{const body=req.body||{};if(!broadIntent(body)){const {r,d}=await inner('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(50000)});return res.status(r.status).json(d)}const id=idFor(body);const j=ensureJob(id,{...body,query:'__all_cars__'});return res.json(publicJob(j))});
 app.get('/api/search/progress/:id',async(req,res)=>{const id=String(req.params.id);if(id.startsWith('vol.')){const j=jobs.get(id);if(!j)return res.status(404).json({error:'Search expired'});return res.json(publicJob(j))}const {r,d}=await inner(`/api/search/progress/${encodeURIComponent(id)}`,{signal:AbortSignal.timeout(40000)});return res.status(r.status).json(d)});
 async function proxy(req,res){try{const headers={};for(const[k,v]of Object.entries(req.headers))if(!['host','content-length','connection'].includes(k.toLowerCase())&&v!=null)headers[k]=Array.isArray(v)?v.join(','):String(v);let body;if(!['GET','HEAD'].includes(req.method)&&req.is('application/json')){body=JSON.stringify(req.body||{});headers['content-type']='application/json'}const r=await fetch(`http://127.0.0.1:${innerPort}${req.originalUrl}`,{method:req.method,headers,body,redirect:'manual',signal:AbortSignal.timeout(50000)});const buf=Buffer.from(await r.arrayBuffer());for(const[k,v]of r.headers.entries())if(!['content-length','transfer-encoding','connection'].includes(k.toLowerCase()))res.setHeader(k,v);return res.status(r.status).send(buf)}catch(e){return res.status(502).json({error:e?.message||'Dalelah unavailable'})}}

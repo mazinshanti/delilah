@@ -4,18 +4,20 @@ on:
   push:
     branches: [coverage/opensooq-v15]
     paths:
+      - 'lib/opensooq-source.js'
       - 'tests/probe-opensooq-v15.mjs'
+      - 'tests/opensooq-source-v15.mjs'
       - '.github/workflows/opensooq-probe.yml'
   workflow_dispatch:
 
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Probe OpenSooq Saudi listing structure
-        run: node tests/probe-opensooq-v15.mjs
+      - name: Validate OpenSooq structured source adapter
+        run: node tests/opensooq-source-v15.mjs

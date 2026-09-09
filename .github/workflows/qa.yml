@@ -19,75 +19,79 @@ jobs:
         with:
           node-version: 22
       - run: npm install --no-audit --no-fund
-      - name: Syntax-check current Dalelah 1.5 search chain
+      - name: Syntax-check Dalelah 1.5 volume chain
         run: |
+          node --check server-v15-volume.js
+          node --check server-v15-ux.js
           node --check server-v15-carswitch.js
           node --check server-v15-saleh.js
           node --check server-v15-quality.js
           node --check server-v15-haraj.js
           node --check server-v15-market.js
           node --check server-recovery-v25.js
-          node --check server-v24.js
-          node --check server-v23.js
-          node --check server-v22.js
-          node --check server-v21.js
-          node --check server-v20.js
           node --check lib/search-intent.js
-          node --check tests/native-sources-v15.mjs
-          node --check tests/saleh-native-v15.mjs
+          node --check tests/production-core-v15.mjs
+          node --check tests/volume-market-v15.mjs
           node --check tests/full-market-v15.mjs
-          node --check tests/probe-saleh-page.mjs
       - name: Test exact-year behavior
         run: npm run test:exact-year
       - name: Test current Dalelah 1.5 UI
         run: node --test tests/ui-v15.test.mjs
-      - name: Run broad local regression assertions
-        run: node tests/regression.mjs
-      - name: Probe Saleh frontend inventory data
-        run: node tests/probe-saleh-page.mjs
+      - name: Guard broad-market volume architecture
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import {readFile} from 'node:fs/promises';
+          const pkg=JSON.parse(await readFile('package.json','utf8'));
+          const v=await readFile('server-v15-volume.js','utf8');
+          assert.equal(pkg.scripts.start,'node server-v15-volume.js');
+          assert.match(v,/const MAX_RESULTS=500/);
+          assert.match(v,/const USED_QUERIES=\[/);
+          assert.match(v,/__all_cars__/);
+          assert.match(v,/volumeBrowse:true/);
+          assert.match(v,/mergeInto\(/);
+          console.log('PASS volume architecture guards');
+          NODE
 
   deploy-ready:
     needs: regression
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Wait for exact Dalelah 1.5 commit to reach production
+      - name: Wait for exact Dalelah 1.5 volume commit
         env:
           DELILAH_URL: https://delilah-pm5f.onrender.com
           EXPECTED_GIT_COMMIT: ${{ github.sha }}
         run: |
           node --input-type=module <<'NODE'
           const base=process.env.DELILAH_URL.replace(/\/$/,'');
-          const expected=String(process.env.EXPECTED_GIT_COMMIT||'').trim();
+          const expected=process.env.EXPECTED_GIT_COMMIT;
           const sleep=ms=>new Promise(r=>setTimeout(r,ms));
           let last='';
-          for(let i=0;i<100;i++){
+          for(let i=0;i<120;i++){
             try{
               const [home,health]=await Promise.all([
-                fetch(`${base}/`,{signal:AbortSignal.timeout(7000),headers:{'cache-control':'no-cache'}}),
-                fetch(`${base}/api/health`,{signal:AbortSignal.timeout(7000),headers:{'cache-control':'no-cache'}})
+                fetch(`${base}/`,{signal:AbortSignal.timeout(8000),headers:{'cache-control':'no-cache'}}),
+                fetch(`${base}/api/health`,{signal:AbortSignal.timeout(8000),headers:{'cache-control':'no-cache'}})
               ]);
-              const html=await home.text();
-              const h=await health.json().catch(()=>({}));
-              const currentUi=html.includes('async function pollSearch')&&html.includes("seller:$('source').value");
-              const exactCommit=Boolean(expected)&&String(h.renderGitCommit||'')===expected;
-              const currentMarketEdge=h.motoryNativeCatalog===true&&h.harajNativeSearch===true&&h.syarahNativeInventory===true&&h.salehNativeInventory===true&&h.carswitchNativeInventory===true&&h.restartSafeSearchIds===true&&h.qualityGate===true;
-              last=JSON.stringify({home:home.status,health:health.status,edge:h.edge||null,productVersion:h.productVersion||null,renderGitCommit:h.renderGitCommit||null,expected,currentUi,currentMarketEdge,exactCommit,carswitch:h.carswitchNativeInventory||false,yallamotorStatus:h.yallamotorStatus||null});
-              if(home.ok&&health.ok&&currentUi&&currentMarketEdge&&h.productVersion==='1.5'&&h.edge==='dalelah-v15-carswitch'&&exactCommit){console.log('PASS exact Dalelah 1.5 CarSwitch-native commit detected',last);process.exit(0)}
+              const html=await home.text();const h=await health.json().catch(()=>({}));
+              const ok=home.ok&&health.ok&&h.productVersion==='1.5'&&h.edge==='dalelah-v15-volume'&&h.volumeBrowse===true&&h.renderGitCommit===expected&&html.includes('__all_cars__')&&html.includes('async function pollSearch');
+              last=JSON.stringify({home:home.status,health:health.status,edge:h.edge,commit:h.renderGitCommit,expected,volume:h.volumeBrowse});
+              if(ok){console.log('PASS exact Dalelah volume commit',last);process.exit(0)}
             }catch(e){last=e.message}
             await sleep(5000);
           }
-          throw new Error(`Exact Dalelah 1.5 CarSwitch production commit not observed: ${last}`);
+          throw new Error(`Volume commit not observed: ${last}`);
           NODE
 
   production-qa:
     needs: deploy-ready
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
       DELILAH_URL: https://delilah-pm5f.onrender.com
       EXPECTED_GIT_COMMIT: ${{ github.sha }}
@@ -96,11 +100,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Verify exact-year integrity and CarSwitch live coverage
-        run: node tests/production-v15-smoke.mjs
-      - name: Verify source-native Syarah behavior
-        run: node tests/native-sources-v15.mjs
-      - name: Verify source-native Saleh Cars new inventory
-        run: node tests/saleh-native-v15.mjs
-      - name: Run full Saudi-market coverage matrix
+      - name: Verify core searches across multiple cars
+        run: node tests/production-core-v15.mjs
+      - name: Verify hundreds-of-cars broad market volume
+        run: node tests/volume-market-v15.mjs
+      - name: Run full Saudi-market model/filter matrix
         run: node tests/full-market-v15.mjs

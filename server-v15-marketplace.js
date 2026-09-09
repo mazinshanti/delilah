@@ -43,6 +43,26 @@ async function inner(path, opts={}) {
   return {response,data,text};
 }
 
+function patchWebUi(html='') {
+  let out=String(html);
+  out=out.replace(
+    '<option>Haraj</option><option>Saleh Cars</option><option>YallaMotor</option>',
+    '<option>Haraj</option><option>OpenSooq</option><option>Syarah</option><option>Saleh Cars</option>'
+  );
+  out=out.replace(
+    '<div class="live"><span class="dot"></span>Saudi market live</div>',
+    '<div style="margin-left:auto;display:flex;align-items:center;gap:8px"><a href="/mobile" style="color:#d8ff5a;text-decoration:none;border:1px solid #30353c;border-radius:999px;padding:9px 11px;font-size:11px;font-weight:900">Mobile</a><a href="/sell" style="color:#f7f6f1;text-decoration:none;border:1px solid #30353c;border-radius:999px;padding:9px 11px;font-size:11px;font-weight:900">Sell my car</a><div class="live" style="margin-left:0"><span class="dot"></span>Saudi market live</div></div>'
+  );
+  return out;
+}
+
+function patchMobileHtml(html='') {
+  return String(html).replace(
+    '<title>Dalelah Mobile Preview</title>',
+    '<title>Dalelah — Saudi Car Search</title><meta name="theme-color" content="#090a0b"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Dalelah"><link rel="manifest" href="/mobile-manifest.webmanifest">'
+  );
+}
+
 async function searchComparables(vehicle={}) {
   const query = [vehicle.make,vehicle.model,vehicle.year].filter(Boolean).join(' ');
   const body = {query,condition:'used',filters:{}};
@@ -74,6 +94,16 @@ async function searchComparables(vehicle={}) {
   return [...byUrl.values()];
 }
 
+app.get('/', async (_req,res) => {
+  try {
+    const {response,text} = await inner('/', {signal:AbortSignal.timeout(12_000)});
+    if (!response.ok) return res.status(response.status).send(text);
+    return res.type('html').send(patchWebUi(text));
+  } catch (error) {
+    return res.status(502).send(`Dalelah web unavailable: ${error?.message || error}`);
+  }
+});
+
 app.get('/sell', async (_req,res) => {
   try {
     const html = await readFile(join(root,'public','sell.html'),'utf8');
@@ -83,13 +113,26 @@ app.get('/sell', async (_req,res) => {
   }
 });
 
-app.get('/mobile', async (_req,res) => {
+app.get(['/mobile','/app'], async (_req,res) => {
   try {
     const html = await readFile(join(root,'public','mobile-preview.html'),'utf8');
-    res.type('html').send(html);
+    res.type('html').send(patchMobileHtml(html));
   } catch (error) {
-    res.status(500).send('Dalelah mobile preview unavailable');
+    res.status(500).send('Dalelah mobile unavailable');
   }
+});
+
+app.get('/mobile-manifest.webmanifest', (_req,res) => {
+  res.type('application/manifest+json').send(JSON.stringify({
+    name:'Dalelah — Saudi Car Search',
+    short_name:'Dalelah',
+    start_url:'/mobile',
+    scope:'/',
+    display:'standalone',
+    background_color:'#090a0b',
+    theme_color:'#090a0b',
+    description:'Search Saudi car marketplaces and dealers in one place.'
+  }));
 });
 
 app.post('/api/sell/estimate', async (req,res) => {
@@ -144,6 +187,7 @@ app.get('/api/marketplace/status', (_req,res) => {
     ok:true,
     productVersion:'1.5',
     marketplaceFoundation:true,
+    mobileSurface:true,
     sellPreview:true,
     sellerDataResidency:'Saudi Arabia',
     sellerStore:{configured:store.configured,writable:store.writable,region:store.region,reason:store.reason}
@@ -157,13 +201,15 @@ app.get('/api/health', async (_req,res) => {
     return res.status(response.status).json({
       ...data,
       marketplaceFoundation:true,
+      mobileSurface:true,
       sellPreview:true,
       sellerDataResidency:'Saudi Arabia',
       sellerStoreWritable:store.writable,
-      sellerDataRegion:store.region
+      sellerDataRegion:store.region,
+      releaseRuntime:'marketplace-mobile'
     });
   } catch (error) {
-    return res.status(503).json({ok:false,marketplaceFoundation:true,error:error?.message || String(error)});
+    return res.status(503).json({ok:false,marketplaceFoundation:true,mobileSurface:true,error:error?.message || String(error)});
   }
 });
 
@@ -198,4 +244,4 @@ async function proxy(req,res) {
 }
 
 app.use(proxy);
-app.listen(externalPort,()=>console.log(`Dalelah marketplace edge on ${externalPort}; search core ${innerPort}`));
+app.listen(externalPort,()=>console.log(`Dalelah unified marketplace/mobile edge on ${externalPort}; search core ${innerPort}`));

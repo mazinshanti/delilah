@@ -2,7 +2,7 @@ name: Dalelah 1.5 QA
 
 on:
   push:
-    branches: [main]
+    branches: [main, dalelah-release-candidate]
   workflow_dispatch:
 
 concurrency:
@@ -12,15 +12,18 @@ concurrency:
 jobs:
   regression:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - run: npm install --no-audit --no-fund
-      - name: Syntax-check Dalelah 1.5 chain
+      - name: Syntax-check Dalelah unified chain
         run: |
+          node --check server-v15-marketplace.js
+          node --check lib/market-valuation.js
+          node --check lib/saudi-seller-store.js
           node --check server-v15-opensooq.js
           node --check lib/opensooq-source.js
           node --check server-v15-new-fast.js
@@ -41,18 +44,26 @@ jobs:
         run: npm run test:exact-year
       - name: Test current Dalelah 1.5 UI
         run: node --test tests/ui-v15.test.mjs
-      - name: Guard current production architecture
+      - name: Test marketplace foundation
+        run: npm run test:marketplace
+      - name: Guard unified production architecture
         run: |
           node --input-type=module <<'NODE'
           import assert from 'node:assert/strict';
           import {readFile} from 'node:fs/promises';
           const pkg=JSON.parse(await readFile('package.json','utf8'));
+          const market=await readFile('server-v15-marketplace.js','utf8');
           const os=await readFile('server-v15-opensooq.js','utf8');
           const src=await readFile('lib/opensooq-source.js','utf8');
           const v=await readFile('server-v15-volume.js','utf8');
           const q=await readFile('server-v15-volume-quality.js','utf8');
           const n=await readFile('server-v15-new-fast.js','utf8');
-          assert.equal(pkg.scripts.start,'node server-v15-opensooq.js');
+          assert.equal(pkg.scripts.start,'node server-v15-marketplace.js');
+          assert.match(market,/marketplaceFoundation:true/);
+          assert.match(market,/mobileSurface:true/);
+          assert.match(market,/sellerStoreWritable/);
+          assert.match(market,/\/mobile/);
+          assert.match(market,/\/sell/);
           assert.match(v,/const MAX_RESULTS=500/);
           assert.match(v,/__all_cars__/);
           assert.match(q,/volumeQualityGate:true/);
@@ -61,13 +72,35 @@ jobs:
           assert.match(os,/BROAD_OPENSOOQ_QUOTA=150/);
           assert.match(os,/opensooqStructuredInventory:true/);
           assert.match(os,/opensooqNativeExact:true/);
-          assert.match(src,/application\/ld\+json/);
+          assert.ok(src.includes('application\\/ld\\+json'),'OpenSooq JSON-LD parser guard');
           assert.match(src,/openSooqSearchUrl/);
-          console.log('PASS multi-market + exact-new architecture guards');
+          console.log('PASS unified marketplace + mobile + multi-market guards');
           NODE
 
+  mobile-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install mobile dependencies
+        working-directory: mobile
+        run: npm install --no-audit --no-fund
+      - name: Export iOS bundle
+        working-directory: mobile
+        run: npx expo export --platform ios --output-dir dist-ios
+      - name: Export Android bundle
+        working-directory: mobile
+        run: npx expo export --platform android --output-dir dist-android
+      - name: Export web bundle
+        working-directory: mobile
+        run: npx expo export --platform web --output-dir dist-web
+
   deploy-ready:
-    needs: regression
+    if: github.ref == 'refs/heads/main'
+    needs: [regression, mobile-build]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -75,7 +108,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Wait for exact Dalelah 1.5 commit
+      - name: Wait for exact Dalelah unified commit
         env:
           DELILAH_URL: https://delilah-pm5f.onrender.com
           EXPECTED_GIT_COMMIT: ${{ github.sha }}
@@ -87,21 +120,24 @@ jobs:
           let last='';
           for(let i=0;i<120;i++){
             try{
-              const [home,health]=await Promise.all([
+              const [home,health,mobile,sell]=await Promise.all([
                 fetch(`${base}/`,{signal:AbortSignal.timeout(8000),headers:{'cache-control':'no-cache'}}),
-                fetch(`${base}/api/health`,{signal:AbortSignal.timeout(8000),headers:{'cache-control':'no-cache'}})
+                fetch(`${base}/api/health`,{signal:AbortSignal.timeout(8000),headers:{'cache-control':'no-cache'}}),
+                fetch(`${base}/mobile`,{signal:AbortSignal.timeout(8000),headers:{'cache-control':'no-cache'}}),
+                fetch(`${base}/sell`,{signal:AbortSignal.timeout(8000),headers:{'cache-control':'no-cache'}})
               ]);
               const html=await home.text();const h=await health.json().catch(()=>({}));
-              const ok=home.ok&&health.ok&&h.productVersion==='1.5'&&h.edge==='dalelah-v15-volume'&&h.volumeBrowse===true&&h.volumeQualityGate===true&&h.exactModelQualityGate===true&&h.salehFastExact===true&&h.opensooqStructuredInventory===true&&h.opensooqNativeExact===true&&h.renderGitCommit===expected&&html.includes('__all_cars__')&&html.includes('async function pollSearch');
-              last=JSON.stringify({home:home.status,health:health.status,edge:h.edge,commit:h.renderGitCommit,expected,volume:h.volumeBrowse,quality:h.volumeQualityGate,modelQuality:h.exactModelQualityGate,salehFastExact:h.salehFastExact,opensooq:h.opensooqStructuredInventory,native:h.opensooqNativeExact});
-              if(ok){console.log('PASS exact Dalelah multi-market commit',last);process.exit(0)}
+              const ok=home.ok&&health.ok&&mobile.ok&&sell.ok&&h.productVersion==='1.5'&&h.volumeBrowse===true&&h.volumeQualityGate===true&&h.exactModelQualityGate===true&&h.salehFastExact===true&&h.opensooqStructuredInventory===true&&h.opensooqNativeExact===true&&h.marketplaceFoundation===true&&h.mobileSurface===true&&h.releaseRuntime==='marketplace-mobile'&&h.renderGitCommit===expected&&html.includes('__all_cars__');
+              last=JSON.stringify({home:home.status,health:health.status,mobile:mobile.status,sell:sell.status,commit:h.renderGitCommit,expected,marketplace:h.marketplaceFoundation,mobileSurface:h.mobileSurface,runtime:h.releaseRuntime});
+              if(ok){console.log('PASS exact unified Dalelah commit',last);process.exit(0)}
             }catch(e){last=e.message}
             await sleep(5000);
           }
-          throw new Error(`Exact multi-market production commit not observed: ${last}`);
+          throw new Error(`Exact unified production commit not observed: ${last}`);
           NODE
 
   production-qa:
+    if: github.ref == 'refs/heads/main'
     needs: deploy-ready
     runs-on: ubuntu-latest
     timeout-minutes: 45

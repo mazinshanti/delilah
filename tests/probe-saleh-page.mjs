@@ -4,21 +4,26 @@ const r=await fetch(url,{redirect:'follow',signal:AbortSignal.timeout(20000),hea
 const html=await r.text();
 console.log(JSON.stringify({status:r.status,url:r.url,length:html.length},null,2));
 const scripts=[...html.matchAll(/<script\b[^>]*src=["']([^"']+)["'][^>]*>/gi)].map(m=>m[1]);
-const targets=scripts.filter(x=>/cars\/all|2210-|5485-|8529-|6998-|2094-|8159-|110-|4377-|3405-|1405-/.test(x));
-console.log('TARGETS',JSON.stringify(targets,null,2));
-for(const src of targets){
+console.log('SCRIPT_COUNT',scripts.length);
+for(const src of scripts){
   const u=new URL(src,base).href;
   try{
     const rr=await fetch(u,{signal:AbortSignal.timeout(20000),headers:{'user-agent':'Dalelah/1.5 probe'}});
     const js=await rr.text();
-    console.log(`CHUNK ${src} status=${rr.status} length=${js.length}`);
-    const publicRoutes=[...new Set([...js.matchAll(/["'`]([^"'`]*\/public\/[^"'`]{1,260})["'`]/gi)].map(m=>m[1]))].slice(0,250);
-    if(publicRoutes.length) console.log('PUBLIC_ROUTES',JSON.stringify(publicRoutes,null,2));
-    const modelRoutes=[...new Set([...js.matchAll(/["'`]([^"'`]*(?:CarModel|CarBrand|Car|Vehicle|Product|Inventory)[^"'`]{0,260})["'`]/gi)].map(m=>m[1]))].filter(x=>x.length<320).slice(0,250);
-    if(modelRoutes.length) console.log('MODEL_ROUTES',JSON.stringify(modelRoutes,null,2));
-    for(const term of ['/public/','CarModel','CarBrand','pageSize=','brandId=','modelId=','carsPage','ClientCars']){
+    if(!rr.ok)continue;
+    const needles=['94403:','/public/','pageSize','CarModel','CarBrand','ClientCars','cars/all','modelId','brandId','searchParams'];
+    let interesting=false;
+    for(const term of needles)if(js.includes(term))interesting=true;
+    if(!interesting)continue;
+    console.log(`CHUNK ${src} length=${js.length}`);
+    const strings=[...new Set([...js.matchAll(/["'`]([^"'`]{2,260})["'`]/g)].map(m=>m[1]))]
+      .filter(x=>/(public|Car|car|vehicle|inventory|pageSize|brandId|modelId|searchParams|api)/i.test(x))
+      .slice(0,400);
+    console.log('STRINGS',JSON.stringify(strings,null,2));
+    for(const term of needles){
       let from=0,count=0;
-      while(count<6){const i=js.indexOf(term,from);if(i<0)break;console.log(`AROUND_${term.replace(/[^a-z0-9]/gi,'_')}_${count+1}`,js.slice(Math.max(0,i-900),i+2000));from=i+term.length;count++}
+      while(count<10){const i=js.indexOf(term,from);if(i<0)break;console.log(`AROUND_${term.replace(/[^a-z0-9]/gi,'_')}_${count+1}`,js.slice(Math.max(0,i-1400),i+3200));from=i+term.length;count++}
     }
+    if(/cars\/all\/page/i.test(src))console.log('PAGE_CHUNK_FULL',js);
   }catch(e){console.log('CHUNK_ERROR',src,e.message)}
 }

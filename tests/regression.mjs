@@ -86,9 +86,18 @@ assert.match(qualityLayer,/const PARTS_RE=.*شبك/,'Final quality gate must rej
 assert.match(qualityLayer,/const NON_SALE_RE=/,'Final quality gate must reject rental/service/non-sale results');checks++;
 assert.match(qualityLayer,/function acceptable\(/,'Final quality gate must revalidate each listing before display');checks++;
 assert.match(qualityLayer,/qualityGate:true/,'Dalelah health/results must advertise the final quality gate');checks++;
+assert.match(qualityLayer,/function directSyarah\(/,'Dalelah must validate direct Syarah cardetail URLs');checks++;
+assert.match(qualityLayer,/async function scanSyarah\(/,'Dalelah must retain source-native Syarah inventory retrieval');checks++;
+
+const salehLayer=await readFile(new URL('../server-v15-saleh.js',import.meta.url),'utf8');
+assert.match(salehLayer,/function directSaleh\(/,'Dalelah must validate direct Saleh Cars URLs');checks++;
+assert.match(salehLayer,/async function scanSaleh\(/,'Dalelah must scan Saleh Cars native inventory');checks++;
+assert.match(salehLayer,/body\.condition!==['"]new['"]/,'Saleh native inventory must remain New-tab only');checks++;
+assert.match(salehLayer,/saleh_source_native_inventory/,'Saleh listings must be tagged as source-native inventory');checks++;
+assert.match(salehLayer,/salehNativeInventory:true/,'Saleh health/results must expose native-source diagnostics');checks++;
 
 const pkg=JSON.parse(await readFile(new URL('../package.json',import.meta.url),'utf8'));
 assert.equal(pkg.version,'1.5.0');checks++;
-assert.equal(pkg.scripts.start,'node server-v15-quality.js');checks++;
+assert.equal(pkg.scripts.start,'node server-v15-saleh.js');checks++;
 
 console.log(`PASS: ${checks.toLocaleString()} regression assertions`);

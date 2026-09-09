@@ -100,9 +100,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Verify core searches across multiple cars
-        run: node tests/production-core-v15.mjs
       - name: Verify hundreds-of-cars broad market volume
         run: node tests/volume-market-v15.mjs
+      - name: Verify core searches across multiple cars
+        run: node tests/production-core-v15.mjs
       - name: Run full Saudi-market model/filter matrix
         run: node tests/full-market-v15.mjs

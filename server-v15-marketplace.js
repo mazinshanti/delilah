@@ -83,6 +83,15 @@ app.get('/sell', async (_req,res) => {
   }
 });
 
+app.get('/mobile', async (_req,res) => {
+  try {
+    const html = await readFile(join(root,'public','mobile-preview.html'),'utf8');
+    res.type('html').send(html);
+  } catch (error) {
+    res.status(500).send('Dalelah mobile preview unavailable');
+  }
+});
+
 app.post('/api/sell/estimate', async (req,res) => {
   const vehicle = req.body || {};
   if (!vehicle.make || !vehicle.model || !vehicle.year) {

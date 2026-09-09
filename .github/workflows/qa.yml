@@ -53,8 +53,9 @@ jobs:
           assert.match(v,/volumeBrowse:true/);
           assert.match(v,/mergeInto\(/);
           assert.match(q,/volumeQualityGate:true/);
+          assert.match(q,/exactModelQualityGate:true/);
           assert.match(q,/جنط/);
-          console.log('PASS volume architecture + quality guards');
+          console.log('PASS volume architecture + final quality guards');
           NODE
 
   deploy-ready:
@@ -83,13 +84,13 @@ jobs:
                 fetch(`${base}/api/health`,{signal:AbortSignal.timeout(8000),headers:{'cache-control':'no-cache'}})
               ]);
               const html=await home.text();const h=await health.json().catch(()=>({}));
-              const ok=home.ok&&health.ok&&h.productVersion==='1.5'&&h.edge==='dalelah-v15-volume'&&h.volumeBrowse===true&&h.volumeQualityGate===true&&h.renderGitCommit===expected&&html.includes('__all_cars__')&&html.includes('async function pollSearch');
-              last=JSON.stringify({home:home.status,health:health.status,edge:h.edge,commit:h.renderGitCommit,expected,volume:h.volumeBrowse,quality:h.volumeQualityGate});
-              if(ok){console.log('PASS exact Dalelah clean-volume commit',last);process.exit(0)}
+              const ok=home.ok&&health.ok&&h.productVersion==='1.5'&&h.edge==='dalelah-v15-volume'&&h.volumeBrowse===true&&h.volumeQualityGate===true&&h.exactModelQualityGate===true&&h.renderGitCommit===expected&&html.includes('__all_cars__')&&html.includes('async function pollSearch');
+              last=JSON.stringify({home:home.status,health:health.status,edge:h.edge,commit:h.renderGitCommit,expected,volume:h.volumeBrowse,quality:h.volumeQualityGate,modelQuality:h.exactModelQualityGate});
+              if(ok){console.log('PASS exact Dalelah clean-volume/model commit',last);process.exit(0)}
             }catch(e){last=e.message}
             await sleep(5000);
           }
-          throw new Error(`Clean volume commit not observed: ${last}`);
+          throw new Error(`Clean model-aware volume commit not observed: ${last}`);
           NODE
 
   production-qa:
@@ -106,7 +107,7 @@ jobs:
           node-version: 22
       - name: Verify hundreds-of-cars clean broad market volume
         run: node tests/volume-market-v15.mjs
-      - name: Verify core searches across multiple cars
-        run: node tests/production-core-v15.mjs
       - name: Run full Saudi-market model/filter matrix
         run: node tests/full-market-v15.mjs
+      - name: Verify core searches across multiple cars
+        run: node tests/production-core-v15.mjs

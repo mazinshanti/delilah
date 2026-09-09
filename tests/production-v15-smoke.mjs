@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 const base = String(process.env.DELILAH_URL || 'https://delilah-pm5f.onrender.com').replace(/\/$/, '');
 const expectedCommit = String(process.env.EXPECTED_GIT_COMMIT || '').trim();
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+const BAD_TITLE=/(?:قطع\s*غيار|مكين[هة]|محرك|ايرباق|ارباق|طبلون|كمبروسر|دينمو|رديتر|صدام|شبك|شمعة|شمعات|انوار|أنوار|رفرف|كبوت|جنوط|كفرات|فلتر|طرمب[هة]|حساس|اصطب|اسطب|كشاف|كشافات|مراي[هة]|مرآة|للايجار|للإيجار|تاجير|تأجير|سطح[هة]|نقل\s*سيارات|فحص\s*سيارات|ورشة|صيانة|تشليح|للتشليح)/i;
 
 async function json(url, options = {}) {
   const r = await fetch(url, {...options, signal: AbortSignal.timeout(35_000), headers:{...(options.headers||{}),'cache-control':'no-cache'}});
@@ -20,6 +21,8 @@ assert.equal(health.productVersion, '1.5', `unexpected product version: ${JSON.s
 assert.equal(health.restartSafeSearchIds, true, `restart-safe search IDs are not enabled: ${JSON.stringify(health)}`);
 assert.equal(health.motoryNativeCatalog, true, `Motory native catalogue is not enabled: ${JSON.stringify(health)}`);
 assert.equal(health.harajNativeSearch, true, `Haraj native search is not enabled: ${JSON.stringify(health)}`);
+assert.equal(health.qualityGate, true, `final listing quality gate is not enabled: ${JSON.stringify(health)}`);
+assert.equal(health.edge, 'dalelah-v15-quality', `unexpected production edge: ${JSON.stringify(health)}`);
 if (expectedCommit) assert.equal(health.renderGitCommit, expectedCommit, `production is not running the commit under test: expected ${expectedCommit}, got ${health.renderGitCommit}`);
 
 function diagnostics(query, first, latest, listings) {
@@ -33,6 +36,8 @@ function diagnostics(query, first, latest, listings) {
     exactYearIntent:latest.exactYearIntent??first.exactYearIntent??null,
     searchRecoveryCount:latest.searchRecoveryCount??null,
     searchStateReconstructed:Boolean(latest.searchStateReconstructed),
+    qualityGate:latest.qualityGate??first.qualityGate??null,
+    qualityRejected:latest.qualityRejected??first.qualityRejected??null,
     harajNativeSearch:latest.harajNativeSearch??first.harajNativeSearch??null,
     harajNativeComplete:latest.harajNativeComplete??first.harajNativeComplete??null,
     harajNativeListings:latest.harajNativeListings??first.harajNativeListings??null,
@@ -83,6 +88,8 @@ async function exactYearCase({query, year, requireResults = true}) {
   console.log('CASE_DIAGNOSTIC '+JSON.stringify(diag));
   const wrong = listings.filter(car => Number(car?.year) !== year);
   assert.equal(wrong.length, 0, `${query}: exact-year leakage detected: ${JSON.stringify({...diag,wrong:wrong.slice(0,5).map(x=>({title:x.title,year:x.year,source:x.source,url:x.url}))})}`);
+  const junk=listings.filter(car=>BAD_TITLE.test(String(car?.title||'')));
+  assert.equal(junk.length,0,`${query}: parts/services/rentals leaked into vehicle results: ${JSON.stringify({...diag,junk:junk.slice(0,8).map(x=>({title:x.title,source:x.source,url:x.url}))})}`);
   if (requireResults) assert.ok(listings.length > 0, `${query}: no verified ${year} listings were returned from the live Saudi-market scan: ${JSON.stringify(diag)}`);
 
   return {
@@ -93,6 +100,7 @@ async function exactYearCase({query, year, requireResults = true}) {
     sourceCounts:latest.counts || {},
     complete:latest.complete ?? latest.marketScanComplete ?? null,
     searchRecoveryCount:latest.searchRecoveryCount ?? null,
+    qualityRejected:latest.qualityRejected??0,
     reconstructed:Boolean(latest.searchStateReconstructed),
     harajNativeListings:latest.harajNativeListings??null,
     motoryNativeListings:latest.motoryNativeListings??null

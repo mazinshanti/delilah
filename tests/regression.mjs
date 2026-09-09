@@ -101,14 +101,20 @@ assert.match(yallaLayer,/function directYalla\(/);checks++;
 assert.match(yallaLayer,/yallamotor_source_native_search/);checks++;
 
 const carSwitchLayer=await readFile(new URL('../server-v15-carswitch.js',import.meta.url),'utf8');
-assert.match(carSwitchLayer,/function direct\(/,'CarSwitch direct listing validator must remain enabled');checks++;
-assert.match(carSwitchLayer,/function searchUrl\(/,'CarSwitch model/year source-native routing must remain enabled');checks++;
-assert.match(carSwitchLayer,/carswitch_source_native_search/,'CarSwitch results must be source-tagged');checks++;
-assert.match(carSwitchLayer,/carswitchNativeInventory:true/,'CarSwitch diagnostics must remain visible');checks++;
-assert.match(carSwitchLayer,/yallamotorStatus:'blocked-http-403-experimental'/,'Blocked YallaMotor must not be counted as active coverage');checks++;
+assert.match(carSwitchLayer,/function direct\(/);checks++;
+assert.match(carSwitchLayer,/function searchUrl\(/);checks++;
+assert.match(carSwitchLayer,/carswitch_source_native_search/);checks++;
+assert.match(carSwitchLayer,/carswitchNativeInventory:true/);checks++;
+assert.match(carSwitchLayer,/yallamotorStatus:'blocked-http-403-experimental'/);checks++;
+
+const uxLayer=await readFile(new URL('../server-v15-ux.js',import.meta.url),'utf8');
+assert.match(uxLayer,/progressiveUiGuard:true/);checks++;
+assert.match(uxLayer,/Searching the Saudi market/);checks++;
+assert.match(uxLayer,/for\(let i=0;i<40;i\+\+\)/);checks++;
+assert.match(uxLayer,/window\.__dalelahScanning=true/);checks++;
 
 const pkg=JSON.parse(await readFile(new URL('../package.json',import.meta.url),'utf8'));
 assert.equal(pkg.version,'1.5.0');checks++;
-assert.equal(pkg.scripts.start,'node server-v15-carswitch.js');checks++;
+assert.equal(pkg.scripts.start,'node server-v15-ux.js');checks++;
 
 console.log(`PASS: ${checks.toLocaleString()} regression assertions`);

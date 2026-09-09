@@ -59,45 +59,51 @@ for(let n=0;n<2000;n++){
 }
 
 const sourceLayer=await readFile(new URL('../server-v21.js',import.meta.url),'utf8');
-assert.match(sourceLayer,/const allUsed=\[[\s\S]*?\{name:"Motory",seller:"Motory",type:"marketplace"[\s\S]*?condition:"used"\}/,'Motory must remain in the used-car indexed scan');checks++;
-assert.match(sourceLayer,/Motory:\"active-indexed\+verified-url\"/,'Motory must remain active in the source registry');checks++;
-assert.match(sourceLayer,/Motory: u =>[\s\S]*?cars-for-sale/,'Motory individual-listing validation must remain enabled');checks++;
+assert.match(sourceLayer,/const allUsed=\[[\s\S]*?\{name:"Motory",seller:"Motory",type:"marketplace"[\s\S]*?condition:"used"\}/);checks++;
+assert.match(sourceLayer,/Motory:\"active-indexed\+verified-url\"/);checks++;
+assert.match(sourceLayer,/Motory: u =>[\s\S]*?cars-for-sale/);checks++;
 
 const edgeLayer=await readFile(new URL('../server-recovery-v25.js',import.meta.url),'utf8');
-assert.match(edgeLayer,/function makeSearchId\(/,'Dalelah 1.5 must emit restart-safe search IDs');checks++;
-assert.match(edgeLayer,/function stateFromSearchId\(/,'Dalelah 1.5 must reconstruct search state after restart');checks++;
-assert.match(edgeLayer,/restartSafeSearchIds:true/,'Dalelah health must advertise restart-safe search IDs');checks++;
+assert.match(edgeLayer,/function makeSearchId\(/);checks++;
+assert.match(edgeLayer,/function stateFromSearchId\(/);checks++;
+assert.match(edgeLayer,/restartSafeSearchIds:true/);checks++;
 
 const marketLayer=await readFile(new URL('../server-v15-market.js',import.meta.url),'utf8');
-assert.match(marketLayer,/function directMotory\(/,'Dalelah 1.5 must validate direct Motory listing URLs');checks++;
-assert.match(marketLayer,/async function scanMotory\(/,'Dalelah 1.5 must scan Motory source-native catalogue pages');checks++;
-assert.match(marketLayer,/motory_source_native_catalog/,'Motory native listings must be tagged with source-native discovery');checks++;
-assert.match(marketLayer,/bodyFromSearchId\(/,'Motory overlay must survive process restarts by reconstructing search bodies');checks++;
+assert.match(marketLayer,/function directMotory\(/);checks++;
+assert.match(marketLayer,/async function scanMotory\(/);checks++;
+assert.match(marketLayer,/motory_source_native_catalog/);checks++;
+assert.match(marketLayer,/bodyFromSearchId\(/);checks++;
 
 const harajLayer=await readFile(new URL('../server-v15-haraj.js',import.meta.url),'utf8');
-assert.match(harajLayer,/function directHaraj\(/,'Dalelah 1.5 must validate direct Haraj ad URLs');checks++;
-assert.match(harajLayer,/async function scanHaraj\(/,'Dalelah 1.5 must scan the native Haraj search page');checks++;
-assert.match(harajLayer,/haraj_source_native_search/,'Haraj native listings must be tagged as source-native discovery');checks++;
-assert.match(harajLayer,/const PARTS_RE=/,'Haraj native retrieval must filter obvious parts/accessory ads');checks++;
-assert.match(harajLayer,/bodyFromSearchId\(/,'Haraj overlay must survive process restarts by reconstructing search bodies');checks++;
+assert.match(harajLayer,/function directHaraj\(/);checks++;
+assert.match(harajLayer,/async function scanHaraj\(/);checks++;
+assert.match(harajLayer,/haraj_source_native_search/);checks++;
+assert.match(harajLayer,/const PARTS_RE=/);checks++;
+assert.match(harajLayer,/bodyFromSearchId\(/);checks++;
 
 const qualityLayer=await readFile(new URL('../server-v15-quality.js',import.meta.url),'utf8');
-assert.match(qualityLayer,/const PARTS_RE=.*شبك/,'Final quality gate must reject grille/part ads such as شبك');checks++;
-assert.match(qualityLayer,/const NON_SALE_RE=/,'Final quality gate must reject rental/service/non-sale results');checks++;
-assert.match(qualityLayer,/function acceptable\(/,'Final quality gate must revalidate each listing before display');checks++;
-assert.match(qualityLayer,/qualityGate:true/,'Dalelah health/results must advertise the final quality gate');checks++;
-assert.match(qualityLayer,/function directSyarah\(/,'Dalelah must validate direct Syarah cardetail URLs');checks++;
-assert.match(qualityLayer,/async function scanSyarah\(/,'Dalelah must retain source-native Syarah inventory retrieval');checks++;
+assert.match(qualityLayer,/const PARTS_RE=.*شبك/);checks++;
+assert.match(qualityLayer,/const NON_SALE_RE=/);checks++;
+assert.match(qualityLayer,/function acceptable\(/);checks++;
+assert.match(qualityLayer,/qualityGate:true/);checks++;
+assert.match(qualityLayer,/function directSyarah\(/);checks++;
+assert.match(qualityLayer,/async function scanSyarah\(/);checks++;
 
 const salehLayer=await readFile(new URL('../server-v15-saleh.js',import.meta.url),'utf8');
-assert.match(salehLayer,/function directSaleh\(/,'Dalelah must validate direct Saleh Cars URLs');checks++;
-assert.match(salehLayer,/async function scanSaleh\(/,'Dalelah must scan Saleh Cars native inventory');checks++;
-assert.match(salehLayer,/body\.condition!==['"]new['"]/,'Saleh native inventory must remain New-tab only');checks++;
-assert.match(salehLayer,/saleh_source_native_inventory/,'Saleh listings must be tagged as source-native inventory');checks++;
-assert.match(salehLayer,/salehNativeInventory:true/,'Saleh health/results must expose native-source diagnostics');checks++;
+assert.match(salehLayer,/function directSaleh\(/);checks++;
+assert.match(salehLayer,/async function scanSaleh\(/);checks++;
+assert.match(salehLayer,/body\.condition!==['"]new['"]/);checks++;
+assert.match(salehLayer,/saleh_source_native_inventory/);checks++;
+assert.match(salehLayer,/salehNativeInventory:true/);checks++;
+
+const yallaLayer=await readFile(new URL('../server-v15-yallamotor.js',import.meta.url),'utf8');
+assert.match(yallaLayer,/function directYalla\(/,'YallaMotor direct listing validation must remain enabled');checks++;
+assert.match(yallaLayer,/function searchUrl\(/,'YallaMotor exact model/year native search routing must remain enabled');checks++;
+assert.match(yallaLayer,/yallamotor_source_native_search/,'YallaMotor native listings must remain source-tagged');checks++;
+assert.match(yallaLayer,/yallamotorNativeInventory:true/,'YallaMotor diagnostics must remain visible');checks++;
 
 const pkg=JSON.parse(await readFile(new URL('../package.json',import.meta.url),'utf8'));
 assert.equal(pkg.version,'1.5.0');checks++;
-assert.equal(pkg.scripts.start,'node server-v15-saleh.js');checks++;
+assert.equal(pkg.scripts.start,'node server-v15-yallamotor.js');checks++;
 
 console.log(`PASS: ${checks.toLocaleString()} regression assertions`);

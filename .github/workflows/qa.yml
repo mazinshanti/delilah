@@ -31,6 +31,7 @@ jobs:
           node --check server-v21.js
           node --check server-v20.js
           node --check lib/search-intent.js
+          node --check tests/native-sources-v15.mjs
       - name: Test exact-year behavior
         run: npm run test:exact-year
       - name: Test current Dalelah 1.5 UI
@@ -67,13 +68,13 @@ jobs:
               const h=await health.json().catch(()=>({}));
               const currentUi=html.includes('async function pollSearch')&&html.includes("seller:$('source').value");
               const exactCommit=Boolean(expected)&&String(h.renderGitCommit||'')===expected;
-              const currentMarketEdge=h.motoryNativeCatalog===true&&h.harajNativeSearch===true&&h.restartSafeSearchIds===true&&h.qualityGate===true;
+              const currentMarketEdge=h.motoryNativeCatalog===true&&h.harajNativeSearch===true&&h.syarahNativeInventory===true&&h.restartSafeSearchIds===true&&h.qualityGate===true;
               last=JSON.stringify({home:home.status,health:health.status,edge:h.edge||null,productVersion:h.productVersion||null,renderGitCommit:h.renderGitCommit||null,expected,currentUi,currentMarketEdge,exactCommit});
-              if(home.ok&&health.ok&&currentUi&&currentMarketEdge&&h.productVersion==='1.5'&&h.edge==='dalelah-v15-quality'&&exactCommit){console.log('PASS exact Dalelah 1.5 quality commit detected',last);process.exit(0)}
+              if(home.ok&&health.ok&&currentUi&&currentMarketEdge&&h.productVersion==='1.5'&&h.edge==='dalelah-v15-quality'&&exactCommit){console.log('PASS exact Dalelah 1.5 native-source commit detected',last);process.exit(0)}
             }catch(e){last=e.message}
             await sleep(5000);
           }
-          throw new Error(`Exact Dalelah 1.5 quality production commit not observed: ${last}`);
+          throw new Error(`Exact Dalelah 1.5 native-source production commit not observed: ${last}`);
           NODE
 
   production-qa:
@@ -90,3 +91,5 @@ jobs:
           node-version: 22
       - name: Verify exact-year integrity and live market coverage
         run: node tests/production-v15-smoke.mjs
+      - name: Verify source-native Syarah behavior
+        run: node tests/native-sources-v15.mjs

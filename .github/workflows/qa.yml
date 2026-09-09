@@ -35,12 +35,15 @@ jobs:
           node --check tests/native-sources-v15.mjs
           node --check tests/saleh-native-v15.mjs
           node --check tests/full-market-v15.mjs
+          node --check tests/probe-saleh-page.mjs
       - name: Test exact-year behavior
         run: npm run test:exact-year
       - name: Test current Dalelah 1.5 UI
         run: node --test tests/ui-v15.test.mjs
       - name: Run broad local regression assertions
         run: node tests/regression.mjs
+      - name: Probe Saleh frontend inventory data
+        run: node tests/probe-saleh-page.mjs
 
   deploy-ready:
     needs: regression

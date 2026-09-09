@@ -43,8 +43,8 @@ app.get('/api/health',async(req,res)=>{
   try{
     const r=await inner('/api/health',{signal:AbortSignal.timeout(8000)});
     const d=await r.json();
-    return res.status(r.status).json({...d,edge:'dalelah-v15-ux',productVersion:'1.5',renderGitCommit:process.env.RENDER_GIT_COMMIT||d.renderGitCommit||null,progressiveUiGuard:true});
-  }catch(e){return res.status(503).json({ok:false,edge:'dalelah-v15-ux',productVersion:'1.5',renderGitCommit:process.env.RENDER_GIT_COMMIT||null,progressiveUiGuard:true,error:e?.message||'health unavailable'})}
+    return res.status(r.status).json({...d,edge:'dalelah-v15-carswitch',uiEdge:'dalelah-v15-ux',productVersion:'1.5',renderGitCommit:process.env.RENDER_GIT_COMMIT||d.renderGitCommit||null,progressiveUiGuard:true});
+  }catch(e){return res.status(503).json({ok:false,edge:'dalelah-v15-carswitch',uiEdge:'dalelah-v15-ux',productVersion:'1.5',renderGitCommit:process.env.RENDER_GIT_COMMIT||null,progressiveUiGuard:true,error:e?.message||'health unavailable'})}
 });
 
 async function proxy(req,res){

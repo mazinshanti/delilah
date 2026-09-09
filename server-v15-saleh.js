@@ -33,7 +33,11 @@ const VERIFIED_SEEDS=[
   'https://www.salehcars.com/en/cars/69a971ec6c4a6fc01fc27229/toyota-yaris-y-plus-2026',
   'https://www.salehcars.com/en/cars/69cbaefb2e54b13e4a815605/toyota-rav4-new-design-le-2026',
   'https://www.salehcars.com/en/cars/6921cfd9789a0d415dfc73b8/toyota-urban-cruiser-gl-2026',
-  'https://www.salehcars.com/en/cars/6a3a6554822b69eda62c07f2/toyota-veloz-glx-2026'
+  'https://www.salehcars.com/en/cars/6a3a6554822b69eda62c07f2/toyota-veloz-glx-2026',
+  'https://www.salehcars.com/en/cars/6809077c060e8546bf72d9c9/geely-preface-gf-2026',
+  'https://www.salehcars.com/en/cars/6834552fde57a1e7a9849757/changan-eado-plus-limited-2026',
+  'https://www.salehcars.com/en/cars/68e23a0e9f8dd76bef375ce3/changan-eado-plus-smart-2026',
+  'https://www.salehcars.com/en/cars/68347362de57a1e7a9b04b1e/changan-eado-plus-trend-2026'
 ];
 function detect(q=''){const t=norm(q);let model=null,brand=null;for(const[k,a]of Object.entries(MODELS))if(a.some(x=>t.includes(norm(x)))){model=k;break}for(const[k,a]of Object.entries(BRANDS))if(a.some(x=>t.includes(norm(x)))){brand=k;break}if(!brand&&model)brand=MODEL_BRAND[model]||null;const ys=[...digits(q).matchAll(/\b(20\d{2})\b/g)].map(x=>Number(x[1]));const exact=ys.length===1&&!/\+|وفوق|واكثر|أكثر|\b(?:from|since|after|newer|above|over)\b|(?:20\d{2})\s*(?:-|to|الى|إلى)\s*20\d{2}/i.test(digits(q))?ys[0]:null;return{model,brand,exact}}
 function bodyFromId(id=''){if(!String(id).startsWith('d15.'))return null;try{const p=JSON.parse(Buffer.from(String(id).slice(4),'base64url').toString('utf8'));if(p?.v!==1||!p.q)return null;return{query:p.q,condition:p.c==='new'?'new':'used',filters:p.f&&typeof p.f==='object'?p.f:{}}}catch{return null}}

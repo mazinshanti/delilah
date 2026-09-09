@@ -1,5 +1,6 @@
-const SEARCH_API = process.env.EXPO_PUBLIC_DALELAH_API_URL || 'https://delilah-pm5f.onrender.com';
-const MARKETPLACE_API = process.env.EXPO_PUBLIC_DALELAH_MARKETPLACE_URL || 'https://dalelah-sell-preview.onrender.com';
+const PREVIEW_API = 'https://dalelah-sell-preview.onrender.com';
+const SEARCH_API = process.env.EXPO_PUBLIC_DALELAH_API_URL || PREVIEW_API;
+const MARKETPLACE_API = process.env.EXPO_PUBLIC_DALELAH_MARKETPLACE_URL || PREVIEW_API;
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 function mergeByUrl(map, cars = []) {

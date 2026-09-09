@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node server-v15-saleh.js",
-    "dev": "node --watch server-v15-saleh.js",
-    "check": "node --check server-v15-saleh.js && node --check server-v15-quality.js && node --check server-v15-haraj.js && node --check server-v15-market.js && node --check server-recovery-v25.js",
+    "start": "node server-v15-yallamotor.js",
+    "dev": "node --watch server-v15-yallamotor.js",
+    "check": "node --check server-v15-yallamotor.js && node --check server-v15-saleh.js && node --check server-v15-quality.js && node --check server-v15-haraj.js && node --check server-v15-market.js && node --check server-recovery-v25.js",
     "test:exact-year": "node --test tests/exact-year-v15.test.mjs"
   },
   "dependencies": {

@@ -34,6 +34,7 @@ jobs:
           node --check lib/search-intent.js
           node --check tests/native-sources-v15.mjs
           node --check tests/saleh-native-v15.mjs
+          node --check tests/full-market-v15.mjs
       - name: Test exact-year behavior
         run: npm run test:exact-year
       - name: Test current Dalelah 1.5 UI
@@ -82,7 +83,7 @@ jobs:
   production-qa:
     needs: deploy-ready
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     env:
       DELILAH_URL: https://delilah-pm5f.onrender.com
       EXPECTED_GIT_COMMIT: ${{ github.sha }}
@@ -97,3 +98,5 @@ jobs:
         run: node tests/native-sources-v15.mjs
       - name: Verify source-native Saleh Cars new inventory
         run: node tests/saleh-native-v15.mjs
+      - name: Run full Saudi-market coverage matrix
+        run: node tests/full-market-v15.mjs

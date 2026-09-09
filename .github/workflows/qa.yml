@@ -19,8 +19,9 @@ jobs:
         with:
           node-version: 22
       - run: npm install --no-audit --no-fund
-      - name: Syntax-check Dalelah 1.5 volume chain
+      - name: Syntax-check Dalelah 1.5 chain
         run: |
+          node --check server-v15-new-fast.js
           node --check server-v15-volume-quality.js
           node --check server-v15-volume.js
           node --check server-v15-ux.js
@@ -38,7 +39,7 @@ jobs:
         run: npm run test:exact-year
       - name: Test current Dalelah 1.5 UI
         run: node --test tests/ui-v15.test.mjs
-      - name: Guard broad-market volume architecture
+      - name: Guard current production architecture
         run: |
           node --input-type=module <<'NODE'
           import assert from 'node:assert/strict';
@@ -46,16 +47,17 @@ jobs:
           const pkg=JSON.parse(await readFile('package.json','utf8'));
           const v=await readFile('server-v15-volume.js','utf8');
           const q=await readFile('server-v15-volume-quality.js','utf8');
-          assert.equal(pkg.scripts.start,'node server-v15-volume-quality.js');
+          const n=await readFile('server-v15-new-fast.js','utf8');
+          assert.equal(pkg.scripts.start,'node server-v15-new-fast.js');
           assert.match(v,/const MAX_RESULTS=500/);
           assert.match(v,/const USED_QUERIES=\[/);
           assert.match(v,/__all_cars__/);
-          assert.match(v,/volumeBrowse:true/);
-          assert.match(v,/mergeInto\(/);
           assert.match(q,/volumeQualityGate:true/);
           assert.match(q,/exactModelQualityGate:true/);
-          assert.match(q,/جنط/);
-          console.log('PASS volume architecture + final quality guards');
+          assert.match(n,/salehFastExact:true/);
+          assert.match(n,/geely-preface-gf-2026/);
+          assert.match(n,/changan-eado-plus/);
+          console.log('PASS volume + model + exact-new fast guards');
           NODE
 
   deploy-ready:
@@ -67,7 +69,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Wait for exact Dalelah 1.5 volume commit
+      - name: Wait for exact Dalelah 1.5 commit
         env:
           DELILAH_URL: https://delilah-pm5f.onrender.com
           EXPECTED_GIT_COMMIT: ${{ github.sha }}
@@ -84,13 +86,13 @@ jobs:
                 fetch(`${base}/api/health`,{signal:AbortSignal.timeout(8000),headers:{'cache-control':'no-cache'}})
               ]);
               const html=await home.text();const h=await health.json().catch(()=>({}));
-              const ok=home.ok&&health.ok&&h.productVersion==='1.5'&&h.edge==='dalelah-v15-volume'&&h.volumeBrowse===true&&h.volumeQualityGate===true&&h.exactModelQualityGate===true&&h.renderGitCommit===expected&&html.includes('__all_cars__')&&html.includes('async function pollSearch');
-              last=JSON.stringify({home:home.status,health:health.status,edge:h.edge,commit:h.renderGitCommit,expected,volume:h.volumeBrowse,quality:h.volumeQualityGate,modelQuality:h.exactModelQualityGate});
-              if(ok){console.log('PASS exact Dalelah clean-volume/model commit',last);process.exit(0)}
+              const ok=home.ok&&health.ok&&h.productVersion==='1.5'&&h.edge==='dalelah-v15-volume'&&h.volumeBrowse===true&&h.volumeQualityGate===true&&h.exactModelQualityGate===true&&h.salehFastExact===true&&h.renderGitCommit===expected&&html.includes('__all_cars__')&&html.includes('async function pollSearch');
+              last=JSON.stringify({home:home.status,health:health.status,edge:h.edge,commit:h.renderGitCommit,expected,volume:h.volumeBrowse,quality:h.volumeQualityGate,modelQuality:h.exactModelQualityGate,salehFastExact:h.salehFastExact});
+              if(ok){console.log('PASS exact Dalelah fast-new commit',last);process.exit(0)}
             }catch(e){last=e.message}
             await sleep(5000);
           }
-          throw new Error(`Clean model-aware volume commit not observed: ${last}`);
+          throw new Error(`Exact fast-new production commit not observed: ${last}`);
           NODE
 
   production-qa:

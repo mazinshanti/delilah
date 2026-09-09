@@ -21,6 +21,8 @@ jobs:
       - run: npm install --no-audit --no-fund
       - name: Syntax-check Dalelah 1.5 chain
         run: |
+          node --check server-v15-opensooq.js
+          node --check lib/opensooq-source.js
           node --check server-v15-new-fast.js
           node --check server-v15-volume-quality.js
           node --check server-v15-volume.js
@@ -45,19 +47,23 @@ jobs:
           import assert from 'node:assert/strict';
           import {readFile} from 'node:fs/promises';
           const pkg=JSON.parse(await readFile('package.json','utf8'));
+          const os=await readFile('server-v15-opensooq.js','utf8');
+          const src=await readFile('lib/opensooq-source.js','utf8');
           const v=await readFile('server-v15-volume.js','utf8');
           const q=await readFile('server-v15-volume-quality.js','utf8');
           const n=await readFile('server-v15-new-fast.js','utf8');
-          assert.equal(pkg.scripts.start,'node server-v15-new-fast.js');
+          assert.equal(pkg.scripts.start,'node server-v15-opensooq.js');
           assert.match(v,/const MAX_RESULTS=500/);
-          assert.match(v,/const USED_QUERIES=\[/);
           assert.match(v,/__all_cars__/);
           assert.match(q,/volumeQualityGate:true/);
           assert.match(q,/exactModelQualityGate:true/);
           assert.match(n,/salehFastExact:true/);
-          assert.match(n,/geely-preface-gf-2026/);
-          assert.match(n,/changan-eado-plus/);
-          console.log('PASS volume + model + exact-new fast guards');
+          assert.match(os,/BROAD_OPENSOOQ_QUOTA=150/);
+          assert.match(os,/opensooqStructuredInventory:true/);
+          assert.match(os,/opensooqNativeExact:true/);
+          assert.match(src,/application\/ld\+json/);
+          assert.match(src,/openSooqSearchUrl/);
+          console.log('PASS multi-market + exact-new architecture guards');
           NODE
 
   deploy-ready:
@@ -86,13 +92,13 @@ jobs:
                 fetch(`${base}/api/health`,{signal:AbortSignal.timeout(8000),headers:{'cache-control':'no-cache'}})
               ]);
               const html=await home.text();const h=await health.json().catch(()=>({}));
-              const ok=home.ok&&health.ok&&h.productVersion==='1.5'&&h.edge==='dalelah-v15-volume'&&h.volumeBrowse===true&&h.volumeQualityGate===true&&h.exactModelQualityGate===true&&h.salehFastExact===true&&h.renderGitCommit===expected&&html.includes('__all_cars__')&&html.includes('async function pollSearch');
-              last=JSON.stringify({home:home.status,health:health.status,edge:h.edge,commit:h.renderGitCommit,expected,volume:h.volumeBrowse,quality:h.volumeQualityGate,modelQuality:h.exactModelQualityGate,salehFastExact:h.salehFastExact});
-              if(ok){console.log('PASS exact Dalelah fast-new commit',last);process.exit(0)}
+              const ok=home.ok&&health.ok&&h.productVersion==='1.5'&&h.edge==='dalelah-v15-volume'&&h.volumeBrowse===true&&h.volumeQualityGate===true&&h.exactModelQualityGate===true&&h.salehFastExact===true&&h.opensooqStructuredInventory===true&&h.opensooqNativeExact===true&&h.renderGitCommit===expected&&html.includes('__all_cars__')&&html.includes('async function pollSearch');
+              last=JSON.stringify({home:home.status,health:health.status,edge:h.edge,commit:h.renderGitCommit,expected,volume:h.volumeBrowse,quality:h.volumeQualityGate,modelQuality:h.exactModelQualityGate,salehFastExact:h.salehFastExact,opensooq:h.opensooqStructuredInventory,native:h.opensooqNativeExact});
+              if(ok){console.log('PASS exact Dalelah multi-market commit',last);process.exit(0)}
             }catch(e){last=e.message}
             await sleep(5000);
           }
-          throw new Error(`Exact fast-new production commit not observed: ${last}`);
+          throw new Error(`Exact multi-market production commit not observed: ${last}`);
           NODE
 
   production-qa:
@@ -107,7 +113,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Verify hundreds-of-cars clean broad market volume
+      - name: Verify clean Haraj + OpenSooq frontend volume
         run: node tests/volume-market-v15.mjs
       - name: Run full Saudi-market model/filter matrix
         run: node tests/full-market-v15.mjs

@@ -12,6 +12,22 @@ await import('./server-v15-opensooq.js');
 process.env.PORT = String(externalPort);
 
 const app = express();
+const MOBILE_PREVIEW_ORIGINS = new Set([
+  'https://dalelah-mobile-preview.onrender.com',
+  'http://localhost:8081',
+  'http://localhost:19006'
+]);
+app.use((req,res,next) => {
+  const origin = req.headers.origin;
+  if (origin && MOBILE_PREVIEW_ORIGINS.has(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  }
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
 app.use(express.json({limit:'256kb'}));
 const root = dirname(fileURLToPath(import.meta.url));
 const sleep = ms => new Promise(resolve=>setTimeout(resolve,ms));
@@ -146,7 +162,7 @@ async function proxy(req,res) {
   try {
     const headers = {};
     for (const [key,value] of Object.entries(req.headers)) {
-      if (!['host','content-length','connection'].includes(key.toLowerCase()) && value != null) {
+      if (!['host','content-length','connection','origin'].includes(key.toLowerCase()) && value != null) {
         headers[key] = Array.isArray(value) ? value.join(',') : String(value);
       }
     }
@@ -164,7 +180,7 @@ async function proxy(req,res) {
     });
     const buffer = Buffer.from(await response.arrayBuffer());
     for (const [key,value] of response.headers.entries()) {
-      if (!['content-length','transfer-encoding','connection'].includes(key.toLowerCase())) res.setHeader(key,value);
+      if (!['content-length','transfer-encoding','connection','access-control-allow-origin','vary'].includes(key.toLowerCase())) res.setHeader(key,value);
     }
     return res.status(response.status).send(buffer);
   } catch (error) {

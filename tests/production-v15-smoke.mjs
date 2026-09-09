@@ -22,7 +22,9 @@ assert.equal(health.restartSafeSearchIds, true, `restart-safe search IDs are not
 assert.equal(health.motoryNativeCatalog, true, `Motory native catalogue is not enabled: ${JSON.stringify(health)}`);
 assert.equal(health.harajNativeSearch, true, `Haraj native search is not enabled: ${JSON.stringify(health)}`);
 assert.equal(health.qualityGate, true, `final listing quality gate is not enabled: ${JSON.stringify(health)}`);
-assert.equal(health.edge, 'dalelah-v15-quality', `unexpected production edge: ${JSON.stringify(health)}`);
+assert.equal(health.syarahNativeInventory, true, `Syarah native inventory is not enabled: ${JSON.stringify(health)}`);
+assert.equal(health.salehNativeInventory, true, `Saleh Cars native inventory is not enabled: ${JSON.stringify(health)}`);
+assert.equal(health.edge, 'dalelah-v15-saleh', `unexpected production edge: ${JSON.stringify(health)}`);
 if (expectedCommit) assert.equal(health.renderGitCommit, expectedCommit, `production is not running the commit under test: expected ${expectedCommit}, got ${health.renderGitCommit}`);
 
 function diagnostics(query, first, latest, listings) {
@@ -43,6 +45,14 @@ function diagnostics(query, first, latest, listings) {
     harajNativeListings:latest.harajNativeListings??first.harajNativeListings??null,
     harajNativeError:latest.harajNativeError??first.harajNativeError??null,
     harajNativeQuery:latest.harajNativeQuery??first.harajNativeQuery??null,
+    syarahNativeInventory:latest.syarahNativeInventory??first.syarahNativeInventory??null,
+    syarahNativeComplete:latest.syarahNativeComplete??first.syarahNativeComplete??null,
+    syarahNativeListings:latest.syarahNativeListings??first.syarahNativeListings??null,
+    syarahNativeError:latest.syarahNativeError??first.syarahNativeError??null,
+    salehNativeInventory:latest.salehNativeInventory??first.salehNativeInventory??null,
+    salehNativeComplete:latest.salehNativeComplete??first.salehNativeComplete??null,
+    salehNativeListings:latest.salehNativeListings??first.salehNativeListings??null,
+    salehNativeError:latest.salehNativeError??first.salehNativeError??null,
     motoryNativeCatalog:latest.motoryNativeCatalog??first.motoryNativeCatalog??null,
     motoryNativeComplete:latest.motoryNativeComplete??first.motoryNativeComplete??null,
     motoryNativeListings:latest.motoryNativeListings??first.motoryNativeListings??null,
@@ -103,6 +113,8 @@ async function exactYearCase({query, year, requireResults = true}) {
     qualityRejected:latest.qualityRejected??0,
     reconstructed:Boolean(latest.searchStateReconstructed),
     harajNativeListings:latest.harajNativeListings??null,
+    syarahNativeListings:latest.syarahNativeListings??null,
+    salehNativeListings:latest.salehNativeListings??null,
     motoryNativeListings:latest.motoryNativeListings??null
   };
 }

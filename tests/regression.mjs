@@ -97,13 +97,18 @@ assert.match(salehLayer,/saleh_source_native_inventory/);checks++;
 assert.match(salehLayer,/salehNativeInventory:true/);checks++;
 
 const yallaLayer=await readFile(new URL('../server-v15-yallamotor.js',import.meta.url),'utf8');
-assert.match(yallaLayer,/function directYalla\(/,'YallaMotor direct listing validation must remain enabled');checks++;
-assert.match(yallaLayer,/function searchUrl\(/,'YallaMotor exact model/year native search routing must remain enabled');checks++;
-assert.match(yallaLayer,/yallamotor_source_native_search/,'YallaMotor native listings must remain source-tagged');checks++;
-assert.match(yallaLayer,/yallamotorNativeInventory:true/,'YallaMotor diagnostics must remain visible');checks++;
+assert.match(yallaLayer,/function directYalla\(/);checks++;
+assert.match(yallaLayer,/yallamotor_source_native_search/);checks++;
+
+const carSwitchLayer=await readFile(new URL('../server-v15-carswitch.js',import.meta.url),'utf8');
+assert.match(carSwitchLayer,/function direct\(/,'CarSwitch direct listing validator must remain enabled');checks++;
+assert.match(carSwitchLayer,/function searchUrl\(/,'CarSwitch model/year source-native routing must remain enabled');checks++;
+assert.match(carSwitchLayer,/carswitch_source_native_search/,'CarSwitch results must be source-tagged');checks++;
+assert.match(carSwitchLayer,/carswitchNativeInventory:true/,'CarSwitch diagnostics must remain visible');checks++;
+assert.match(carSwitchLayer,/yallamotorStatus:'blocked-http-403-experimental'/,'Blocked YallaMotor must not be counted as active coverage');checks++;
 
 const pkg=JSON.parse(await readFile(new URL('../package.json',import.meta.url),'utf8'));
 assert.equal(pkg.version,'1.5.0');checks++;
-assert.equal(pkg.scripts.start,'node server-v15-yallamotor.js');checks++;
+assert.equal(pkg.scripts.start,'node server-v15-carswitch.js');checks++;
 
 console.log(`PASS: ${checks.toLocaleString()} regression assertions`);

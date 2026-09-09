@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node server-v15-volume-quality.js",
-    "dev": "node --watch server-v15-volume-quality.js",
-    "check": "node --check server-v15-volume-quality.js && node --check server-v15-volume.js && node --check server-v15-ux.js && node --check server-v15-carswitch.js && node --check server-v15-saleh.js && node --check server-v15-quality.js && node --check server-v15-haraj.js && node --check server-v15-market.js && node --check server-recovery-v25.js",
+    "start": "node server-v15-new-fast.js",
+    "dev": "node --watch server-v15-new-fast.js",
+    "check": "node --check server-v15-new-fast.js && node --check server-v15-volume-quality.js && node --check server-v15-volume.js && node --check server-v15-ux.js && node --check server-v15-carswitch.js && node --check server-v15-saleh.js && node --check server-v15-quality.js && node --check server-v15-haraj.js && node --check server-v15-market.js && node --check server-recovery-v25.js",
     "test:exact-year": "node --test tests/exact-year-v15.test.mjs"
   },
   "dependencies": {

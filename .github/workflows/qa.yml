@@ -2,7 +2,7 @@ name: Dalelah 1.5 QA
 
 on:
   push:
-    branches: [main, dalelah-release-candidate]
+    branches: [main, dalelah-release-candidate, dalelah-brand-relevance-hotfix]
   workflow_dispatch:
 
 concurrency:
@@ -22,6 +22,7 @@ jobs:
       - name: Syntax-check Dalelah unified chain
         run: |
           node --check server-v15-marketplace.js
+          node --check lib/search-relevance.js
           node --check lib/market-valuation.js
           node --check lib/saudi-seller-store.js
           node --check server-v15-opensooq.js
@@ -40,8 +41,11 @@ jobs:
           node --check tests/production-core-v15.mjs
           node --check tests/volume-market-v15.mjs
           node --check tests/full-market-v15.mjs
+          node --check tests/search-relevance-v15.test.mjs
       - name: Test exact-year behavior
         run: npm run test:exact-year
+      - name: Test strict brand relevance
+        run: npm run test:relevance
       - name: Test current Dalelah 1.5 UI
         run: node --test tests/ui-v15.test.mjs
       - name: Test marketplace foundation
@@ -53,12 +57,16 @@ jobs:
           import {readFile} from 'node:fs/promises';
           const pkg=JSON.parse(await readFile('package.json','utf8'));
           const market=await readFile('server-v15-marketplace.js','utf8');
+          const relevance=await readFile('lib/search-relevance.js','utf8');
           const os=await readFile('server-v15-opensooq.js','utf8');
           const src=await readFile('lib/opensooq-source.js','utf8');
           const v=await readFile('server-v15-volume.js','utf8');
           const q=await readFile('server-v15-volume-quality.js','utf8');
           const n=await readFile('server-v15-new-fast.js','utf8');
           assert.equal(pkg.scripts.start,'node server-v15-marketplace.js');
+          assert.match(relevance,/Bentley/);
+          assert.match(relevance,/detectRequestedBrand/);
+          assert.match(relevance,/listingMatchesBrand/);
           assert.match(market,/marketplaceFoundation:true/);
           assert.match(market,/mobileSurface:true/);
           assert.match(market,/sellerStoreWritable/);
@@ -68,13 +76,14 @@ jobs:
           assert.match(v,/__all_cars__/);
           assert.match(q,/volumeQualityGate:true/);
           assert.match(q,/exactModelQualityGate:true/);
+          assert.match(q,/exactBrandQualityGate:true/);
           assert.match(n,/salehFastExact:true/);
           assert.match(os,/BROAD_OPENSOOQ_QUOTA=150/);
           assert.match(os,/opensooqStructuredInventory:true/);
           assert.match(os,/opensooqNativeExact:true/);
           assert.ok(src.includes('application\\/ld\\+json'),'OpenSooq JSON-LD parser guard');
           assert.match(src,/openSooqSearchUrl/);
-          console.log('PASS unified marketplace + mobile + multi-market guards');
+          console.log('PASS unified marketplace + mobile + strict brand relevance guards');
           NODE
 
   mobile-build:
@@ -127,8 +136,8 @@ jobs:
                 fetch(`${base}/sell`,{signal:AbortSignal.timeout(8000),headers:{'cache-control':'no-cache'}})
               ]);
               const html=await home.text();const h=await health.json().catch(()=>({}));
-              const ok=home.ok&&health.ok&&mobile.ok&&sell.ok&&h.productVersion==='1.5'&&h.volumeBrowse===true&&h.volumeQualityGate===true&&h.exactModelQualityGate===true&&h.salehFastExact===true&&h.opensooqStructuredInventory===true&&h.opensooqNativeExact===true&&h.marketplaceFoundation===true&&h.mobileSurface===true&&h.releaseRuntime==='marketplace-mobile'&&h.renderGitCommit===expected&&html.includes('__all_cars__');
-              last=JSON.stringify({home:home.status,health:health.status,mobile:mobile.status,sell:sell.status,commit:h.renderGitCommit,expected,marketplace:h.marketplaceFoundation,mobileSurface:h.mobileSurface,runtime:h.releaseRuntime});
+              const ok=home.ok&&health.ok&&mobile.ok&&sell.ok&&h.productVersion==='1.5'&&h.volumeBrowse===true&&h.volumeQualityGate===true&&h.exactModelQualityGate===true&&h.exactBrandQualityGate===true&&h.salehFastExact===true&&h.opensooqStructuredInventory===true&&h.opensooqNativeExact===true&&h.marketplaceFoundation===true&&h.mobileSurface===true&&h.releaseRuntime==='marketplace-mobile'&&h.renderGitCommit===expected&&html.includes('__all_cars__');
+              last=JSON.stringify({home:home.status,health:health.status,mobile:mobile.status,sell:sell.status,commit:h.renderGitCommit,expected,brandGate:h.exactBrandQualityGate,marketplace:h.marketplaceFoundation,mobileSurface:h.mobileSurface,runtime:h.releaseRuntime});
               if(ok){console.log('PASS exact unified Dalelah commit',last);process.exit(0)}
             }catch(e){last=e.message}
             await sleep(5000);

@@ -4,6 +4,7 @@ import {fileURLToPath} from 'node:url';
 import {dirname,join} from 'node:path';
 import {buildMarketValuation} from './lib/market-valuation.js';
 import {createSellerSubmission,sellerStoreStatus,validateSellerSubmission} from './lib/saudi-seller-store.js';
+import {detectRequestedBrand,filterBrandRelevance} from './lib/search-relevance.js';
 
 const externalPort = Number(process.env.PORT || 3000);
 const innerPort = Number(process.env.DALELAH_MARKETPLACE_INNER_PORT || 7400);
@@ -31,6 +32,8 @@ app.use((req,res,next) => {
 app.use(express.json({limit:'256kb'}));
 const root = dirname(fileURLToPath(import.meta.url));
 const sleep = ms => new Promise(resolve=>setTimeout(resolve,ms));
+const SEARCH_QUERY_TTL = 20 * 60_000;
+const searchQueryById = new Map();
 
 async function inner(path, opts={}) {
   const response = await fetch(`http://127.0.0.1:${innerPort}${path}`, {
@@ -41,6 +44,51 @@ async function inner(path, opts={}) {
   let data;
   try { data = JSON.parse(text); } catch { data = {error:text.slice(0,1000)}; }
   return {response,data,text};
+}
+
+function counts(listings=[]) {
+  return (Array.isArray(listings)?listings:[]).reduce((out,car)=>{
+    const key=car?.source||car?.seller||'Other';
+    out[key]=(out[key]||0)+1;
+    return out;
+  },{});
+}
+
+function decodeSearchQuery(id='') {
+  const known=searchQueryById.get(String(id));
+  if(known && Date.now()-known.at<SEARCH_QUERY_TTL) return known.query;
+  try {
+    const raw=String(id);
+    if(raw.startsWith('d15.')) {
+      const p=JSON.parse(Buffer.from(raw.slice(4),'base64url').toString('utf8'));
+      return String(p?.q||'');
+    }
+    if(raw.startsWith('vol.')) {
+      const p=JSON.parse(Buffer.from(raw.slice(4),'base64url').toString('utf8'));
+      return String(p?.q||'');
+    }
+  } catch {}
+  return '';
+}
+
+function rememberSearchQuery(id,query) {
+  if(!id) return;
+  searchQueryById.set(String(id),{query:String(query||''),at:Date.now()});
+}
+
+function applyMarketplaceBrandBoundary(data={},query='') {
+  if(!Array.isArray(data.listings)) return data;
+  const before=data.listings.length;
+  const listings=filterBrandRelevance(data.listings,String(query||''));
+  const detectedBrand=detectRequestedBrand(String(query||''));
+  return {
+    ...data,
+    listings,
+    counts:counts(listings),
+    marketplaceBrandBoundaryGate:true,
+    marketplaceBrandRejected:(Number(data.marketplaceBrandRejected)||0)+(before-listings.length),
+    detectedBrand:data.detectedBrand||detectedBrand||null
+  };
 }
 
 function patchWebUi(html='') {
@@ -91,7 +139,7 @@ async function searchComparables(vehicle={}) {
       merge(data.listings);
     }
   }
-  return [...byUrl.values()];
+  return filterBrandRelevance([...byUrl.values()],query);
 }
 
 app.get('/', async (_req,res) => {
@@ -133,6 +181,33 @@ app.get('/mobile-manifest.webmanifest', (_req,res) => {
     theme_color:'#090a0b',
     description:'Search Saudi car marketplaces and dealers in one place.'
   }));
+});
+
+app.post('/api/search', async (req,res) => {
+  const body=req.body||{};
+  const query=String(body.query||'');
+  try {
+    const {response,data}=await inner('/api/search',{
+      method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(55_000)
+    });
+    if(data?.searchId) rememberSearchQuery(data.searchId,query);
+    return res.status(response.status).json(applyMarketplaceBrandBoundary(data,query));
+  } catch(error) {
+    return res.status(502).json({error:error?.message||'Dalelah search unavailable'});
+  }
+});
+
+app.get('/api/search/progress/:id', async (req,res) => {
+  const id=String(req.params.id||'');
+  const query=decodeSearchQuery(id);
+  try {
+    const {response,data}=await inner(`/api/search/progress/${encodeURIComponent(id)}`,{signal:AbortSignal.timeout(50_000)});
+    const out=applyMarketplaceBrandBoundary(data,query);
+    if(out?.complete===true||out?.marketScanComplete===true) searchQueryById.delete(id);
+    return res.status(response.status).json(out);
+  } catch(error) {
+    return res.status(502).json({error:error?.message||'Dalelah search progress unavailable'});
+  }
 });
 
 app.post('/api/sell/estimate', async (req,res) => {
@@ -206,10 +281,11 @@ app.get('/api/health', async (_req,res) => {
       sellerDataResidency:'Saudi Arabia',
       sellerStoreWritable:store.writable,
       sellerDataRegion:store.region,
-      releaseRuntime:'marketplace-mobile'
+      releaseRuntime:'marketplace-mobile',
+      marketplaceBrandBoundaryGate:true
     });
   } catch (error) {
-    return res.status(503).json({ok:false,marketplaceFoundation:true,mobileSurface:true,error:error?.message || String(error)});
+    return res.status(503).json({ok:false,marketplaceFoundation:true,mobileSurface:true,marketplaceBrandBoundaryGate:true,error:error?.message || String(error)});
   }
 });
 
@@ -244,4 +320,8 @@ async function proxy(req,res) {
 }
 
 app.use(proxy);
+setInterval(()=>{
+  const now=Date.now();
+  for(const [id,value] of searchQueryById) if(now-value.at>SEARCH_QUERY_TTL) searchQueryById.delete(id);
+},60_000).unref();
 app.listen(externalPort,()=>console.log(`Dalelah unified marketplace/mobile edge on ${externalPort}; search core ${innerPort}`));

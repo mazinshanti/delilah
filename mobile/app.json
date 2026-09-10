@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "Dalelah",
+    "slug": "dalelah",
+    "scheme": "dalelah",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "plugins": ["expo-router"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "sa.dalelah.app"
+    },
+    "android": {
+      "package": "sa.dalelah.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#090A0B"
+      }
+    },
+    "experiments": {
+      "typedRoutes": false
+    }
+  }
+}

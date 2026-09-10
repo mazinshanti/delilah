@@ -3,7 +3,9 @@ const base=String(process.env.DELILAH_URL||'https://delilah-pm5f.onrender.com').
 const expected=String(process.env.EXPECTED_GIT_COMMIT||'').trim();
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const BAD=/(?:قطع\s*غيار|مكين[هة]|محرك|ايرباق|ارباق|طبلون|كمبروسر|دينمو|رديتر|صدام|شبك|شمعة|شمعات|انوار|أنوار|رفرف|كبوت|باب\s*(?:يمين|يسار|امامي|خلفي)|جنط|جنوط|كفرات|فلتر|طرمب[هة]|حساس|اصطب|اسطب|كشاف|كشافات|مراي[هة]|مرآة|تشليح|للتشليح|للايجار|للإيجار|تاجير|تأجير|سطح[هة]|نقل\s*سيارات|فحص\s*سيارات|ورشة|صيانة)/i;
-const OBVIOUS_NEW=/(?:\bbrand\s*new\b|\bzero\s*km\b|جديد(?:ه|ة)?\s*(?:وكالة|بالوكالة)?|زيرو|غير\s*مستخدم)/i;
+const OBVIOUS_NEW=/(?:\bbrand\s*new\b|\bzero\s*km\b|سيار[هة]\s*جديد[هة]?|جديد[هة]?\s*(?:وكالة|بالوكالة)|زيرو|غير\s*مستخدم)/i;
+assert.equal(OBVIOUS_NEW.test('فورد فليكس 2011 فحص واستمارة جديدة'),false,'QA must not confuse new inspection/registration with a new car');
+assert.equal(OBVIOUS_NEW.test('تويوتا كامري سيارة جديدة وكالة'),true,'QA must still catch obvious new-car wording');
 async function json(path,options={}){const r=await fetch(base+path,{...options,signal:AbortSignal.timeout(50000),headers:{...(options.headers||{}),'cache-control':'no-cache'}});const t=await r.text();let d;try{d=JSON.parse(t)}catch{d={error:t.slice(0,300)}}assert.ok(r.ok,`${path} HTTP ${r.status}: ${JSON.stringify(d)}`);return d}
 const h=await json('/api/health');assert.equal(h.edge,'dalelah-v15-volume');assert.equal(h.volumeBrowse,true);assert.equal(h.volumeQualityGate,true);assert.equal(h.opensooqStructuredInventory,true);assert.equal(h.opensooqNativeExact,true);if(expected)assert.equal(h.renderGitCommit,expected);
 const first=await json('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query:'__all_cars__',condition:'used',filters:{}})});assert.ok(String(first.searchId||'').startsWith('vol.'),'used: expected volume search id');let latest=first;for(let i=0;i<45;i++){if(latest.complete===true||latest.marketScanComplete===true)break;await sleep(i?900:400);latest=await json('/api/search/progress/'+encodeURIComponent(first.searchId))}

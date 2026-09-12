@@ -25,6 +25,8 @@ jobs:
         run: npm run test:haraj-mileage
       - name: Haraj price matrix
         run: npm run test:haraj-price
+      - name: Syarah cash-price matrix
+        run: npm run test:syarah-price
       - name: Direct search core
         run: npm run test:direct-core
       - name: Marketplace regression

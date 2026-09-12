@@ -4,7 +4,7 @@ import {searchDirectFirst,mergeDirectListings,strictDirectListings} from './lib/
 import {exactYearIntent,enforceExactYear} from './lib/search-intent.js';
 
 const externalPort=Number(process.env.PORT||3000);
-const legacyBase=String(process.env.DALELAH_LEGACY_BASE_URL||'https://delilah-pm5f.onrender.com').replace(/\/$/,'');
+const legacyBase=String(process.env.DALELAH_LEGACY_BASE_URL||'https://delilah-live-search.onrender.com').replace(/\/$/,'');
 const DIRECT_BUDGET_MS=Number(process.env.DALELAH_DIRECT_BUDGET_MS||1800);
 const FULL_HEAD_START_MS=Number(process.env.DALELAH_FULL_HEAD_START_MS||900);
 const JOB_TTL=10*60_000;

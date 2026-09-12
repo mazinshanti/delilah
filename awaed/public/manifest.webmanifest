@@ -1,0 +1,13 @@
+{
+  "name": "Awaed Copilot",
+  "short_name": "Awaed Copilot",
+  "description": "U.S. market signal companion with iPhone push alerts.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#06100c",
+  "theme_color": "#06100c",
+  "orientation": "portrait-primary",
+  "icons": [
+    {"src":"/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}

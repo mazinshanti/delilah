@@ -1,8 +1,7 @@
 import express from 'express';
 import {randomUUID} from 'node:crypto';
-import {searchDirectFirst,mergeDirectListings} from './lib/direct-search.js';
+import {searchDirectFirst,mergeDirectListings,strictDirectListings} from './lib/direct-search.js';
 import {exactYearIntent,enforceExactYear} from './lib/search-intent.js';
-import {filterBrandRelevance} from './lib/search-relevance.js';
 
 const externalPort=Number(process.env.PORT||3000);
 const legacyBase=String(process.env.DALELAH_LEGACY_BASE_URL||'https://delilah-pm5f.onrender.com').replace(/\/$/,'');
@@ -21,7 +20,7 @@ const keyFor=body=>JSON.stringify({q:norm(body?.query||''),c:body?.condition==='
 
 function counts(listings=[]){return listings.reduce((out,car)=>{const key=car?.source||car?.seller||'Other';out[key]=(out[key]||0)+1;return out;},{});}
 function exactFor(body={}){const f=body.filters||{};if(Number(f.minYear)&&Number(f.maxYear)&&Number(f.minYear)===Number(f.maxYear))return Number(f.minYear);return exactYearIntent(String(body.query||''));}
-function strictMerged(listings=[],body={}){let xs=Array.isArray(listings)?listings:[];const year=exactFor(body);if(year)xs=enforceExactYear(xs,year,{requireEvidence:true});xs=filterBrandRelevance(xs,String(body.query||''));const condition=body.condition==='new'?'new':'used';xs=xs.filter(car=>!car?.condition||car.condition===condition);return mergeDirectListings(xs);}
+function strictMerged(listings=[],body={}){let xs=Array.isArray(listings)?listings:[];const year=exactFor(body);if(year)xs=enforceExactYear(xs,year,{requireEvidence:true});return strictDirectListings(xs,body);}
 
 async function legacy(path,opts={}){
   const response=await fetch(`${legacyBase}${path}`,{...opts,signal:opts.signal||AbortSignal.timeout(55_000)});

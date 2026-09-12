@@ -14,6 +14,7 @@
     "test:haraj-price": "node --test tests/haraj-price.test.mjs tests/haraj-fast-source-price.test.mjs",
     "test:haraj-mileage": "node --test tests/haraj-mileage.test.mjs",
     "test:syarah-price": "node --test tests/syarah-price.test.mjs",
+    "test:syarah-price-live": "node scripts/syarah-price-live.mjs",
     "test:haraj-price-live": "node scripts/haraj-price-live.mjs"
   },
   "dependencies": {

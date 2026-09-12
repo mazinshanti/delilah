@@ -4,6 +4,8 @@ import {searchDirectFirst,mergeDirectListings,strictDirectListings} from './lib/
 import {exactYearIntent,enforceExactYear} from './lib/search-intent.js';
 import {extractHarajPrice} from './lib/haraj-price.js';
 import {enrichHarajListingPrices} from './lib/haraj-price-enrichment.js';
+import {extractSyarahCashPrice} from './lib/syarah-price.js';
+import {enrichSyarahListingPrices,isSyarahDetailUrl} from './lib/syarah-price-enrichment.js';
 
 const externalPort=Number(process.env.PORT||3000);
 const legacyBase=String(process.env.DALELAH_LEGACY_BASE_URL||'https://delilah-live-search.onrender.com').replace(/\/$/,'');
@@ -22,16 +24,25 @@ const keyFor=body=>JSON.stringify({q:norm(body?.query||''),c:body?.condition==='
 
 function counts(listings=[]){return listings.reduce((out,car)=>{const key=car?.source||car?.seller||'Other';out[key]=(out[key]||0)+1;return out;},{});}
 function exactFor(body={}){const f=body.filters||{};if(Number(f.minYear)&&Number(f.maxYear)&&Number(f.minYear)===Number(f.maxYear))return Number(f.minYear);return exactYearIntent(String(body.query||''));}
-function enrichHarajPrices(listings=[]){
+function enrichSourcePrices(listings=[]){
   return (Array.isArray(listings)?listings:[]).map(car=>{
-    if(norm(car?.source||car?.seller||'')!==norm('Haraj'))return car;
-    const hit=extractHarajPrice(`${car?.title||''} ${car?.snippet||''}`,{year:car?.year});
-    if(hit)return{...car,price:hit.price,priceVerified:true,priceSource:hit.source,priceEvidence:hit.evidence,harajPriceMatrix:true};
-    if(car?.priceVerified===true)return car;
-    return{...car,price:null,priceVerified:false,priceSource:null,priceEvidence:null,harajPriceMatrix:true};
+    const source=norm(car?.source||car?.seller||'');
+    if(source===norm('Haraj')){
+      const hit=extractHarajPrice(`${car?.title||''} ${car?.snippet||''}`,{year:car?.year});
+      if(hit)return{...car,price:hit.price,priceVerified:true,priceSource:hit.source,priceEvidence:hit.evidence,harajPriceMatrix:true};
+      if(car?.priceVerified===true)return car;
+      return{...car,price:null,priceVerified:false,priceSource:null,priceEvidence:null,harajPriceMatrix:true};
+    }
+    if(source===norm('Syarah')){
+      const hit=extractSyarahCashPrice(`${car?.title||''} ${car?.snippet||''}`);
+      if(hit)return{...car,price:hit.price,priceVerified:true,priceSource:hit.source,priceEvidence:hit.evidence,syarahPriceMatrix:true};
+      if(car?.priceVerified===true)return car;
+      return{...car,price:null,priceVerified:false,priceSource:null,priceEvidence:null,syarahPriceMatrix:true};
+    }
+    return car;
   });
 }
-function strictMerged(listings=[],body={}){let xs=enrichHarajPrices(listings);const year=exactFor(body);if(year)xs=enforceExactYear(xs,year,{requireEvidence:true});return strictDirectListings(xs,body);}
+function strictMerged(listings=[],body={}){let xs=enrichSourcePrices(listings);const year=exactFor(body);if(year)xs=enforceExactYear(xs,year,{requireEvidence:true});return strictDirectListings(xs,body);}
 
 async function legacy(path,opts={}){
   const response=await fetch(`${legacyBase}${path}`,{...opts,signal:opts.signal||AbortSignal.timeout(55_000)});
@@ -58,15 +69,44 @@ function kickPriceEnrichment(job){
   return job.priceEnrichmentPromise;
 }
 
+function kickSyarahPriceEnrichment(job){
+  if(job.syarahPriceEnrichmentPromise||!Array.isArray(job.fullData?.listings))return job.syarahPriceEnrichmentPromise;
+  const candidates=job.fullData.listings.filter(car=>car?.source==='Syarah'&&car?.priceVerified!==true&&isSyarahDetailUrl(car?.url)&&!job.syarahPriceSeen.has(String(car.url))).slice(0,16);
+  if(!candidates.length){job.syarahPriceEnrichmentComplete=true;return null;}
+  for(const car of candidates)job.syarahPriceSeen.add(String(car.url));
+  job.syarahPriceEnrichmentComplete=false;
+  job.syarahPriceEnrichmentPromise=enrichSyarahListingPrices(candidates,{max:candidates.length,concurrency:4,timeout:3000})
+    .then(result=>{
+      const enrichedByUrl=new Map((result.listings||[]).filter(car=>car?.priceVerified===true).map(car=>[String(car.url),car]));
+      const current=Array.isArray(job.fullData?.listings)?job.fullData.listings:[];
+      job.fullData={...job.fullData,listings:current.map(car=>{
+        const hit=enrichedByUrl.get(String(car?.url||''));
+        return hit?{...car,price:hit.price,priceVerified:true,priceSource:hit.priceSource,priceEvidence:hit.priceEvidence,priceDiscovery:hit.priceDiscovery,syarahPriceMatrix:true}:car;
+      })};
+      job.syarahPriceEnriched+=(result.enriched||0);
+      job.syarahPriceAttempted+=(result.attempted||0);
+      job.syarahPriceEnrichmentComplete=true;
+      return result;
+    })
+    .catch(error=>{
+      job.syarahPriceEnrichmentError=error?.message||String(error);
+      job.syarahPriceEnrichmentComplete=true;
+      return null;
+    })
+    .finally(()=>{job.syarahPriceEnrichmentPromise=null;});
+  return job.syarahPriceEnrichmentPromise;
+}
+
 function publicJob(job){
   const direct=job.directData||{};
   const full=job.fullData||{};
   const listings=strictMerged(mergeDirectListings(direct.listings,full.listings),job.body);
   const fullComplete=Boolean(job.fullData&&(full.complete===true||full.marketScanComplete===true));
   const pricePending=Boolean(job.priceEnrichmentPromise&&!job.priceEnrichmentComplete);
-  const complete=fullComplete&&!pricePending;
+  const syarahPricePending=Boolean(job.syarahPriceEnrichmentPromise&&!job.syarahPriceEnrichmentComplete);
+  const complete=fullComplete&&!pricePending&&!syarahPricePending;
   const base=job.fullData||job.directData||{};
-  const out={...base,listings,counts:counts(listings),complete,marketScanComplete:complete,directCoreLane:true,directCoreFirstResultMs:job.firstResultMs??null,directCoreDurationMs:direct.durationMs??null,directCoreSources:direct.sources||[],directCoreErrors:direct.errors||[],deepScanStarted:Boolean(job.fullPromise),deepScanMode:'remote-legacy-fallback',deepZeroRetry:Boolean(job.deepZeroRetry),exactBrandQualityGate:true,harajPriceMatrix:true,harajDetailPriceEnrichment:true,harajPriceEnrichmentPending:pricePending,harajPriceEnrichmentComplete:Boolean(job.priceEnrichmentComplete),harajDetailPricesEnriched:job.priceEnriched||0,harajDetailPricesAttempted:job.priceAttempted||0,harajPriceEnrichmentError:job.priceEnrichmentError||null};
+  const out={...base,listings,counts:counts(listings),complete,marketScanComplete:complete,directCoreLane:true,directCoreFirstResultMs:job.firstResultMs??null,directCoreDurationMs:direct.durationMs??null,directCoreSources:direct.sources||[],directCoreErrors:direct.errors||[],deepScanStarted:Boolean(job.fullPromise),deepScanMode:'remote-legacy-fallback',deepZeroRetry:Boolean(job.deepZeroRetry),exactBrandQualityGate:true,harajPriceMatrix:true,harajDetailPriceEnrichment:true,harajPriceEnrichmentPending:pricePending,harajPriceEnrichmentComplete:Boolean(job.priceEnrichmentComplete),harajDetailPricesEnriched:job.priceEnriched||0,harajDetailPricesAttempted:job.priceAttempted||0,harajPriceEnrichmentError:job.priceEnrichmentError||null,syarahPriceMatrix:true,syarahDetailPriceEnrichment:true,syarahPriceEnrichmentPending:syarahPricePending,syarahPriceEnrichmentComplete:Boolean(job.syarahPriceEnrichmentComplete),syarahDetailPricesEnriched:job.syarahPriceEnriched||0,syarahDetailPricesAttempted:job.syarahPriceAttempted||0,syarahPriceEnrichmentError:job.syarahPriceEnrichmentError||null};
   if(!complete)out.searchId=job.id;else delete out.searchId;
   if(!out.answer)out.answer=listings.length?`${listings.length} verified cars found. Dalelah is continuing the market scan.`:'Dalelah is scanning the Saudi market…';
   return out;
@@ -96,6 +136,7 @@ function kickFull(job){
       job.fullData=data;
       job.upstreamId=data?.searchId||job.upstreamId||null;
       if(Array.isArray(data?.listings)&&data.listings.length&&!job.firstResultMs)job.firstResultMs=Date.now()-job.createdAt;
+      kickSyarahPriceEnrichment(job);
       return data;
     })
     .catch(error=>{job.fullDone=true;job.error=error?.message||String(error);return null;});
@@ -105,7 +146,7 @@ function kickFull(job){
 function startJob(body={}){
   const key=keyFor(body),existing=inFlight.get(key);
   if(existing&&Date.now()-existing.createdAt<COALESCE_TTL)return existing;
-  const job={id:`dc.${randomUUID()}`,key,body,createdAt:Date.now(),directData:null,fullData:null,fullPromise:null,fullDone:false,upstreamId:null,error:null,firstResultMs:null,deepZeroRetry:false,priceEnrichmentPromise:null,priceEnrichmentComplete:false,priceEnriched:0,priceAttempted:0,priceEnrichmentError:null};
+  const job={id:`dc.${randomUUID()}`,key,body,createdAt:Date.now(),directData:null,fullData:null,fullPromise:null,fullDone:false,upstreamId:null,error:null,firstResultMs:null,deepZeroRetry:false,priceEnrichmentPromise:null,priceEnrichmentComplete:false,priceEnriched:0,priceAttempted:0,priceEnrichmentError:null,syarahPriceEnrichmentPromise:null,syarahPriceEnrichmentComplete:false,syarahPriceEnriched:0,syarahPriceAttempted:0,syarahPriceEnrichmentError:null,syarahPriceSeen:new Set()};
   jobs.set(job.id,job);inFlight.set(key,job);
   job.directPromise=searchDirectFirst(body,{timeoutMs:DIRECT_BUDGET_MS})
     .then(data=>{
@@ -124,12 +165,12 @@ async function advanceFull(job){
   if(!job.fullPromise)kickFull(job);
   if(!job.fullData&&!job.fullDone)await Promise.race([job.fullPromise,sleep(60)]);
   if(!job.fullData)return;
-  if(job.fullData.complete===true||job.fullData.marketScanComplete===true)return;
+  if(job.fullData.complete===true||job.fullData.marketScanComplete===true){kickSyarahPriceEnrichment(job);return;}
   const upstream=job.upstreamId||job.fullData.searchId;
   if(!upstream)return;
   try{
     const {response,data}=await legacy(`/api/search/progress/${encodeURIComponent(upstream)}`,{signal:AbortSignal.timeout(50_000)});
-    if(response.ok){job.fullData={...job.fullData,...data};job.upstreamId=data?.searchId||job.upstreamId||upstream;}
+    if(response.ok){job.fullData={...job.fullData,...data};job.upstreamId=data?.searchId||job.upstreamId||upstream;kickSyarahPriceEnrichment(job);}
   }catch{}
 }
 
@@ -166,8 +207,8 @@ app.get('/api/health',async(_req,res)=>{
   try{
     const {response,data}=await legacy('/api/health',{signal:AbortSignal.timeout(9000)});
     const frontRenderGitCommit=process.env.RENDER_GIT_COMMIT||process.env.RENDER_COMMIT||null;
-    return res.status(response.status).json({...data,legacyRenderGitCommit:data?.renderGitCommit||null,renderGitCommit:frontRenderGitCommit||data?.renderGitCommit||null,frontRenderGitCommit,directCoreLane:true,directCoreStrategy:'direct-first-remote-deep-scan',directCoreBudgetMs:DIRECT_BUDGET_MS,directCoreFullHeadStartMs:FULL_HEAD_START_MS,directCoreJobs:jobs.size,legacyBase,harajPriceMatrix:true,harajDetailPriceEnrichment:true});
-  }catch(error){return res.status(503).json({ok:false,renderGitCommit:process.env.RENDER_GIT_COMMIT||process.env.RENDER_COMMIT||null,directCoreLane:true,directCoreStrategy:'direct-first-remote-deep-scan',harajPriceMatrix:true,harajDetailPriceEnrichment:true,error:error?.message||String(error)});}
+    return res.status(response.status).json({...data,legacyRenderGitCommit:data?.renderGitCommit||null,renderGitCommit:frontRenderGitCommit||data?.renderGitCommit||null,frontRenderGitCommit,directCoreLane:true,directCoreStrategy:'direct-first-remote-deep-scan',directCoreBudgetMs:DIRECT_BUDGET_MS,directCoreFullHeadStartMs:FULL_HEAD_START_MS,directCoreJobs:jobs.size,legacyBase,harajPriceMatrix:true,harajDetailPriceEnrichment:true,syarahPriceMatrix:true,syarahDetailPriceEnrichment:true});
+  }catch(error){return res.status(503).json({ok:false,renderGitCommit:process.env.RENDER_GIT_COMMIT||process.env.RENDER_COMMIT||null,directCoreLane:true,directCoreStrategy:'direct-first-remote-deep-scan',harajPriceMatrix:true,harajDetailPriceEnrichment:true,syarahPriceMatrix:true,syarahDetailPriceEnrichment:true,error:error?.message||String(error)});}
 });
 
 async function proxy(req,res){

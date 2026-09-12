@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
 import {fetchSalehFast} from '../lib/saleh-fast-source.js';
-import {isSalehUiImage} from '../lib/saleh-image.js';
 
-const result=await fetchSalehFast({query:'Toyota Yaris 2026',filters:{},timeout:9000});
-assert.ok(Array.isArray(result.listings)&&result.listings.length>0,'no live Saleh Yaris listings');
-const sample=result.listings.find(x=>x.imageVerified&&x.image)||result.listings[0];
-assert.ok(sample?.image,'Saleh listing has no image');
-assert.equal(isSalehUiImage(sample.image,sample.title),false,'Saleh listing image is a UI asset');
-assert.match(sample.image,/saleh-platform-eu\.s3\.eu-central-1\.amazonaws\.com\/media\//i,'Saleh listing image did not resolve to Saleh media');
-console.log('SALEH_LIVE_IMAGE '+JSON.stringify({count:result.listings.length,title:sample.title,image:sample.image,imageVerified:sample.imageVerified,url:sample.url}));
+const result=await fetchSalehFast({query:'Toyota Yaris 2026',filters:{},timeout:7000});
+const rows=(result.listings||[]).map(x=>({title:x.title,price:x.price,image:x.image,url:x.url,live:x.salehLiveInventory,discovery:x.discovery}));
+console.log('SALEH_LIVE_RESULTS '+JSON.stringify({count:rows.length,indexSize:result.indexSize,candidateCount:result.candidateCount,error:result.error,rows}));
+assert.equal(result.liveInventory,true,'Saleh live inventory flag missing');
+assert.ok(Number(result.indexSize)>=300,'Saleh live inventory index unexpectedly small');
+assert.ok(rows.length>=2,'too few live Saleh Yaris results');
+assert.ok(rows.some(x=>/yaris y limited/i.test(x.title)||/yaris-y-limited-2026/i.test(x.url)),'current Yaris Y Limited listing missing');
+assert.ok(rows.every(x=>x.url.includes('salehcars.com/en/cars/')),'non-Saleh product URL leaked');
+assert.ok(rows.every(x=>x.live===true&&x.discovery==='saleh_live_sitemap'),'result did not come from live Saleh sitemap');

@@ -34,16 +34,30 @@ function publicJob(job){
   const listings=strictMerged(mergeDirectListings(direct.listings,full.listings),job.body);
   const complete=Boolean(job.fullData&&(full.complete===true||full.marketScanComplete===true));
   const base=job.fullData||job.directData||{};
-  const out={...base,listings,counts:counts(listings),complete,marketScanComplete:complete,directCoreLane:true,directCoreFirstResultMs:job.firstResultMs??null,directCoreDurationMs:direct.durationMs??null,directCoreSources:direct.sources||[],directCoreErrors:direct.errors||[],deepScanStarted:Boolean(job.fullPromise),deepScanMode:'remote-legacy-fallback',exactBrandQualityGate:true};
+  const out={...base,listings,counts:counts(listings),complete,marketScanComplete:complete,directCoreLane:true,directCoreFirstResultMs:job.firstResultMs??null,directCoreDurationMs:direct.durationMs??null,directCoreSources:direct.sources||[],directCoreErrors:direct.errors||[],deepScanStarted:Boolean(job.fullPromise),deepScanMode:'remote-legacy-fallback',deepZeroRetry:Boolean(job.deepZeroRetry),exactBrandQualityGate:true};
   if(!complete)out.searchId=job.id;else delete out.searchId;
   if(!out.answer)out.answer=listings.length?`${listings.length} verified cars found. Dalelah is continuing the market scan.`:'Dalelah is scanning the Saudi market…';
   return out;
 }
 
+async function fetchFullSearch(job){
+  const request=()=>legacy('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(job.body),signal:AbortSignal.timeout(55_000)});
+  const first=await request();
+  if(!first.response.ok)return first;
+  const firstListings=Array.isArray(first.data?.listings)?first.data.listings:[];
+  const firstComplete=first.data?.complete===true||first.data?.marketScanComplete===true;
+  const hasDirect=Array.isArray(job.directData?.listings)&&job.directData.listings.length>0;
+  if(firstListings.length||!firstComplete||hasDirect)return first;
+  job.deepZeroRetry=true;
+  await sleep(180);
+  const second=await request();
+  return second.response.ok?second:first;
+}
+
 function kickFull(job){
   if(job.fullPromise)return job.fullPromise;
   job.fullStartedAt=Date.now();
-  job.fullPromise=legacy('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(job.body),signal:AbortSignal.timeout(55_000)})
+  job.fullPromise=fetchFullSearch(job)
     .then(({response,data})=>{
       job.fullDone=true;
       if(!response.ok){job.error=data?.error||`HTTP ${response.status}`;return null;}
@@ -59,7 +73,7 @@ function kickFull(job){
 function startJob(body={}){
   const key=keyFor(body),existing=inFlight.get(key);
   if(existing&&Date.now()-existing.createdAt<COALESCE_TTL)return existing;
-  const job={id:`dc.${randomUUID()}`,key,body,createdAt:Date.now(),directData:null,fullData:null,fullPromise:null,fullDone:false,upstreamId:null,error:null,firstResultMs:null};
+  const job={id:`dc.${randomUUID()}`,key,body,createdAt:Date.now(),directData:null,fullData:null,fullPromise:null,fullDone:false,upstreamId:null,error:null,firstResultMs:null,deepZeroRetry:false};
   jobs.set(job.id,job);inFlight.set(key,job);
   job.directPromise=searchDirectFirst(body,{timeoutMs:DIRECT_BUDGET_MS})
     .then(data=>{job.directData=data;if(data?.listings?.length&&!job.firstResultMs)job.firstResultMs=Date.now()-job.createdAt;return data;})

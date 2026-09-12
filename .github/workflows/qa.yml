@@ -25,6 +25,8 @@ jobs:
           node --check server-core-candidate.js
           node --check lib/direct-search.js
           node --check lib/haraj-fast-source.js
+          node --check lib/haraj-price.js
+          node --check lib/haraj-price-enrichment.js
           node --check lib/saleh-fast-source.js
           node --check lib/search-model-relevance.js
           node --check server-v15-marketplace.js
@@ -45,12 +47,16 @@ jobs:
           node --check server-recovery-v25.js
           node --check lib/search-intent.js
           node --check tests/direct-search-core.test.mjs
+          node --check tests/haraj-price.test.mjs
+          node --check tests/haraj-fast-source-price.test.mjs
           node --check tests/production-core-v15.mjs
           node --check tests/volume-market-v15.mjs
           node --check tests/full-market-v15.mjs
           node --check tests/search-relevance-v15.test.mjs
       - name: Test direct search core
         run: npm run test:direct-core
+      - name: Test Haraj price import matrix
+        run: npm run test:haraj-price
       - name: Test exact-year behavior
         run: npm run test:exact-year
       - name: Test strict brand relevance
@@ -68,6 +74,8 @@ jobs:
           const entry=await readFile('server-entry.js','utf8');
           const core=await readFile('server-core-candidate.js','utf8');
           const direct=await readFile('lib/direct-search.js','utf8');
+          const price=await readFile('lib/haraj-price.js','utf8');
+          const priceEnrichment=await readFile('lib/haraj-price-enrichment.js','utf8');
           const market=await readFile('server-v15-marketplace.js','utf8');
           const relevance=await readFile('lib/search-relevance.js','utf8');
           const os=await readFile('server-v15-opensooq.js','utf8');
@@ -84,8 +92,14 @@ jobs:
           assert.match(core,/remote-legacy-fallback/);
           assert.match(core,/delilah-live-search\.onrender\.com/);
           assert.match(core,/frontRenderGitCommit/);
+          assert.match(core,/harajPriceMatrix:true/);
+          assert.match(core,/harajDetailPriceEnrichment:true/);
           assert.match(direct,/strictDirectListings/);
           assert.match(direct,/searchDirectFirst/);
+          assert.match(direct,/priceVerified/);
+          assert.match(price,/haraj_text_price_label/);
+          assert.match(price,/haraj_search_card_formatted_price/);
+          assert.match(priceEnrichment,/enrichHarajListingPrices/);
           assert.match(relevance,/Bentley/);
           assert.match(relevance,/detectRequestedBrand/);
           assert.match(relevance,/listingMatchesBrand/);
@@ -112,7 +126,7 @@ jobs:
           const normalizedSrc=src.replaceAll('\\/','/').replaceAll('\\+','+');
           assert.ok(normalizedSrc.includes('application/ld+json'),'OpenSooq JSON-LD parser guard');
           assert.match(src,/openSooqSearchUrl/);
-          console.log('PASS direct-first + legacy-deep + marketplace architecture guards');
+          console.log('PASS direct-first + Haraj price matrix + legacy-deep architecture guards');
           NODE
 
   mobile-build:
@@ -165,8 +179,8 @@ jobs:
                 fetch(`${base}/sell`,{signal:AbortSignal.timeout(8000),headers:{'cache-control':'no-cache'}})
               ]);
               const html=await home.text();const h=await health.json().catch(()=>({}));
-              const ok=home.ok&&health.ok&&mobile.ok&&sell.ok&&h.productVersion==='1.5'&&h.volumeBrowse===true&&h.volumeQualityGate===true&&h.exactModelQualityGate===true&&h.exactBrandQualityGate===true&&h.opensooqBrandRelevanceGate===true&&h.marketplaceBrandBoundaryGate===true&&h.salehFastExact===true&&h.opensooqStructuredInventory===true&&h.opensooqNativeExact===true&&h.marketplaceFoundation===true&&h.mobileSurface===true&&h.releaseRuntime==='marketplace-mobile'&&h.directCoreLane===true&&h.directCoreStrategy==='direct-first-remote-deep-scan'&&h.renderGitCommit===expected&&html.includes('__all_cars__');
-              last=JSON.stringify({home:home.status,health:health.status,mobile:mobile.status,sell:sell.status,commit:h.renderGitCommit,front:h.frontRenderGitCommit,legacy:h.legacyRenderGitCommit,expected,directCore:h.directCoreLane,legacyBase:h.legacyBase,brandGate:h.exactBrandQualityGate,openBrandGate:h.opensooqBrandRelevanceGate,boundary:h.marketplaceBrandBoundaryGate,marketplace:h.marketplaceFoundation,mobileSurface:h.mobileSurface,runtime:h.releaseRuntime});
+              const ok=home.ok&&health.ok&&mobile.ok&&sell.ok&&h.productVersion==='1.5'&&h.volumeBrowse===true&&h.volumeQualityGate===true&&h.exactModelQualityGate===true&&h.exactBrandQualityGate===true&&h.opensooqBrandRelevanceGate===true&&h.marketplaceBrandBoundaryGate===true&&h.salehFastExact===true&&h.opensooqStructuredInventory===true&&h.opensooqNativeExact===true&&h.marketplaceFoundation===true&&h.mobileSurface===true&&h.releaseRuntime==='marketplace-mobile'&&h.directCoreLane===true&&h.directCoreStrategy==='direct-first-remote-deep-scan'&&h.harajPriceMatrix===true&&h.harajDetailPriceEnrichment===true&&h.renderGitCommit===expected&&html.includes('__all_cars__');
+              last=JSON.stringify({home:home.status,health:health.status,mobile:mobile.status,sell:sell.status,commit:h.renderGitCommit,front:h.frontRenderGitCommit,legacy:h.legacyRenderGitCommit,expected,directCore:h.directCoreLane,legacyBase:h.legacyBase,harajPriceMatrix:h.harajPriceMatrix,harajDetailPriceEnrichment:h.harajDetailPriceEnrichment,brandGate:h.exactBrandQualityGate,openBrandGate:h.opensooqBrandRelevanceGate,boundary:h.marketplaceBrandBoundaryGate,marketplace:h.marketplaceFoundation,mobileSurface:h.mobileSurface,runtime:h.releaseRuntime});
               if(ok){console.log('PASS exact direct-first Dalelah commit',last);process.exit(0)}
             }catch(e){last=e.message}
             await sleep(5000);

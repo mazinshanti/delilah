@@ -1,0 +1,35 @@
+name: Dalelah Phase 2 Vehicle Data QA
+
+on:
+  push:
+    branches: [dalelah-phase-2-vehicle-data-intelligence]
+  workflow_dispatch:
+
+concurrency:
+  group: dalelah-phase2-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  vehicle-data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - name: Syntax check
+        run: npm run check
+      - name: Haraj mileage matrix
+        run: npm run test:haraj-mileage
+      - name: Haraj price matrix
+        run: npm run test:haraj-price
+      - name: Direct search core
+        run: npm run test:direct-core
+      - name: Marketplace regression
+        run: npm run test:marketplace
+      - name: Exact year regression
+        run: npm run test:exact-year
+      - name: Brand relevance regression
+        run: npm run test:relevance

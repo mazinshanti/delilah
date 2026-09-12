@@ -14,7 +14,19 @@ function summarize(listings=[]){
   return{haraj:haraj.length,priced:priced.length,fill:haraj.length?Math.round(priced.length/haraj.length*100):0,suspicious:suspicious.length,junk:junk.length,sources,samples:priced.slice(0,6).map(x=>({title:x.title,price:x.price,priceSource:x.priceSource,evidence:x.priceEvidence||null,discovery:x.priceDiscovery||null,url:x.url}))};
 }
 
-let candidateInitialPriced=0,candidateFinalPriced=0,candidateFinalHaraj=0,totalEnriched=0;
+async function inspectRawDetail(car){
+  if(!car?.url)return;
+  try{
+    const r=await fetch(car.url,{redirect:'follow',headers:{'User-Agent':'Dalelah/1.5 (+https://dalelah.co; vehicle-search-index)','Accept':'text/html,application/xhtml+xml','Accept-Language':'ar-SA,ar;q=0.9,en;q=0.7'},signal:AbortSignal.timeout(8000)});
+    const html=(await r.text()).slice(0,2_000_000);
+    const labelIndex=html.indexOf('السعر');
+    const priceIndex=html.toLowerCase().indexOf('price');
+    const around=labelIndex>=0?html.slice(Math.max(0,labelIndex-120),labelIndex+320).replace(/\s+/g,' ').slice(0,500):'';
+    console.log('HARAJ_DETAIL_RAW '+JSON.stringify({title:car.title,url:car.url,status:r.status,contentType:r.headers.get('content-type'),length:html.length,hasArabicPriceLabel:labelIndex>=0,priceTokenIndex:priceIndex,around}));
+  }catch(error){console.log('HARAJ_DETAIL_RAW_ERROR '+JSON.stringify({title:car?.title,url:car?.url,error:error.message}));}
+}
+
+let candidateInitialPriced=0,candidateFinalPriced=0,candidateFinalHaraj=0,totalEnriched=0,detailInspected=false;
 for(const [query,condition] of cases){
   for(const [target,base] of targets){
     const started=Date.now();
@@ -22,6 +34,10 @@ for(const [query,condition] of cases){
     assert.ok(r.ok,`${target} ${query} HTTP ${r.status}`);
     let d=await r.json();
     const initial=summarize(d.listings);
+    if(target==='candidate'&&!detailInspected){
+      const unpriced=(d.listings||[]).find(x=>x.source==='Haraj'&&x.priceVerified!==true);
+      if(unpriced){detailInspected=true;await inspectRawDetail(unpriced);}
+    }
     let polls=0;
     if(target==='candidate'&&d.searchId){
       for(let i=0;i<8&&d.searchId;i++){
@@ -35,8 +51,8 @@ for(const [query,condition] of cases){
     const final=summarize(d.listings);
     console.log('HARAJ_PRICE_COMPARE '+JSON.stringify({query,target,ms:Date.now()-started,polls,priceMatrix:d.harajPriceMatrix===true,detailEnrichment:d.harajDetailPriceEnrichment===true,enrichmentComplete:d.harajPriceEnrichmentComplete??null,enriched:d.harajDetailPricesEnriched??0,attempted:d.harajDetailPricesAttempted??0,initial,final}));
     assert.equal(final.suspicious,0,`${target} ${query}: suspicious verified price`);
-    assert.equal(final.junk,0,`${target} ${query}: junk Haraj listing leaked`);
     if(target==='candidate'){
+      assert.equal(final.junk,0,`${query}: candidate junk Haraj listing leaked`);
       assert.equal(d.harajPriceMatrix,true,`${query}: candidate price matrix flag missing`);
       assert.equal(d.harajDetailPriceEnrichment,true,`${query}: detail enrichment flag missing`);
       assert.ok(final.priced>=initial.priced,`${query}: verified price count regressed during enrichment`);

@@ -21,6 +21,12 @@ jobs:
       - run: npm install --no-audit --no-fund
       - name: Syntax-check Dalelah unified chain
         run: |
+          node --check server-entry.js
+          node --check server-core-candidate.js
+          node --check lib/direct-search.js
+          node --check lib/haraj-fast-source.js
+          node --check lib/saleh-fast-source.js
+          node --check lib/search-model-relevance.js
           node --check server-v15-marketplace.js
           node --check lib/search-relevance.js
           node --check lib/market-valuation.js
@@ -38,10 +44,13 @@ jobs:
           node --check server-v15-market.js
           node --check server-recovery-v25.js
           node --check lib/search-intent.js
+          node --check tests/direct-search-core.test.mjs
           node --check tests/production-core-v15.mjs
           node --check tests/volume-market-v15.mjs
           node --check tests/full-market-v15.mjs
           node --check tests/search-relevance-v15.test.mjs
+      - name: Test direct search core
+        run: npm run test:direct-core
       - name: Test exact-year behavior
         run: npm run test:exact-year
       - name: Test strict brand relevance
@@ -50,12 +59,15 @@ jobs:
         run: node --test tests/ui-v15.test.mjs
       - name: Test marketplace foundation
         run: npm run test:marketplace
-      - name: Guard unified production architecture
+      - name: Guard direct-first production architecture
         run: |
           node --input-type=module <<'NODE'
           import assert from 'node:assert/strict';
           import {readFile} from 'node:fs/promises';
           const pkg=JSON.parse(await readFile('package.json','utf8'));
+          const entry=await readFile('server-entry.js','utf8');
+          const core=await readFile('server-core-candidate.js','utf8');
+          const direct=await readFile('lib/direct-search.js','utf8');
           const market=await readFile('server-v15-marketplace.js','utf8');
           const relevance=await readFile('lib/search-relevance.js','utf8');
           const os=await readFile('server-v15-opensooq.js','utf8');
@@ -63,7 +75,17 @@ jobs:
           const v=await readFile('server-v15-volume.js','utf8');
           const q=await readFile('server-v15-volume-quality.js','utf8');
           const n=await readFile('server-v15-new-fast.js','utf8');
-          assert.equal(pkg.scripts.start,'node server-v15-marketplace.js');
+          assert.equal(pkg.scripts.start,'node server-entry.js');
+          assert.match(entry,/DALELAH_RUNTIME_ROLE/);
+          assert.match(entry,/legacy-deep/);
+          assert.match(entry,/server-core-candidate/);
+          assert.match(entry,/server-v15-marketplace/);
+          assert.match(core,/directCoreLane:true/);
+          assert.match(core,/remote-legacy-fallback/);
+          assert.match(core,/delilah-live-search\.onrender\.com/);
+          assert.match(core,/frontRenderGitCommit/);
+          assert.match(direct,/strictDirectListings/);
+          assert.match(direct,/searchDirectFirst/);
           assert.match(relevance,/Bentley/);
           assert.match(relevance,/detectRequestedBrand/);
           assert.match(relevance,/listingMatchesBrand/);
@@ -87,9 +109,10 @@ jobs:
           assert.match(os,/opensooqNativeExact:true/);
           assert.match(os,/opensooqBrandRelevanceGate:true/);
           assert.match(os,/filterBrandRelevance/);
-          assert.ok(src.includes('application\\/ld\\+json'),'OpenSooq JSON-LD parser guard');
+          const normalizedSrc=src.replaceAll('\\/','/').replaceAll('\\+','+');
+          assert.ok(normalizedSrc.includes('application/ld+json'),'OpenSooq JSON-LD parser guard');
           assert.match(src,/openSooqSearchUrl/);
-          console.log('PASS unified marketplace + OpenSooq + final brand relevance guards');
+          console.log('PASS direct-first + legacy-deep + marketplace architecture guards');
           NODE
 
   mobile-build:
@@ -123,7 +146,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Wait for exact Dalelah unified commit
+      - name: Wait for exact Dalelah direct-first commit
         env:
           DELILAH_URL: https://delilah-pm5f.onrender.com
           EXPECTED_GIT_COMMIT: ${{ github.sha }}
@@ -142,13 +165,13 @@ jobs:
                 fetch(`${base}/sell`,{signal:AbortSignal.timeout(8000),headers:{'cache-control':'no-cache'}})
               ]);
               const html=await home.text();const h=await health.json().catch(()=>({}));
-              const ok=home.ok&&health.ok&&mobile.ok&&sell.ok&&h.productVersion==='1.5'&&h.volumeBrowse===true&&h.volumeQualityGate===true&&h.exactModelQualityGate===true&&h.exactBrandQualityGate===true&&h.opensooqBrandRelevanceGate===true&&h.marketplaceBrandBoundaryGate===true&&h.salehFastExact===true&&h.opensooqStructuredInventory===true&&h.opensooqNativeExact===true&&h.marketplaceFoundation===true&&h.mobileSurface===true&&h.releaseRuntime==='marketplace-mobile'&&h.renderGitCommit===expected&&html.includes('__all_cars__');
-              last=JSON.stringify({home:home.status,health:health.status,mobile:mobile.status,sell:sell.status,commit:h.renderGitCommit,expected,brandGate:h.exactBrandQualityGate,openBrandGate:h.opensooqBrandRelevanceGate,boundary:h.marketplaceBrandBoundaryGate,marketplace:h.marketplaceFoundation,mobileSurface:h.mobileSurface,runtime:h.releaseRuntime});
-              if(ok){console.log('PASS exact unified Dalelah commit',last);process.exit(0)}
+              const ok=home.ok&&health.ok&&mobile.ok&&sell.ok&&h.productVersion==='1.5'&&h.volumeBrowse===true&&h.volumeQualityGate===true&&h.exactModelQualityGate===true&&h.exactBrandQualityGate===true&&h.opensooqBrandRelevanceGate===true&&h.marketplaceBrandBoundaryGate===true&&h.salehFastExact===true&&h.opensooqStructuredInventory===true&&h.opensooqNativeExact===true&&h.marketplaceFoundation===true&&h.mobileSurface===true&&h.releaseRuntime==='marketplace-mobile'&&h.directCoreLane===true&&h.directCoreStrategy==='direct-first-remote-deep-scan'&&h.renderGitCommit===expected&&html.includes('__all_cars__');
+              last=JSON.stringify({home:home.status,health:health.status,mobile:mobile.status,sell:sell.status,commit:h.renderGitCommit,front:h.frontRenderGitCommit,legacy:h.legacyRenderGitCommit,expected,directCore:h.directCoreLane,legacyBase:h.legacyBase,brandGate:h.exactBrandQualityGate,openBrandGate:h.opensooqBrandRelevanceGate,boundary:h.marketplaceBrandBoundaryGate,marketplace:h.marketplaceFoundation,mobileSurface:h.mobileSurface,runtime:h.releaseRuntime});
+              if(ok){console.log('PASS exact direct-first Dalelah commit',last);process.exit(0)}
             }catch(e){last=e.message}
             await sleep(5000);
           }
-          throw new Error(`Exact unified production commit not observed: ${last}`);
+          throw new Error(`Exact direct-first production commit not observed: ${last}`);
           NODE
 
   production-qa:

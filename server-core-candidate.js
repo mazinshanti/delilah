@@ -69,7 +69,7 @@ function startJob(body={}){
   job.directPromise=searchDirectFirst(body,{timeoutMs:DIRECT_BUDGET_MS})
     .then(data=>{job.directData=data;if(data?.listings?.length&&!job.firstResultMs)job.firstResultMs=Date.now()-job.createdAt;return data;})
     .catch(error=>{job.directData={listings:[],counts:{},sources:[],errors:[error?.message||String(error)],durationMs:Date.now()-job.createdAt};return job.directData;})
-    .finally(()=>kickFull(job));
+    .finally(()=>{kickFull(job);});
   const timer=setTimeout(()=>kickFull(job),FULL_HEAD_START_MS);timer.unref?.();
   return job;
 }

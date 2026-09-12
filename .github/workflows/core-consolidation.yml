@@ -1,0 +1,46 @@
+name: Dalelah Core Consolidation
+
+on:
+  push:
+    branches:
+      - dalelah-core-consolidation
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - name: Syntax
+        run: npm run check
+      - name: Direct core
+        run: npm run test:direct-core
+      - name: Existing exact-year
+        run: npm run test:exact-year
+      - name: Existing relevance
+        run: npm run test:relevance
+      - name: Marketplace foundation
+        run: npm run test:marketplace
+      - name: Current web UI
+        run: node --test tests/ui-v15.test.mjs
+
+  mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: cd mobile && npm install --no-audit --no-fund
+      - name: Export iOS
+        run: cd mobile && npx expo export --platform ios --output-dir dist-ios
+      - name: Export Android
+        run: cd mobile && npx expo export --platform android --output-dir dist-android
+      - name: Export Web
+        run: cd mobile && npx expo export --platform web --output-dir dist-web

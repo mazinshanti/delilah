@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
-    "start": "node awaed/server.js",
+    "start": "node awaed/start.js",
     "check": "node -e \"console.log('awaed check ok')\"",
     "test:exact-year": "node -e \"console.log('awaed exact-year compatibility ok')\"",
     "test:relevance": "node -e \"console.log('awaed relevance compatibility ok')\"",

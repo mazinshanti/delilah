@@ -18,6 +18,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 const DEFAULT_WATCHLIST = ['NVDA','TSLA','AMD','PLTR','AAPL','MSFT','AMZN','META','GOOGL','AVGO','NFLX','COIN','SOFI','TSM','QQQ'];
 const clients = new Map();
 const recentAlerts = new Map();
+const activeSignals = new Map();
 
 function cleanTickers(input) {
   const raw = Array.isArray(input) ? input : [];
@@ -54,7 +55,7 @@ async function fetchBars(symbol) {
   const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=5m&range=1d&includePrePost=true`;
   const res = await fetch(url, {
     headers: {
-      'User-Agent': 'Mozilla/5.0 AwaedCopilot/0.2',
+      'User-Agent': 'Mozilla/5.0 AwaedCopilot/0.3',
       'Accept': 'application/json'
     }
   });
@@ -82,7 +83,6 @@ async function fetchBars(symbol) {
 function scoreBars(symbol, bars, meta = {}) {
   if (bars.length < 12) throw new Error('Not enough bars yet');
   const closes = bars.map(b => b.c);
-  const vols = bars.map(b => b.v || 0);
   const last = bars[bars.length - 1];
   const prior = bars[Math.max(0, bars.length - 7)];
   const momentum = ((last.c / prior.c) - 1) * 100;
@@ -152,26 +152,92 @@ async function sendPush(subscription, payload) {
   return webpush.sendNotification(subscription, JSON.stringify(payload), { TTL: 90 });
 }
 
+function activeKey(endpoint, symbol) {
+  return `${endpoint}|${symbol}`;
+}
+
+function evaluateExit(signal, active) {
+  if (!signal || !active) return null;
+  const price = Number(signal.price || 0);
+
+  if (price <= active.stop) {
+    return { reason: 'STOP HIT', body: `$${price.toFixed(2)} fell to/below stop $${active.stop.toFixed(2)}` };
+  }
+  if (price >= active.target2) {
+    return { reason: 'TARGET 2 HIT', body: `$${price.toFixed(2)} reached T2 $${active.target2.toFixed(2)}` };
+  }
+  if (price >= active.target1) {
+    return { reason: 'TARGET 1 HIT', body: `$${price.toFixed(2)} reached T1 $${active.target1.toFixed(2)}` };
+  }
+  if ((signal.score || 0) < 55 || signal.ema9 < signal.ema21 || signal.momentumPct < -0.5) {
+    return { reason: 'MOMENTUM EXIT', body: `${signal.symbol} score weakened to ${signal.score}/100 at $${price.toFixed(2)}` };
+  }
+  return null;
+}
+
 async function scanAndNotify() {
   if (!clients.size) return;
   const allSymbols = [...new Set([...clients.values()].flatMap(c => c.watchlist))].slice(0, 30);
   if (!allSymbols.length) return;
+
   let results;
   try { results = await scanSymbols(allSymbols); } catch { return; }
+  const bySymbol = new Map(results.map(r => [r.symbol, r]));
 
   for (const [endpoint, client] of clients) {
-    const matches = results.filter(r => client.watchlist.includes(r.symbol) && (r.score || 0) >= client.minScore && r.label === 'BUY SETUP');
-    for (const signal of matches) {
-      const key = `${endpoint}|${signal.symbol}`;
-      const lastSent = recentAlerts.get(key) || 0;
+    for (const symbol of client.watchlist) {
+      const signal = bySymbol.get(symbol);
+      if (!signal || signal.error) continue;
+
+      const key = activeKey(endpoint, symbol);
+      const active = activeSignals.get(key);
+
+      if (active) {
+        const exit = evaluateExit(signal, active);
+        if (!exit) continue;
+
+        const sellKey = `${key}|SELL|${exit.reason}`;
+        const lastSent = recentAlerts.get(sellKey) || 0;
+        if (Date.now() - lastSent < 30 * 60 * 1000) continue;
+
+        try {
+          const pnlPct = ((signal.price / active.entry) - 1) * 100;
+          await sendPush(client.subscription, {
+            title: `SELL / EXIT ${symbol} · ${exit.reason}`,
+            body: `${exit.body} · Since BUY ${pnlPct >= 0 ? '+' : ''}${pnlPct.toFixed(2)}%`,
+            data: { url: `/?symbol=${encodeURIComponent(symbol)}&action=sell` }
+          });
+          recentAlerts.set(sellKey, Date.now());
+          activeSignals.delete(key);
+        } catch (err) {
+          if (err.statusCode === 404 || err.statusCode === 410) clients.delete(endpoint);
+        }
+        continue;
+      }
+
+      if ((signal.score || 0) < client.minScore || signal.label !== 'BUY SETUP') continue;
+
+      const buyKey = `${key}|BUY`;
+      const lastSent = recentAlerts.get(buyKey) || 0;
       if (Date.now() - lastSent < 30 * 60 * 1000) continue;
+
       try {
         await sendPush(client.subscription, {
-          title: `Awaed Copilot: ${signal.symbol} ${signal.score}/100`,
-          body: `$${signal.price.toFixed(2)} · Stop $${signal.stop.toFixed(2)} · T1 $${signal.target1.toFixed(2)}`,
-          data: { url: `/?symbol=${encodeURIComponent(signal.symbol)}` }
+          title: `BUY ALERT ${symbol} · ${signal.score}/100`,
+          body: `$${signal.price.toFixed(2)} · Stop $${signal.stop.toFixed(2)} · T1 $${signal.target1.toFixed(2)} · T2 $${signal.target2.toFixed(2)}`,
+          data: { url: `/?symbol=${encodeURIComponent(symbol)}&action=buy` }
         });
-        recentAlerts.set(key, Date.now());
+
+        activeSignals.set(key, {
+          symbol,
+          entry: signal.price,
+          stop: signal.stop,
+          target1: signal.target1,
+          target2: signal.target2,
+          openedAt: Date.now(),
+          scoreAtEntry: signal.score
+        });
+        recentAlerts.set(buyKey, Date.now());
       } catch (err) {
         if (err.statusCode === 404 || err.statusCode === 410) clients.delete(endpoint);
       }
@@ -182,10 +248,12 @@ async function scanAndNotify() {
 app.get('/api/status', (req, res) => {
   res.json({
     ok: true,
-    version: '0.2.0',
+    version: '0.3.0',
     pushConfigured: Boolean(VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY),
     subscribers: clients.size,
+    activeSignals: activeSignals.size,
     provider: 'Yahoo Finance web chart fallback',
+    alerts: ['BUY SETUP', 'SELL STOP', 'SELL TARGET 1', 'SELL TARGET 2', 'SELL MOMENTUM EXIT'],
     note: 'Signals are analytical alerts only; orders are not sent to Awaed.'
   });
 });
@@ -231,8 +299,8 @@ app.post('/api/test-push', async (req, res) => {
   if (!client) return res.status(404).json({ ok:false, error:'Enable notifications first' });
   try {
     await sendPush(client.subscription, {
-      title: 'Awaed Copilot is live',
-      body: 'Push notifications are working on your iPhone.',
+      title: 'Awaed Copilot BUY/SELL alerts are live',
+      body: 'You will receive paired BUY and EXIT notifications for tracked setups.',
       data: { url: '/' }
     });
     res.json({ ok:true });

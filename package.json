@@ -1,6 +1,6 @@
 {
   "name": "awaed-copilot-render",
-  "version": "0.2.0",
+  "version": "0.5.0",
   "private": true,
   "scripts": {
     "start": "node awaed/start.js",
@@ -9,11 +9,11 @@
     "test:relevance": "node -e \"console.log('awaed relevance compatibility ok')\"",
     "test:marketplace": "node -e \"console.log('awaed marketplace compatibility ok')\""
   },
-  "engines": {
-    "node": ">=18"
-  },
+  "engines": {"node": ">=18"},
   "dependencies": {
     "express": "^4.21.2",
-    "web-push": "^3.6.7"
+    "web-push": "^3.6.7",
+    "ws": "^8.18.0",
+    "pg": "^8.13.1"
   }
 }

@@ -1,3 +1,5 @@
+await import('./syarah-price-live.mjs');
+
 import assert from 'node:assert/strict';
 
 const targets=[['production','https://delilah-pm5f.onrender.com'],['candidate','https://dalelah-brand-outer-hotfix.onrender.com']];

@@ -126,8 +126,11 @@ app.get('/api/search/progress/:id',async(req,res)=>{
 });
 
 app.get('/api/health',async(_req,res)=>{
-  try{const {response,data}=await legacy('/api/health',{signal:AbortSignal.timeout(9000)});return res.status(response.status).json({...data,directCoreLane:true,directCoreStrategy:'direct-first-remote-deep-scan',directCoreBudgetMs:DIRECT_BUDGET_MS,directCoreFullHeadStartMs:FULL_HEAD_START_MS,directCoreJobs:jobs.size,legacyBase});}
-  catch(error){return res.status(503).json({ok:false,directCoreLane:true,directCoreStrategy:'direct-first-remote-deep-scan',error:error?.message||String(error)});}
+  try{
+    const {response,data}=await legacy('/api/health',{signal:AbortSignal.timeout(9000)});
+    const frontRenderGitCommit=process.env.RENDER_GIT_COMMIT||process.env.RENDER_COMMIT||null;
+    return res.status(response.status).json({...data,legacyRenderGitCommit:data?.renderGitCommit||null,renderGitCommit:frontRenderGitCommit||data?.renderGitCommit||null,frontRenderGitCommit,directCoreLane:true,directCoreStrategy:'direct-first-remote-deep-scan',directCoreBudgetMs:DIRECT_BUDGET_MS,directCoreFullHeadStartMs:FULL_HEAD_START_MS,directCoreJobs:jobs.size,legacyBase});
+  }catch(error){return res.status(503).json({ok:false,renderGitCommit:process.env.RENDER_GIT_COMMIT||process.env.RENDER_COMMIT||null,directCoreLane:true,directCoreStrategy:'direct-first-remote-deep-scan',error:error?.message||String(error)});}
 });
 
 async function proxy(req,res){

@@ -1,4 +1,5 @@
 import express from 'express';
+import {extractSalehVehicleImage} from './lib/saleh-image.js';
 
 const externalPort=Number(process.env.PORT||3000);
 const innerPort=Number(process.env.DALELAH_SALEH_INNER_PORT||6600);
@@ -51,7 +52,6 @@ function priceFrom(text='',html=''){
   for(const re of[/["'](?:price|cashPrice|salePrice|finalPrice|sellingPrice|discountedPrice)["']\s*:\s*["']?([1-9][0-9]{3,6})(?:\.\d+)?["']?/gi,/(?:price|cashPrice|salePrice|finalPrice|sellingPrice|discountedPrice)\\?"?\s*[:=]\s*\\?"?([1-9][0-9]{3,6})(?:\.\d+)?/gi])for(const m of raw.matchAll(re))vals.push(Number(m[1]));
   const good=vals.filter(n=>n>=5000&&n<=2_000_000);return good.length?Math.min(...good):null;
 }
-function imageFrom(html='',base=''){for(const m of String(html).matchAll(/<img\b[^>]*(?:src|data-src)=["']([^"']+)["'][^>]*>/gi)){try{const u=new URL(m[1].replace(/&amp;/g,'&'),base).href;if(!/(logo|icon|avatar|placeholder|banner)/i.test(u))return u}catch{}}return null}
 async function fetchPage(url){const hit=cache.get(url);if(hit&&Date.now()-hit.at<CACHE_TTL)return hit.data;const r=await fetch(url,{redirect:'follow',signal:AbortSignal.timeout(FETCH_TIMEOUT),headers:{'User-Agent':'Dalelah/1.5 (+https://dalelah.co; vehicle-search-index)','Accept':'text/html,application/xhtml+xml,application/xml,text/xml,text/plain;q=0.9,*/*;q=0.5','Accept-Language':'en-US,en;q=0.9,ar;q=0.7'}});if(!r.ok)throw new Error(`Saleh HTTP ${r.status}`);const data={html:(await r.text()).slice(0,12_000_000),url:r.url||url};cache.set(url,{at:Date.now(),data});return data}
 function inventoryLinks(html='',base=''){const out=[],seen=new Set();for(const m of String(html).matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi)){let url=null;try{url=new URL(m[1].replace(/&amp;/g,'&'),base).href}catch{}const id=url&&salehId(url);if(!url||!directSaleh(url)||!id||seen.has(id))continue;seen.add(id);out.push({url,title:strip(m[2]),id})}return out}
 function sitemapLocs(xml=''){return[...String(xml).matchAll(/<loc\b[^>]*>([\s\S]*?)<\/loc>/gi)].map(m=>decode(strip(m[1])).trim()).filter(Boolean)}
@@ -83,7 +83,7 @@ async function scanSaleh(body={}){
     if(d.model&&!hasAny(matchText,MODELS[d.model]))return null;if(d.brand&&!hasAny(matchText,BRANDS[d.brand]))return null;if(d.exact&&year!==d.exact)return null;
     const price=priceFrom(text.slice(0,5000),p.html),f=body.filters||{};if(f.maxPrice&&price!=null&&price>Number(f.maxPrice))return null;if(f.seller&&norm(f.seller)!==norm('Saleh Cars'))return null;if(f.sourceType&&f.sourceType!=='dealer')return null;
     if(/not available|غير متوفر|نفدت الكمية/i.test(text)&&!/available upon request|متوفر عند الطلب/i.test(text))return null;
-    const image=imageFrom(p.html,p.url);
+    const image=extractSalehVehicleImage(p.html,p.url,{title});
     return{source:'Saleh Cars',sourceType:'dealer',seller:'Saleh Cars',sourceStrict:true,title,snippet:text.slice(0,650),url:p.url,salehProductId:salehId(p.url),brand:d.brand,model:d.model,year,price,mileage:0,city:null,condition:'new',saleVerified:true,saleEvidence:['saleh_direct_car_url','saleh_public_product_index'],image:image||null,displayImage:image||null,imageVerified:Boolean(image),priceVerified:Boolean(price),priceSource:price?'saleh_direct_car_page':null,score:96,discovery:'saleh_source_native_inventory',salehNativeVerified:true};
   }));for(const c of batch)if(c)out.push(c);if(out.length>=50)break}
   const dedup=new Map();for(const c of out){const key=c.salehProductId||c.url;if(!dedup.has(key)||/\/en\/cars\//i.test(c.url))dedup.set(key,c)}

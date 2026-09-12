@@ -1,0 +1,14 @@
+const targets=[['production','https://delilah-pm5f.onrender.com'],['candidate','https://dalelah-speed-pass-1.onrender.com']];
+const cases=[['Toyota Corolla 2013','used',2013,/corolla|كورولا|كرولا/i],['Nissan Patrol 2020','used',2020,/patrol|باترول/i],['Jeep Wrangler 2021','used',2021,/wrangler|رانجلر/i],['Toyota Corolla 2026','new',2026,/corolla|كورولا/i],['Bentley','used',null,/bentley|بنتلي/i]];
+for(const [query,condition,year,re] of cases){
+  for(const [target,base] of targets){
+    const start=performance.now();
+    try{
+      const r=await fetch(base+'/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query,condition,filters:{}}),signal:AbortSignal.timeout(20_000)});
+      const d=await r.json();
+      const xs=Array.isArray(d.listings)?d.listings:[];
+      const bad=xs.filter(x=>(year&&Number(x.year)!==year)||(re&&!re.test(String(x.title||''))));
+      console.log('INITIAL_ONLY',JSON.stringify({query,target,status:r.status,ms:Math.round(performance.now()-start),count:xs.length,bad:bad.length,directCore:Boolean(d.directCoreLane),directFirstMs:d.directCoreFirstResultMs??null,directDurationMs:d.directCoreDurationMs??null,directSources:d.directCoreSources||null,searchId:Boolean(d.searchId)}));
+    }catch(error){console.log('INITIAL_ONLY_ERROR',JSON.stringify({query,target,ms:Math.round(performance.now()-start),error:error.message}));}
+  }
+}

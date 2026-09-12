@@ -13,6 +13,17 @@ test('direct core rejects cross-brand progressive contamination',()=>{
   assert.ok(out.every(x=>/bentley|بنتلي/i.test(`${x.title} ${x.url}`)));
 });
 
+test('direct core keeps model-only Haraj titles when there is no conflicting brand',()=>{
+  const input=[
+    {source:'Haraj',title:'باترول 2020 بلاتينيوم',url:'https://example.com/patrol',year:2020,condition:'used'},
+    {source:'Haraj',title:'تويوتا باترول 2020',url:'https://example.com/fake-conflict',year:2020,condition:'used'},
+    {source:'Haraj',title:'BMW X6 2020',url:'https://example.com/bmw',year:2020,condition:'used'}
+  ];
+  const out=strictDirectListings(input,{query:'Nissan Patrol 2020',condition:'used',filters:{}});
+  assert.equal(out.length,1);
+  assert.equal(out[0].url,'https://example.com/patrol');
+});
+
 test('direct core preserves exact-year protection',()=>{
   const input=[
     {source:'Haraj',title:'تويوتا كورولا 2013',url:'https://example.com/c13',year:2013,condition:'used'},

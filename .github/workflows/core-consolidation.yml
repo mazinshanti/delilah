@@ -2,17 +2,15 @@ name: Dalelah Core Consolidation
 
 on:
   push:
-    branches: [dalelah-core-consolidation]
-  workflow_dispatch:
-
-concurrency:
-  group: dalelah-core-${{ github.ref }}
-  cancel-in-progress: true
+    branches:
+      - dalelah-core-consolidation
+  pull_request:
+    branches:
+      - main
 
 jobs:
   core:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -34,20 +32,15 @@ jobs:
 
   mobile:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - working-directory: mobile
-        run: npm install --no-audit --no-fund
+      - run: cd mobile && npm install --no-audit --no-fund
       - name: Export iOS
-        working-directory: mobile
-        run: npx expo export --platform ios --output-dir dist-ios
+        run: cd mobile && npx expo export --platform ios --output-dir dist-ios
       - name: Export Android
-        working-directory: mobile
-        run: npx expo export --platform android --output-dir dist-android
+        run: cd mobile && npx expo export --platform android --output-dir dist-android
       - name: Export Web
-        working-directory: mobile
-        run: npx expo export --platform web --output-dir dist-web
+        run: cd mobile && npx expo export --platform web --output-dir dist-web

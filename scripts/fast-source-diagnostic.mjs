@@ -1,14 +1,12 @@
-const UA='Dalelah/1.5 (+https://dalelah.co; vehicle-search-index)';
-const targets=['https://www.salehcars.com/en/cars/all','https://www.salehcars.com/sitemap.xml','https://www.salehcars.com/robots.txt'];
-for(const url of targets){
-  try{
-    const r=await fetch(url,{redirect:'follow',signal:AbortSignal.timeout(12000),headers:{'User-Agent':UA,'Accept':'text/html,application/xhtml+xml,application/xml,text/xml,text/plain;q=0.9,*/*;q=0.5','Accept-Language':'en-US,en;q=0.9,ar;q=0.7'}});
-    const text=(await r.text()).slice(0,12_000_000);
-    const productLinks=[...text.matchAll(/href=["']([^"']*\/cars\/[a-f0-9]{24}[^"']*)["']/gi)].map(m=>m[1]);
-    const unique=[...new Set(productLinks)].slice(0,40);
-    const yaris=[...text.matchAll(/.{0,160}yaris.{0,220}/gi)].slice(0,12).map(m=>m[0].replace(/\s+/g,' '));
-    const apis=[...text.matchAll(/(?:https?:\\?\/\\?\/[^"'\s<]+|\/api\/[^"'\s<]+)/gi)].map(m=>m[0].replace(/\\u0026/g,'&').replace(/\\\//g,'/')).filter(x=>/(api|car|vehicle|inventory|product)/i.test(x));
-    const next=[...text.matchAll(/<script[^>]+src=["']([^"']+_next[^"']+)["']/gi)].map(m=>m[1]).slice(-25);
-    console.log('SALEH_LIVE_DISCOVERY '+JSON.stringify({url,status:r.status,length:text.length,productLinkCount:productLinks.length,uniqueProductLinks:unique.length,sampleLinks:unique.slice(0,12),hasYarisLimited:/yaris-y-limited-2026/i.test(text),yarisSnippets:yaris,apiCandidates:[...new Set(apis)].slice(0,30),nextScripts:next.slice(-12)}));
-  }catch(error){console.log('SALEH_LIVE_DISCOVERY_ERROR '+JSON.stringify({url,error:error.message}));}
-}
+import assert from 'node:assert/strict';
+import {fetchSalehFast} from '../lib/saleh-fast-source.js';
+
+const result=await fetchSalehFast({query:'Toyota Yaris 2026',filters:{},timeout:7000});
+const rows=(result.listings||[]).map(x=>({title:x.title,price:x.price,image:x.image,url:x.url,live:x.salehLiveInventory,discovery:x.discovery}));
+console.log('SALEH_LIVE_RESULTS '+JSON.stringify({count:rows.length,indexSize:result.indexSize,candidateCount:result.candidateCount,error:result.error,rows}));
+assert.equal(result.liveInventory,true,'Saleh live inventory flag missing');
+assert.ok(Number(result.indexSize)>=300,'Saleh live inventory index unexpectedly small');
+assert.ok(rows.length>=2,'too few live Saleh Yaris results');
+assert.ok(rows.some(x=>/yaris y limited/i.test(x.title)||/yaris-y-limited-2026/i.test(x.url)),'current Yaris Y Limited listing missing');
+assert.ok(rows.every(x=>x.url.includes('salehcars.com/en/cars/')),'non-Saleh product URL leaked');
+assert.ok(rows.every(x=>x.live===true&&x.discovery==='saleh_live_sitemap'),'result did not come from live Saleh sitemap');

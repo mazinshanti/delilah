@@ -4,6 +4,7 @@ import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 
 const html = await readFile(new URL('../public/index.html', import.meta.url), 'utf8');
+const front = await readFile(new URL('../server-core-candidate.js', import.meta.url), 'utf8');
 
 test('Dalelah 1.5 inline scripts parse', () => {
   const scripts = [...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)]
@@ -35,4 +36,16 @@ test('new and used remain separate product modes', () => {
   assert.match(html, /id="usedTab"/);
   assert.match(html, /id="newTab"/);
   assert.match(html, /condition='used'/);
+});
+
+test('front service owns the product shell and has a local health check', () => {
+  assert.match(front, /app\.get\('\/healthz'/);
+  assert.match(front, /express\.static\(/);
+  assert.ok(front.indexOf('express.static(') < front.indexOf('app.use(proxy)'), 'static shell must load before legacy proxy');
+  assert.match(front, /app\.listen\(externalPort,'0\.0\.0\.0'/);
+});
+
+test('Dalelah can be installed as a mobile web app', () => {
+  assert.match(html, /rel="manifest" href="\/manifest\.webmanifest"/);
+  assert.match(html, /apple-mobile-web-app-capable/);
 });

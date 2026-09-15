@@ -1,5 +1,7 @@
 import express from 'express';
 import {randomUUID} from 'node:crypto';
+import {fileURLToPath} from 'node:url';
+import {dirname,join} from 'node:path';
 import {searchDirectFirst,mergeDirectListings,strictDirectListings} from './lib/direct-search.js';
 import {exactYearIntent,enforceExactYear} from './lib/search-intent.js';
 import {extractHarajPrice} from './lib/haraj-price.js';
@@ -16,6 +18,11 @@ const COALESCE_TTL=3_000;
 
 const app=express();
 app.use(express.json({limit:'1mb'}));
+const here=dirname(fileURLToPath(import.meta.url));
+app.get('/healthz',(_req,res)=>res.json({ok:true,service:'dalelah-front',version:'1.5'}));
+app.use(express.static(join(here,'public'),{extensions:['html'],maxAge:'1h',setHeaders(res,path){
+  if(path.endsWith('.html'))res.setHeader('Cache-Control','no-cache');
+}}));
 const jobs=new Map();
 const inFlight=new Map();
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -223,4 +230,4 @@ async function proxy(req,res){
 app.use(proxy);
 
 setInterval(()=>{const now=Date.now();for(const[id,job]of jobs)if(now-job.createdAt>JOB_TTL){jobs.delete(id);if(inFlight.get(job.key)===job)inFlight.delete(job.key);}},60_000).unref?.();
-app.listen(externalPort,()=>console.log(`Dalelah direct-core candidate on ${externalPort}; deep scan ${legacyBase}`));
+app.listen(externalPort,'0.0.0.0',()=>console.log(`Dalelah direct-core candidate on 0.0.0.0:${externalPort}; deep scan ${legacyBase}`));

@@ -1,0 +1,13 @@
+{
+  "name": "Dalelah — دليلة",
+  "short_name": "Dalelah",
+  "description": "Search Saudi car marketplaces and dealers in one place.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#07110d",
+  "theme_color": "#07110d",
+  "lang": "en",
+  "dir": "auto",
+  "icons": [{"src":"/dalelah-icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}

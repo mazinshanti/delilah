@@ -1,5 +1,6 @@
 import express from 'express';
 import {randomUUID} from 'node:crypto';
+import {readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {dirname,join} from 'node:path';
 import {searchDirectFirst,mergeDirectListings,strictDirectListings} from './lib/direct-search.js';
@@ -19,8 +20,40 @@ const COALESCE_TTL=3_000;
 const app=express();
 app.use(express.json({limit:'1mb'}));
 const here=dirname(fileURLToPath(import.meta.url));
+const publicDir=join(here,'public');
+const indexTemplate=await readFile(join(publicDir,'index.html'),'utf8');
+const landingPages=new Map([
+  ['/cars/used/toyota/corolla/2013',{condition:'used',query:'Toyota Corolla 2013',title:'Used Toyota Corolla 2013 for sale in Saudi Arabia | Dalelah',description:'Compare live used Toyota Corolla 2013 listings from Saudi marketplaces and dealers in one search.',heading:'Used Toyota Corolla 2013'}],
+  ['/cars/used/toyota/camry',{condition:'used',query:'Toyota Camry',title:'Used Toyota Camry for sale in Saudi Arabia | Dalelah',description:'Search live used Toyota Camry listings across Saudi marketplaces and dealers with direct seller links.',heading:'Used Toyota Camry'}],
+  ['/cars/used/nissan/patrol',{condition:'used',query:'Nissan Patrol',title:'Used Nissan Patrol for sale in Saudi Arabia | Dalelah',description:'Compare live used Nissan Patrol listings across the Saudi car market in one place.',heading:'Used Nissan Patrol'}],
+  ['/cars/used/jeep/wrangler',{condition:'used',query:'Jeep Wrangler',title:'Used Jeep Wrangler for sale in Saudi Arabia | Dalelah',description:'Search current used Jeep Wrangler listings from Saudi marketplaces and dealers.',heading:'Used Jeep Wrangler'}],
+  ['/cars/used/chevrolet/tahoe',{condition:'used',query:'Chevrolet Tahoe',title:'Used Chevrolet Tahoe for sale in Saudi Arabia | Dalelah',description:'Compare live used Chevrolet Tahoe listings and open the original Saudi seller source.',heading:'Used Chevrolet Tahoe'}],
+  ['/cars/new/toyota/corolla',{condition:'new',query:'Toyota Corolla',title:'New Toyota Corolla for sale in Saudi Arabia | Dalelah',description:'Search new Toyota Corolla listings from Saudi dealers and marketplaces in one place.',heading:'New Toyota Corolla'}],
+  ['/cars/new/hyundai/elantra',{condition:'new',query:'Hyundai Elantra',title:'New Hyundai Elantra for sale in Saudi Arabia | Dalelah',description:'Compare new Hyundai Elantra listings from Saudi dealers and marketplaces.',heading:'New Hyundai Elantra'}],
+  ['/cars/new/kia/sportage',{condition:'new',query:'Kia Sportage',title:'New Kia Sportage for sale in Saudi Arabia | Dalelah',description:'Search live new Kia Sportage listings across the Saudi car market.',heading:'New Kia Sportage'}]
+]);
+const htmlEscape=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+function renderLanding(pathname,page){
+  const canonical=`https://www.dalelah.co${pathname}`;
+  return indexTemplate
+    .replace(/<title>[^<]*<\/title>/,`<title>${htmlEscape(page.title)}</title>`)
+    .replace(/<meta name="description" content="[^"]*">/,`<meta name="description" content="${htmlEscape(page.description)}">`)
+    .replace(/<link rel="canonical" href="[^"]*">/,`<link rel="canonical" href="${canonical}">`)
+    .replace(/<meta property="og:title" content="[^"]*">/,`<meta property="og:title" content="${htmlEscape(page.title)}">`)
+    .replace(/<meta property="og:description" content="[^"]*">/,`<meta property="og:description" content="${htmlEscape(page.description)}">`)
+    .replace(/<meta property="og:url" content="[^"]*">/,`<meta property="og:url" content="${canonical}">`)
+    .replace('<!--SEO_H1--><h1>One search.<br><span>The whole market.</span></h1>',`<!--SEO_H1--><h1>${htmlEscape(page.heading)}<br><span>Across Saudi Arabia.</span></h1>`)
+    .replace('<!--LANDING_DATA-->',`<script>window.__DALELAH_LANDING__=${JSON.stringify(page)};<\/script>`);
+}
 app.get('/healthz',(_req,res)=>res.json({ok:true,service:'dalelah-front',version:'1.5'}));
-app.use(express.static(join(here,'public'),{extensions:['html'],maxAge:'1h',setHeaders(res,path){
+app.get(/^\/cars\/(?:used|new)\/[a-z0-9-]+(?:\/[a-z0-9-]+)?(?:\/\d{4})?\/?$/, (req,res,next)=>{
+  const pathname=req.path.replace(/\/$/,'');
+  const page=landingPages.get(pathname);
+  if(!page)return next();
+  res.setHeader('Cache-Control','public, max-age=300');
+  return res.type('html').send(renderLanding(pathname,page));
+});
+app.use(express.static(publicDir,{extensions:['html'],maxAge:'1h',setHeaders(res,path){
   if(path.endsWith('.html'))res.setHeader('Cache-Control','no-cache');
 }}));
 const jobs=new Map();

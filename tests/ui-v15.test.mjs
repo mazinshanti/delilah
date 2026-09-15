@@ -7,7 +7,7 @@ const html = await readFile(new URL('../public/index.html', import.meta.url), 'u
 const front = await readFile(new URL('../server-core-candidate.js', import.meta.url), 'utf8');
 
 test('Dalelah 1.5 inline scripts parse', () => {
-  const scripts = [...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)]
+  const scripts = [...html.matchAll(/<script(?![^>]*(?:\bsrc=|application\/ld\+json))[^>]*>([\s\S]*?)<\/script>/gi)]
     .map(match => match[1])
     .filter(Boolean);
   assert.ok(scripts.length > 0, 'inline product script missing');
@@ -48,4 +48,19 @@ test('front service owns the product shell and has a local health check', () => 
 test('Dalelah can be installed as a mobile web app', () => {
   assert.match(html, /rel="manifest" href="\/manifest\.webmanifest"/);
   assert.match(html, /apple-mobile-web-app-capable/);
+});
+
+test('searches have crawlable landing pages and shareable URLs', () => {
+  assert.match(html, /href="\/cars\/used\/toyota\/corolla\/2013"/);
+  assert.match(html, /history\.replaceState/);
+  assert.match(html, /window\.__DALELAH_LANDING__/);
+  assert.match(front, /landingPages=new Map/);
+  assert.match(front, /Used Toyota Corolla 2013 for sale/);
+});
+
+test('traffic and conversion surfaces are present', () => {
+  assert.match(html, /rel="canonical"/);
+  assert.match(html, /application\/ld\+json/);
+  assert.match(html, /href="\/sell\.html"/);
+  assert.match(html, /id="shareSearch"/);
 });

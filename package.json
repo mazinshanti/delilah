@@ -19,6 +19,7 @@
     "test:saleh-image": "node --test tests/saleh-image.test.mjs",
     "test:saleh-live": "node --test tests/saleh-live-inventory.test.mjs",
     "test:saleh-price": "node --test tests/saleh-price.test.mjs",
+    "test:traffic": "node --test tests/traffic-readiness.test.mjs",
     "test:haraj-price-live": "node scripts/haraj-price-live.mjs"
   },
   "dependencies": {

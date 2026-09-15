@@ -63,6 +63,8 @@ jobs:
         run: npm run test:relevance
       - name: Test current Dalelah 1.5 UI
         run: node --test tests/ui-v15.test.mjs
+      - name: Test traffic and conversion readiness
+        run: npm run test:traffic
       - name: Test marketplace foundation
         run: npm run test:marketplace
       - name: Guard direct-first production architecture

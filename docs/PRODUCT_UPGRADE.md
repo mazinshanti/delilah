@@ -14,7 +14,7 @@ The existing front/deep-search services and APIs remain in place. No listings ar
 
 ## Verification
 
-109 tests pass, including every catalog entry's canonical recognition, strict searches for each of the 100 makes, New/Used separation, exact years, Arabic aliases, zero-result Pontiac searches, unsafe gallery URLs, photo decoding/deduplication and the seller HTTP journey against embedded PostgreSQL. Database tests cover successful persistence, duplicate requests, validation errors and transaction rollback. Production dependencies have zero reported npm-audit vulnerabilities at verification time.
+112 tests pass, including every catalog entry's canonical recognition, strict searches for each of the 100 makes, New/Used separation, exact years, Arabic aliases, zero-result Pontiac searches, unsafe gallery URLs, photo decoding/deduplication and the seller HTTP journey against embedded PostgreSQL. Production verification additionally caught an Arabic exhaust-gasket ad and a harmless Haraj trailing-slash redirect; both now have regression coverage. Database tests cover successful persistence, duplicate requests, validation errors and transaction rollback. Production dependencies have zero reported npm-audit vulnerabilities at verification time.
 
 `product-upgrade-metrics.json` records the inventory snapshot, gallery coverage and per-make catalog counts. The live release is checked separately after Render deployment; passing local tests alone does not establish production readiness.
 

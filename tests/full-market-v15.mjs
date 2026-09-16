@@ -50,7 +50,7 @@ assert.equal(health.salehNativeInventory,true);
 if(expectedCommit)assert.equal(health.renderGitCommit,expectedCommit);
 
 const cases=[
-  {query:'Toyota Corolla 2013',condition:'used',year:2013,titleRe:/corolla|كورولا|كرولا/i},
+  {query:'Toyota Corolla 2013',condition:'used',year:2013,titleRe:/corolla|كورولا|كرولا|كورلا|كوريلا/i},
   {query:'Toyota Camry 2018',condition:'used',year:2018,titleRe:/camry|كامري|كامرى/i},
   {query:'Nissan Patrol 2020',condition:'used',year:2020,titleRe:/patrol|باترول/i},
   {query:'Nissan Sunny 2020',condition:'used',year:2020,titleRe:/sunny|صني/i},
@@ -60,9 +60,9 @@ const cases=[
   {query:'Kia Sportage 2022',condition:'used',year:2022,titleRe:/sportage|سبورتاج/i},
   {query:'Chevrolet Tahoe 2021',condition:'used',year:2021,titleRe:/tahoe|تاهو/i},
   {query:'Toyota Yaris 2019',condition:'used',year:2019,titleRe:/yaris|يارس/i},
-  {query:'كورولا ٢٠١٣',condition:'used',year:2013,titleRe:/corolla|كورولا|كرولا/i},
+  {query:'كورولا ٢٠١٣',condition:'used',year:2013,titleRe:/corolla|كورولا|كرولا|كورلا|كوريلا/i},
   {query:'باترول ٢٠٢٠',condition:'used',year:2020,titleRe:/patrol|باترول/i},
-  {query:'Toyota Corolla 2026',condition:'new',year:2026,source:'Saleh Cars',titleRe:/corolla|كورولا/i},
+  {query:'Toyota Corolla 2026',condition:'new',year:2026,source:'Saleh Cars',titleRe:/corolla|كورولا|كرولا|كورلا|كوريلا/i},
   {query:'Hyundai Elantra 2026',condition:'new',year:2026,source:'Saleh Cars',titleRe:/elantra|النترا|إلنترا/i},
   {query:'Kia Sportage 2026',condition:'new',year:2026,source:'Saleh Cars',titleRe:/sportage|سبورتاج/i},
   {query:'Geely Preface 2026',condition:'new',year:2026,source:'Saleh Cars',titleRe:/preface|بريفيس|بريفايس/i},
@@ -74,7 +74,7 @@ for(const c of cases)results.push(await runCase(c));
 
 // Filter behavior spot checks; do not require a result if the live market genuinely has none.
 for(const c of[
-  {query:'Toyota Corolla 2013',condition:'used',year:2013,titleRe:/corolla|كورولا/i,filters:{city:'Riyadh'},requireResults:false},
+  {query:'Toyota Corolla 2013',condition:'used',year:2013,titleRe:/corolla|كورولا|كرولا|كورلا|كوريلا/i,filters:{city:'Riyadh'},requireResults:false},
   {query:'Jeep Wrangler 2021',condition:'used',year:2021,titleRe:/wrangler|رانجلر/i,filters:{maxPrice:200000},requireResults:false},
   {query:'Nissan Patrol 2020',condition:'used',year:2020,titleRe:/patrol|باترول/i,filters:{maxMileage:300000},requireResults:false}
 ])results.push(await runCase(c));

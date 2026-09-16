@@ -7,12 +7,13 @@ import {PGlite} from '@electric-sql/pglite';
 import {VEHICLE_CATALOG,catalogIntent,catalogMake,catalogModelMatches} from '../public/catalog.js';
 import {naturalSearch} from '../public/natural-search.js';
 import {strictDirectListings} from '../lib/direct-search.js';
-import {extractListingGallery,eligibleGalleryUrl} from '../lib/listing-gallery.js';
+import {extractListingGallery,eligibleGalleryUrl,discoverListingGallery} from '../lib/listing-gallery.js';
 import {vehicleImages} from '../public/vehicle-media.js';
 import {prepareSellerPhotos} from '../lib/seller-photos.js';
 import {validateSellerInput} from '../lib/seller-validation.js';
 import {createSellerSubmission,SELLER_SCHEMA,sellerStoreStatus} from '../lib/saudi-seller-store.js';
 import {installSellerRoutes} from '../lib/seller-routes.js';
+import {localizedQuery} from '../lib/haraj-fast-source.js';
 
 test('every catalog make and model recognizes its own canonical name',()=>{
  const errors=[];for(const make of VEHICLE_CATALOG.makes){assert.equal(catalogMake(make.name)?.name,make.name);for(const model of make.models){const intent=catalogIntent(make.name+' '+model.name);if(intent.make!==make.name||intent.model!==model.name)errors.push({query:make.name+' '+model.name,intent});}}
@@ -27,6 +28,14 @@ test('Pontiac G8 2009 never substitutes a Chevrolet or another Pontiac',()=>{
 test('strict relevance accepts a catalog vehicle for each of the 100 makes',()=>{
  for(const make of VEHICLE_CATALOG.makes){const model=make.models[0].name;const car={make:make.name,brand:make.name,model,title:make.name+' '+model+' 2020',year:2020,yearVerified:true,condition:'used',listingVerified:true,saleVerified:true,url:'https://example.com/test-fixture'};assert.equal(strictDirectListings([car],{query:car.title,condition:'used'}).length,1,car.title);assert.equal(strictDirectListings([car],{query:car.title,condition:'new'}).length,0);}
 });
+test('live Pontiac exhaust-gasket advertisement is never a vehicle result',()=>{
+ const car={title:'وجيه اقزوز بونتياك G8 2009-وفوق',year:2009,condition:'used',source:'Haraj',url:'https://haraj.com.sa/11175739802/'};
+ assert.deepEqual(strictDirectListings([car],{query:'Pontiac G8 2009',condition:'used'}),[]);
+ assert.deepEqual(strictDirectListings([{...car,title:'للبيع شكمان بونتياك G8 2009'}],{query:'Pontiac G8 2009',condition:'used'}),[]);
+});
+test('Haraj discovery translates catalog makes and never duplicates a model year',()=>{
+ assert.equal(localizedQuery('Bentley'),'بنتلي');assert.equal(localizedQuery('Pontiac G8 2009'),'بونتياك G8 2009');assert.equal(localizedQuery('Toyota Corolla 2013'),'تويوتا كورولا 2013');
+});
 test('natural language extracts explicit constraints and retains unknown model words',()=>{
  assert.deepEqual(naturalSearch('أبغى كورولا ٢٠١٣ مستعملة في الرياض أقل من ٣٠ ألف'),{query:'كورولا 2013',condition:'used',filters:{maxPrice:30000,city:'Riyadh'}});
  assert.deepEqual(naturalSearch('Find me a Toyota Imaginary 2013 under 30k in Jeddah').filters,{maxPrice:30000,city:'Jeddah'});
@@ -38,6 +47,11 @@ test('gallery preserves source order, safe URLs, single-image compatibility and 
  assert.deepEqual(extractListingGallery(html,'https://haraj.com.sa/11188701805/'),[one,two]);assert.deepEqual(vehicleImages({image:one}),[one]);assert.deepEqual(vehicleImages({images:[{url:two},one],image:one}),[two,one]);
  assert.equal(eligibleGalleryUrl('https://haraj.com.sa.evil.test/11188701805/'),false);assert.equal(eligibleGalleryUrl('http://127.0.0.1/11188701805/'),false);
  assert.deepEqual(extractListingGallery(html,'https://haraj.com.sa/11188701806/'),[]);
+});
+test('gallery follows a same-source canonical redirect but rejects a foreign host',async t=>{
+ const url='https://haraj.com.sa/11188701808/example',image='https://mimg6cdn.haraj.com.sa/userfiles30/test.jpg';
+ t.mock.method(globalThis,'fetch',async input=>{const u=String(input);if(u.endsWith('/robots.txt'))return new Response('User-agent: *\nAllow: /');if(u===url)return new Response('',{status:302,headers:{location:url+'/'}});if(u===url+'/')return new Response('<script type="application/ld+json">'+JSON.stringify({'@type':'Product',url:url+'/',image:[image]})+'</script>');return new Response('',{status:302,headers:{location:'https://evil.example/private'}});});
+ assert.deepEqual(await discoverListingGallery(url),[image]);await assert.rejects(discoverListingGallery('https://haraj.com.sa/11188701809/example'),/unsafe-source-redirect/);
 });
 const input=()=>({sellerName:'Integration test',sellerPhone:'٠٥٠١٢٣٤٥٦٧',make:'Toyota',model:'Camry',year:2020,mileageKm:45000,city:'Riyadh',askingPriceSar:50000,consent:true,requestId:crypto.randomUUID()});
 test('seller validation rejects injection types, malformed numbers, invalid contact and absent consent',()=>{

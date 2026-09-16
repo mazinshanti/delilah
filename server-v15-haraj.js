@@ -1,4 +1,5 @@
 import express from 'express';
+import {VEHICLE_CATALOG} from './public/catalog.js';
 
 const externalPort=Number(process.env.PORT||3000);
 const marketPort=Number(process.env.DALELAH_MARKET_PORT||6400);
@@ -28,6 +29,7 @@ const imageOkay=u=>{const x=safeUrl(u);return!!x&&!/(logo|favicon|icon|placehold
 const BRAND_ALIAS=new Map([
   ['toyota',{en:'toyota',ar:'تويوتا'}],['nissan',{en:'nissan',ar:'نيسان'}],['jeep',{en:'jeep',ar:'جيب'}],['hyundai',{en:'hyundai',ar:'هيونداي'}],['kia',{en:'kia',ar:'كيا'}],['ford',{en:'ford',ar:'فورد'}],['chevrolet',{en:'chevrolet',ar:'شفروليه'}],['lexus',{en:'lexus',ar:'لكزس'}],['bmw',{en:'bmw',ar:'بي ام دبليو'}],['mercedes',{en:'mercedes',ar:'مرسيدس'}],['mercedes-benz',{en:'mercedes benz',ar:'مرسيدس'}],['mazda',{en:'mazda',ar:'مازدا'}],['honda',{en:'honda',ar:'هوندا'}],['genesis',{en:'genesis',ar:'جينيسيس'}],['geely',{en:'geely',ar:'جيلي'}],['changan',{en:'changan',ar:'شانجان'}],['haval',{en:'haval',ar:'هافال'}],['jetour',{en:'jetour',ar:'جيتور'}],['gmc',{en:'gmc',ar:'جي ام سي'}]
 ]);
+for(const make of VEHICLE_CATALOG.makes){const key=make.name.toLowerCase();if(!BRAND_ALIAS.has(key))BRAND_ALIAS.set(key,{en:make.name,ar:make.ar});}
 const MODEL_ALIAS=new Map([
   ['corolla',{en:'corolla',ar:['كورولا','كرولا','كورلا','كوريلا']}],['camry',{en:'camry',ar:['كامري']}],['land-cruiser',{en:'land cruiser',ar:['لاند كروزر','لاندكروزر']}],['prado',{en:'prado',ar:['برادو']}],['yaris',{en:'yaris',ar:['يارس']}],['fortuner',{en:'fortuner',ar:['فورتشنر']}],['patrol',{en:'patrol',ar:['باترول']}],['sunny',{en:'sunny',ar:['صني']}],['wrangler',{en:'wrangler',ar:['رانجلر']}],['grand-cherokee',{en:'grand cherokee',ar:['جراند شيروكي','قراند شيروكي']}],['tucson',{en:'tucson',ar:['توسان']}],['elantra',{en:'elantra',ar:['النترا','إلنترا']}],['sonata',{en:'sonata',ar:['سوناتا']}],['accent',{en:'accent',ar:['اكسنت','أكسنت']}],['sportage',{en:'sportage',ar:['سبورتاج']}],['sorento',{en:'sorento',ar:['سورينتو']}],['cerato',{en:'cerato',ar:['سيراتو']}],['tahoe',{en:'tahoe',ar:['تاهو']}],['territory',{en:'territory',ar:['تيريتوري','تيريتوري']}]
 ]);

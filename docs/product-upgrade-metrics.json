@@ -703,7 +703,7 @@
     "multipleImages": 600
   },
   "tests": {
-    "passed": 109,
+    "passed": 112,
     "failed": 0,
     "engine": "Node test runner; seller integration uses PGlite PostgreSQL"
   },

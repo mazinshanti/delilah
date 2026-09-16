@@ -39,6 +39,9 @@ test('Haraj discovery translates catalog makes and never duplicates a model year
 test('broad inventory excludes the live GMC window-switch advertisement',()=>{
  const car={title:'سويتش نافذه زجاج باب يمين شيفروليه GMC جمس',condition:'used',source:'Haraj',url:'https://haraj.com.sa/11186777322/'};assert.deepEqual(strictDirectListings([car],{query:'',condition:'used'}),[]);
 });
+test('Pontiac transmission mounts and other component-led titles are not cars',()=>{
+ for(const title of ['كراسي قير كابريس وبونتياك G8','قواعد قير بونتياك G8','طقم جوان بونتياك G8','عمود دركسون بونتياك G8'])assert.deepEqual(strictDirectListings([{title,year:2009,yearVerified:true,condition:'used',source:'Haraj',url:'https://haraj.com.sa/11175739809/'}],{query:'Pontiac G8 2009',condition:'used'}),[],title);
+});
 test('natural language extracts explicit constraints and retains unknown model words',()=>{
  assert.deepEqual(naturalSearch('أبغى كورولا ٢٠١٣ مستعملة في الرياض أقل من ٣٠ ألف'),{query:'كورولا 2013',condition:'used',filters:{maxPrice:30000,city:'Riyadh'}});
  assert.deepEqual(naturalSearch('Find me a Toyota Imaginary 2013 under 30k in Jeddah').filters,{maxPrice:30000,city:'Jeddah'});

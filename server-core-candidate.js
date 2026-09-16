@@ -1,4 +1,5 @@
 import {naturalSearch} from './public/natural-search.js';
+import {createIntentEngine,intentSearchBody,applyIntentConstraints,needsAI} from './lib/ai-search-intent.js';
 import express from 'express';
 import {installSellerRoutes} from './lib/seller-routes.js';
 import {VEHICLE_CATALOG,catalogIntent} from './public/catalog.js';
@@ -35,6 +36,9 @@ installApiGuard(app);
 installSellerRoutes(app);
 app.use(express.json({limit:'32kb'}));
 const inventoryIndex=new InventoryIndex();
+const intentEngine=createIntentEngine();
+app.get('/api/search/ai-status',(_req,res)=>{const {stats,...status}=intentEngine.status();res.json(status);});
+if(process.env.NODE_ENV==='development')app.get('/api/search/ai-metrics',(_req,res)=>res.json(intentEngine.status()));
 app.get('/api/catalog',(_req,res)=>{res.setHeader('Cache-Control','public,max-age=3600');res.json(VEHICLE_CATALOG);});
 await inventoryIndex.load();
 app.get('/api/sources',(_req,res)=>{const stats=inventoryIndex.stats();res.json({generatedAt:stats.generatedAt,sources:publicSourceRegistry(stats.bySource,stats.diagnostics,stats.generatedAt)});});
@@ -45,6 +49,8 @@ app.get('/api/inventory',(req,res)=>{
   const error=validateFilters(filters);if(error)return res.status(400).json({error});
   if(req.query.q!=null&&(typeof req.query.q!=='string'||req.query.q.length>180))return res.status(400).json({error:'invalid-query'});
   const parsed=naturalSearch(req.query.q||'');Object.assign(filters,parsed.filters);const parsedError=validateFilters(filters);if(parsedError)return res.status(400).json({error:parsedError});const query=canonicalizeVehicleQuery(parsed.query).query;
+  // Conversational queries must go through POST /api/search; never flash unvalidated warm results.
+  if(needsAI(req.query.q))return res.json({...paginateInventory([],req.query),intentPending:true,complete:false});
   const started=performance.now();
   const rows=inventoryIndex.search({query,condition:parsed.condition||(req.query.condition==='new'?'new':'used'),filters});
   res.setHeader('Server-Timing',`inventory;dur=${(performance.now()-started).toFixed(2)}`);
@@ -98,7 +104,7 @@ app.get('/api/listing/gallery',async(req,res)=>{
 const inFlight=new Map();
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const norm=value=>String(value??'').toLowerCase().replace(/[^a-z0-9\u0600-\u06ff]+/g,' ').replace(/\s+/g,' ').trim();
-const keyFor=body=>JSON.stringify({q:norm(body?.query||''),c:body?.condition==='new'?'new':'used',f:body?.filters||{},page:body.page,pageSize:body.pageSize,sort:body.sort});
+const keyFor=body=>JSON.stringify({q:norm(body?.query||''),c:body?.condition==='new'?'new':'used',f:body?.filters||{},page:body.page,pageSize:body.pageSize,sort:body.sort,intent:body._intentKey});
 
 function validateSearchBody(body={}){
   if(!body||typeof body!=='object'||Array.isArray(body))return 'invalid-search-body';
@@ -205,7 +211,11 @@ function kickSyarahPriceEnrichment(job){
 function publicJob(job){
   const direct=job.directData||{};
   const full=job.fullData||{};
-  const listings=deduplicateVehicles(strictMerged(mergeDirectListings(job.indexedListings,direct.listings,full.listings),job.body));
+  let listings=deduplicateVehicles(strictMerged(mergeDirectListings(job.indexedListings,direct.listings,full.listings),job.body));
+  listings=applyIntentConstraints(listings,job.intentResult?.intent);
+  // If semantic interpretation fails, do not silently discard unknown requirements.
+  const interpretationUnavailable=Boolean(job.intentResult?.fallbackReason&&!job.intentResult.safeFallback);
+  if(interpretationUnavailable)listings=[];
   const fullComplete=Boolean(job.fullData&&(full.complete===true||full.marketScanComplete===true));
   const pricePending=Boolean(job.priceEnrichmentPromise&&!job.priceEnrichmentComplete);
   const syarahPricePending=Boolean(job.syarahPriceEnrichmentPromise&&!job.syarahPriceEnrichmentComplete);
@@ -219,6 +229,11 @@ function publicJob(job){
   out.indexedCount=job.indexedListings?.length||0;
   out.snapshotAt=inventoryIndex.generatedAt;
   out.sourceErrors=[...(scanTimedOut?['scan-deadline-reached']:[]),...(direct.errors||[]),...(job.error?['deep-search-unavailable']:[])];
+  out.interpretationUnavailable=interpretationUnavailable;
+  if(job.intentResult){const r=job.intentResult;out.intentMode=r.intentMode;out.intent=r.intent;out.ai={model:r.intentMode==='ai'?r.model:null,latencyMs:r.aiLatencyMs,cacheHit:Boolean(r.cacheHit),fallbackReason:r.fallbackReason||null};out.understanding.normalizedIntent=r.intent;out.unverifiedPreferences=r.intent.priorities;out.resultCount=listings.length;
+   if(complete&&!job.intentLogged){job.intentLogged=true;console.info(JSON.stringify({event:'search_intent_results',intentMode:r.intentMode,resultCount:listings.length,zeroResults:listings.length===0,sourcesUsed:Object.keys(counts(listings))}));}
+   if(process.env.NODE_ENV==='development')out.intentDebug={originalQuery:job.originalQuery,normalizedIntent:r.intent,intentMode:r.intentMode,catalogMatch:catalogIntent(job.body.query),resultCount:listings.length,sourcesUsed:Object.keys(counts(listings))};
+  }
   if(job.body.pageSize||job.body.page){const paged=paginateInventory(listings,job.body);out.listings=paged.listings;out.pagination=paged.pagination;}
   if(!out.answer)out.answer=listings.length?`${listings.length} matching listings found.`:'Dalelah is scanning the Saudi market…';
   return out;
@@ -262,6 +277,7 @@ function startJob(body={},meta={}){
   if(existing&&Date.now()-existing.createdAt<COALESCE_TTL)return existing;
   const job={id:`dc.${randomUUID()}`,key,body,originalQuery:meta.originalQuery||body.query,queryCorrections:meta.corrections||[],createdAt:Date.now(),directData:null,fullData:null,fullPromise:null,fullDone:false,upstreamId:null,error:null,firstResultMs:null,deepZeroRetry:false,priceEnrichmentPromise:null,priceEnrichmentComplete:false,priceEnriched:0,priceAttempted:0,priceEnrichmentError:null,syarahPriceEnrichmentPromise:null,syarahPriceEnrichmentComplete:false,syarahPriceEnriched:0,syarahPriceAttempted:0,syarahPriceEnrichmentError:null,syarahPriceSeen:new Set()};
   jobs.set(job.id,job);inFlight.set(key,job);
+  job.intentResult=meta.intentResult;
   job.indexedListings=inventoryIndex.search(body);
   job.directPromise=(isBroad(body)?browseLiveSources(body):searchDirectFirst(body,{timeoutMs:DIRECT_BUDGET_MS}))
     .then(data=>{
@@ -295,13 +311,11 @@ app.post('/api/search',async(req,res)=>{
   const incoming=req.body||{};
   const validationError=validateSearchBody(incoming);
   if(validationError)return res.status(400).json({error:validationError});
-  const parsed=naturalSearch(incoming.query),normalized=canonicalizeVehicleQuery(parsed.query);
-  const body={...incoming,query:normalized.query,condition:parsed.condition||incoming.condition,filters:{...incoming.filters,...parsed.filters}};
+  const intentResult=await intentEngine.understand(incoming.query);
+  const body=intentSearchBody(incoming,intentResult),normalized=canonicalizeVehicleQuery(body.query);
+  body.query=normalized.query;body._intentKey=JSON.stringify({mode:intentResult.intentMode,intent:intentResult.intent,fallback:intentResult.fallbackReason});
   const parsedError=validateSearchBody(body);if(parsedError)return res.status(400).json({error:parsedError});
-  if(isBroad(body)&&!inventoryIndex.search(body).length){
-    try{const {response,data}=await legacy('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});return res.status(response.status).json(enforceVehicleBoundary(data));}catch(error){return res.status(502).json({error:error?.message||'Dalelah search unavailable'});}
-  }
-  const started=Date.now(),job=startJob(body,{originalQuery:incoming.query,corrections:normalized.corrections});
+  const started=Date.now(),job=startJob(body,{originalQuery:incoming.query,corrections:normalized.corrections,intentResult});
   if(!job.indexedListings.length)await Promise.race([job.directPromise,sleep(DIRECT_BUDGET_MS)]);
   if(!job.indexedListings.length&&!(job.directData?.listings?.length)&&!job.fullData){const left=Math.max(0,DIRECT_BUDGET_MS-(Date.now()-started));if(left)await Promise.race([job.fullPromise,sleep(left)]);}
   const out=publicJob(job);

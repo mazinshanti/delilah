@@ -1,10 +1,3 @@
-export const BRANDS=[['Toyota','TY'],['Nissan','NI'],['Jeep','JP'],['Lexus','LX'],['BMW','BM'],['Mercedes','MB'],['Hyundai','HY'],['Kia','KA'],['Ford','FD'],['Chevrolet','CH'],['GMC','GM'],['Mazda','MZ'],['Honda','HN'],['Genesis','GN'],['Geely','GE'],['Changan','CG'],['Haval','HV'],['MG','MG'],['BYD','BY'],['Jetour','JT']];
-export const MODELS={Toyota:['Camry','Corolla','Land Cruiser','Prado','Yaris','Fortuner','Hilux','RAV4'],Nissan:['Patrol','Sunny','Altima','X-Trail','Pathfinder','Kicks','X-Terra'],Jeep:['Wrangler','Compass','Grand Cherokee','Gladiator'],Lexus:['ES','IS','LS','RX','NX','LX','GX','UX'],BMW:['X1','X3','X5','X6','X7','3 Series','5 Series','7 Series'],Mercedes:['A-Class','C-Class','E-Class','S-Class','GLC','GLE','GLS','G-Class'],Hyundai:['Accent','Elantra','Sonata','Tucson','Santa Fe','Palisade'],Kia:['Pegas','Cerato','K5','K8','Sportage','Sorento','Carnival'],Ford:['Territory','Taurus','Explorer','Expedition','Everest','Ranger','F-150','Mustang','Bronco'],Chevrolet:['Tahoe','Suburban','Captiva','Traverse','Silverado','Camaro'],GMC:['Yukon','Sierra','Acadia'],Mazda:['Mazda 3','Mazda 6','CX-5','CX-9'],Honda:['Accord','Civic','City','CR-V','HR-V','Pilot'],Genesis:['G70','G80','G90','GV70','GV80'],Geely:['Coolray','Emgrand','Monjaro','Starray'],Changan:['CS35 Plus','CS55 Plus','CS75 Plus','UNI-K','UNI-T'],Haval:['H6','Jolion','Dargo','H9'],MG:['MG 5','MG 6','RX5','HS','ZS','GT'],BYD:['Song Plus','Seal','Han','Atto 3','Tang'],Jetour:['Dashing','X70','X90 Plus','T1','T2']};
-
-for(const [name,mark] of [['Bentley','BE'],['Porsche','PO'],['Audi','AU'],['Land Rover','LR'],['Volvo','VO'],['Mitsubishi','MI']])BRANDS.push([name,mark]);
-MODELS.Bentley=['Continental','Bentayga','Flying Spur','Mulsanne'];
-MODELS.Porsche=['911','Cayenne','Macan','Panamera','Taycan'];
-MODELS.Audi=['A3','A4','A6','A8','Q3','Q5','Q7','Q8'];
-MODELS['Land Rover']=['Range Rover','Defender','Discovery'];
-MODELS.Volvo=['XC40','XC60','XC90','S60','S90'];
-MODELS.Mitsubishi=['Pajero','Montero Sport','Outlander','ASX','Attrage','L200'];
+import {VEHICLE_CATALOG} from './catalog.js';
+export const BRANDS=VEHICLE_CATALOG.makes.map(m=>[m.name,m.name.slice(0,2)]);
+export const MODELS=Object.fromEntries(VEHICLE_CATALOG.makes.map(m=>[m.name,m.models.map(x=>x.name)]));

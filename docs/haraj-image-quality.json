@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-09-16T22:51:42.039Z",
+  "listing": "https://haraj.com.sa/11188701805/",
+  "thumbnail": {
+    "url": "https://thumbcdn.haraj.com.sa/1200x1600_D67A599A-BF39-4FB4-A1A3-0D87B744B58B.jpg-140x140.webp",
+    "width": 140,
+    "height": 140
+  },
+  "original": {
+    "url": "https://mimg6cdn.haraj.com.sa/userfiles30/2026-09-16/1200x1600_D67A599A-BF39-4FB4-A1A3-0D87B744B58B.jpg",
+    "width": 900,
+    "height": 1200
+  },
+  "pixelRatio": 55.102040816326536,
+  "originalImages": 11,
+  "method": "URLs published in the same public listing JSON-LD; no URL rewrites or authentication bypass"
+}

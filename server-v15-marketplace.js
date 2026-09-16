@@ -1,4 +1,5 @@
 import express from 'express';
+import {installSellerRoutes} from './lib/seller-routes.js';
 import {installApiGuard,validateFilters} from './lib/api-guard.js';
 import {readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
@@ -15,6 +16,7 @@ process.env.PORT = String(externalPort);
 
 const app = express();
 installApiGuard(app);
+installSellerRoutes(app);
 app.get('/healthz',(_req,res)=>res.json({ok:true,service:'dalelah-deep',renderGitCommit:process.env.RENDER_GIT_COMMIT||null}));
 const MOBILE_PREVIEW_ORIGINS = new Set([
   'https://dalelah-mobile-preview.onrender.com',

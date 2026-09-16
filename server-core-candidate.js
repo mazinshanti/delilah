@@ -1,4 +1,8 @@
+import {naturalSearch} from './public/natural-search.js';
 import express from 'express';
+import {installSellerRoutes} from './lib/seller-routes.js';
+import {VEHICLE_CATALOG,catalogIntent} from './public/catalog.js';
+import {discoverListingGallery} from './lib/listing-gallery.js';
 import {browseLiveSources} from './lib/browse-sources.js';
 import {extractMileage} from './lib/vehicle-mileage.js';
 import {randomUUID} from 'node:crypto';
@@ -28,8 +32,10 @@ const MAX_QUERY_LENGTH=180;
 
 const app=express();
 installApiGuard(app);
+installSellerRoutes(app);
 app.use(express.json({limit:'32kb'}));
 const inventoryIndex=new InventoryIndex();
+app.get('/api/catalog',(_req,res)=>{res.setHeader('Cache-Control','public,max-age=3600');res.json(VEHICLE_CATALOG);});
 await inventoryIndex.load();
 app.get('/api/sources',(_req,res)=>{const stats=inventoryIndex.stats();res.json({generatedAt:stats.generatedAt,sources:publicSourceRegistry(stats.bySource,stats.diagnostics,stats.generatedAt)});});
 app.get('/api/inventory/stats',(_req,res)=>res.json(inventoryIndex.stats()));
@@ -38,12 +44,12 @@ app.get('/api/inventory',(req,res)=>{
   const filters={};for(const k of ['minYear','maxYear','minPrice','maxPrice','maxMileage','city','seller','category','fuelType','trim'])if(req.query[k]!=null)filters[k]=req.query[k];
   const error=validateFilters(filters);if(error)return res.status(400).json({error});
   if(req.query.q!=null&&(typeof req.query.q!=='string'||req.query.q.length>180))return res.status(400).json({error:'invalid-query'});
-  const query=canonicalizeVehicleQuery(req.query.q||'').query;
+  const parsed=naturalSearch(req.query.q||'');Object.assign(filters,parsed.filters);const parsedError=validateFilters(filters);if(parsedError)return res.status(400).json({error:parsedError});const query=canonicalizeVehicleQuery(parsed.query).query;
   const started=performance.now();
-  const rows=inventoryIndex.search({query,condition:req.query.condition==='new'?'new':'used',filters});
+  const rows=inventoryIndex.search({query,condition:parsed.condition||(req.query.condition==='new'?'new':'used'),filters});
   res.setHeader('Server-Timing',`inventory;dur=${(performance.now()-started).toFixed(2)}`);
   res.setHeader('Cache-Control','public, max-age=30, stale-while-revalidate=60');
-  return res.json({...paginateInventory(rows,req.query),snapshotAt:inventoryIndex.generatedAt,complete:true});
+  return res.json({...paginateInventory(rows,req.query),understanding:catalogIntent(query),snapshotAt:inventoryIndex.generatedAt,complete:true});
 });
 const here=dirname(fileURLToPath(import.meta.url));
 const publicDir=join(here,'public');
@@ -83,6 +89,12 @@ app.use(express.static(publicDir,{extensions:['html'],maxAge:'1h',setHeaders(res
   if(/\.(?:html|js|css)$/.test(path))res.setHeader('Cache-Control','no-cache');
 }}));
 const jobs=new Map();
+app.get('/api/listing/gallery',async(req,res)=>{
+ const url=String(req.query.url||'');if(url.length>1800)return res.status(400).json({error:'invalid-url'});
+ const known=inventoryIndex.records.some(c=>c.url===url)||[...jobs.values()].some(j=>[...(j.directData?.listings||[]),...(j.fullData?.listings||[])].some(c=>c.url===url));
+ if(!known)return res.status(404).json({error:'listing-not-in-current-inventory'});
+ try{return res.json({url,images:await discoverListingGallery(url),provenance:'original-listing-public-metadata'});}catch{return res.status(502).json({error:'gallery-unavailable',images:[]});}
+});
 const inFlight=new Map();
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const norm=value=>String(value??'').toLowerCase().replace(/[^a-z0-9\u0600-\u06ff]+/g,' ').replace(/\s+/g,' ').trim();
@@ -283,8 +295,9 @@ app.post('/api/search',async(req,res)=>{
   const incoming=req.body||{};
   const validationError=validateSearchBody(incoming);
   if(validationError)return res.status(400).json({error:validationError});
-  const normalized=canonicalizeVehicleQuery(incoming.query);
-  const body={...incoming,query:normalized.query};
+  const parsed=naturalSearch(incoming.query),normalized=canonicalizeVehicleQuery(parsed.query);
+  const body={...incoming,query:normalized.query,condition:parsed.condition||incoming.condition,filters:{...incoming.filters,...parsed.filters}};
+  const parsedError=validateSearchBody(body);if(parsedError)return res.status(400).json({error:parsedError});
   if(isBroad(body)&&!inventoryIndex.search(body).length){
     try{const {response,data}=await legacy('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});return res.status(response.status).json(enforceVehicleBoundary(data));}catch(error){return res.status(502).json({error:error?.message||'Dalelah search unavailable'});}
   }

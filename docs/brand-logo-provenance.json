@@ -1,0 +1,694 @@
+{
+  "retrievedAt": "2026-09-16T22:28:19.689Z",
+  "dataset": "https://github.com/filippofilip95/car-logos-dataset",
+  "notice": "Third-party reproductions of manufacturer marks, not a claim of an official distribution license. Assets used solely to identify vehicle makes. Review assets on brand updates.",
+  "brands": {
+    "Toyota": {
+      "url": "/brand-logos/toyota.png",
+      "source": "https://www.carlogos.org/car-logos/toyota-logo-2020-europe-640.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/toyota.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Lexus": {
+      "url": "/brand-logos/lexus.png",
+      "source": "https://www.carlogos.org/logo/Lexus-logo-1988-1920x1080.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/lexus.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Nissan": {
+      "url": "/brand-logos/nissan.png",
+      "source": "https://www.carlogos.org/car-logos/nissan-logo-2020-black-show.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/nissan.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Hyundai": {
+      "url": "/brand-logos/hyundai.png",
+      "source": "https://www.carlogos.org/car-logos/hyundai-logo-2011-640.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/hyundai.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Mercedes": {
+      "url": "/brand-logos/mercedes-benz.png",
+      "source": "https://www.carlogos.org/logo/Mercedes-Benz-logo-2011-1920x1080.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/mercedes-benz.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "BMW": {
+      "url": "/brand-logos/bmw.png",
+      "source": "https://www.carlogos.org/car-logos/bmw-logo-2020-gray.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/bmw.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Kia": {
+      "url": "/brand-logos/kia.png",
+      "source": "https://www.carlogos.org/logo/Kia-logo-2560x1440.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/kia.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Ford": {
+      "url": "/brand-logos/ford.png",
+      "source": "https://www.carlogos.org/car-logos/ford-logo-2017-640.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/ford.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Chevrolet": {
+      "url": "/brand-logos/chevrolet.png",
+      "source": "https://www.carlogos.org/logo/Chevrolet-logo-2013-2560x1440.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/chevrolet.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Jeep": {
+      "url": "/brand-logos/jeep.png",
+      "source": "https://www.carlogos.org/car-logos/jeep-logo-1993-640.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/jeep.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Porsche": {
+      "url": "/brand-logos/porsche.png",
+      "source": "https://www.carlogos.org/car-logos/porsche-logo-2014-full-640.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/porsche.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "GMC": {
+      "url": "/brand-logos/gmc.png",
+      "source": "https://www.carlogos.org/logo/GMC-logo-2200x600.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/gmc.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Audi": {
+      "url": "/brand-logos/audi.png",
+      "source": "https://www.carlogos.org/car-logos/audi-logo-2016-640.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/audi.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Volkswagen": {
+      "url": "/brand-logos/volkswagen.png",
+      "source": "https://www.carlogos.org/logo/Volkswagen-logo-2019-1500x1500.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/volkswagen.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Land Rover": {
+      "url": "/brand-logos/land-rover.png",
+      "source": "https://www.carlogos.org/logo/Land-Rover-logo-2011-1920x1080.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/land-rover.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Genesis": {
+      "url": "/brand-logos/genesis.png",
+      "source": "https://www.carlogos.org/logo/Genesis-logo-640x248.jpg",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/genesis.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "BYD": {
+      "url": "/brand-logos/byd.png",
+      "source": "https://www.carlogos.org/logo/BYD-logo-2007-2560x1440.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/byd.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "GAC": {
+      "url": "/brand-logos/gac-group.png",
+      "source": "https://www.carlogos.org/logo/GAC-Group-logo-2560x1440.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/gac-group.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only."
+    },
+    "Geely": {
+      "url": "/brand-logos/geely.png",
+      "source": "https://www.carlogos.org/logo/Geely-logo-2014-2560x1440.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/geely.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Tesla": {
+      "url": "/brand-logos/tesla.png",
+      "source": "https://www.carlogos.org/car-logos/tesla-logo-2007-full-640.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/tesla.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Changan": {
+      "url": "/brand-logos/changan.png",
+      "source": "https://www.carlogos.org/logo/Changan-logo-2010-2560x1440.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/changan.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "MG": {
+      "url": "/brand-logos/mg.png",
+      "source": "https://www.carlogos.org/logo/MG-logo-red-2010-1920x1080.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/mg.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Jetour": {
+      "url": "/brand-logos/jetour.png",
+      "source": "/Users/filip.popranec/Develop/car-logos-dataset/local-logos/jetour.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/jetour.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "BAIC": {
+      "url": "/brand-logos/baic-motor.png",
+      "source": "https://www.carlogos.org/logo/BAIC-Motor-logo-2560x1440.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/baic-motor.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only."
+    },
+    "BAW": {
+      "status": "unavailable",
+      "reason": "No verified asset in source dataset"
+    },
+    "Acura": {
+      "url": "/brand-logos/acura.png",
+      "source": "https://www.carlogos.org/logo/Acura-logo-1990-1024x768.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/acura.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Bentley": {
+      "url": "/brand-logos/bentley.png",
+      "source": "https://www.carlogos.org/car-logos/bentley-logo-2002-640.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/bentley.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Aston Martin": {
+      "url": "/brand-logos/aston-martin.png",
+      "source": "https://www.carlogos.org/logo/Aston-Martin-logo-2003-6000x3000.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/aston-martin.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Alfa Romeo": {
+      "url": "/brand-logos/alfa-romeo.png",
+      "source": "https://www.carlogos.org/logo/Alfa-Romeo-logo-2015-1920x1080.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/alfa-romeo.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Hongqi": {
+      "url": "/brand-logos/hongqi.png",
+      "source": "https://www.carlogos.org/car-logos/hongqi-logo-2018-800x600-show.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/hongqi.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Cadillac": {
+      "url": "/brand-logos/cadillac.png",
+      "source": "https://www.carlogos.org/car-logos/cadillac-logo-2021-full-640.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/cadillac.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Bestune": {
+      "url": "/brand-logos/bestune.png",
+      "source": "https://www.carlogos.org/car-logos/bestune-logo-2400x1200-show.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/bestune.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Chery": {
+      "url": "/brand-logos/chery.png",
+      "source": "https://www.carlogos.org/logo/Chery-logo-2013-3840x2160.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/chery.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Bugatti": {
+      "url": "/brand-logos/bugatti.png",
+      "source": "https://www.carlogos.org/logo/Bugatti-logo-1024x768.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/bugatti.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Chrysler": {
+      "url": "/brand-logos/chrysler.png",
+      "source": "https://www.carlogos.org/car-logos/chrysler-logo-2009-640.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/chrysler.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Citroen": {
+      "url": "/brand-logos/citroen.png",
+      "source": "https://www.carlogos.org/logo/Citroen-logo-2009-2048x2048.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/citroen.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Deepal": {
+      "status": "unavailable",
+      "reason": "No verified asset in source dataset"
+    },
+    "Denza": {
+      "url": "/brand-logos/denza.png",
+      "source": "https://www.denza.com/material/denza-overseas/public/logo/logo_bgLight.svg",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only."
+    },
+    "Cupra": {
+      "url": "/brand-logos/cupra.png",
+      "source": "/Users/filip.popranec/Develop/car-logos-dataset/local-logos/cupra.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/cupra.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Dacia": {
+      "url": "/brand-logos/dacia.png",
+      "source": "https://www.carlogos.org/logo/Dacia-logo-2008-1920x1080.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/dacia.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Dodge": {
+      "url": "/brand-logos/dodge.png",
+      "source": "https://www.carlogos.org/car-logos/dodge-logo-2010-640.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/dodge.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Daihatsu": {
+      "url": "/brand-logos/daihatsu.png",
+      "source": "https://www.carlogos.org/logo/Daihatsu-logo-1997-1280x233.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/daihatsu.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Daewoo": {
+      "url": "/brand-logos/daewoo.png",
+      "source": "https://www.carlogos.org/logo/Daewoo-logo-1920x1080.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/daewoo.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Exeed": {
+      "url": "/brand-logos/exeed.png",
+      "source": "https://www.carlogos.org/car-logos/exeed-logo-1200x200-show.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/exeed.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "FAW": {
+      "url": "/brand-logos/faw.png",
+      "source": "https://www.carlogos.org/logo/FAW-logo-1920x1080.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/faw.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Ferrari": {
+      "url": "/brand-logos/ferrari.png",
+      "source": "https://www.carlogos.org/car-logos/ferrari-logo-2002-640.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/ferrari.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Great Wall": {
+      "url": "/brand-logos/great-wall.png",
+      "source": "https://www.carlogos.org/logo/Great-Wall-logo-2007-2048x2048.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/great-wall.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Honda": {
+      "url": "/brand-logos/honda.png",
+      "source": "https://www.carlogos.org/car-logos/honda-logo-2000-full-640.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/honda.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Haval": {
+      "url": "/brand-logos/haval.png",
+      "source": "https://www.carlogos.org/logo/Haval-logo-1366x768.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/haval.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Fiat": {
+      "url": "/brand-logos/fiat.png",
+      "source": "https://www.carlogos.org/logo/Fiat-logo-2006-1920x1080.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/fiat.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Foton": {
+      "url": "/brand-logos/foton.png",
+      "source": "https://www.carlogos.org/logo/Foton-logo-1920x1080.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/foton.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Jaecoo": {
+      "status": "unavailable",
+      "reason": "No verified asset in source dataset"
+    },
+    "Hummer": {
+      "url": "/brand-logos/hummer.png",
+      "source": "https://www.carlogos.org/logo/Hummer-logo-2000x205.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/hummer.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Infiniti": {
+      "url": "/brand-logos/infiniti.png",
+      "source": "https://www.carlogos.org/logo/Infiniti-logo-1989-2560x1440.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/infiniti.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Jaguar": {
+      "url": "/brand-logos/jaguar.png",
+      "source": "https://www.carlogos.org/car-logos/jaguar-logo-2021-640.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/jaguar.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Isuzu": {
+      "url": "/brand-logos/isuzu.png",
+      "source": "https://www.carlogos.org/logo/Isuzu-logo-1991-3840x2160.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/isuzu.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "JAC": {
+      "url": "/brand-logos/jac.png",
+      "source": "https://www.carlogos.org/logo/JAC-Motors-logo-2016-1920x1080.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/jac.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Koenigsegg": {
+      "url": "/brand-logos/koenigsegg.png",
+      "source": "https://www.carlogos.org/logo/Koenigsegg-logo-1994-2048x2048.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/koenigsegg.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Lamborghini": {
+      "url": "/brand-logos/lamborghini.png",
+      "source": "https://www.carlogos.org/car-logos/lamborghini-logo-1998-640.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/lamborghini.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Lincoln": {
+      "url": "/brand-logos/lincoln.png",
+      "source": "https://www.carlogos.org/logo/Lincoln-logo-2019-1920x1080.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/lincoln.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "JMC": {
+      "url": "/brand-logos/jmc.png",
+      "source": "https://www.carlogos.org/logo/Jiangling-logo-1280x1024.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/jmc.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Leapmotor": {
+      "url": "/brand-logos/leapmotor.png",
+      "source": "https://www.carlogos.org/car-logos/leapmotor-logo-1000x650-show.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/leapmotor.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Lotus": {
+      "url": "/brand-logos/lotus.png",
+      "source": "https://www.carlogos.org/logo/Lotus-logo-2019-1800x1800.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/lotus.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Lynk & Co": {
+      "url": "/brand-logos/lynk-and-co.png",
+      "source": "https://www.carlogos.org/car-logos/lynkco-logo-2150x400-show.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/lynk-and-co.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Lucid": {
+      "url": "/brand-logos/lucid.png",
+      "source": "https://www.carlogos.org/logo/Lucid-Motors-logo-1500x200.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/lucid.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Maserati": {
+      "url": "/brand-logos/maserati.png",
+      "source": "https://www.carlogos.org/car-logos/maserati-logo-2020-640.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/maserati.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Mahindra": {
+      "url": "/brand-logos/mahindra.png",
+      "source": "https://www.carlogos.org/logo/Mahindra-logo-2560x1440.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/mahindra.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Maxus": {
+      "url": "/brand-logos/maxus.png",
+      "source": "https://www.carlogos.org/logo/Maxus-logo-2014-1920x1080.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/maxus.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Mazda": {
+      "url": "/brand-logos/mazda.png",
+      "source": "https://www.carlogos.org/car-logos/mazda-logo-2018-vertical-640.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/mazda.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "McLaren": {
+      "url": "/brand-logos/mclaren.png",
+      "source": "https://www.carlogos.org/logo/McLaren-logo-2002-2560x1440.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/mclaren.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "MINI": {
+      "url": "/brand-logos/mini.png",
+      "source": "https://www.carlogos.org/logo/Mini-logo-2001-1920x1080.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/mini.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Mitsubishi": {
+      "url": "/brand-logos/mitsubishi.png",
+      "source": "https://www.carlogos.org/logo/Mitsubishi-logo-2000x2500.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/mitsubishi.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Nio": {
+      "url": "/brand-logos/nio.png",
+      "source": "https://www.carlogos.org/car-logos/nio-logo-1800x700-show.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/nio.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Mercury": {
+      "url": "/brand-logos/mercury.png",
+      "source": "https://www.carlogos.org/logo/Mercury-logo-1980-2500x2500.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/mercury.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Omoda": {
+      "url": "/brand-logos/omoda.png",
+      "source": "/Users/filip.popranec/Develop/car-logos-dataset/local-logos/omoda.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/omoda.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Opel": {
+      "url": "/brand-logos/opel.png",
+      "source": "https://www.carlogos.org/logo/Opel-logo-2009-1920x1080.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/opel.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Pagani": {
+      "url": "/brand-logos/pagani.png",
+      "source": "https://www.carlogos.org/logo/Pagani-logo-1992-1440x900.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/pagani.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Peugeot": {
+      "url": "/brand-logos/peugeot.png",
+      "source": "https://www.carlogos.org/logo/Peugeot-logo-2010-1920x1080.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/peugeot.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Polestar": {
+      "url": "/brand-logos/polestar.png",
+      "source": "https://www.carlogos.org/logo/Polestar-logo-1366x768.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/polestar.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Oldsmobile": {
+      "url": "/brand-logos/oldsmobile.png",
+      "source": "https://www.carlogos.org/logo/Oldsmobile-logo-1996-1024x768.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/oldsmobile.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Rolls-Royce": {
+      "url": "/brand-logos/rolls-royce.png",
+      "source": "https://www.carlogos.org/logo/Rolls-Royce-logo-2048x2048.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/rolls-royce.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Ram": {
+      "url": "/brand-logos/ram.png",
+      "source": "https://www.carlogos.org/logo/RAM-logo-2009-1920x1080.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/ram.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Renault": {
+      "url": "/brand-logos/renault.png",
+      "source": "https://www.carlogos.org/logo/Renault-logo-2015-2048x2048.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/renault.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Pontiac": {
+      "url": "/brand-logos/pontiac.png",
+      "source": "https://www.carlogos.org/logo/Pontiac-logo-2560x1440.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/pontiac.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Rivian": {
+      "url": "/brand-logos/rivian.png",
+      "source": "https://www.carlogos.org/car-logos/rivian-logo-black-1300x1150-show.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/rivian.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Saab": {
+      "url": "/brand-logos/saab.png",
+      "source": "https://www.carlogos.org/logo/Saab-logo-2013-2000x450.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/saab.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Skoda": {
+      "url": "/brand-logos/skoda.png",
+      "source": "https://www.carlogos.org/logo/Skoda-logo-2016-1920x1080.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/skoda.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "SEAT": {
+      "url": "/brand-logos/seat.png",
+      "source": "https://www.carlogos.org/logo/SEAT-logo-2012-6000x5000.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/seat.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Smart": {
+      "url": "/brand-logos/smart.png",
+      "source": "https://www.carlogos.org/logo/Smart-logo-1994-1366x768.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/smart.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Saturn": {
+      "url": "/brand-logos/saturn.png",
+      "source": "https://www.carlogos.org/logo/Saturn-logo-1985-2048x2048.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/saturn.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Tank": {
+      "status": "unavailable",
+      "reason": "No verified asset in source dataset"
+    },
+    "Rover": {
+      "url": "/brand-logos/rover.png",
+      "source": "https://www.carlogos.org/logo/Rover-logo-2003-3840x2160.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/rover.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Soueast": {
+      "url": "/brand-logos/soueast.png",
+      "source": "https://www.carlogos.org/logo/Soueast-logo-1995-800x600.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/soueast.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Subaru": {
+      "url": "/brand-logos/subaru.png",
+      "source": "https://www.carlogos.org/car-logos/subaru-logo-2019-640.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/subaru.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Suzuki": {
+      "url": "/brand-logos/suzuki.png",
+      "source": "https://www.carlogos.org/logo/Suzuki-logo-5000x2500.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/suzuki.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Volvo": {
+      "url": "/brand-logos/volvo.png",
+      "source": "https://www.carlogos.org/logo/Volvo-logo-2014-1920x1080.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/volvo.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Xpeng": {
+      "url": "/brand-logos/xpeng.png",
+      "source": "https://www.carlogos.org/car-logos/xpeng-logo-2021-2700x1100-show.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/xpeng.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Zeekr": {
+      "url": "/brand-logos/zeekr.png",
+      "source": "https://www.carlogos.org/car-logos/zeekr-logo-2300x700-show.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/zeekr.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "Tata": {
+      "url": "/brand-logos/tata.png",
+      "source": "https://www.carlogos.org/logo/Tata-logo-2000-2560x1440.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/tata.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    },
+    "VinFast": {
+      "url": "/brand-logos/vinfast.png",
+      "source": "https://www.carlogos.org/car-logos/vinfast-logo-900x850-show.png",
+      "assetSource": "https://raw.githubusercontent.com/filippofilip95/car-logos-dataset/master/logos/optimized/vinfast.png",
+      "status": "available",
+      "rights": "Manufacturer trademark; identification only. No affiliation implied."
+    }
+  }
+}

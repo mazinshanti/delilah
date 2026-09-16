@@ -1,0 +1,26 @@
+{
+  "snapshotAt": "2026-09-16T23:00:52.848Z",
+  "bySource": {
+    "CarSwitch Saudi": {
+      "listings": 579,
+      "multipleImages": 0,
+      "totalImages": 579
+    },
+    "Syarah": {
+      "listings": 1514,
+      "multipleImages": 600,
+      "totalImages": 3914
+    },
+    "Saudi Sale": {
+      "listings": 23,
+      "multipleImages": 0,
+      "totalImages": 23
+    },
+    "Mercedes-Benz Saudi": {
+      "listings": 24,
+      "multipleImages": 0,
+      "totalImages": 0
+    }
+  },
+  "multipleImages": 600
+}

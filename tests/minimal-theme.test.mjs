@@ -25,8 +25,9 @@ test('theme follows iPhone conventions and persists between product pages',async
     assert.match(html,/id="themeToggle"/);
     assert.match(html,/localStorage\.getItem\('dalelah\.theme'\)/);
     assert.match(html,/prefers-color-scheme: dark/);
-    assert.match(html===home?ui:html,/localStorage\.setItem\('dalelah\.theme'/);
-    if(html===home)assert.match(ui,/next==='dark'\?'day':'night'/);else assert.match(html,/Switch to day mode/);
+    const behavior=html===home?ui:await readFile(new URL('public/sell-v2.js',root),'utf8');
+    assert.match(behavior,/localStorage\.setItem\('dalelah\.theme'/);
+    if(html===home)assert.match(ui,/next==='dark'\?'day':'night'/);else assert.match(behavior,/aria-label/);
   }
   assert.match(homeTheme,/-apple-system,BlinkMacSystemFont,"SF Pro Text"/);
   assert.match(sellTheme,/-apple-system,BlinkMacSystemFont,"SF Pro Text"/);

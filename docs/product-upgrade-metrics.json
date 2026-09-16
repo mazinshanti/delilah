@@ -1,0 +1,714 @@
+{
+  "checkedAt": "2026-09-16T23:01:52.972Z",
+  "catalog": {
+    "makes": 100,
+    "models": 1544,
+    "coverage": [
+      {
+        "make": "Toyota",
+        "arabic": "تويوتا",
+        "models": 49
+      },
+      {
+        "make": "Lexus",
+        "arabic": "لكزس",
+        "models": 26
+      },
+      {
+        "make": "Mercedes",
+        "arabic": "مرسيدس",
+        "models": 73
+      },
+      {
+        "make": "BMW",
+        "arabic": "بي إم دبليو",
+        "models": 60
+      },
+      {
+        "make": "Nissan",
+        "arabic": "نيسان",
+        "models": 50
+      },
+      {
+        "make": "Hyundai",
+        "arabic": "هيونداي",
+        "models": 43
+      },
+      {
+        "make": "Kia",
+        "arabic": "كيا",
+        "models": 41
+      },
+      {
+        "make": "Ford",
+        "arabic": "فورد",
+        "models": 56
+      },
+      {
+        "make": "Chevrolet",
+        "arabic": "شفروليه",
+        "models": 34
+      },
+      {
+        "make": "GMC",
+        "arabic": "جي إم سي",
+        "models": 9
+      },
+      {
+        "make": "Jeep",
+        "arabic": "جيب",
+        "models": 11
+      },
+      {
+        "make": "Porsche",
+        "arabic": "بورش",
+        "models": 18
+      },
+      {
+        "make": "Audi",
+        "arabic": "أودي",
+        "models": 60
+      },
+      {
+        "make": "Volkswagen",
+        "arabic": "فولكس واجن",
+        "models": 56
+      },
+      {
+        "make": "Land Rover",
+        "arabic": "لاند روفر",
+        "models": 9
+      },
+      {
+        "make": "Genesis",
+        "arabic": "جينيسس",
+        "models": 6
+      },
+      {
+        "make": "Tesla",
+        "arabic": "تسلا",
+        "models": 6
+      },
+      {
+        "make": "BYD",
+        "arabic": "بي واي دي",
+        "models": 11
+      },
+      {
+        "make": "Geely",
+        "arabic": "جيلي",
+        "models": 13
+      },
+      {
+        "make": "Changan",
+        "arabic": "شانجان",
+        "models": 15
+      },
+      {
+        "make": "MG",
+        "arabic": "إم جي",
+        "models": 17
+      },
+      {
+        "make": "GAC",
+        "arabic": "جي ايه سي",
+        "models": 12
+      },
+      {
+        "make": "Jetour",
+        "arabic": "جيتور",
+        "models": 8
+      },
+      {
+        "make": "Hongqi",
+        "arabic": "هونشي",
+        "models": 8
+      },
+      {
+        "make": "Acura",
+        "arabic": "اكورا",
+        "models": 9
+      },
+      {
+        "make": "Alfa Romeo",
+        "arabic": "Alfa Romeo",
+        "models": 22
+      },
+      {
+        "make": "Aston Martin",
+        "arabic": "استون مارتن",
+        "models": 9
+      },
+      {
+        "make": "BAIC",
+        "arabic": "بايك",
+        "models": 8
+      },
+      {
+        "make": "BAW",
+        "arabic": "باو",
+        "models": 2
+      },
+      {
+        "make": "Bentley",
+        "arabic": "بنتلي",
+        "models": 7
+      },
+      {
+        "make": "Bestune",
+        "arabic": "بيستون",
+        "models": 5
+      },
+      {
+        "make": "Bugatti",
+        "arabic": "بوجاتي",
+        "models": 4
+      },
+      {
+        "make": "Cadillac",
+        "arabic": "كاديلاك",
+        "models": 14
+      },
+      {
+        "make": "Chery",
+        "arabic": "شيري",
+        "models": 8
+      },
+      {
+        "make": "Chrysler",
+        "arabic": "كرايسلر",
+        "models": 18
+      },
+      {
+        "make": "Citroen",
+        "arabic": "سيتروين",
+        "models": 31
+      },
+      {
+        "make": "Cupra",
+        "arabic": "كوبرا",
+        "models": 5
+      },
+      {
+        "make": "Dacia",
+        "arabic": "داسيا",
+        "models": 10
+      },
+      {
+        "make": "Daewoo",
+        "arabic": "دايو",
+        "models": 13
+      },
+      {
+        "make": "Daihatsu",
+        "arabic": "دايهاتسو",
+        "models": 7
+      },
+      {
+        "make": "Deepal",
+        "arabic": "ديبال",
+        "models": 3
+      },
+      {
+        "make": "Denza",
+        "arabic": "دينزا",
+        "models": 3
+      },
+      {
+        "make": "Dodge",
+        "arabic": "دودج",
+        "models": 14
+      },
+      {
+        "make": "Exeed",
+        "arabic": "اكسيد",
+        "models": 4
+      },
+      {
+        "make": "FAW",
+        "arabic": "فاو",
+        "models": 5
+      },
+      {
+        "make": "Ferrari",
+        "arabic": "فيراري",
+        "models": 15
+      },
+      {
+        "make": "Fiat",
+        "arabic": "فيات",
+        "models": 49
+      },
+      {
+        "make": "Foton",
+        "arabic": "فوتون",
+        "models": 3
+      },
+      {
+        "make": "Great Wall",
+        "arabic": "جريت وول",
+        "models": 3
+      },
+      {
+        "make": "Haval",
+        "arabic": "هافال",
+        "models": 7
+      },
+      {
+        "make": "Honda",
+        "arabic": "هوندا",
+        "models": 26
+      },
+      {
+        "make": "Hummer",
+        "arabic": "همر",
+        "models": 3
+      },
+      {
+        "make": "Infiniti",
+        "arabic": "انفينيتي",
+        "models": 21
+      },
+      {
+        "make": "Isuzu",
+        "arabic": "ايسوزو",
+        "models": 4
+      },
+      {
+        "make": "JAC",
+        "arabic": "جاك",
+        "models": 8
+      },
+      {
+        "make": "Jaecoo",
+        "arabic": "جايكو",
+        "models": 3
+      },
+      {
+        "make": "Jaguar",
+        "arabic": "جاكوار",
+        "models": 20
+      },
+      {
+        "make": "JMC",
+        "arabic": "جي ام سي التجارية",
+        "models": 2
+      },
+      {
+        "make": "Koenigsegg",
+        "arabic": "كونيجسيج",
+        "models": 5
+      },
+      {
+        "make": "Lamborghini",
+        "arabic": "لامبورغيني",
+        "models": 9
+      },
+      {
+        "make": "Leapmotor",
+        "arabic": "ليب موتور",
+        "models": 4
+      },
+      {
+        "make": "Lincoln",
+        "arabic": "لينكولن",
+        "models": 9
+      },
+      {
+        "make": "Lotus",
+        "arabic": "لوتس",
+        "models": 6
+      },
+      {
+        "make": "Lucid",
+        "arabic": "لوسيد",
+        "models": 2
+      },
+      {
+        "make": "Lynk & Co",
+        "arabic": "لينك اند كو",
+        "models": 7
+      },
+      {
+        "make": "Mahindra",
+        "arabic": "ماهيندرا",
+        "models": 5
+      },
+      {
+        "make": "Maserati",
+        "arabic": "مازيراتي",
+        "models": 7
+      },
+      {
+        "make": "Maxus",
+        "arabic": "ماكسوس",
+        "models": 7
+      },
+      {
+        "make": "Mazda",
+        "arabic": "مازدا",
+        "models": 33
+      },
+      {
+        "make": "McLaren",
+        "arabic": "ماكلارين",
+        "models": 14
+      },
+      {
+        "make": "Mercury",
+        "arabic": "ميركوري",
+        "models": 7
+      },
+      {
+        "make": "MINI",
+        "arabic": "ميني",
+        "models": 14
+      },
+      {
+        "make": "Mitsubishi",
+        "arabic": "ميتسوبيشي",
+        "models": 30
+      },
+      {
+        "make": "Nio",
+        "arabic": "نيو",
+        "models": 6
+      },
+      {
+        "make": "Oldsmobile",
+        "arabic": "اولدزموبيل",
+        "models": 9
+      },
+      {
+        "make": "Omoda",
+        "arabic": "اومودا",
+        "models": 4
+      },
+      {
+        "make": "Opel",
+        "arabic": "اوبل",
+        "models": 27
+      },
+      {
+        "make": "Pagani",
+        "arabic": "باجاني",
+        "models": 3
+      },
+      {
+        "make": "Peugeot",
+        "arabic": "بيجو",
+        "models": 42
+      },
+      {
+        "make": "Polestar",
+        "arabic": "بولستار",
+        "models": 4
+      },
+      {
+        "make": "Pontiac",
+        "arabic": "بونتياك",
+        "models": 16
+      },
+      {
+        "make": "Ram",
+        "arabic": "رام",
+        "models": 4
+      },
+      {
+        "make": "Renault",
+        "arabic": "رينو",
+        "models": 34
+      },
+      {
+        "make": "Rivian",
+        "arabic": "ريفيان",
+        "models": 2
+      },
+      {
+        "make": "Rolls-Royce",
+        "arabic": "رولز رويس",
+        "models": 8
+      },
+      {
+        "make": "Rover",
+        "arabic": "Rover",
+        "models": 9
+      },
+      {
+        "make": "Saab",
+        "arabic": "ساب",
+        "models": 11
+      },
+      {
+        "make": "Saturn",
+        "arabic": "ساترن",
+        "models": 8
+      },
+      {
+        "make": "SEAT",
+        "arabic": "سيات",
+        "models": 18
+      },
+      {
+        "make": "Skoda",
+        "arabic": "سكودا",
+        "models": 20
+      },
+      {
+        "make": "Smart",
+        "arabic": "سمارت",
+        "models": 10
+      },
+      {
+        "make": "Soueast",
+        "arabic": "ساوايست",
+        "models": 6
+      },
+      {
+        "make": "Subaru",
+        "arabic": "سوبارو",
+        "models": 18
+      },
+      {
+        "make": "Suzuki",
+        "arabic": "سوزوكي",
+        "models": 22
+      },
+      {
+        "make": "Tank",
+        "arabic": "تانك",
+        "models": 3
+      },
+      {
+        "make": "Tata",
+        "arabic": "تاتا",
+        "models": 5
+      },
+      {
+        "make": "VinFast",
+        "arabic": "فين فاست",
+        "models": 4
+      },
+      {
+        "make": "Volvo",
+        "arabic": "فولفو",
+        "models": 27
+      },
+      {
+        "make": "Xpeng",
+        "arabic": "اكس بنج",
+        "models": 4
+      },
+      {
+        "make": "Zeekr",
+        "arabic": "زيكر",
+        "models": 5
+      }
+    ]
+  },
+  "inventory": {
+    "generatedAt": "2026-09-16T23:00:52.848Z",
+    "totalUnique": 2140,
+    "completeRecords": 1823,
+    "expiredRecords": 0,
+    "bySource": {
+      "CarSwitch Saudi": {
+        "count": 579,
+        "complete": 579,
+        "lastSeenAt": "2026-09-16T22:55:13.472Z"
+      },
+      "Syarah": {
+        "count": 1514,
+        "complete": 1244,
+        "lastSeenAt": "2026-09-16T23:00:51.746Z"
+      },
+      "Saudi Sale": {
+        "count": 23,
+        "complete": 0,
+        "lastSeenAt": "2026-09-16T22:49:32.800Z"
+      },
+      "Mercedes-Benz Saudi": {
+        "count": 24,
+        "complete": 0,
+        "lastSeenAt": "2026-09-16T22:49:34.185Z"
+      }
+    },
+    "byBrand": {
+      "Hyundai": 264,
+      "Chevrolet": 44,
+      "Mazda": 46,
+      "Suzuki": 83,
+      "Mitsubishi": 20,
+      "Land Rover": 42,
+      "Nissan": 69,
+      "Changan": 42,
+      "Lincoln": 3,
+      "Toyota": 232,
+      "Audi": 20,
+      "BMW": 70,
+      "Ford": 47,
+      "Dodge": 17,
+      "Great Wall": 6,
+      "Jeep": 24,
+      "MG": 100,
+      "Cadillac": 9,
+      "Volkswagen": 38,
+      "MINI": 4,
+      "GMC": 17,
+      "Haval": 88,
+      "Lexus": 39,
+      "Geely": 22,
+      "Chery": 32,
+      "Jaecoo": 18,
+      "Hongqi": 6,
+      "Jetour": 75,
+      "Maxus": 5,
+      "GAC": 89,
+      "Mercedes": 81,
+      "BAW": 2,
+      "Genesis": 48,
+      "Tesla": 4,
+      "Kia": 233,
+      "BAIC": 6,
+      "Exeed": 1,
+      "Porsche": 8,
+      "Fiat": 11,
+      "Isuzu": 12,
+      "Jaguar": 3,
+      "Honda": 11,
+      "Peugeot": 16,
+      "Infiniti": 3,
+      "JAC": 14,
+      "Foton": 6,
+      "Renault": 33,
+      "Volvo": 1,
+      "Maserati": 1,
+      "BYD": 1,
+      "JMC": 5,
+      "FAW": 14,
+      "Lucid": 7,
+      "Dongfeng ": 9,
+      "Shineray": 5,
+      "Deepal": 2,
+      "Force": 2,
+      "Sintruck": 1,
+      "Omoda": 13,
+      "Lynk and Co": 5,
+      "Forthing": 1,
+      "Soueast": 3,
+      "CMC": 3,
+      "ZX Auto": 2,
+      "Rolls-Royce": 1,
+      "Ferrari": 1
+    },
+    "byCity": {
+      "Riyadh": 1632,
+      "Jeddah": 164,
+      "Khobar": 37,
+      "Mahayil": 1,
+      "Jazan": 1,
+      "Dammam": 59,
+      "Abha": 2,
+      "Buraidah": 1,
+      "Jubail": 1,
+      "Yanbu": 1,
+      "Al Taif": 1,
+      "Al Qurayyat": 215,
+      "Unknown": 25
+    },
+    "byCondition": {
+      "used": 1881,
+      "new": 259
+    },
+    "missingFields": {
+      "trim": 69,
+      "mileage": 259,
+      "city": 25,
+      "image": 24
+    },
+    "storage": "versioned-snapshot-and-memory",
+    "maxAgeHours": 36,
+    "diagnostics": [
+      {
+        "source": "Mercedes-Benz Saudi",
+        "pages": 1,
+        "successfulPages": 1,
+        "completedAt": "2026-09-16T22:49:35.286Z",
+        "records": 24,
+        "duplicateCards": 0,
+        "errors": [],
+        "durationMs": 26586
+      },
+      {
+        "source": "Saudi Sale",
+        "pages": 2,
+        "successfulPages": 2,
+        "completedAt": "2026-09-16T22:49:47.768Z",
+        "records": 21,
+        "duplicateCards": 21,
+        "errors": [],
+        "durationMs": 39069
+      },
+      {
+        "source": "CarSwitch Saudi",
+        "pages": 25,
+        "successfulPages": 24,
+        "completedAt": "2026-09-16T22:55:27.989Z",
+        "records": 576,
+        "duplicateCards": 0,
+        "errors": [
+          {
+            "page": 25,
+            "error": "HTTP 202"
+          }
+        ],
+        "durationMs": 379292
+      },
+      {
+        "source": "Syarah",
+        "pages": 50,
+        "successfulPages": 50,
+        "completedAt": "2026-09-16T23:00:52.848Z",
+        "records": 600,
+        "duplicateCards": 0,
+        "errors": [],
+        "durationMs": 704154
+      }
+    ]
+  },
+  "galleries": {
+    "snapshotAt": "2026-09-16T23:00:52.848Z",
+    "bySource": {
+      "CarSwitch Saudi": {
+        "listings": 579,
+        "multipleImages": 0,
+        "totalImages": 579
+      },
+      "Syarah": {
+        "listings": 1514,
+        "multipleImages": 600,
+        "totalImages": 3914
+      },
+      "Saudi Sale": {
+        "listings": 23,
+        "multipleImages": 0,
+        "totalImages": 23
+      },
+      "Mercedes-Benz Saudi": {
+        "listings": 24,
+        "multipleImages": 0,
+        "totalImages": 0
+      }
+    },
+    "multipleImages": 600
+  },
+  "tests": {
+    "passed": 109,
+    "failed": 0,
+    "engine": "Node test runner; seller integration uses PGlite PostgreSQL"
+  },
+  "seller": {
+    "productionAvailable": false,
+    "reason": "saudi-database-not-configured"
+  }
+}

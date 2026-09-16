@@ -19,6 +19,8 @@ jobs:
         with:
           node-version: 22
       - run: npm install --no-audit --no-fund
+      - name: Test catalog, seller transactions, galleries and existing regressions
+        run: npm test
       - name: Syntax-check Dalelah unified chain
         run: |
           node --check server-entry.js

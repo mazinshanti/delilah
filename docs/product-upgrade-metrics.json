@@ -703,12 +703,43 @@
     "multipleImages": 600
   },
   "tests": {
-    "passed": 112,
+    "passed": 113,
     "failed": 0,
-    "engine": "Node test runner; seller integration uses PGlite PostgreSQL"
+    "engine": "Node test runner; seller integration uses PGlite PostgreSQL",
+    "inventory": {
+      "records": 2140,
+      "assertions": 23540,
+      "queries": 884,
+      "localLatencyMs": {
+        "p50": 8.281480999999985,
+        "p95": 18.052560000000085,
+        "max": 49.234826
+      }
+    }
   },
   "seller": {
     "productionAvailable": false,
-    "reason": "saudi-database-not-configured"
+    "reason": "saudi-database-not-configured",
+    "browserChecks": [
+      "Arabic/RTL",
+      "English/LTR",
+      "photo preview",
+      "photo reorder",
+      "photo removal",
+      "review",
+      "unavailable storage disables submission"
+    ]
+  },
+  "liveSearches": {
+    "Bentley": {
+      "listings": 16,
+      "multipleImages": 12
+    },
+    "Toyota Corolla 2013": {
+      "listings": 22
+    },
+    "Pontiac G8 2009": {
+      "listings": 0
+    }
   }
 }

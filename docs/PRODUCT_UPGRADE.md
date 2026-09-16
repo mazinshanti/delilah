@@ -14,7 +14,9 @@ The existing front/deep-search services and APIs remain in place. No listings ar
 
 ## Verification
 
-112 tests pass, including every catalog entry's canonical recognition, strict searches for each of the 100 makes, New/Used separation, exact years, Arabic aliases, zero-result Pontiac searches, unsafe gallery URLs, photo decoding/deduplication and the seller HTTP journey against embedded PostgreSQL. Production verification additionally caught an Arabic exhaust-gasket ad and a harmless Haraj trailing-slash redirect; both now have regression coverage. Database tests cover successful persistence, duplicate requests, validation errors and transaction rollback. Production dependencies have zero reported npm-audit vulnerabilities at verification time.
+113 tests pass, including every catalog entry's canonical recognition, strict searches for each of the 100 makes, New/Used separation, exact years, Arabic aliases, zero-result Pontiac searches, unsafe gallery URLs, photo decoding/deduplication and the seller HTTP journey against embedded PostgreSQL. Production verification additionally caught an Arabic exhaust-gasket ad and a harmless Haraj trailing-slash redirect; both now have regression coverage. A live GMC window-switch ad also has a regression test. The live seller form passed preview, reorder and removal checks. Database tests cover successful persistence, duplicate requests, validation errors and transaction rollback. Production dependencies have zero reported npm-audit vulnerabilities at verification time.
+
+A separate snapshot validation passed 23,540 record assertions and 884 queries across 2,140 records (local query p50 8.3ms, p95 18.1ms). Completed live searches returned 16 Bentley listings, 22 exact-year Corolla 2013 listings and zero Pontiac G8 2009 listings; 12 of those Bentley listings carried multiple photos.
 
 `product-upgrade-metrics.json` records the inventory snapshot, gallery coverage and per-make catalog counts. The live release is checked separately after Render deployment; passing local tests alone does not establish production readiness.
 

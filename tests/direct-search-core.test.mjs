@@ -99,3 +99,15 @@ test('Bentley results reject suspension, body-kit and spare-parts ads',()=>{
   const out=strictDirectListings(input,{query:'Bentley 2020',condition:'used',filters:{}});
   assert.deepEqual(out.map(x=>x.url),['https://example.com/bentley-car']);
 });
+
+test('misspelled Bentley search keeps cars and rejects unrelated products',()=>{
+  const input=[
+    {source:'Haraj',title:'بنتلي بنتايجا 2021 BENTLY V8',url:'https://example.com/bentley-car',year:2021,condition:'used'},
+    {source:'Haraj',title:'عوده بنتلي فوحان وثبات بيور',url:'https://example.com/perfume',condition:'used'},
+    {source:'Haraj',title:'ساعة بنتلي bently جديدة',url:'https://example.com/watch',condition:'used'},
+    {source:'Haraj',title:'حساب ببجي نادر للبيع',url:'https://example.com/game',condition:'used'},
+    {source:'Haraj',title:'كت تحويل بنتلي بنتياقا',url:'https://example.com/kit',condition:'used'}
+  ];
+  const out=strictDirectListings(input,{query:'bently',condition:'used',filters:{}});
+  assert.deepEqual(out.map(x=>x.url),['https://example.com/bentley-car']);
+});

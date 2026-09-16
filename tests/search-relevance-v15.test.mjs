@@ -1,11 +1,19 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {detectRequestedBrand,filterBrandRelevance,listingMatchesBrand} from '../lib/search-relevance.js';
+import {canonicalizeVehicleQuery,detectRequestedBrand,filterBrandRelevance,listingMatchesBrand} from '../lib/search-relevance.js';
 import {detectRequestedModel,listingMatchesModel} from '../lib/search-model-relevance.js';
 
 test('detects Bentley in English and Arabic',()=>{
   assert.equal(detectRequestedBrand('Bentley'),'Bentley');
+  assert.equal(detectRequestedBrand('bently'),'Bentley');
   assert.equal(detectRequestedBrand('بنتلي'),'Bentley');
+});
+
+test('canonicalizes common Bentley misspellings before source retrieval',()=>{
+  assert.deepEqual(canonicalizeVehicleQuery('bently 2021'),{
+    query:'Bentley 2021',
+    corrections:[{from:'bently',to:'Bentley',type:'typo'}]
+  });
 });
 
 test('Bentley search rejects unrelated BMW inventory',()=>{

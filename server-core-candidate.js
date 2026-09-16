@@ -10,6 +10,7 @@ import {enrichHarajListingPrices} from './lib/haraj-price-enrichment.js';
 import {extractSyarahCashPrice} from './lib/syarah-price.js';
 import {enrichSyarahListingPrices,isSyarahDetailUrl} from './lib/syarah-price-enrichment.js';
 import {filterVehicleSaleListings} from './lib/listing-quality.js';
+import {canonicalizeVehicleQuery} from './lib/search-relevance.js';
 
 const externalPort=Number(process.env.PORT||3000);
 const legacyBase=String(process.env.DALELAH_LEGACY_BASE_URL||'https://delilah-live-search.onrender.com').replace(/\/$/,'');
@@ -174,7 +175,7 @@ function publicJob(job){
   const syarahPricePending=Boolean(job.syarahPriceEnrichmentPromise&&!job.syarahPriceEnrichmentComplete);
   const complete=fullComplete&&!pricePending&&!syarahPricePending;
   const base=job.fullData||job.directData||{};
-  const out={...base,listings,counts:counts(listings),complete,marketScanComplete:complete,directCoreLane:true,directCoreFirstResultMs:job.firstResultMs??null,directCoreDurationMs:direct.durationMs??null,directCoreSources:direct.sources||[],directCoreErrors:direct.errors||[],deepScanStarted:Boolean(job.fullPromise),deepScanMode:'remote-legacy-fallback',deepZeroRetry:Boolean(job.deepZeroRetry),exactBrandQualityGate:true,harajPriceMatrix:true,harajDetailPriceEnrichment:true,harajPriceEnrichmentPending:pricePending,harajPriceEnrichmentComplete:Boolean(job.priceEnrichmentComplete),harajDetailPricesEnriched:job.priceEnriched||0,harajDetailPricesAttempted:job.priceAttempted||0,harajPriceEnrichmentError:job.priceEnrichmentError||null,syarahPriceMatrix:true,syarahDetailPriceEnrichment:true,syarahPriceEnrichmentPending:syarahPricePending,syarahPriceEnrichmentComplete:Boolean(job.syarahPriceEnrichmentComplete),syarahDetailPricesEnriched:job.syarahPriceEnriched||0,syarahDetailPricesAttempted:job.syarahPriceAttempted||0,syarahPriceEnrichmentError:job.syarahPriceEnrichmentError||null};
+  const out={...base,listings,counts:counts(listings),complete,marketScanComplete:complete,directCoreLane:true,directCoreFirstResultMs:job.firstResultMs??null,directCoreDurationMs:direct.durationMs??null,directCoreSources:direct.sources||[],directCoreErrors:direct.errors||[],deepScanStarted:Boolean(job.fullPromise),deepScanMode:'remote-legacy-fallback',deepZeroRetry:Boolean(job.deepZeroRetry),exactBrandQualityGate:true,queryCorrections:job.queryCorrections,understanding:{...(base.understanding||{}),query:job.originalQuery,normalizedQuery:job.body.query,typoCorrections:job.queryCorrections},harajPriceMatrix:true,harajDetailPriceEnrichment:true,harajPriceEnrichmentPending:pricePending,harajPriceEnrichmentComplete:Boolean(job.priceEnrichmentComplete),harajDetailPricesEnriched:job.priceEnriched||0,harajDetailPricesAttempted:job.priceAttempted||0,harajPriceEnrichmentError:job.priceEnrichmentError||null,syarahPriceMatrix:true,syarahDetailPriceEnrichment:true,syarahPriceEnrichmentPending:syarahPricePending,syarahPriceEnrichmentComplete:Boolean(job.syarahPriceEnrichmentComplete),syarahDetailPricesEnriched:job.syarahPriceEnriched||0,syarahDetailPricesAttempted:job.syarahPriceAttempted||0,syarahPriceEnrichmentError:job.syarahPriceEnrichmentError||null};
   if(!complete)out.searchId=job.id;else delete out.searchId;
   if(!out.answer)out.answer=listings.length?`${listings.length} verified cars found. Dalelah is continuing the market scan.`:'Dalelah is scanning the Saudi market…';
   return out;
@@ -211,11 +212,11 @@ function kickFull(job){
   return job.fullPromise;
 }
 
-function startJob(body={}){
+function startJob(body={},meta={}){
   if(jobs.size>=MAX_ACTIVE_JOBS)pruneJobs(Date.now(),true);
   const key=keyFor(body),existing=inFlight.get(key);
   if(existing&&Date.now()-existing.createdAt<COALESCE_TTL)return existing;
-  const job={id:`dc.${randomUUID()}`,key,body,createdAt:Date.now(),directData:null,fullData:null,fullPromise:null,fullDone:false,upstreamId:null,error:null,firstResultMs:null,deepZeroRetry:false,priceEnrichmentPromise:null,priceEnrichmentComplete:false,priceEnriched:0,priceAttempted:0,priceEnrichmentError:null,syarahPriceEnrichmentPromise:null,syarahPriceEnrichmentComplete:false,syarahPriceEnriched:0,syarahPriceAttempted:0,syarahPriceEnrichmentError:null,syarahPriceSeen:new Set()};
+  const job={id:`dc.${randomUUID()}`,key,body,originalQuery:meta.originalQuery||body.query,queryCorrections:meta.corrections||[],createdAt:Date.now(),directData:null,fullData:null,fullPromise:null,fullDone:false,upstreamId:null,error:null,firstResultMs:null,deepZeroRetry:false,priceEnrichmentPromise:null,priceEnrichmentComplete:false,priceEnriched:0,priceAttempted:0,priceEnrichmentError:null,syarahPriceEnrichmentPromise:null,syarahPriceEnrichmentComplete:false,syarahPriceEnriched:0,syarahPriceAttempted:0,syarahPriceEnrichmentError:null,syarahPriceSeen:new Set()};
   jobs.set(job.id,job);inFlight.set(key,job);
   job.directPromise=searchDirectFirst(body,{timeoutMs:DIRECT_BUDGET_MS})
     .then(data=>{
@@ -246,13 +247,15 @@ async function advanceFull(job){
 function isBroad(body={}){const q=String(body.query||'').trim();return !q||q==='__all_cars__';}
 
 app.post('/api/search',async(req,res)=>{
-  const body=req.body||{};
-  const validationError=validateSearchBody(body);
+  const incoming=req.body||{};
+  const validationError=validateSearchBody(incoming);
   if(validationError)return res.status(400).json({error:validationError});
+  const normalized=canonicalizeVehicleQuery(incoming.query);
+  const body={...incoming,query:normalized.query};
   if(isBroad(body)){
     try{const {response,data}=await legacy('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});return res.status(response.status).json(enforceVehicleBoundary(data));}catch(error){return res.status(502).json({error:error?.message||'Dalelah search unavailable'});}
   }
-  const started=Date.now(),job=startJob(body);
+  const started=Date.now(),job=startJob(body,{originalQuery:incoming.query,corrections:normalized.corrections});
   await Promise.race([job.directPromise,sleep(DIRECT_BUDGET_MS)]);
   if(!(job.directData?.listings?.length)&&!job.fullData){const left=Math.max(0,DIRECT_BUDGET_MS-(Date.now()-started));if(left)await Promise.race([job.fullPromise,sleep(left)]);}
   const out=publicJob(job);

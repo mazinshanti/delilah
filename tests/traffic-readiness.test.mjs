@@ -18,10 +18,10 @@ test('search engines can discover only intentional public pages',()=>{
   assert.doesNotMatch(sitemap,/\?q=/);
 });
 
-test('landing pages have unique server-rendered metadata and live search hydration',()=>{
+test('landing pages have unique server-rendered metadata and live search hydration',async()=>{
   assert.match(server,/renderLanding/);
   assert.match(server,/og:title/);
   assert.match(server,/__DALELAH_LANDING__/);
-  assert.match(html,/hydrateFromUrl/);
+  assert.match(await readFile(new URL('public/market-ui.js',root),'utf8'),/hydrateFromUrl/);
   assert.match(html,/SearchAction/);
 });

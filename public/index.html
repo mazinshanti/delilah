@@ -1,16 +1,16 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#ffffff">
-  <meta name="description" content="Search real Saudi car listings from marketplaces and dealers in one place.">
+  <meta name="description" content="اكتشف السيارات الجديدة والمستعملة من مصادر السوق السعودي في مكان واحد.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://www.dalelah.co/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Dalelah · دليلة">
-  <meta property="og:title" content="Dalelah — Search the Saudi car market">
-  <meta property="og:description" content="Search real Saudi car listings from marketplaces and dealers in one place.">
+  <meta property="og:title" content="دليلة — سيارتك القادمة، أقرب">
+  <meta property="og:description" content="اكتشف السيارات الجديدة والمستعملة من مصادر السوق السعودي في مكان واحد.">
   <meta property="og:url" content="https://www.dalelah.co/">
   <meta name="twitter:card" content="summary">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,63 +18,53 @@
   <meta name="apple-mobile-web-app-title" content="Dalelah">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" href="/dalelah-icon.svg" type="image/svg+xml">
-  <script>(function(){var saved=localStorage.getItem('dalelah.theme');var theme=saved||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=theme;document.querySelector('meta[name="theme-color"]').content=theme==='dark'?'#000000':'#ffffff'})()</script>
-  <link rel="stylesheet" href="/dalelah.css">
-  <link rel="stylesheet" href="/minimal-theme.css?v=market2">
-  <title>Dalelah — Search the Saudi car market</title>
+  <script>try{const t=localStorage.getItem('dalelah.theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'),l=localStorage.getItem('dalelah.language')||'ar';document.documentElement.dataset.theme=t;document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';document.querySelector('meta[name="theme-color"]').content=t==='dark'?'#000000':'#ffffff'}catch{}</script>
+  <link rel="stylesheet" href="/experience.css?v=ux1">
+  <title>دليلة — سيارتك القادمة، أقرب</title>
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","name":"Dalelah","alternateName":"دليلة","url":"https://www.dalelah.co/"},{"@type":"WebSite","name":"Dalelah","url":"https://www.dalelah.co/","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://www.dalelah.co/?q={search_term_string}"},"query-input":"required name=search_term_string"}}]}</script>
 </head>
 <body>
 <!--LANDING_DATA-->
-<div class="shell">
-  <header class="nav">
-    <div class="brand"><div class="mark">D</div><div><div class="brandName">Dalelah</div><div class="brandArabic">دليلة</div></div></div>
-    <div class="navActions"><a class="sellLink" href="/sell.html">Sell</a><button id="themeToggle" class="themeToggle" type="button" aria-label="Switch to night mode" title="Switch appearance"><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 15.4A8.5 8.5 0 0 1 8.6 3.5 8.6 8.6 0 1 0 20.5 15.4Z"/></svg><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button></div>
-  </header>
-
-  <section class="hero">
-    <!--SEO_H1--><h1>Find your<br><span>next car.</span></h1>
-  </section>
-
-  <section id="discover" class="searchPanel">
-    <div class="searchTop"><div class="tabs"><button id="usedTab" class="tab active">Used cars</button><button id="newTab" class="tab">New cars</button></div><button id="filterBtn" class="filterBtn">Filters · الفلاتر</button></div>
-    <div id="search" class="search"><input id="q" autocomplete="off" placeholder="Corolla 2013 or ابي باترول 2020"><button id="ask" aria-label="Search">Search</button></div>
-    <div class="quick"><span class="quickLabel">Popular</span><a href="/cars/used/toyota/corolla/2013">Corolla 2013</a><a href="/cars/used/nissan/patrol">Nissan Patrol</a><a href="/cars/used/jeep/wrangler">Jeep Wrangler</a><a href="/cars/used/toyota/camry">Toyota Camry</a></div>
-    <div id="filters" class="filters"><div class="filterGrid"><div class="field"><label>Min year</label><input id="minYear" type="number" inputmode="numeric"></div><div class="field"><label>Max year</label><input id="maxYear" type="number" inputmode="numeric"></div><div class="field"><label>Max price</label><input id="maxPrice" type="number" inputmode="numeric"></div><div class="field"><label>Max mileage</label><input id="maxMileage" type="number" inputmode="numeric"></div><div class="field"><label>City</label><select id="city"><option value="">Any city</option><option>Riyadh</option><option>Jeddah</option><option>Dammam</option><option>Khobar</option><option>Makkah</option><option>Madinah</option></select></div></div></div>
-  </section>
-
-  <section class="browse">
-    <div class="sectionHead"><h2>Browse by brand</h2><button class="clearBrand" onclick="selectBrand('')">All brands</button></div>
-    <div id="brands" class="brands"></div>
-    <div class="modelBar"><div class="field"><label id="modelLabel">Model · All brands</label><select id="model"><option value="">All models</option></select></div><div class="field"><label>Category</label><select id="category"><option value="">All categories</option><option>SUV</option><option>Sedan</option><option>Pickup</option><option>Coupe</option><option>Hatchback</option><option>Van</option><option>Electric</option><option>Hybrid</option></select></div><div class="field"><label>Source</label><select id="source"><option value="">All sources</option><option>Haraj</option><option>Syarah</option><option>OpenSooq</option><option>Saleh Cars</option></select></div><button id="browseGo" class="browseGo">Browse cars →</button></div>
-    <div id="answer" class="answer"><span class="answerStar">✦</span><div id="answerText" class="answerText"></div></div>
-  </section>
-
-  <section id="results" class="main"><div class="resultsHead"><div><h2 id="resultTitle">Best used matches</h2><div id="sub" class="sub">Search or browse current Saudi inventory.</div></div><button id="shareSearch" class="shareBtn" hidden>Share search</button></div><div id="grid" class="grid"><div class="empty"><b>What car are you looking for?</b>Tell Dalelah and we’ll search the market.</div></div></section>
-  <footer class="footer"><span>Dalelah · دليلة</span><a href="/sell.html">Sell your car</a></footer>
-</div>
-<script>
-const BRANDS=[['Toyota','TY'],['Nissan','NI'],['Jeep','JP'],['Lexus','LX'],['BMW','BM'],['Mercedes','MB'],['Hyundai','HY'],['Kia','KA'],['Ford','FD'],['Chevrolet','CH'],['GMC','GM'],['Mazda','MZ'],['Honda','HN'],['Genesis','GN'],['Geely','GE'],['Changan','CG'],['Haval','HV'],['MG','MG'],['BYD','BY'],['Jetour','JT']];
-const MODELS={Toyota:['Camry','Corolla','Land Cruiser','Prado','Yaris','Fortuner','Hilux','RAV4'],Nissan:['Patrol','Sunny','Altima','X-Trail','Pathfinder','Kicks','X-Terra'],Jeep:['Wrangler','Compass','Grand Cherokee','Gladiator'],Lexus:['ES','IS','LS','RX','NX','LX','GX','UX'],BMW:['X1','X3','X5','X6','X7','3 Series','5 Series','7 Series'],Mercedes:['A-Class','C-Class','E-Class','S-Class','GLC','GLE','GLS','G-Class'],Hyundai:['Accent','Elantra','Sonata','Tucson','Santa Fe','Palisade'],Kia:['Pegas','Cerato','K5','K8','Sportage','Sorento','Carnival'],Ford:['Territory','Taurus','Explorer','Expedition','Everest','Ranger','F-150','Mustang','Bronco'],Chevrolet:['Tahoe','Suburban','Captiva','Traverse','Silverado','Camaro'],GMC:['Yukon','Sierra','Acadia'],Mazda:['Mazda 3','Mazda 6','CX-5','CX-9'],Honda:['Accord','Civic','City','CR-V','HR-V','Pilot'],Genesis:['G70','G80','G90','GV70','GV80'],Geely:['Coolray','Emgrand','Monjaro','Starray'],Changan:['CS35 Plus','CS55 Plus','CS75 Plus','UNI-K','UNI-T'],Haval:['H6','Jolion','Dargo','H9'],MG:['MG 5','MG 6','RX5','HS','ZS','GT'],BYD:['Song Plus','Seal','Han','Atto 3','Tang'],Jetour:['Dashing','X70','X90 Plus','T1','T2']};
-const $=x=>document.getElementById(x),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let condition='used',selectedBrand='',listings=[],runSeq=0;
-function applyTheme(theme){const next=theme==='dark'?'dark':'light';document.documentElement.dataset.theme=next;localStorage.setItem('dalelah.theme',next);document.querySelector('meta[name="theme-color"]').content=next==='dark'?'#000000':'#ffffff';$('themeToggle').setAttribute('aria-label',next==='dark'?'Switch to day mode':'Switch to night mode')}
-$('themeToggle').onclick=()=>applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');applyTheme(document.documentElement.dataset.theme);
-function paintBrands(){const h=$('brands');h.innerHTML=`<button class="brandBtn ${!selectedBrand?'active':''}" data-brand=""><span class="brandMonogram">ALL</span><span>All brands</span></button>`+BRANDS.map(([n,m])=>`<button class="brandBtn ${selectedBrand===n?'active':''}" data-brand="${n}"><span class="brandMonogram">${m}</span><span>${n}</span></button>`).join('');h.querySelectorAll('[data-brand]').forEach(b=>b.onclick=()=>selectBrand(b.dataset.brand))}
-function selectBrand(b){selectedBrand=b;paintBrands();const m=$('model');m.disabled=!b;m.innerHTML='<option value="">All models</option>'+((MODELS[b]||[]).map(x=>`<option>${x}</option>`).join(''));$('modelLabel').textContent=`Model · ${b||'All brands'}`}
-function setCondition(v){condition=v;$('usedTab').classList.toggle('active',v==='used');$('newTab').classList.toggle('active',v==='new');$('resultTitle').textContent=`Best ${v} matches`}
-$('usedTab').onclick=()=>setCondition('used');$('newTab').onclick=()=>setCondition('new');$('filterBtn').onclick=()=>$('filters').classList.toggle('show');
-function filters(){return{minYear:$('minYear').value,maxYear:$('maxYear').value,maxPrice:$('maxPrice').value,maxMileage:$('maxMileage').value,city:$('city').value,seller:$('source').value}}
-function browse(){const q=[selectedBrand,$('model').value,$('category').value].filter(Boolean).join(' ')||'__all_cars__';$('q').value=q==='__all_cars__'?'':q;run(q)}
-$('browseGo').onclick=browse;$('ask').onclick=()=>run();$('q').onkeydown=e=>{if(e.key==='Enter')run()};
-function render(){const g=$('grid');if(!listings.length){g.innerHTML='<div class="empty"><b>No verified matches yet.</b>Dalelah will keep scanning when more inventory may be available.</div>';return}g.innerHTML=listings.map(c=>{const title=c.title||[c.year,c.brand,c.model].filter(Boolean).join(' ')||'Car listing',img=c.displayImage||c.image,url=String(c.url||'');return`<article class="card"><div class="photo">${img?`<img src="${esc(img)}" alt="${esc(title)}" loading="lazy" onerror="this.remove()">`:'<div class="fallback">D</div>'}<span class="chip source">${esc(c.source||'Source')}</span></div><div class="body"><div class="title">${esc(title)}</div><div class="facts">${c.year?`<span class="fact">${c.year}</span>`:''}${c.mileage!=null?`<span class="fact">${Number(c.mileage).toLocaleString()} km</span>`:''}${c.city?`<span class="fact">${esc(c.city)}</span>`:''}${c.trim?`<span class="fact">${esc(c.trim)}</span>`:''}</div><div class="price">${c.price?`${Number(c.price).toLocaleString()} SAR`:'Price unavailable'}</div><button class="open" data-url="${esc(url)}">View listing ↗</button></div></article>`}).join('');g.querySelectorAll('.open').forEach(b=>b.onclick=()=>{if(b.dataset.url)window.open(b.dataset.url,'_blank','noopener')})}
-const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
-function mergeListings(next=[]){const map=new Map(listings.filter(x=>x?.url).map(x=>[x.url,x]));for(const c of next||[]){if(!c?.url)continue;const old=map.get(c.url);map.set(c.url,old?{...old,...c,image:c.image||old.image,displayImage:c.displayImage||old.displayImage,price:c.price??old.price??null}:c)}listings=[...map.values()]}
-function paintStatus(d={},scanning=false){const exact=d.exactYearIntent||d.exactYear||null;const sourceCount=Object.keys(d.counts||listings.reduce((a,c)=>(a[c.source||'Source']=1,a),{})).length;$('answerText').textContent=exact?`Exact year ${exact} enforced · ${listings.length} verified matches${scanning?' so far':''}.`:`${listings.length} verified matches across ${sourceCount} source${sourceCount===1?'':'s'}${scanning?' · scanning more…':''}`;$('sub').textContent=scanning?`${listings.length} ${condition} cars found so far — scanning more inventory…`:`${listings.length} ${condition} cars across ${sourceCount} source${sourceCount===1?'':'s'}.`;render()}
-async function pollSearch(searchId,seq){let latest={};for(let i=0;i<12;i++){if(seq!==runSeq)return;await sleep(i===0?650:1200);if(seq!==runSeq)return;try{const r=await fetch(`/api/search/progress/${encodeURIComponent(searchId)}`);const d=await r.json();if(!r.ok)continue;latest=d;mergeListings(d.listings||[]);const done=d.complete===true||d.marketScanComplete===true;paintStatus(d,!done);if(done)return d}catch{}}return latest}
-async function run(override,options={}){const query=String(override??$('q').value).trim();if(!query)return;if(options.updateUrl!==false&&!window.__DALELAH_LANDING__){const params=new URLSearchParams({q:query,condition});history.replaceState(null,'',`/?${params}`)}$('shareSearch').hidden=false;const seq=++runSeq;$('search').classList.add('loading');$('ask').textContent='Searching…';$('answer').classList.add('show');$('answerText').textContent='Scanning Saudi sources for real matching listings…';$('sub').textContent='Searching live inventory…';listings=[];render();try{const r=await fetch('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query,condition,filters:filters()})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Search failed');if(seq!==runSeq)return;mergeListings(d.listings||[]);const canPoll=Boolean(d.searchId)&&d.complete!==true&&d.marketScanComplete!==true;paintStatus(d,canPoll);if(canPoll){$('ask').textContent='Scanning…';const final=await pollSearch(d.searchId,seq);if(seq!==runSeq)return;paintStatus(final||d,false)}}catch(e){if(seq!==runSeq)return;$('answerText').textContent='Search is temporarily unavailable. Please try again.';$('sub').textContent=e.message;listings=[];render()}finally{if(seq===runSeq){$('search').classList.remove('loading');$('ask').textContent='Search'}}}
-$('shareSearch').onclick=async()=>{const data={title:document.title,text:`Dalelah search: ${$('q').value}`,url:location.href};if(navigator.share){await navigator.share(data).catch(()=>{})}else{await navigator.clipboard?.writeText(location.href);$('shareSearch').textContent='Link copied';setTimeout(()=>$('shareSearch').textContent='Share search',1800)}};
-function hydrateFromUrl(){const params=new URLSearchParams(location.search),landing=window.__DALELAH_LANDING__||null;const initialCondition=landing?.condition||params.get('condition');if(initialCondition==='new'||initialCondition==='used')setCondition(initialCondition);const query=landing?.query||params.get('q');if(query){$('q').value=query;setTimeout(()=>run(query,{updateUrl:false}),0)}}
-paintBrands();selectBrand('');render();hydrateFromUrl();
-</script>
-<script src="/market-ui.js?v=20260916-3"></script>
+<a class="skip" href="#discover" data-i18n="skip">انتقل إلى البحث</a>
+<header class="nav wrap">
+ <a class="brand" href="/" aria-label="دليلة — Dalelah"><svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="13" fill="currentColor"/><path d="M13 28V12h6a8 8 0 0 1 0 16h-6m8-12v8m0-4h-5" fill="none" stroke="var(--bg)" stroke-width="2.5" stroke-linecap="round"/></svg><span data-i18n="brand">دليلة</span></a>
+ <nav class="navActions" aria-label="Language and appearance"><button id="languageToggle" class="text-button" lang="en">English</button><span class="nav-divider"></span><button id="themeToggle" class="icon-button" aria-label="الوضع الليلي"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 15.4A8.5 8.5 0 0 1 8.6 3.5 8.6 8.6 0 1 0 20.5 15.4Z"/></svg></button></nav>
+</header>
+<main id="searchView">
+ <section class="hero wrap"><p class="eyebrow" data-i18n="eyebrow">السوق السعودي. بحث واحد.</p><template id="landingHeading"><!--SEO_H1--><h1>Find your<br><span>next car.</span></h1></template><h1 data-i18n="headline">سيارتك القادمة، أقرب.</h1><p class="hero-sub" data-i18n="heroSub">اكتشف ما يناسبك. وقارن براحتك.</p></section>
+ <section id="discover" class="searchPanel wrap" aria-label="البحث عن سيارة">
+  <form id="searchForm">
+   <div class="searchTop"><div class="tabs" role="group" aria-label="حالة السيارة"><button id="usedTab" type="button" aria-pressed="true" class="tab active" data-i18n="used">مستعملة</button><button id="newTab" type="button" aria-pressed="false" class="tab" data-i18n="new">جديدة</button></div><span class="search-note" data-i18n="searchNote">خيارات حقيقية، من مصادر متعددة</span></div>
+   <div class="search-fields"><div class="field"><label for="make" data-i18n="make">الماركة</label><select id="make"></select></div><div class="field"><label for="model" data-i18n="model">الموديل</label><select id="model" disabled></select></div><div class="field"><label for="budget" data-i18n="budget">الميزانية</label><select id="budget"></select></div><div class="field"><label for="homeCity" data-i18n="city">المدينة</label><select id="homeCity"></select></div><button id="ask" type="submit" class="primary"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg><span data-i18n="search">ابحث عن سيارة</span></button></div>
+   <div class="query-row"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h6"/></svg><input id="q" aria-label="ابحث بالماركة أو الموديل أو السنة" placeholder="أو اكتب ما تبحث عنه، مثل كورولا 2013" autocomplete="off"><button id="filterBtn" type="button" class="text-button" data-i18n="allFilters">كل الفلاتر</button></div>
+  </form>
+ </section>
+ <div id="homeContent" class="wrap">
+  <section class="browse"><div class="sectionHead"><h2 data-i18n="browseBrand">ابدأ بماركتك المفضلة</h2><button id="allBrands" class="text-button" aria-expanded="false" data-i18n="allBrands">كل الماركات</button></div><div id="brands" class="brands"></div></section>
+  <section class="bodyBrowse"><div class="sectionHead"><h2 data-i18n="browseBody">سيارة تناسب يومك</h2></div><div id="bodyTypes" class="bodyTypes"></div></section>
+ </div>
+ <section id="results" class="wrap results-section"><div class="resultsHead"><div><p id="resultEyebrow" class="eyebrow" data-i18n="marketNow">من السوق الآن</p><h2 id="resultTitle" data-i18n="selectedCars">اكتشف بعض الخيارات</h2><p id="sub" class="sub" role="status" aria-live="polite"></p></div><div class="resultActions"><button id="mobileFilters" class="secondary" data-i18n="filters">الفلاتر</button><select id="sort" aria-label="ترتيب النتائج"></select><button id="shareSearch" class="text-button" hidden data-i18n="share">مشاركة البحث</button></div></div>
+  <div id="resultsLayout" class="results-layout"><div id="sidebarSlot"></div><div class="results-content"><div id="activeFilters" class="active-filters"></div><div id="grid" class="grid" aria-busy="true"></div><div class="more-row"><button id="loadMore" class="secondary" hidden data-i18n="moreCars">عرض المزيد</button><button id="browseGo" class="text-button" data-i18n="browseAll">استكشف كل السيارات ←</button></div></div></div>
+ </section>
+ <div class="wrap popular"><span data-i18n="popular">عمليات بحث شائعة</span><a href="/cars/used/toyota/corolla/2013" data-ar="كورولا 2013" data-en="Corolla 2013">كورولا 2013</a><a href="/cars/used/nissan/patrol" data-ar="نيسان باترول" data-en="Nissan Patrol">نيسان باترول</a><a href="/cars/used/jeep/wrangler" data-ar="جيب رانجلر" data-en="Jeep Wrangler">جيب رانجلر</a></div>
+</main>
+<section id="vehicleView" class="wrap vehicle-view" hidden aria-labelledby="vehicleTitle"></section>
+<footer class="footer wrap"><a href="/" class="footer-brand" data-i18n="brand">دليلة</a><span data-i18n="footer">بحث أبسط. خيارات أوضح.</span><a href="/sell.html" data-i18n="sell">بيع سيارتك</a></footer>
+<dialog id="filterDialog" aria-labelledby="filterTitle"><div id="sheetSlot"></div></dialog>
+<aside id="filterPanel" class="filter-panel" aria-labelledby="filterTitle" hidden>
+ <div class="filter-heading"><h2 id="filterTitle" data-i18n="filters">الفلاتر</h2><button id="closeFilters" class="icon-button" aria-label="إغلاق الفلاتر">×</button></div>
+ <div class="filterGrid">
+  <div class="filter-pair"><div class="field"><label for="minPrice" data-i18n="minPrice">السعر من</label><input id="minPrice" type="number" min="0" inputmode="numeric"></div><div class="field"><label for="maxPrice" data-i18n="maxPrice">السعر إلى</label><input id="maxPrice" type="number" min="0" inputmode="numeric"></div></div>
+  <div class="filter-pair"><div class="field"><label for="minYear" data-i18n="minYear">السنة من</label><input id="minYear" type="number" min="1980" max="2027" inputmode="numeric"></div><div class="field"><label for="maxYear" data-i18n="maxYear">السنة إلى</label><input id="maxYear" type="number" min="1980" max="2027" inputmode="numeric"></div></div>
+  <div class="field"><label for="maxMileage" data-i18n="maxMileage">أقصى ممشى (كم)</label><input id="maxMileage" type="number" min="0" inputmode="numeric"></div>
+  <div class="field"><label for="city" data-i18n="city">المدينة</label><select id="city"></select></div>
+  <div class="field"><label for="bodyType" data-i18n="bodyType">نوع الهيكل</label><select id="bodyType"></select></div>
+  <div class="field"><label for="category" data-i18n="fuel">الوقود</label><select id="category"></select></div>
+  <div class="field"><label for="source" data-i18n="source">المصدر</label><select id="source"></select></div>
+  <div class="field"><label for="trim" data-i18n="trim">الفئة</label><input id="trim" type="text" maxlength="80"></div>
+ </div>
+ <div class="filter-footer"><button id="applyFilters" class="primary" data-i18n="apply">عرض النتائج</button><button id="resetFilters" class="text-button" data-i18n="reset">مسح الفلاتر</button></div>
+</aside>
+<div id="announcement" class="sr-only" role="status" aria-live="polite"></div>
+<script type="module" src="/market-ui.js?v=ux1"></script>
 </body></html>

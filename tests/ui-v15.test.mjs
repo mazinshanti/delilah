@@ -4,6 +4,7 @@ import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 
 const html = await readFile(new URL('../public/index.html', import.meta.url), 'utf8');
+const ui = await readFile(new URL('../public/market-ui.js', import.meta.url), 'utf8');
 const front = await readFile(new URL('../server-core-candidate.js', import.meta.url), 'utf8');
 
 test('Dalelah 1.5 inline scripts parse', () => {
@@ -17,25 +18,25 @@ test('Dalelah 1.5 inline scripts parse', () => {
 });
 
 test('Dalelah 1.5 keeps All Brands as the default', () => {
-  assert.match(html, />All brands<\/span>/);
-  assert.match(html, /selectBrand\(''\)/);
+  assert.match(html, /<html lang="ar" dir="rtl">/);
+  assert.match(ui, /selectBrand\(''\)/);
 });
 
 test('source dropdown sends the backend seller filter', () => {
-  assert.match(html, /seller:\$\('source'\)\.value/);
-  assert.doesNotMatch(html, /source:\$\('source'\)\.value/);
+  assert.match(ui, /seller:\$\('source'\)\.value/);
+  assert.doesNotMatch(ui, /source:\$\('source'\)\.value/);
 });
 
 test('frontend follows progressive market scan results', () => {
-  assert.match(html, /async function pollSearch\(/);
-  assert.match(html, /\/api\/search\/progress\//);
-  assert.match(html, /mergeListings\(d\.listings\|\|\[\]\)/);
+  assert.match(ui, /async function pollSearch\(/);
+  assert.match(ui, /\/api\/search\/progress\//);
+  assert.match(ui, /mergeListings\(d\.listings\|\|\[\]\)/);
 });
 
 test('new and used remain separate product modes', () => {
   assert.match(html, /id="usedTab"/);
   assert.match(html, /id="newTab"/);
-  assert.match(html, /condition='used'/);
+  assert.match(ui, /condition='used'/);
 });
 
 test('front service owns the product shell and has a local health check', () => {
@@ -52,8 +53,8 @@ test('Dalelah can be installed as a mobile web app', () => {
 
 test('searches have crawlable landing pages and shareable URLs', () => {
   assert.match(html, /href="\/cars\/used\/toyota\/corolla\/2013"/);
-  assert.match(html, /history\.replaceState/);
-  assert.match(html, /window\.__DALELAH_LANDING__/);
+  assert.match(ui, /history\.replaceState/);
+  assert.match(ui, /window\.__DALELAH_LANDING__/);
   assert.match(front, /landingPages=new Map/);
   assert.match(front, /Used Toyota Corolla 2013 for sale/);
 });

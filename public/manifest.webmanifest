@@ -1,13 +1,20 @@
 {
   "name": "Dalelah — دليلة",
-  "short_name": "Dalelah",
-  "description": "Search Saudi car marketplaces and dealers in one place.",
+  "short_name": "دليلة",
+  "description": "اكتشف السيارات الجديدة والمستعملة من مصادر السوق السعودي في مكان واحد.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
-  "lang": "en",
-  "dir": "auto",
-  "icons": [{"src":"/dalelah-icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/dalelah-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }

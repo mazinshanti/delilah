@@ -53,7 +53,7 @@ async function run(override,options={}){
 }
 let homeSeq=0;async function loadHome(){const seq=++homeSeq;homeLoading=true;homeError=false;render();try{const d=await json(`/api/inventory?condition=${condition}&pageSize=6`,{},null);if(seq!==homeSeq)return;homeListings=d.listings||[];}catch{if(seq!==homeSeq)return;homeError=true;homeListings=[];}finally{if(seq===homeSeq){homeLoading=false;if(!searchStarted)render();}}}
 const mobile=matchMedia('(max-width:760px)');
-function placeFilters(){if($('filterDialog').open)return;const sidebar=searchStarted&&!mobile.matches;$('resultsLayout').classList.toggle('has-sidebar',sidebar);$('filterPanel').hidden=!sidebar;(sidebar?$('sidebarSlot'):$('sheetSlot')).append($('filterPanel'));}
+function placeFilters(){if($('filterDialog').open)return;const sidebar=searchStarted&&!mobile.matches;$('resultsLayout').classList.toggle('has-sidebar',sidebar);$('filterPanel').hidden=!sidebar;const target=sidebar?$('sidebarSlot'):$('sheetSlot');if($('filterPanel').parentElement!==target)target.append($('filterPanel'));}
 function openFilters(){lastFocus=document.activeElement;$('sheetSlot').append($('filterPanel'));$('filterPanel').hidden=false;$('filterDialog').showModal();document.body.style.overflow='hidden';$('closeFilters').focus();}
 function closeFilters(){if($('filterDialog').open)$('filterDialog').close();document.body.style.overflow='';placeFilters();lastFocus?.focus();}
 function resetFilters(){for(const id of ['minYear','maxYear','minPrice','maxPrice','maxMileage','city','source','trim','category','bodyType','budget','homeCity'])$(id).value='';run(lastQuery||buildQuery());}

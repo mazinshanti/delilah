@@ -1,0 +1,42 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import vm from 'node:vm';
+
+const root=new URL('../',import.meta.url);
+const [home,homeTheme,sell,sellTheme,manifest]=await Promise.all([
+  readFile(new URL('public/index.html',root),'utf8'),
+  readFile(new URL('public/minimal-theme.css',root),'utf8'),
+  readFile(new URL('public/sell.html',root),'utf8'),
+  readFile(new URL('public/sell-minimal.css',root),'utf8'),
+  readFile(new URL('public/manifest.webmanifest',root),'utf8')
+]);
+
+test('day and night themes use true white and black foundations',()=>{
+  assert.match(homeTheme,/:root\{[^}]*--bg:#fff/);
+  assert.match(homeTheme,/:root\[data-theme="dark"\]\{[^}]*--bg:#000/);
+  assert.match(sellTheme,/:root\{[^}]*--bg:#fff/);
+  assert.match(sellTheme,/:root\[data-theme="dark"\]\{[^}]*--bg:#000/);
+});
+
+test('theme follows iPhone conventions and persists between product pages',()=>{
+  for(const html of [home,sell]){
+    assert.match(html,/id="themeToggle"/);
+    assert.match(html,/localStorage\.getItem\('dalelah\.theme'\)/);
+    assert.match(html,/prefers-color-scheme: dark/);
+    assert.match(html,/localStorage\.setItem\('dalelah\.theme'/);
+    assert.match(html,/Switch to day mode/);
+  }
+  assert.match(homeTheme,/-apple-system,BlinkMacSystemFont,"SF Pro Text"/);
+  assert.match(sellTheme,/-apple-system,BlinkMacSystemFont,"SF Pro Text"/);
+});
+
+test('theme scripts parse and the install surface starts in day mode',()=>{
+  for(const [name,html] of [['home',home],['sell',sell]]){
+    const scripts=[...html.matchAll(/<script(?![^>]*application\/ld\+json)[^>]*>([\s\S]*?)<\/script>/gi)].map(x=>x[1]).filter(Boolean);
+    for(const [index,source] of scripts.entries())new vm.Script(source,{filename:`${name}-theme-${index+1}.js`});
+  }
+  const parsed=JSON.parse(manifest);
+  assert.equal(parsed.background_color,'#ffffff');
+  assert.equal(parsed.theme_color,'#ffffff');
+});

@@ -76,5 +76,5 @@ $('shareSearch').onclick=async()=>{const data={title:document.title,text:`Dalela
 function hydrateFromUrl(){const params=new URLSearchParams(location.search),landing=window.__DALELAH_LANDING__||null;const initialCondition=landing?.condition||params.get('condition');if(initialCondition==='new'||initialCondition==='used')setCondition(initialCondition);const query=landing?.query||params.get('q');if(query){$('q').value=query;setTimeout(()=>run(query,{updateUrl:false}),0)}}
 paintBrands();selectBrand('');render();hydrateFromUrl();
 </script>
-<script src="/market-ui.js"></script>
+<script src="/market-ui.js?v=20260916-3"></script>
 </body></html>

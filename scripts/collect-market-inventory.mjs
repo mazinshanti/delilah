@@ -13,7 +13,7 @@ try{const old=JSON.parse(gunzipSync(await readFile('data/market-inventory.json.g
 async function get(url){const {stdout}=await exec('curl',['-sS','--max-time','30','--max-filesize','12000000','-A','Dalelah/1.5 (+https://dalelah.co; vehicle-search-index)','-w','\n%{http_code}',url],{maxBuffer:12_000_000});const i=stdout.lastIndexOf('\n');const status=Number(stdout.slice(i+1));if(status!==200)throw new Error('HTTP '+status);return stdout.slice(0,i);}
 const parsers={jsonld:parseStructuredInventory,syarah:parseSyarahInventory,saudisale:parseSaudiSaleInventory};
 async function collect(source){
- const started=Date.now(),seen=new Set(),errors=[];let attempted=0,duplicates=0,robots='';
+ const started=Date.now(),seen=new Set(),errors=[];let attempted=0,successfulPages=0,duplicates=0,robots='';
  try{robots=await get(new URL('/robots.txt',source.url).href);}catch(e){diagnostics.push({source:source.name,records:0,errors:[{error:'robots-unavailable: '+e.message}]});return;}
  for(let page=1;page<=(source.id==='mercedes'?1:maxPages);page++){
   const url=new URL(source.path,source.url);if(page>1)url.searchParams.set('page',String(page));
@@ -22,14 +22,14 @@ async function collect(source){
    const policy=robotsPolicy(robots,url.href);if(!policy.allowed)throw new Error('robots-disallowed');
    await sleep(policy.delayMs);
    const stdout=await get(url.href);
-   const records=parsers[source.adapter](stdout,source);let added=0;
+   const records=parsers[source.adapter](stdout,source);successfulPages++;let added=0;
    for(const r of records){if(seen.has(r.url)){duplicates++;continue;}seen.add(r.url);all.set(r.url,r);added++;}
    console.log(JSON.stringify({source:source.name,page,records:records.length,added,total:seen.size}));
    if(!added){if(!records.length)errors.push({page,error:'no-parseable-records-or-source-blocked'});break;}
   }catch(e){errors.push({page,error:e.message.slice(0,180)});break;}
   await sleep(1100);
  }
- diagnostics.push({source:source.name,pages:attempted,records:seen.size,duplicateCards:duplicates,errors,durationMs:Date.now()-started});
+ diagnostics.push({source:source.name,pages:attempted,successfulPages,completedAt:new Date().toISOString(),records:seen.size,duplicateCards:duplicates,errors,durationMs:Date.now()-started});
  
 }
 await Promise.all(SOURCE_REGISTRY.filter(s=>parsers[s.adapter]).map(collect));

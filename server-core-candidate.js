@@ -31,7 +31,7 @@ installApiGuard(app);
 app.use(express.json({limit:'32kb'}));
 const inventoryIndex=new InventoryIndex();
 await inventoryIndex.load();
-app.get('/api/sources',(_req,res)=>res.json({sources:publicSourceRegistry(inventoryIndex.stats().bySource)}));
+app.get('/api/sources',(_req,res)=>{const stats=inventoryIndex.stats();res.json({generatedAt:stats.generatedAt,sources:publicSourceRegistry(stats.bySource,stats.diagnostics,stats.generatedAt)});});
 app.get('/api/inventory/stats',(_req,res)=>res.json(inventoryIndex.stats()));
 app.get('/api/inventory',(req,res)=>{
   if(req.query.condition!=null&&!['new','used'].includes(req.query.condition))return res.status(400).json({error:'invalid-condition'});
@@ -80,7 +80,7 @@ app.get(/^\/cars\/(?:used|new)\/[a-z0-9-]+(?:\/[a-z0-9-]+)?(?:\/\d{4})?\/?$/, (r
   return res.type('html').send(renderLanding(pathname,page));
 });
 app.use(express.static(publicDir,{extensions:['html'],maxAge:'1h',setHeaders(res,path){
-  if(path.endsWith('.html'))res.setHeader('Cache-Control','no-cache');
+  if(/\.(?:html|js|css)$/.test(path))res.setHeader('Cache-Control','no-cache');
 }}));
 const jobs=new Map();
 const inFlight=new Map();

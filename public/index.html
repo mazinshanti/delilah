@@ -19,25 +19,36 @@
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" href="/dalelah-icon.svg" type="image/svg+xml">
   <script>try{const t=localStorage.getItem('dalelah.theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'),l=localStorage.getItem('dalelah.language')||'ar';document.documentElement.dataset.theme=t;document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';document.querySelector('meta[name="theme-color"]').content=t==='dark'?'#000000':'#ffffff'}catch{}</script>
-  <link rel="stylesheet" href="/experience.css?v=ux1">
+  <link rel="preload" as="image" href="/hero-riyadh-day-v2.webp" media="(prefers-color-scheme: light)">
+  <link rel="preload" as="image" href="/hero-riyadh-night-v2.webp" media="(prefers-color-scheme: dark)">
+  <link rel="stylesheet" href="/experience.css?v=ux2">
   <title>دليلة — سيارتك القادمة، أقرب</title>
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","name":"Dalelah","alternateName":"دليلة","url":"https://www.dalelah.co/"},{"@type":"WebSite","name":"Dalelah","url":"https://www.dalelah.co/","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://www.dalelah.co/?q={search_term_string}"},"query-input":"required name=search_term_string"}}]}</script>
 </head>
 <body>
 <!--LANDING_DATA-->
 <a class="skip" href="#discover" data-i18n="skip">انتقل إلى البحث</a>
-<header class="nav wrap">
- <a class="brand" href="/" aria-label="دليلة — Dalelah"><svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="13" fill="currentColor"/><path d="M13 28V12h6a8 8 0 0 1 0 16h-6m8-12v8m0-4h-5" fill="none" stroke="var(--bg)" stroke-width="2.5" stroke-linecap="round"/></svg><span data-i18n="brand">دليلة</span></a>
- <nav class="navActions" aria-label="Language and appearance"><button id="languageToggle" class="text-button" lang="en">English</button><span class="nav-divider"></span><button id="themeToggle" class="icon-button" aria-label="الوضع الليلي"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 15.4A8.5 8.5 0 0 1 8.6 3.5 8.6 8.6 0 1 0 20.5 15.4Z"/></svg></button></nav>
-</header>
 <main id="searchView">
- <section class="hero wrap"><p class="eyebrow" data-i18n="eyebrow">السوق السعودي. بحث واحد.</p><template id="landingHeading"><!--SEO_H1--><h1>Find your<br><span>next car.</span></h1></template><h1 data-i18n="headline">سيارتك القادمة، أقرب.</h1><p class="hero-sub" data-i18n="heroSub">اكتشف ما يناسبك. وقارن براحتك.</p></section>
- <section id="discover" class="searchPanel wrap" aria-label="البحث عن سيارة">
-  <form id="searchForm">
-   <div class="searchTop"><div class="tabs" role="group" aria-label="حالة السيارة"><button id="usedTab" type="button" aria-pressed="true" class="tab active" data-i18n="used">مستعملة</button><button id="newTab" type="button" aria-pressed="false" class="tab" data-i18n="new">جديدة</button></div><span class="search-note" data-i18n="searchNote">خيارات حقيقية، من مصادر متعددة</span></div>
-   <div class="search-fields"><div class="field"><label for="make" data-i18n="make">الماركة</label><select id="make"></select></div><div class="field"><label for="model" data-i18n="model">الموديل</label><select id="model" disabled></select></div><div class="field"><label for="budget" data-i18n="budget">الميزانية</label><select id="budget"></select></div><div class="field"><label for="homeCity" data-i18n="city">المدينة</label><select id="homeCity"></select></div><button id="ask" type="submit" class="primary"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg><span data-i18n="search">ابحث عن سيارة</span></button></div>
-   <div class="query-row"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h6"/></svg><input id="q" aria-label="ابحث بالماركة أو الموديل أو السنة" placeholder="أو اكتب ما تبحث عنه، مثل كورولا 2013" autocomplete="off"><button id="filterBtn" type="button" class="text-button" data-i18n="allFilters">كل الفلاتر</button></div>
-  </form>
+ <div class="heroStage">
+  <header class="nav wrap">
+   <a class="brand" href="/" aria-label="دليلة — Dalelah"><svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="13" fill="currentColor"/><path d="M13 28V12h6a8 8 0 0 1 0 16h-6m8-12v8m0-4h-5" fill="none" stroke="var(--brand-cut)" stroke-width="2.5" stroke-linecap="round"/></svg><span data-i18n="brand">دليلة</span></a>
+   <nav class="mainNav" aria-label="التنقل الرئيسي"><a href="#results" data-i18n="cars">السيارات</a><a href="#homeContent" data-i18n="browseBrand">تصفح حسب الماركة</a></nav>
+   <nav class="navActions" aria-label="Language and appearance"><button id="languageToggle" class="text-button" lang="en">English</button><span class="nav-divider"></span><button id="themeToggle" class="icon-button" aria-label="الوضع الليلي"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 15.4A8.5 8.5 0 0 1 8.6 3.5 8.6 8.6 0 1 0 20.5 15.4Z"/></svg></button></nav>
+  </header>
+  <section class="hero wrap"><p class="eyebrow" data-i18n="eyebrow">السوق السعودي. بحث واحد.</p><template id="landingHeading"><!--SEO_H1--><h1>Find your<br><span>next car.</span></h1></template><h1 data-i18n="headline">سيارتك القادمة، أقرب.</h1><p class="hero-sub" data-i18n="heroSub">اكتشف ما يناسبك. وقارن براحتك.</p></section>
+  <section id="discover" class="searchPanel wrap" aria-label="البحث عن سيارة">
+   <form id="searchForm">
+    <div class="searchTop"><div class="tabs" role="group" aria-label="حالة السيارة"><button id="usedTab" type="button" aria-pressed="true" class="tab active" data-i18n="used">مستعملة</button><button id="newTab" type="button" aria-pressed="false" class="tab" data-i18n="new">جديدة</button></div><span class="search-note" data-i18n="searchNote">خيارات حقيقية، من مصادر متعددة</span></div>
+    <div class="search-fields"><div class="field"><label for="make" data-i18n="make">الماركة</label><select id="make"></select></div><div class="field"><label for="model" data-i18n="model">الموديل</label><select id="model" disabled></select></div><div class="field"><label for="budget" data-i18n="budget">الميزانية</label><select id="budget"></select></div><div class="field"><label for="homeCity" data-i18n="city">المدينة</label><select id="homeCity"></select></div><button id="ask" type="submit" class="primary"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg><span data-i18n="search">ابحث عن سيارة</span></button></div>
+    <div class="query-row"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h6"/></svg><input id="q" aria-label="ابحث بالماركة أو الموديل أو السنة" placeholder="أو اكتب ما تبحث عنه، مثل كورولا 2013" autocomplete="off"><button id="filterBtn" type="button" class="text-button" data-i18n="allFilters">كل الفلاتر</button></div>
+   </form>
+  </section>
+ </div>
+ <section class="benefitStrip wrap" aria-label="مزايا دليلة">
+  <div><svg viewBox="0 0 24 24"><path d="M3 14h18M5 14l2-6h10l2 6M6 14v4m12-4v4M7 18h10"/></svg><p><strong data-i18n="realCars">سيارات حقيقية</strong><span data-i18n="realCarsSub">من مصادر موثوقة</span></p></div>
+  <div><svg viewBox="0 0 24 24"><path d="M12 3v4m0 10v4M3 12h4m10 0h4M7 7l2 2m6 6 2 2m0-10-2 2m-6 6-2 2"/><circle cx="12" cy="12" r="3"/></svg><p><strong data-i18n="freshDaily">تحديث يومي</strong><span data-i18n="freshDailySub">أحدث الإعلانات أولًا</span></p></div>
+  <div><svg viewBox="0 0 24 24"><path d="M12 21s7-4.5 7-11a7 7 0 1 0-14 0c0 6.5 7 11 7 11Z"/><circle cx="12" cy="10" r="2"/></svg><p><strong data-i18n="allSaudi">كل مدن المملكة</strong><span data-i18n="allSaudiSub">من الشمال إلى الجنوب</span></p></div>
+  <div><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4M10.5 7.5v6M7.5 10.5h6"/></svg><p><strong data-i18n="smartSearch">بحث ذكي</strong><span data-i18n="smartSearchSub">يوفر عليك الوقت</span></p></div>
  </section>
  <div id="homeContent" class="wrap">
   <section class="browse"><div class="sectionHead"><h2 data-i18n="browseBrand">ابدأ بماركتك المفضلة</h2><button id="allBrands" class="text-button" aria-expanded="false" data-i18n="allBrands">كل الماركات</button></div><div id="brands" class="brands"></div></section>
@@ -66,5 +77,5 @@
  <div class="filter-footer"><button id="applyFilters" class="primary" data-i18n="apply">عرض النتائج</button><button id="resetFilters" class="text-button" data-i18n="reset">مسح الفلاتر</button></div>
 </aside>
 <div id="announcement" class="sr-only" role="status" aria-live="polite"></div>
-<script type="module" src="/market-ui.js?v=ux1"></script>
+<script type="module" src="/market-ui.js?v=ux2"></script>
 </body></html>

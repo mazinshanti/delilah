@@ -1,4 +1,5 @@
 import express from 'express';
+import {installApiGuard,validateFilters} from './lib/api-guard.js';
 import {readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {dirname,join} from 'node:path';
@@ -13,6 +14,8 @@ await import('./server-v15-opensooq.js');
 process.env.PORT = String(externalPort);
 
 const app = express();
+installApiGuard(app);
+app.get('/healthz',(_req,res)=>res.json({ok:true,service:'dalelah-deep',renderGitCommit:process.env.RENDER_GIT_COMMIT||null}));
 const MOBILE_PREVIEW_ORIGINS = new Set([
   'https://dalelah-mobile-preview.onrender.com',
   'http://localhost:8081',
@@ -29,7 +32,7 @@ app.use((req,res,next) => {
   if (req.method === 'OPTIONS') return res.sendStatus(204);
   next();
 });
-app.use(express.json({limit:'256kb'}));
+app.use(express.json({limit:'32kb'}));
 const root = dirname(fileURLToPath(import.meta.url));
 const sleep = ms => new Promise(resolve=>setTimeout(resolve,ms));
 const SEARCH_QUERY_TTL = 20 * 60_000;
@@ -185,6 +188,9 @@ app.get('/mobile-manifest.webmanifest', (_req,res) => {
 
 app.post('/api/search', async (req,res) => {
   const body=req.body||{};
+  if(typeof body.query!=='string'||body.query.length>180)return res.status(400).json({error:'invalid-query'});
+  if(body.condition!=null&&!['new','used'].includes(body.condition))return res.status(400).json({error:'invalid-condition'});
+  const filterError=validateFilters(body.filters||{});if(filterError)return res.status(400).json({error:filterError});
   const query=String(body.query||'');
   try {
     const {response,data}=await inner('/api/search',{

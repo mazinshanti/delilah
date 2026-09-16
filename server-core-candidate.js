@@ -11,18 +11,38 @@ import {extractSyarahCashPrice} from './lib/syarah-price.js';
 import {enrichSyarahListingPrices,isSyarahDetailUrl} from './lib/syarah-price-enrichment.js';
 import {filterVehicleSaleListings} from './lib/listing-quality.js';
 import {canonicalizeVehicleQuery} from './lib/search-relevance.js';
+import {InventoryIndex,paginateInventory,deduplicateVehicles} from './lib/inventory-index.js';
+import {publicSourceRegistry} from './lib/source-registry.js';
+import {installApiGuard,validateFilters} from './lib/api-guard.js';
 
 const externalPort=Number(process.env.PORT||3000);
 const legacyBase=String(process.env.DALELAH_LEGACY_BASE_URL||'https://delilah-live-search.onrender.com').replace(/\/$/,'');
 const DIRECT_BUDGET_MS=Number(process.env.DALELAH_DIRECT_BUDGET_MS||1800);
 const FULL_HEAD_START_MS=Number(process.env.DALELAH_FULL_HEAD_START_MS||900);
 const JOB_TTL=10*60_000;
-const COALESCE_TTL=3_000;
-const MAX_ACTIVE_JOBS=750;
+const COALESCE_TTL=5*60_000;
+const MAX_ACTIVE_JOBS=100;
 const MAX_QUERY_LENGTH=180;
 
 const app=express();
-app.use(express.json({limit:'1mb'}));
+installApiGuard(app);
+app.use(express.json({limit:'32kb'}));
+const inventoryIndex=new InventoryIndex();
+await inventoryIndex.load();
+app.get('/api/sources',(_req,res)=>res.json({sources:publicSourceRegistry(inventoryIndex.stats().bySource)}));
+app.get('/api/inventory/stats',(_req,res)=>res.json(inventoryIndex.stats()));
+app.get('/api/inventory',(req,res)=>{
+  if(req.query.condition!=null&&!['new','used'].includes(req.query.condition))return res.status(400).json({error:'invalid-condition'});
+  const filters={};for(const k of ['minYear','maxYear','minPrice','maxPrice','maxMileage','city','seller','category','trim'])if(req.query[k]!=null)filters[k]=req.query[k];
+  const error=validateFilters(filters);if(error)return res.status(400).json({error});
+  if(req.query.q!=null&&(typeof req.query.q!=='string'||req.query.q.length>180))return res.status(400).json({error:'invalid-query'});
+  const query=canonicalizeVehicleQuery(req.query.q||'').query;
+  const started=performance.now();
+  const rows=inventoryIndex.search({query,condition:req.query.condition==='new'?'new':'used',filters});
+  res.setHeader('Server-Timing',`inventory;dur=${(performance.now()-started).toFixed(2)}`);
+  res.setHeader('Cache-Control','public, max-age=30, stale-while-revalidate=60');
+  return res.json({...paginateInventory(rows,req.query),snapshotAt:inventoryIndex.generatedAt,complete:true});
+});
 const here=dirname(fileURLToPath(import.meta.url));
 const publicDir=join(here,'public');
 const indexTemplate=await readFile(join(publicDir,'index.html'),'utf8');
@@ -46,10 +66,10 @@ function renderLanding(pathname,page){
     .replace(/<meta property="og:title" content="[^"]*">/,`<meta property="og:title" content="${htmlEscape(page.title)}">`)
     .replace(/<meta property="og:description" content="[^"]*">/,`<meta property="og:description" content="${htmlEscape(page.description)}">`)
     .replace(/<meta property="og:url" content="[^"]*">/,`<meta property="og:url" content="${canonical}">`)
-    .replace('<!--SEO_H1--><h1>One search.<br><span>The whole market.</span></h1>',`<!--SEO_H1--><h1>${htmlEscape(page.heading)}<br><span>Across Saudi Arabia.</span></h1>`)
+    .replace('<!--SEO_H1--><h1>Find your<br><span>next car.</span></h1>',`<!--SEO_H1--><h1>${htmlEscape(page.heading)}<br><span>Across Saudi Arabia.</span></h1>`)
     .replace('<!--LANDING_DATA-->',`<script>window.__DALELAH_LANDING__=${JSON.stringify(page)};<\/script>`);
 }
-app.get('/healthz',(_req,res)=>res.json({ok:true,service:'dalelah-front',version:'1.5'}));
+app.get('/healthz',(_req,res)=>res.json({ok:true,service:'dalelah-front',version:'1.5',renderGitCommit:process.env.RENDER_GIT_COMMIT||null,inventoryLoaded:inventoryIndex.records.length>0}));
 app.get(/^\/cars\/(?:used|new)\/[a-z0-9-]+(?:\/[a-z0-9-]+)?(?:\/\d{4})?\/?$/, (req,res,next)=>{
   const pathname=req.path.replace(/\/$/,'');
   const page=landingPages.get(pathname);
@@ -64,14 +84,15 @@ const jobs=new Map();
 const inFlight=new Map();
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const norm=value=>String(value??'').toLowerCase().replace(/[^a-z0-9\u0600-\u06ff]+/g,' ').replace(/\s+/g,' ').trim();
-const keyFor=body=>JSON.stringify({q:norm(body?.query||''),c:body?.condition==='new'?'new':'used',f:body?.filters||{}});
+const keyFor=body=>JSON.stringify({q:norm(body?.query||''),c:body?.condition==='new'?'new':'used',f:body?.filters||{},page:body.page,pageSize:body.pageSize,sort:body.sort});
 
 function validateSearchBody(body={}){
   if(!body||typeof body!=='object'||Array.isArray(body))return 'invalid-search-body';
   if(typeof body.query!=='string')return 'query-must-be-text';
   if(body.query.length>MAX_QUERY_LENGTH)return 'query-too-long';
   if(body.filters!=null&&(typeof body.filters!=='object'||Array.isArray(body.filters)))return 'filters-must-be-an-object';
-  return null;
+  if(body.condition!=null&&!['used','new'].includes(body.condition))return 'invalid-condition';
+  return validateFilters(body.filters||{});
 }
 
 function pruneJobs(now=Date.now(),force=false){
@@ -169,15 +190,22 @@ function kickSyarahPriceEnrichment(job){
 function publicJob(job){
   const direct=job.directData||{};
   const full=job.fullData||{};
-  const listings=strictMerged(mergeDirectListings(direct.listings,full.listings),job.body);
+  const listings=deduplicateVehicles(strictMerged(mergeDirectListings(job.indexedListings,direct.listings,full.listings),job.body));
   const fullComplete=Boolean(job.fullData&&(full.complete===true||full.marketScanComplete===true));
   const pricePending=Boolean(job.priceEnrichmentPromise&&!job.priceEnrichmentComplete);
   const syarahPricePending=Boolean(job.syarahPriceEnrichmentPromise&&!job.syarahPriceEnrichmentComplete);
-  const complete=fullComplete&&!pricePending&&!syarahPricePending;
+  const scanTimedOut=Date.now()-job.createdAt>90_000;
+  const complete=(fullComplete&&!pricePending&&!syarahPricePending)||scanTimedOut||Boolean(job.error&&job.fullDone);
   const base=job.fullData||job.directData||{};
   const out={...base,listings,counts:counts(listings),complete,marketScanComplete:complete,directCoreLane:true,directCoreFirstResultMs:job.firstResultMs??null,directCoreDurationMs:direct.durationMs??null,directCoreSources:direct.sources||[],directCoreErrors:direct.errors||[],deepScanStarted:Boolean(job.fullPromise),deepScanMode:'remote-legacy-fallback',deepZeroRetry:Boolean(job.deepZeroRetry),exactBrandQualityGate:true,queryCorrections:job.queryCorrections,understanding:{...(base.understanding||{}),query:job.originalQuery,normalizedQuery:job.body.query,typoCorrections:job.queryCorrections},harajPriceMatrix:true,harajDetailPriceEnrichment:true,harajPriceEnrichmentPending:pricePending,harajPriceEnrichmentComplete:Boolean(job.priceEnrichmentComplete),harajDetailPricesEnriched:job.priceEnriched||0,harajDetailPricesAttempted:job.priceAttempted||0,harajPriceEnrichmentError:job.priceEnrichmentError||null,syarahPriceMatrix:true,syarahDetailPriceEnrichment:true,syarahPriceEnrichmentPending:syarahPricePending,syarahPriceEnrichmentComplete:Boolean(job.syarahPriceEnrichmentComplete),syarahDetailPricesEnriched:job.syarahPriceEnriched||0,syarahDetailPricesAttempted:job.syarahPriceAttempted||0,syarahPriceEnrichmentError:job.syarahPriceEnrichmentError||null};
   if(!complete)out.searchId=job.id;else delete out.searchId;
-  if(!out.answer)out.answer=listings.length?`${listings.length} verified cars found. Dalelah is continuing the market scan.`:'Dalelah is scanning the Saudi market…';
+  out.partial=Boolean(scanTimedOut||job.error);
+  out.scanStatus=out.partial?'partial':complete?'complete':'scanning';
+  out.indexedCount=job.indexedListings?.length||0;
+  out.snapshotAt=inventoryIndex.generatedAt;
+  out.sourceErrors=[...(direct.errors||[]),...(job.error?['deep-search-unavailable']:[])];
+  if(job.body.pageSize||job.body.page){const paged=paginateInventory(listings,job.body);out.listings=paged.listings;out.pagination=paged.pagination;}
+  if(!out.answer)out.answer=listings.length?`${listings.length} matching listings found.`:'Dalelah is scanning the Saudi market…';
   return out;
 }
 
@@ -218,7 +246,8 @@ function startJob(body={},meta={}){
   if(existing&&Date.now()-existing.createdAt<COALESCE_TTL)return existing;
   const job={id:`dc.${randomUUID()}`,key,body,originalQuery:meta.originalQuery||body.query,queryCorrections:meta.corrections||[],createdAt:Date.now(),directData:null,fullData:null,fullPromise:null,fullDone:false,upstreamId:null,error:null,firstResultMs:null,deepZeroRetry:false,priceEnrichmentPromise:null,priceEnrichmentComplete:false,priceEnriched:0,priceAttempted:0,priceEnrichmentError:null,syarahPriceEnrichmentPromise:null,syarahPriceEnrichmentComplete:false,syarahPriceEnriched:0,syarahPriceAttempted:0,syarahPriceEnrichmentError:null,syarahPriceSeen:new Set()};
   jobs.set(job.id,job);inFlight.set(key,job);
-  job.directPromise=searchDirectFirst(body,{timeoutMs:DIRECT_BUDGET_MS})
+  job.indexedListings=inventoryIndex.search(body);
+  job.directPromise=(isBroad(body)?Promise.resolve({listings:[],sources:[],errors:[]}):searchDirectFirst(body,{timeoutMs:DIRECT_BUDGET_MS}))
     .then(data=>{
       job.directData=data;
       if(data?.listings?.length&&!job.firstResultMs)job.firstResultMs=Date.now()-job.createdAt;
@@ -252,12 +281,12 @@ app.post('/api/search',async(req,res)=>{
   if(validationError)return res.status(400).json({error:validationError});
   const normalized=canonicalizeVehicleQuery(incoming.query);
   const body={...incoming,query:normalized.query};
-  if(isBroad(body)){
+  if(isBroad(body)&&!inventoryIndex.search(body).length){
     try{const {response,data}=await legacy('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});return res.status(response.status).json(enforceVehicleBoundary(data));}catch(error){return res.status(502).json({error:error?.message||'Dalelah search unavailable'});}
   }
   const started=Date.now(),job=startJob(body,{originalQuery:incoming.query,corrections:normalized.corrections});
-  await Promise.race([job.directPromise,sleep(DIRECT_BUDGET_MS)]);
-  if(!(job.directData?.listings?.length)&&!job.fullData){const left=Math.max(0,DIRECT_BUDGET_MS-(Date.now()-started));if(left)await Promise.race([job.fullPromise,sleep(left)]);}
+  if(!job.indexedListings.length)await Promise.race([job.directPromise,sleep(DIRECT_BUDGET_MS)]);
+  if(!job.indexedListings.length&&!(job.directData?.listings?.length)&&!job.fullData){const left=Math.max(0,DIRECT_BUDGET_MS-(Date.now()-started));if(left)await Promise.race([job.fullPromise,sleep(left)]);}
   const out=publicJob(job);
   res.setHeader('Server-Timing',`dalelah-direct;dur=${Date.now()-started}`);
   res.setHeader('X-Dalelah-Core',out.listings.length?'direct-first':'scanning');
@@ -272,8 +301,7 @@ app.get('/api/search/progress/:id',async(req,res)=>{
   const job=jobs.get(id);if(!job)return res.status(404).json({error:'Search expired'});
   await advanceFull(job);
   const out=publicJob(job);
-  if(out.complete){inFlight.delete(job.key);const timer=setTimeout(()=>jobs.delete(job.id),60_000);timer.unref?.();}
-  if(job.error&&job.fullDone&&!out.listings.length)return res.status(502).json({...out,error:job.error});
+  if(job.error&&job.fullDone&&!out.listings.length)return res.status(502).json({...out,error:'A search source is temporarily unavailable. Please retry.'});
   return res.json(out);
 });
 
@@ -292,9 +320,14 @@ async function proxy(req,res){
     const response=await fetch(`${legacyBase}${req.originalUrl}`,{method:req.method,headers,body,redirect:'manual',signal:AbortSignal.timeout(55_000)});
     const buf=Buffer.from(await response.arrayBuffer());for(const[k,v]of response.headers.entries())if(!['content-length','transfer-encoding','connection'].includes(k.toLowerCase()))res.setHeader(k,v);
     return res.status(response.status).send(buf);
-  }catch(error){return res.status(502).json({error:error?.message||'Dalelah unavailable'});}
+  }catch(error){return res.status(502).json({error:'Dalelah unavailable'});}
 }
+app.use((req,res,next)=>{
+  if(req.path.startsWith('/api/')&&!/^\/api\/(?:sell\/(?:estimate|submit)|marketplace\/status)$/.test(req.path))return res.status(404).json({error:'not-found'});
+  return next();
+});
 app.use(proxy);
+app.use((error,req,res,next)=>{if(res.headersSent)return next(error);res.status(error.status===413?413:400).json({error:error.status===413?'request-too-large':'invalid-request'});});
 
 setInterval(()=>pruneJobs(),60_000).unref?.();
 app.listen(externalPort,'0.0.0.0',()=>console.log(`Dalelah direct-core candidate on 0.0.0.0:${externalPort}; deep scan ${legacyBase}`));

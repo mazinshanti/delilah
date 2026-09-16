@@ -1,11 +1,29 @@
 services:
   - type: web
+    name: delilah
+    runtime: node
+    region: frankfurt
+    plan: free
+    buildCommand: npm ci --omit=dev --no-audit --no-fund
+    startCommand: npm start
+    healthCheckPath: /healthz
+    autoDeployTrigger: commit
+    envVars:
+      - key: DALELAH_RUNTIME_ROLE
+        value: front
+      - key: DALELAH_LEGACY_BASE_URL
+        value: https://delilah-live-search.onrender.com
+  - type: web
     name: delilah-live-search
     runtime: node
+    region: frankfurt
+    plan: free
     buildCommand: npm ci --omit=dev --no-audit --no-fund
     startCommand: npm start
     healthCheckPath: /healthz
     envVars:
+      - key: DALELAH_RUNTIME_ROLE
+        value: legacy-deep
       - key: OPENAI_API_KEY
         sync: false
       - key: BRAVE_SEARCH_API_KEY

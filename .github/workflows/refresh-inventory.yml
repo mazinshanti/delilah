@@ -1,0 +1,35 @@
+name: Refresh public Saudi inventory
+on:
+  schedule:
+    - cron: '17 2,14 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: inventory-refresh
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --no-audit --no-fund
+      - run: node scripts/collect-market-inventory.mjs
+        env:
+          MARKET_PAGES: 200
+      - run: npm test
+      - run: node scripts/validate-market-inventory.mjs
+      - name: Save validated public inventory
+        run: |
+          git config user.name 'Dalelah inventory refresh'
+          git config user.email 'inventory@users.noreply.github.com'
+          git add data/market-inventory.json.gz
+          if ! git diff --cached --quiet; then
+            git commit -m 'Refresh validated Saudi inventory snapshot'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi

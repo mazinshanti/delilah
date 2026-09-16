@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {detectRequestedBrand,filterBrandRelevance,listingMatchesBrand} from '../lib/search-relevance.js';
+import {detectRequestedModel,listingMatchesModel} from '../lib/search-model-relevance.js';
 
 test('detects Bentley in English and Arabic',()=>{
   assert.equal(detectRequestedBrand('Bentley'),'Bentley');
@@ -32,4 +33,9 @@ test('queries without a recognized brand do not suppress inventory',()=>{
 test('Toyota request rejects Lexus',()=>{
   const listings=[{brand:'Toyota',title:'Toyota Corolla 2019'},{brand:'Lexus',title:'Lexus ES 2019'}];
   assert.deepEqual(filterBrandRelevance(listings,'Toyota Corolla 2019').map(x=>x.brand),['Toyota']);
+});
+
+test('Camry relevance accepts the common Arabic ya spelling variant',()=>{
+  assert.equal(detectRequestedModel('Toyota Camry 2018'),'camry');
+  assert.equal(listingMatchesModel({title:'تويوتا كامرى موديل 2018 فل'},'camry'),true);
 });

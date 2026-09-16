@@ -51,7 +51,7 @@ if(expectedCommit)assert.equal(health.renderGitCommit,expectedCommit);
 
 const cases=[
   {query:'Toyota Corolla 2013',condition:'used',year:2013,titleRe:/corolla|كورولا|كرولا/i},
-  {query:'Toyota Camry 2018',condition:'used',year:2018,titleRe:/camry|كامري/i},
+  {query:'Toyota Camry 2018',condition:'used',year:2018,titleRe:/camry|كامري|كامرى/i},
   {query:'Nissan Patrol 2020',condition:'used',year:2020,titleRe:/patrol|باترول/i},
   {query:'Nissan Sunny 2020',condition:'used',year:2020,titleRe:/sunny|صني/i},
   {query:'Jeep Wrangler 2021',condition:'used',year:2021,titleRe:/wrangler|رانجلر/i},

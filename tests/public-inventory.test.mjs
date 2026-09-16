@@ -24,6 +24,7 @@ test('records retain evidence and missing fields without manufactured defaults',
  assert.equal(inventoryRecord({...raw,url:'https://attacker.test/car'},source),null);
  assert.equal(inventoryRecord({...raw,url:'javascript:alert(1)'},source),null);
  assert.equal(inventoryRecord({...raw,title:'Toyota Corolla spare parts'},source),null);
+ assert.equal(inventoryRecord({...raw,title:'جنط جديد لم يستخدم اصلى كيا سبورتاج'},source),null);
 });
 test('CarSwitch ItemPage and official OfferCatalog schemas parse safely',()=>{
  const vehicle={'@type':['Product','Car'],url:raw.url,name:raw.title,brand:{name:'Toyota'},model:'Corolla',vehicleModelDate:2013,itemCondition:'https://schema.org/UsedCondition',mileageFromOdometer:{value:100000},offers:{price:35000},image:raw.image,vehicleIdentificationNumber:'BUYWITHCS00123'};

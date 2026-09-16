@@ -13,6 +13,7 @@ test('front API serves indexed pages while deep search is unavailable',async()=>
   const stats=await (await fetch(base+'/api/inventory/stats')).json();assert.ok(stats.totalUnique>0);
   const a=await (await fetch(base+'/api/inventory?page=1')).json(),b=await (await fetch(base+'/api/inventory?page=2')).json();assert.equal(a.listings.length,24);assert.equal(new Set([...a.listings,...b.listings].map(c=>c.url)).size,48);
   const exact=await (await fetch(base+'/api/inventory?q=Toyota%20Corolla%202013')).json();assert.ok(exact.listings.every(c=>c.year===2013));
+  const electric=await (await fetch(base+'/api/inventory?fuelType=Electric')).json();assert.ok(electric.listings.length>0);assert.ok(electric.listings.every(c=>c.fuelType==='Electric'));
   for(const path of ['/api/inventory?maxPrice=bad','/api/inventory?condition=broken'])assert.equal((await fetch(base+path)).status,400);
   assert.equal((await fetch(base+'/api/not-a-public-route')).status,404);
   const bad=await fetch(base+'/api/search',{method:'POST',headers:{'content-type':'application/json'},body:'{broken'});assert.equal(bad.status,400);

@@ -22,8 +22,11 @@
   more.hidden=visible>=all.length;more.textContent=`Show more cars (${Math.max(0,all.length-visible)} remaining)`;
  };
  more.onclick=()=>{visible+=24;render();};sort.onchange=()=>{visible=24;render();};
+ const fuel=$('category');fuel.previousElementSibling.textContent='Fuel';fuel.innerHTML='<option value="">All fuels</option><option>Gasoline</option><option>Diesel</option><option>Electric</option><option>Hybrid</option>';
+ browse=function(){const query=[selectedBrand,$('model').value].filter(Boolean).join(' ')||'__all_cars__';$('q').value=query==='__all_cars__'?'':query;run(query);};
+ $('browseGo').onclick=()=>browse();
  const originalFilters=filters;
- filters=()=>({...originalFilters(),category:$('category').value,minPrice:$('minPrice').value,trim:$('trim').value});
+ filters=()=>({...originalFilters(),fuelType:$('category').value,minPrice:$('minPrice').value,trim:$('trim').value});
  paintStatus=function(d={},scanning=false){lastResponse=d;const sources=new Set(listings.map(c=>c.source));$('answerText').textContent=d.queryCorrections?.length?`Searching for ${d.understanding?.normalizedQuery||lastQuery}`:'';$('answer').classList.toggle('show',Boolean(d.queryCorrections?.length));$('sub').textContent=`${listings.length} matching ${condition} cars · ${sources.size} sources${scanning?' · checking more…':d.partial?' · some sources unavailable':''}`;render();};
  async function json(url,options={}){const r=await fetch(url,{...options,signal:AbortSignal.any([activeController.signal,AbortSignal.timeout(20000)])});const d=await r.json();if(!r.ok)throw new Error(d.error||'Search unavailable');return d;}
  pollSearch=async function(id,seq){const started=Date.now();let latest={};while(Date.now()-started<95000&&seq===runSeq){await sleep(1500);if(seq!==runSeq)return latest;try{const d=await json(`/api/search/progress/${encodeURIComponent(id)}`);if(seq!==runSeq)return latest;latest=d;mergeListings(d.listings||[]);const done=d.complete===true||d.marketScanComplete===true;paintStatus(d,!done);if(done)return d;}catch(e){if(activeController.signal.aborted)return latest;latest={...latest,partial:true};}}return {...latest,partial:true};};
@@ -44,7 +47,8 @@
  $('usedTab').onclick=()=>{setCondition('used');if(lastQuery)run(lastQuery);};$('newTab').onclick=()=>{setCondition('new');if(lastQuery)run(lastQuery);};
  for(const pair of [['Bentley','BE'],['Porsche','PO'],['Audi','AU'],['Land Rover','LR'],['Volvo','VO'],['Mitsubishi','MI']])if(!BRANDS.some(b=>b[0]===pair[0]))BRANDS.push(pair);
  MODELS.Bentley=['Continental','Bentayga','Flying Spur','Mulsanne'];paintBrands();
- const params=new URLSearchParams(location.search);for(const k of ['minYear','maxYear','minPrice','maxPrice','maxMileage','city','category','trim'])if(params.has(k)&&$(k))$(k).value=params.get(k);
+ const params=new URLSearchParams(location.search);for(const k of ['minYear','maxYear','minPrice','maxPrice','maxMileage','city','trim'])if(params.has(k)&&$(k))$(k).value=params.get(k);
+ if(params.has('fuelType'))$('category').value=params.get('fuelType');
  if(params.get('seller')&&![...$('source').options].some(o=>o.value===params.get('seller'))){const o=new Option(params.get('seller'),params.get('seller'),true,true);$('source').add(o);}
  fetch('/api/inventory/stats').then(r=>r.json()).then(d=>{for(const city of Object.keys(d.byCity||{}))if(city!=='Unknown'&&![...$('city').options].some(o=>o.value===city))$('city').add(new Option(city,city));if(params.has('city'))$('city').value=params.get('city');}).catch(()=>{});
  fetch('/api/sources').then(r=>r.json()).then(d=>{const selected=params.get('seller')||$('source').value;const sources=d.sources.filter(s=>s.status==='connected-live'||s.inventoryCount>0);$('source').innerHTML='<option value="">All sources</option>'+sources.map(s=>`<option>${esc(s.name)}</option>`).join('');$('source').value=selected;}).catch(()=>{});

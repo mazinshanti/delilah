@@ -35,7 +35,7 @@ app.get('/api/sources',(_req,res)=>res.json({sources:publicSourceRegistry(invent
 app.get('/api/inventory/stats',(_req,res)=>res.json(inventoryIndex.stats()));
 app.get('/api/inventory',(req,res)=>{
   if(req.query.condition!=null&&!['new','used'].includes(req.query.condition))return res.status(400).json({error:'invalid-condition'});
-  const filters={};for(const k of ['minYear','maxYear','minPrice','maxPrice','maxMileage','city','seller','category','trim'])if(req.query[k]!=null)filters[k]=req.query[k];
+  const filters={};for(const k of ['minYear','maxYear','minPrice','maxPrice','maxMileage','city','seller','category','fuelType','trim'])if(req.query[k]!=null)filters[k]=req.query[k];
   const error=validateFilters(filters);if(error)return res.status(400).json({error});
   if(req.query.q!=null&&(typeof req.query.q!=='string'||req.query.q.length>180))return res.status(400).json({error:'invalid-query'});
   const query=canonicalizeVehicleQuery(req.query.q||'').query;

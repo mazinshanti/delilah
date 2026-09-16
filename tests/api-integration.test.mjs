@@ -17,8 +17,12 @@ test('front API serves indexed pages while deep search is unavailable',async()=>
   assert.equal((await fetch(base+'/api/not-a-public-route')).status,404);
   const bad=await fetch(base+'/api/search',{method:'POST',headers:{'content-type':'application/json'},body:'{broken'});assert.equal(bad.status,400);
   const big=await fetch(base+'/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query:'x'.repeat(40000)})});assert.equal(big.status,413);
-  const started=performance.now(),r=await fetch(base+'/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query:'__all_cars__',condition:'used'})}),d=await r.json();
+  const started=performance.now(),r=await fetch(base+'/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query:'Toyota',condition:'used'})}),d=await r.json();
   assert.equal(r.status,200);assert.ok(d.listings.length>100);assert.ok(performance.now()-started<2000,'Indexed browse must not wait for failed backend');assert.equal(r.headers.get('x-content-type-options'),'nosniff');
-  if(d.searchId){const done=await (await fetch(base+'/api/search/progress/'+d.searchId)).json();assert.equal(done.partial,true);assert.ok(done.listings.length>100);}
+  if(d.searchId){let done;for(let i=0;i<30;i++){done=await (await fetch(base+'/api/search/progress/'+d.searchId)).json();if(done.partial)break;await new Promise(r=>setTimeout(r,100));}assert.equal(done.partial,true);assert.ok(done.listings.length>100);}
+  const fresh=await (await fetch(base+'/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({query:'__all_cars__',condition:'new'})})).json();
+  assert.ok(fresh.listings.length>0);assert.ok(fresh.listings.every(c=>c.condition==='new'));
+  const finished=fresh.searchId?await (await fetch(base+'/api/search/progress/'+fresh.searchId)).json():fresh;
+  assert.equal(finished.complete,true);assert.equal(finished.partial,false,'Indexed browse must not require the failed legacy service');
  }finally{child.kill('SIGTERM');await new Promise(r=>{child.once('exit',r);setTimeout(()=>{child.kill('SIGKILL');r()},2000).unref();});await new Promise(r=>upstream.close(r));}
 });

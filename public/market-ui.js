@@ -17,6 +17,8 @@
   listings=ordered.slice(0,visible).map(c=>({...c,url:safeUrl(c.url),image:safeUrl(c.image),displayImage:safeUrl(c.displayImage)}));
   oldRender();listings=all;
   if(!all.length)$('grid').innerHTML=`<div class="empty"><b>${busy?'Searching for matching cars…':lastResponse.partial?'Some sources could not respond.':'No matching listings found.'}</b>${busy?'Results will appear here as they arrive.':lastResponse.partial?'Try again shortly or broaden your filters.':'Try a different model or clear your filters.'}</div>`;
+  if(!all.length&&!lastQuery)$('grid').innerHTML='<div class="empty"><b>What car are you looking for?</b>Search by make, model or year.</div>';
+  sort.hidden=!all.length;
   more.hidden=visible>=all.length;more.textContent=`Show more cars (${Math.max(0,all.length-visible)} remaining)`;
  };
  more.onclick=()=>{visible+=24;render();};sort.onchange=()=>{visible=24;render();};
@@ -46,4 +48,5 @@
  if(params.get('seller')&&![...$('source').options].some(o=>o.value===params.get('seller'))){const o=new Option(params.get('seller'),params.get('seller'),true,true);$('source').add(o);}
  fetch('/api/inventory/stats').then(r=>r.json()).then(d=>{for(const city of Object.keys(d.byCity||{}))if(city!=='Unknown'&&![...$('city').options].some(o=>o.value===city))$('city').add(new Option(city,city));if(params.has('city'))$('city').value=params.get('city');}).catch(()=>{});
  fetch('/api/sources').then(r=>r.json()).then(d=>{const selected=params.get('seller')||$('source').value;const sources=d.sources.filter(s=>s.status==='connected-live'||s.inventoryCount>0);$('source').innerHTML='<option value="">All sources</option>'+sources.map(s=>`<option>${esc(s.name)}</option>`).join('');$('source').value=selected;}).catch(()=>{});
+ render();
 })();

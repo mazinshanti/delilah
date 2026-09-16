@@ -1,4 +1,6 @@
 import express from 'express';
+import {browseLiveSources} from './lib/browse-sources.js';
+import {extractMileage} from './lib/vehicle-mileage.js';
 import {randomUUID} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
@@ -117,6 +119,7 @@ function exactFor(body={}){const f=body.filters||{};if(Number(f.minYear)&&Number
 function enrichSourcePrices(listings=[]){
   return (Array.isArray(listings)?listings:[]).map(car=>{
     const source=norm(car?.source||car?.seller||'');
+    if(car.discovery!=='public_inventory_index'&&['haraj','opensooq'].includes(source))car={...car,mileage:extractMileage(`${car.title||''} ${car.snippet||''}`)};
     if(source===norm('Haraj')){
       const hit=extractHarajPrice(`${car?.title||''} ${car?.snippet||''}`,{year:car?.year});
       if(hit)return{...car,price:hit.price,priceVerified:true,priceSource:hit.source,priceEvidence:hit.evidence,harajPriceMatrix:true};
@@ -194,16 +197,16 @@ function publicJob(job){
   const fullComplete=Boolean(job.fullData&&(full.complete===true||full.marketScanComplete===true));
   const pricePending=Boolean(job.priceEnrichmentPromise&&!job.priceEnrichmentComplete);
   const syarahPricePending=Boolean(job.syarahPriceEnrichmentPromise&&!job.syarahPriceEnrichmentComplete);
-  const scanTimedOut=Date.now()-job.createdAt>90_000;
+  const scanTimedOut=!fullComplete&&Date.now()-job.createdAt>90_000;
   const complete=(fullComplete&&!pricePending&&!syarahPricePending)||scanTimedOut||Boolean(job.error&&job.fullDone);
   const base=job.fullData||job.directData||{};
   const out={...base,listings,counts:counts(listings),complete,marketScanComplete:complete,directCoreLane:true,directCoreFirstResultMs:job.firstResultMs??null,directCoreDurationMs:direct.durationMs??null,directCoreSources:direct.sources||[],directCoreErrors:direct.errors||[],deepScanStarted:Boolean(job.fullPromise),deepScanMode:'remote-legacy-fallback',deepZeroRetry:Boolean(job.deepZeroRetry),exactBrandQualityGate:true,queryCorrections:job.queryCorrections,understanding:{...(base.understanding||{}),query:job.originalQuery,normalizedQuery:job.body.query,typoCorrections:job.queryCorrections},harajPriceMatrix:true,harajDetailPriceEnrichment:true,harajPriceEnrichmentPending:pricePending,harajPriceEnrichmentComplete:Boolean(job.priceEnrichmentComplete),harajDetailPricesEnriched:job.priceEnriched||0,harajDetailPricesAttempted:job.priceAttempted||0,harajPriceEnrichmentError:job.priceEnrichmentError||null,syarahPriceMatrix:true,syarahDetailPriceEnrichment:true,syarahPriceEnrichmentPending:syarahPricePending,syarahPriceEnrichmentComplete:Boolean(job.syarahPriceEnrichmentComplete),syarahDetailPricesEnriched:job.syarahPriceEnriched||0,syarahDetailPricesAttempted:job.syarahPriceAttempted||0,syarahPriceEnrichmentError:job.syarahPriceEnrichmentError||null};
   if(!complete)out.searchId=job.id;else delete out.searchId;
-  out.partial=Boolean(scanTimedOut||job.error);
+  out.partial=Boolean(scanTimedOut||job.error||(direct.errors||[]).length);
   out.scanStatus=out.partial?'partial':complete?'complete':'scanning';
   out.indexedCount=job.indexedListings?.length||0;
   out.snapshotAt=inventoryIndex.generatedAt;
-  out.sourceErrors=[...(direct.errors||[]),...(job.error?['deep-search-unavailable']:[])];
+  out.sourceErrors=[...(scanTimedOut?['scan-deadline-reached']:[]),...(direct.errors||[]),...(job.error?['deep-search-unavailable']:[])];
   if(job.body.pageSize||job.body.page){const paged=paginateInventory(listings,job.body);out.listings=paged.listings;out.pagination=paged.pagination;}
   if(!out.answer)out.answer=listings.length?`${listings.length} matching listings found.`:'Dalelah is scanning the Saudi market…';
   return out;
@@ -225,6 +228,7 @@ async function fetchFullSearch(job){
 
 function kickFull(job){
   if(job.fullPromise)return job.fullPromise;
+  if(isBroad(job.body)){job.fullPromise=job.directPromise.then(()=>{job.fullDone=true;job.fullData={complete:true,marketScanComplete:true,volumeBrowse:true};return job.fullData;});return job.fullPromise;}
   job.fullStartedAt=Date.now();
   job.fullPromise=fetchFullSearch(job)
     .then(({response,data})=>{
@@ -247,7 +251,7 @@ function startJob(body={},meta={}){
   const job={id:`dc.${randomUUID()}`,key,body,originalQuery:meta.originalQuery||body.query,queryCorrections:meta.corrections||[],createdAt:Date.now(),directData:null,fullData:null,fullPromise:null,fullDone:false,upstreamId:null,error:null,firstResultMs:null,deepZeroRetry:false,priceEnrichmentPromise:null,priceEnrichmentComplete:false,priceEnriched:0,priceAttempted:0,priceEnrichmentError:null,syarahPriceEnrichmentPromise:null,syarahPriceEnrichmentComplete:false,syarahPriceEnriched:0,syarahPriceAttempted:0,syarahPriceEnrichmentError:null,syarahPriceSeen:new Set()};
   jobs.set(job.id,job);inFlight.set(key,job);
   job.indexedListings=inventoryIndex.search(body);
-  job.directPromise=(isBroad(body)?Promise.resolve({listings:[],sources:[],errors:[]}):searchDirectFirst(body,{timeoutMs:DIRECT_BUDGET_MS}))
+  job.directPromise=(isBroad(body)?browseLiveSources(body):searchDirectFirst(body,{timeoutMs:DIRECT_BUDGET_MS}))
     .then(data=>{
       job.directData=data;
       if(data?.listings?.length&&!job.firstResultMs)job.firstResultMs=Date.now()-job.createdAt;

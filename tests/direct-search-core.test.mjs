@@ -64,3 +64,24 @@ test('direct merge deduplicates canonical URLs and preserves richer fields',()=>
   assert.equal(out[0].image,'https://img.example/car.jpg');
   assert.equal(out[0].price,22000);
 });
+
+test('direct core rejects accessories, parts, wanted ads and service listings',()=>{
+  const input=[
+    {source:'Haraj',title:'تويوتا كورولا 2013',url:'https://example.com/car',year:2013,condition:'used'},
+    {source:'Haraj',title:'عداد كورولا 2013',url:'https://example.com/odometer',year:2013,condition:'used'},
+    {source:'Haraj',title:'مسجل تويوتا كورولا 2013 الأصلي وكالة',url:'https://example.com/stereo',year:2013,condition:'used'},
+    {source:'Haraj',title:'مطلوب كورولا 2013',url:'https://example.com/wanted',year:2013,condition:'used'},
+    {source:'Haraj',title:'صيانة كورولا 2013',url:'https://example.com/service',year:2013,condition:'used'}
+  ];
+  const out=strictDirectListings(input,{query:'Toyota Corolla 2013',condition:'used',filters:{}});
+  assert.deepEqual(out.map(x=>x.url),['https://example.com/car']);
+});
+
+test('vehicle descriptions may mention mileage or mechanical condition',()=>{
+  const input=[
+    {source:'Haraj',title:'كورولا 2013 للبيع ممشى 220 ألف مكينة وقير على الشرط',url:'https://example.com/full-car',year:2013,condition:'used'},
+    {source:'Haraj',title:'كورولا 2013 كفرات جديدة',url:'https://example.com/car-new-tires',year:2013,condition:'used'}
+  ];
+  const out=strictDirectListings(input,{query:'Toyota Corolla 2013',condition:'used',filters:{}});
+  assert.equal(out.length,2);
+});

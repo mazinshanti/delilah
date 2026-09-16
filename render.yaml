@@ -2,8 +2,9 @@ services:
   - type: web
     name: delilah-live-search
     runtime: node
-    buildCommand: npm install
+    buildCommand: npm ci --omit=dev --no-audit --no-fund
     startCommand: npm start
+    healthCheckPath: /healthz
     envVars:
       - key: OPENAI_API_KEY
         sync: false

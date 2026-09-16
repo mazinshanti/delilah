@@ -9,6 +9,7 @@ import {extractHarajPrice} from './lib/haraj-price.js';
 import {enrichHarajListingPrices} from './lib/haraj-price-enrichment.js';
 import {extractSyarahCashPrice} from './lib/syarah-price.js';
 import {enrichSyarahListingPrices,isSyarahDetailUrl} from './lib/syarah-price-enrichment.js';
+import {filterVehicleSaleListings} from './lib/listing-quality.js';
 
 const externalPort=Number(process.env.PORT||3000);
 const legacyBase=String(process.env.DALELAH_LEGACY_BASE_URL||'https://delilah-live-search.onrender.com').replace(/\/$/,'');
@@ -16,6 +17,8 @@ const DIRECT_BUDGET_MS=Number(process.env.DALELAH_DIRECT_BUDGET_MS||1800);
 const FULL_HEAD_START_MS=Number(process.env.DALELAH_FULL_HEAD_START_MS||900);
 const JOB_TTL=10*60_000;
 const COALESCE_TTL=3_000;
+const MAX_ACTIVE_JOBS=750;
+const MAX_QUERY_LENGTH=180;
 
 const app=express();
 app.use(express.json({limit:'1mb'}));
@@ -62,7 +65,32 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const norm=value=>String(value??'').toLowerCase().replace(/[^a-z0-9\u0600-\u06ff]+/g,' ').replace(/\s+/g,' ').trim();
 const keyFor=body=>JSON.stringify({q:norm(body?.query||''),c:body?.condition==='new'?'new':'used',f:body?.filters||{}});
 
+function validateSearchBody(body={}){
+  if(!body||typeof body!=='object'||Array.isArray(body))return 'invalid-search-body';
+  if(typeof body.query!=='string')return 'query-must-be-text';
+  if(body.query.length>MAX_QUERY_LENGTH)return 'query-too-long';
+  if(body.filters!=null&&(typeof body.filters!=='object'||Array.isArray(body.filters)))return 'filters-must-be-an-object';
+  return null;
+}
+
+function pruneJobs(now=Date.now(),force=false){
+  for(const[id,job]of jobs){
+    if(now-job.createdAt>JOB_TTL){
+      jobs.delete(id);
+      if(inFlight.get(job.key)===job)inFlight.delete(job.key);
+    }
+  }
+  if(force&&jobs.size>=MAX_ACTIVE_JOBS){
+    const oldest=jobs.entries().next().value;
+    if(oldest){const[id,job]=oldest;jobs.delete(id);if(inFlight.get(job.key)===job)inFlight.delete(job.key);}
+  }
+}
+
 function counts(listings=[]){return listings.reduce((out,car)=>{const key=car?.source||car?.seller||'Other';out[key]=(out[key]||0)+1;return out;},{});}
+function enforceVehicleBoundary(data={}){
+  const listings=filterVehicleSaleListings(data?.listings);
+  return {...data,listings,counts:counts(listings),vehicleSaleBoundary:true,qualityRejectedAtEdge:Math.max(0,(Array.isArray(data?.listings)?data.listings.length:0)-listings.length)};
+}
 function exactFor(body={}){const f=body.filters||{};if(Number(f.minYear)&&Number(f.maxYear)&&Number(f.minYear)===Number(f.maxYear))return Number(f.minYear);return exactYearIntent(String(body.query||''));}
 function enrichSourcePrices(listings=[]){
   return (Array.isArray(listings)?listings:[]).map(car=>{
@@ -184,6 +212,7 @@ function kickFull(job){
 }
 
 function startJob(body={}){
+  if(jobs.size>=MAX_ACTIVE_JOBS)pruneJobs(Date.now(),true);
   const key=keyFor(body),existing=inFlight.get(key);
   if(existing&&Date.now()-existing.createdAt<COALESCE_TTL)return existing;
   const job={id:`dc.${randomUUID()}`,key,body,createdAt:Date.now(),directData:null,fullData:null,fullPromise:null,fullDone:false,upstreamId:null,error:null,firstResultMs:null,deepZeroRetry:false,priceEnrichmentPromise:null,priceEnrichmentComplete:false,priceEnriched:0,priceAttempted:0,priceEnrichmentError:null,syarahPriceEnrichmentPromise:null,syarahPriceEnrichmentComplete:false,syarahPriceEnriched:0,syarahPriceAttempted:0,syarahPriceEnrichmentError:null,syarahPriceSeen:new Set()};
@@ -209,17 +238,19 @@ async function advanceFull(job){
   const upstream=job.upstreamId||job.fullData.searchId;
   if(!upstream)return;
   try{
-    const {response,data}=await legacy(`/api/search/progress/${encodeURIComponent(upstream)}`,{signal:AbortSignal.timeout(50_000)});
+    const {response,data}=await legacy(`/api/search/progress/${encodeURIComponent(upstream)}`,{signal:AbortSignal.timeout(7_000)});
     if(response.ok){job.fullData={...job.fullData,...data};job.upstreamId=data?.searchId||job.upstreamId||upstream;kickSyarahPriceEnrichment(job);}
-  }catch{}
+  }catch(error){job.progressError=error?.message||String(error);}
 }
 
 function isBroad(body={}){const q=String(body.query||'').trim();return !q||q==='__all_cars__';}
 
 app.post('/api/search',async(req,res)=>{
   const body=req.body||{};
+  const validationError=validateSearchBody(body);
+  if(validationError)return res.status(400).json({error:validationError});
   if(isBroad(body)){
-    try{const {response,data}=await legacy('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});return res.status(response.status).json(data);}catch(error){return res.status(502).json({error:error?.message||'Dalelah search unavailable'});}
+    try{const {response,data}=await legacy('/api/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});return res.status(response.status).json(enforceVehicleBoundary(data));}catch(error){return res.status(502).json({error:error?.message||'Dalelah search unavailable'});}
   }
   const started=Date.now(),job=startJob(body);
   await Promise.race([job.directPromise,sleep(DIRECT_BUDGET_MS)]);
@@ -233,7 +264,7 @@ app.post('/api/search',async(req,res)=>{
 app.get('/api/search/progress/:id',async(req,res)=>{
   const id=String(req.params.id||'');
   if(!id.startsWith('dc.')){
-    try{const {response,data}=await legacy(`/api/search/progress/${encodeURIComponent(id)}`);return res.status(response.status).json(data);}catch(error){return res.status(502).json({error:error?.message||'Dalelah progress unavailable'});}
+    try{const {response,data}=await legacy(`/api/search/progress/${encodeURIComponent(id)}`);return res.status(response.status).json(enforceVehicleBoundary(data));}catch(error){return res.status(502).json({error:error?.message||'Dalelah progress unavailable'});}
   }
   const job=jobs.get(id);if(!job)return res.status(404).json({error:'Search expired'});
   await advanceFull(job);
@@ -248,7 +279,7 @@ app.get('/api/health',async(_req,res)=>{
     const {response,data}=await legacy('/api/health',{signal:AbortSignal.timeout(9000)});
     const frontRenderGitCommit=process.env.RENDER_GIT_COMMIT||process.env.RENDER_COMMIT||null;
     return res.status(response.status).json({...data,legacyRenderGitCommit:data?.renderGitCommit||null,renderGitCommit:frontRenderGitCommit||data?.renderGitCommit||null,frontRenderGitCommit,directCoreLane:true,directCoreStrategy:'direct-first-remote-deep-scan',directCoreBudgetMs:DIRECT_BUDGET_MS,directCoreFullHeadStartMs:FULL_HEAD_START_MS,directCoreJobs:jobs.size,legacyBase,harajPriceMatrix:true,harajDetailPriceEnrichment:true,syarahPriceMatrix:true,syarahDetailPriceEnrichment:true});
-  }catch(error){return res.status(503).json({ok:false,renderGitCommit:process.env.RENDER_GIT_COMMIT||process.env.RENDER_COMMIT||null,directCoreLane:true,directCoreStrategy:'direct-first-remote-deep-scan',harajPriceMatrix:true,harajDetailPriceEnrichment:true,syarahPriceMatrix:true,syarahDetailPriceEnrichment:true,error:error?.message||String(error)});}
+  }catch(error){return res.status(200).json({ok:true,degraded:true,legacyAvailable:false,service:'dalelah-front',renderGitCommit:process.env.RENDER_GIT_COMMIT||process.env.RENDER_COMMIT||null,directCoreLane:true,directCoreStrategy:'direct-first-remote-deep-scan',harajPriceMatrix:true,harajDetailPriceEnrichment:true,syarahPriceMatrix:true,syarahDetailPriceEnrichment:true,upstreamError:error?.message||String(error)});}
 });
 
 async function proxy(req,res){
@@ -262,5 +293,5 @@ async function proxy(req,res){
 }
 app.use(proxy);
 
-setInterval(()=>{const now=Date.now();for(const[id,job]of jobs)if(now-job.createdAt>JOB_TTL){jobs.delete(id);if(inFlight.get(job.key)===job)inFlight.delete(job.key);}},60_000).unref?.();
+setInterval(()=>pruneJobs(),60_000).unref?.();
 app.listen(externalPort,'0.0.0.0',()=>console.log(`Dalelah direct-core candidate on 0.0.0.0:${externalPort}; deep scan ${legacyBase}`));

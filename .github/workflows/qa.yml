@@ -29,6 +29,7 @@ jobs:
           node --check lib/haraj-price-enrichment.js
           node --check lib/saleh-fast-source.js
           node --check lib/search-model-relevance.js
+          node --check lib/listing-quality.js
           node --check server-v15-marketplace.js
           node --check lib/search-relevance.js
           node --check lib/market-valuation.js
@@ -80,6 +81,7 @@ jobs:
           const priceEnrichment=await readFile('lib/haraj-price-enrichment.js','utf8');
           const market=await readFile('server-v15-marketplace.js','utf8');
           const relevance=await readFile('lib/search-relevance.js','utf8');
+          const quality=await readFile('lib/listing-quality.js','utf8');
           const os=await readFile('server-v15-opensooq.js','utf8');
           const src=await readFile('lib/opensooq-source.js','utf8');
           const v=await readFile('server-v15-volume.js','utf8');
@@ -99,6 +101,10 @@ jobs:
           assert.match(direct,/strictDirectListings/);
           assert.match(direct,/searchDirectFirst/);
           assert.match(direct,/priceVerified/);
+          assert.match(direct,/filterVehicleSaleListings/);
+          assert.match(core,/vehicleSaleBoundary:true/);
+          assert.match(quality,/isVehicleSaleListing/);
+          assert.match(quality,/filterVehicleSaleListings/);
           assert.match(price,/haraj_text_price_label/);
           assert.match(price,/haraj_search_card_formatted_price/);
           assert.match(priceEnrichment,/enrichHarajListingPrices/);

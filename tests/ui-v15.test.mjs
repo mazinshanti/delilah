@@ -17,7 +17,7 @@ test('Dalelah 1.5 inline scripts parse', () => {
 });
 
 test('Dalelah 1.5 keeps All Brands as the default', () => {
-  assert.match(html, /All brands is the default/);
+  assert.match(html, />All brands<\/span>/);
   assert.match(html, /selectBrand\(''\)/);
 });
 

@@ -40,3 +40,8 @@ test('theme scripts parse and the install surface starts in day mode',()=>{
   assert.equal(parsed.background_color,'#ffffff');
   assert.equal(parsed.theme_color,'#ffffff');
 });
+
+test('homepage keeps the product controls and removes repeated marketing clutter',()=>{
+  for(const essential of [/id="q"/,/id="usedTab"/,/id="newTab"/,/id="filterBtn"/,/id="brands"/,/id="model"/,/id="category"/,/id="source"/,/id="grid"/])assert.match(home,essential);
+  for(const clutter of [/Saudi market live/,/class="heroCopy"/,/class="proof"/,/class="valueGrid"/,/class="installHint"/,/class="snippet"/,/class="chip score"/,/class="chip condition"/])assert.doesNotMatch(home,clutter);
+});

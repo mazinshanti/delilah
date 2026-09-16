@@ -71,7 +71,10 @@ test('direct core rejects accessories, parts, wanted ads and service listings',(
     {source:'Haraj',title:'عداد كورولا 2013',url:'https://example.com/odometer',year:2013,condition:'used'},
     {source:'Haraj',title:'مسجل تويوتا كورولا 2013 الأصلي وكالة',url:'https://example.com/stereo',year:2013,condition:'used'},
     {source:'Haraj',title:'مطلوب كورولا 2013',url:'https://example.com/wanted',year:2013,condition:'used'},
-    {source:'Haraj',title:'صيانة كورولا 2013',url:'https://example.com/service',year:2013,condition:'used'}
+    {source:'Haraj',title:'صيانة كورولا 2013',url:'https://example.com/service',year:2013,condition:'used'},
+    {source:'Haraj',title:'مساعدات بنتلي فلاينج سبير 2020',url:'https://example.com/suspension',year:2020,condition:'used'},
+    {source:'Haraj',title:'بودي كت بنتلي مولسان تعديل الى 2020 مع التركيب',url:'https://example.com/body-kit',year:2020,condition:'used'},
+    {source:'Haraj',title:'تخصص لي قطع الغيار السيارات بنتلي 2020',url:'https://example.com/spare-parts',year:2020,condition:'used'}
   ];
   const out=strictDirectListings(input,{query:'Toyota Corolla 2013',condition:'used',filters:{}});
   assert.deepEqual(out.map(x=>x.url),['https://example.com/car']);
@@ -84,4 +87,15 @@ test('vehicle descriptions may mention mileage or mechanical condition',()=>{
   ];
   const out=strictDirectListings(input,{query:'Toyota Corolla 2013',condition:'used',filters:{}});
   assert.equal(out.length,2);
+});
+
+test('Bentley results reject suspension, body-kit and spare-parts ads',()=>{
+  const input=[
+    {source:'Haraj',title:'بنتلي بنتايجا 2020 نظيف جدا',url:'https://example.com/bentley-car',year:2020,condition:'used'},
+    {source:'Haraj',title:'مساعدات بنتلي فلاينج سبير 2020',url:'https://example.com/suspension',year:2020,condition:'used'},
+    {source:'Haraj',title:'بودي كت بنتلي مولسان تعديل الى 2020 مع التركيب',url:'https://example.com/body-kit',year:2020,condition:'used'},
+    {source:'Haraj',title:'تخصص لي قطع الغيار السيارات بنتلي 2020',url:'https://example.com/spare-parts',year:2020,condition:'used'}
+  ];
+  const out=strictDirectListings(input,{query:'Bentley 2020',condition:'used',filters:{}});
+  assert.deepEqual(out.map(x=>x.url),['https://example.com/bentley-car']);
 });

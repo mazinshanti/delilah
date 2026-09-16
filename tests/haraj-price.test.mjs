@@ -42,3 +42,9 @@ test('does not turn phone number into price',()=>{
 test('does not import open-ended price text',()=>{
   assert.equal(extractHarajPrice('السعر على السوم والجاد يتواصل',{year:2020}),null);
 });
+
+test('English odometer amounts in live Bentley titles are never prices',()=>{
+ assert.equal(extractHarajPrice('Bentley Continental GT 2021 Saudi 5.000 KM'),null);
+ assert.equal(extractHarajPrice('Bentley 2021 Mileage: 125,000'),null);
+ assert.equal(extractHarajPrice('Bentley 5.000 KM السعر 450,000 ريال').price,450000);
+});

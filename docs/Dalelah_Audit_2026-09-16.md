@@ -161,7 +161,7 @@ Missing-field counts overlap. In particular, the 256 new records do not provide 
 
 Validation
 
-Local suite: **93 tests passed**. Real-data validation: **2,120 records**, **23,320 record assertions**, **869 search cases**, including precision checks and retrieval of observed models. Local in-process search latency: p50 **8.7 ms**, p95 **15.1 ms**. This is not an end-user latency measurement. Production dependency audit reported **0 known vulnerabilities** in 83 dependencies; this is not a penetration test.
+Local suite: **95 tests passed**. Real-data validation: **2,120 records**, **23,320 record assertions**, **869 search cases**, including precision checks and retrieval of observed models. Local in-process search latency: p50 **8.7 ms**, p95 **15.1 ms**. This is not an end-user latency measurement. Production dependency audit reported **0 known vulnerabilities** in 83 dependencies; this is not a penetration test.
 
 The first production run exposed a stalled bulk Haraj path. The next run returned 268 Haraj and 144 OpenSooq records but caught a wheel-only ad. Both failures were fixed rather than lowering the source-volume or quality thresholds.
 
@@ -188,3 +188,5 @@ Production verification
 Release `994639713f8c23b0bc481d112ee68e4e8d7d2483` passed all four [GitHub QA jobs](https://github.com/mazinshanti/delilah/actions/runs/35142283678): regression, mobile builds, deployment SHA verification, and production QA including volume and model/filter checks. The live homepage health endpoint reports that exact commit and inventoryLoaded=true. A subsequent additive release contains the expanded source registry and frontend cache fix; its deployment status is reported separately in the delivery message.
 
 Earlier live probes returned 14 Bentley listings for `bently` and 25 Corolla 2013 listings with strict make/year matching. Browser checks confirmed white Day Mode, true-black Night Mode, incremental 24-card pagination and sorting. Scratch HTTP probes observed roughly 11–13 seconds end-to-end including this environment's network route; those timings are not presented as a production user SLA. Thousands of records are validated, but tens of thousands of unique vehicles have **not** been achieved.
+
+Final browser regression: the live title “Bentley Continental GT 2021 Saudi 5.000 KM” exposed a formatted-odometer-as-price defect. Fixed English KM exclusion in the price extractor and dot-thousands parsing in the odometer extractor, with real-title regression tests. Arabic “ماشي 8 الاف كيلو” now yields 8,000 km.

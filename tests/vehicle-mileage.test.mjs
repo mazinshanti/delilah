@@ -6,3 +6,9 @@ test('Arabic and English mileage multipliers preserve actual magnitude',()=>{
 test('price, years, ambiguous abbreviated mileage and ranges are not odometers',()=>{
  for(const s of ['2013 Toyota 19000 SAR','الممشى 300','190000 - 199999 km','New car'])assert.equal(extractMileage(s),null,s);
 });
+
+test('live Bentley titles use thousands separators and Arabic odometer units',()=>{
+ assert.equal(extractMileage('Bentley Continental GT 2021 Saudi 5.000 KM'),5000);
+ assert.equal(extractMileage('Bentley Bentayga 2023 ماشي 8 الاف كيلو'),8000);
+ assert.equal(extractMileage('mileage 12.5 thousand km'),12500);
+});

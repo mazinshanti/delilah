@@ -53,9 +53,9 @@ test('seller and valuation pages retain the unified product header',()=>{
   for(const html of [home,sell,valuation]){
     assert.match(html,/class="brand-mark"/);
     assert.match(html,/class="mainNav"/);
-    assert.match(html,/class="sell-nav"/);
     assert.match(html,/class="nav-divider"/);
     assert.match(html,/id="themeToggle" class="icon-button"[^>]*><svg/);
+    for(const label of ['navSell','navMarket','navBrand'])assert.match(html,new RegExp(`data-(?:i18n|copy)="${label}"`));
   }
   for(const html of [sell,valuation])assert.match(html,/search-priority\.css/);
 });

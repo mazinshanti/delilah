@@ -26,7 +26,7 @@ test('Pontiac G8 2009 never substitutes a Chevrolet or another Pontiac',()=>{
  assert.deepEqual(strictDirectListings([{make:'Chevrolet',model:'Impala',year:2009,title:'Chevrolet Impala 2009',condition:'used',url:'https://example.com/car'}],{query:'Pontiac G8 2009',condition:'used'}),[]);
 });
 test('strict relevance accepts a catalog vehicle for each of the 100 makes',()=>{
- for(const make of VEHICLE_CATALOG.makes){const model=make.models[0].name;const car={make:make.name,brand:make.name,model,title:make.name+' '+model+' 2020',year:2020,yearVerified:true,condition:'used',listingVerified:true,saleVerified:true,url:'https://example.com/test-fixture'};assert.equal(strictDirectListings([car],{query:car.title,condition:'used'}).length,1,car.title);assert.equal(strictDirectListings([car],{query:car.title,condition:'new'}).length,0);}
+ for(const make of VEHICLE_CATALOG.makes){const model=make.models[0].name;const car={sourceCategory:"cars for sale",make:make.name,brand:make.name,model,title:make.name+' '+model+' 2020',year:2020,yearVerified:true,condition:'used',listingVerified:true,saleVerified:true,url:'https://example.com/test-fixture'};assert.equal(strictDirectListings([car],{query:car.title,condition:'used'}).length,1,car.title);assert.equal(strictDirectListings([car],{query:car.title,condition:'new'}).length,0);}
 });
 test('live Pontiac exhaust-gasket advertisement is never a vehicle result',()=>{
  const car={title:'وجيه اقزوز بونتياك G8 2009-وفوق',year:2009,condition:'used',source:'Haraj',url:'https://haraj.com.sa/11175739802/'};

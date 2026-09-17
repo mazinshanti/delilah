@@ -1,0 +1,36 @@
+{
+  "classificationVersion": 1,
+  "auditedAt": "2026-09-17T15:33:56.467Z",
+  "snapshotGeneratedAt": "2026-09-17T02:37:13.880Z",
+  "input": 3038,
+  "accepted": 3036,
+  "quarantined": 2,
+  "sources": {
+    "Mercedes-Benz Saudi": {
+      "input": 24,
+      "accepted": 24,
+      "quarantined": 0,
+      "reasons": {}
+    },
+    "CarSwitch Saudi": {
+      "input": 579,
+      "accepted": 579,
+      "quarantined": 0,
+      "reasons": {}
+    },
+    "Saudi Sale": {
+      "input": 25,
+      "accepted": 23,
+      "quarantined": 2,
+      "reasons": {
+        "unresolved_model": 2
+      }
+    },
+    "Syarah": {
+      "input": 2410,
+      "accepted": 2410,
+      "quarantined": 0,
+      "reasons": {}
+    }
+  }
+}

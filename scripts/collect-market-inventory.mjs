@@ -1,3 +1,5 @@
+import {filterVehicleSaleListings} from '../lib/listing-quality.js';
+import {normalizeInventoryListing} from '../lib/inventory-normalizer.js';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import {gzipSync,gunzipSync} from 'node:zlib';
@@ -34,5 +36,5 @@ async function collect(source){
 }
 await Promise.all(SOURCE_REGISTRY.filter(s=>parsers[s.adapter]).map(collect));
 if(!diagnostics.some(d=>d.records>0))throw new Error('No source successfully refreshed; preserving previous snapshot');
-await writeFile('data/market-inventory.json.gz',gzipSync(JSON.stringify({generatedAt:new Date().toISOString(),listings:[...all.values()],diagnostics})));
+await writeFile('data/market-inventory.json.gz',gzipSync(JSON.stringify({generatedAt:new Date().toISOString(),listings:filterVehicleSaleListings([...all.values()].map(c=>normalizeInventoryListing(c,{recordMetrics:true}))),diagnostics})));
 console.log(JSON.stringify({totalUnique:all.size,diagnostics}));

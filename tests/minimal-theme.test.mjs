@@ -39,8 +39,8 @@ test('theme scripts parse and the install surface starts in day mode',()=>{
     for(const [index,source] of scripts.entries())new vm.Script(source,{filename:`${name}-theme-${index+1}.js`});
   }
   const parsed=JSON.parse(manifest);
-  assert.equal(parsed.background_color,'#ffffff');
-  assert.equal(parsed.theme_color,'#ffffff');
+  assert.equal(parsed.background_color,'#FBFCFA');
+  assert.equal(parsed.theme_color,'#0F4D3A');
 });
 
 test('homepage keeps the product controls and removes repeated marketing clutter',()=>{

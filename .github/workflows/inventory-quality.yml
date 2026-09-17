@@ -1,7 +1,7 @@
 name: Inventory quality pre-deployment gate
 on:
   push:
-    branches: [fix/inventory-evidence]
+    branches: [fix/inventory-evidence, fix/vehicle-classification]
   workflow_dispatch:
 permissions:
   contents: read

@@ -1,3 +1,4 @@
+import {strictDirectListings} from './lib/direct-search.js';
 import express from 'express';
 import {installSellerRoutes} from './lib/seller-routes.js';
 import {installApiGuard,validateFilters} from './lib/api-guard.js';
@@ -84,7 +85,7 @@ function rememberSearchQuery(id,query) {
 function applyMarketplaceBrandBoundary(data={},query='') {
   if(!Array.isArray(data.listings)) return data;
   const before=data.listings.length;
-  const listings=filterBrandRelevance(data.listings,String(query||''));
+  const listings=strictDirectListings(filterBrandRelevance(data.listings,String(query||'')),{query:String(query||''),condition:'all'});
   const detectedBrand=detectRequestedBrand(String(query||''));
   return {
     ...data,
@@ -144,7 +145,7 @@ async function searchComparables(vehicle={}) {
       merge(data.listings);
     }
   }
-  return filterBrandRelevance([...byUrl.values()],query);
+  return strictDirectListings(filterBrandRelevance([...byUrl.values()],query),{query,condition:'all'});
 }
 
 app.get('/', async (_req,res) => {

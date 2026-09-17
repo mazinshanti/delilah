@@ -3,14 +3,14 @@ export {VEHICLE_CATALOG};
 export const catalogText=value=>String(value??'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).normalize('NFKD').toLowerCase().replace(/[\u0300-\u036f\u064b-\u065f\u0670]/g,'').replace(/[إأآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[^a-z0-9\u0600-\u06ff]+/g,' ').trim().replace(/\s+/g,' ');
 const normalized=new Map();const cachedText=v=>{if(normalized.has(v))return normalized.get(v);const out=catalogText(v);if(normalized.size>12000)normalized.clear();normalized.set(v,out);return out;};
 const contains=(text,alias)=>` ${cachedText(text)} `.includes(` ${cachedText(alias)} `);
-const makeAliases=VEHICLE_CATALOG.makes.flatMap(make=>make.aliases.map(alias=>({make,alias}))).sort((a,b)=>b.alias.length-a.alias.length);
+const makeAliases=VEHICLE_CATALOG.makes.flatMap(make=>[...new Set([make.name,make.ar,...make.aliases].filter(Boolean))].map(alias=>({make,alias}))).sort((a,b)=>b.alias.length-a.alias.length);
 const modelEntries=VEHICLE_CATALOG.makes.flatMap(make=>make.models.map(model=>({make,model})));
 export function catalogMake(query){const hay=` ${cachedText(query)} `;return makeAliases.map(x=>({...x,index:hay.indexOf(` ${cachedText(x.alias)} `)})).filter(x=>x.index>=0).sort((a,b)=>a.index-b.index||b.alias.length-a.alias.length)[0]?.make||null;}
 const intents=new Map();
 export function catalogIntent(query){
  if(intents.has(query))return intents.get(query);
  const make=catalogMake(query),hay=catalogText(query),pool=make?modelEntries.filter(x=>x.make===make):modelEntries;
- const matches=pool.flatMap(x=>x.model.aliases.filter(a=>contains(hay,a)&&(make||catalogText(a).length>3&&!/^\d+$/.test(a))).map(alias=>({...x,alias}))).sort((a,b)=>catalogText(b.alias).length-catalogText(a.alias).length);
+ const matches=pool.flatMap(x=>x.model.aliases.filter(a=>contains(hay,a)&&(make||(catalogText(a).length>3||(/[a-z]/i.test(a)&&/\d/.test(a)&&catalogText(a).length>=2))&&!/^\d+$/.test(a))).map(alias=>({...x,alias}))).sort((a,b)=>catalogText(b.alias).length-catalogText(a.alias).length);
  const prefix=make?.aliases.map(catalogText).sort((a,b)=>b.length-a.length).find(a=>hay.startsWith(a+' '));
  const remainder=prefix?hay.slice(prefix.length).trim():hay;
  const canonical=make?pool.filter(x=>remainder===catalogText(x.model.name)||remainder.startsWith(catalogText(x.model.name)+' ')).sort((a,b)=>b.model.name.length-a.model.name.length)[0]:null;

@@ -70,3 +70,12 @@ test('selected new condition preserved and numeric filters cannot widen',()=>{
 test('logs never contain raw query, key or provider payload',async()=>{
  const entries=[];const e=createIntentEngine({env:{OPENAI_API_KEY:'secret-value'},fetchImpl:async()=>response(value({bodyType:'SUV'})),log:x=>entries.push(x)});await e.understand('family SUV for my children');const text=JSON.stringify(entries);assert(!text.includes('secret-value'));assert(!text.includes('children'));
 });
+
+for(const query of ['i have 45k and i want a sedan in jeddah','my budget is 45000 for a sedan','معي ٤٥ الف ابي سيدان بجدة','عندي 45 الف ابي سيارة','sedan under 45k'])test(`spending ceiling: ${query}`,()=>{
+ const i=normalizeAIIntent(value({bodyType:'sedan',city:'Jeddah',minPrice:45000,maxPrice:45000}),query);
+ assert.equal(i.minPrice,null);assert.equal(i.maxPrice,45000);
+ const body=intentSearchBody({query},{intent:i,intentMode:'ai'});assert.equal(body.filters.maxPrice,45000);assert.equal(body.filters.minPrice,undefined);
+});
+for(const query of ['my budget is between 30k and 45k','I have a budget from 30k to 45k','ميزانيتي بين ٣٠ و٤٥ الف','I have 45k but want exactly 45k'])test(`preserve explicit price floor: ${query}`,()=>{
+ const i=normalizeAIIntent(value({minPrice:30000,maxPrice:45000}),query);assert.equal(i.minPrice,30000);
+});

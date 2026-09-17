@@ -1,3 +1,4 @@
+@import url('/brand-theme.css?v=1');
 /* Search remains the first task; photography supplies quiet context. */
 .nav{height:78px}.mainNav{display:flex;gap:28px;font-size:13px}.sell-nav{display:inline-flex;align-items:center;min-height:44px;padding:8px 15px;border:1px solid var(--line);border-radius:10px;font-weight:600;font-size:13px}
 .heroStage{min-height:0;padding-bottom:45px;background-position:center 58%}.heroStage:before{background:linear-gradient(180deg,#fffffff2,#ffffff7a)}:root[data-theme="dark"] .heroStage:before{background:linear-gradient(180deg,#000e,#0009)}

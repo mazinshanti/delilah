@@ -12,7 +12,7 @@ test('missing soft preference evidence does not eliminate real candidates; hard 
  const body=intentSearchBody({query},{intent:structuredClone(intent),intentMode:'ai'});assert.equal(body.query,'__all_cars__');assert.equal(body.filters.category,undefined);assert.equal(body.filters.maxPrice,150000);
  const car={make:'Toyota',brand:'Toyota',model:'RAV4',title:'Toyota RAV4 2022',year:2022,yearVerified:true,condition:'used',price:100000,priceVerified:true,saleVerified:true,url:'https://example.com/test-fixture',images:['https://example.com/original.jpg']};
  const rows=[car,{...car,price:200000,url:car.url+'2'},{...car,condition:'new',url:car.url+'3'},{...car,bodyType:'sedan',url:car.url+'4'}];
- const found=applyIntentConstraints(strictDirectListings(rows,body),intent);assert.equal(found.length,1);assert.deepEqual(found[0].images,car.images);assert.deepEqual(found[0].unverifiedAttributes,['bodyType']);assert(!found[0].rankingSignals.includes('affordable-maintenance'));
+ const found=applyIntentConstraints(strictDirectListings(rows,body),intent);assert.equal(found.length,1);assert.deepEqual(found[0].images,car.images);assert.deepEqual(found[0].unverifiedAttributes,[]);assert.equal(found[0].resolvedBodyType,'SUV');assert(!found[0].rankingSignals.includes('affordable-maintenance'));
 });
 test('explicit UI body filter stays strict and excluded makes stay excluded',()=>{
  const body=intentSearchBody({query,filters:{category:'SUV'}},{intent:structuredClone(intent),intentMode:'ai'});assert.equal(body.filters.category,'SUV');

@@ -4,10 +4,11 @@ import {readFile} from 'node:fs/promises';
 import vm from 'node:vm';
 
 const root=new URL('../',import.meta.url);
-const [home,homeTheme,sell,sellTheme,manifest]=await Promise.all([
+const [home,homeTheme,sell,valuation,sellTheme,manifest]=await Promise.all([
   readFile(new URL('public/index.html',root),'utf8'),
   readFile(new URL('public/experience.css',root),'utf8'),
   readFile(new URL('public/sell.html',root),'utf8'),
+  readFile(new URL('public/car-valuation.html',root),'utf8'),
   readFile(new URL('public/sell-minimal.css',root),'utf8'),
   readFile(new URL('public/manifest.webmanifest',root),'utf8')
 ]);
@@ -46,4 +47,15 @@ test('theme scripts parse and the install surface starts in day mode',()=>{
 test('homepage keeps the product controls and removes repeated marketing clutter',()=>{
   for(const essential of [/id="q"/,/id="usedTab"/,/id="newTab"/,/id="filterBtn"/,/id="brands"/,/id="model"/,/id="category"/,/id="source"/,/id="grid"/])assert.match(home,essential);
   for(const clutter of [/Saudi market live/,/class="heroCopy"/,/class="proof"/,/class="valueGrid"/,/class="installHint"/,/class="snippet"/,/class="chip score"/,/class="chip condition"/])assert.doesNotMatch(home,clutter);
+});
+
+test('seller and valuation pages retain the unified product header',()=>{
+  for(const html of [home,sell,valuation]){
+    assert.match(html,/class="brand-mark"/);
+    assert.match(html,/class="mainNav"/);
+    assert.match(html,/class="sell-nav"/);
+    assert.match(html,/class="nav-divider"/);
+    assert.match(html,/id="themeToggle" class="icon-button"[^>]*><svg/);
+  }
+  for(const html of [sell,valuation])assert.match(html,/search-priority\.css/);
 });

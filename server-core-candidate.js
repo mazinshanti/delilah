@@ -1,6 +1,7 @@
 import {naturalSearch} from './public/natural-search.js';
 import {createIntentEngine,intentSearchBody,applyIntentConstraints,needsAI} from './lib/ai-search-intent.js';
 import express from 'express';
+import {installValuationRoutes} from './lib/valuation-routes.js';
 import {installSellerRoutes} from './lib/seller-routes.js';
 import {VEHICLE_CATALOG,catalogIntent} from './public/catalog.js';
 import {discoverListingGallery} from './lib/listing-gallery.js';
@@ -41,6 +42,7 @@ app.get('/api/search/ai-status',(_req,res)=>{const {stats,...status}=intentEngin
 if(process.env.NODE_ENV==='development')app.get('/api/search/ai-metrics',(_req,res)=>res.json(intentEngine.status()));
 app.get('/api/catalog',(_req,res)=>{res.setHeader('Cache-Control','public,max-age=3600');res.json(VEHICLE_CATALOG);});
 await inventoryIndex.load();
+installValuationRoutes(app,{inventoryIndex});
 app.get('/api/sources',(_req,res)=>{const stats=inventoryIndex.stats();res.json({generatedAt:stats.generatedAt,sources:publicSourceRegistry(stats.bySource,stats.diagnostics,stats.generatedAt)});});
 app.get('/api/inventory/stats',(_req,res)=>res.json(inventoryIndex.stats()));
 app.get('/api/inventory',(req,res)=>{

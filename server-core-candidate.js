@@ -144,8 +144,7 @@ function enrichSourcePrices(listings=[]){
       if(car.priceDiscovery==='haraj_detail_page'&&car.priceVerified===true)return car;
       const hit=extractHarajPrice(`${car?.title||''} ${car?.snippet||''}`,{year:car?.year});
       if(hit)return{...car,price:hit.price,priceVerified:true,priceSource:hit.source,priceEvidence:hit.evidence,harajPriceMatrix:true};
-      if(car?.priceVerified===true)return car;
-      return{...car,price:null,priceVerified:false,priceSource:null,priceEvidence:null,harajPriceMatrix:true};
+      return{...car,price:null,price_sar:null,price_type:/قسط|دفعة|installment|monthly/i.test(`${car.title||''} ${car.snippet||''}`)?'installment':'unknown',price_confidence:'unknown',priceVerified:false,priceSource:null,priceEvidence:null,harajPriceMatrix:true};
     }
     if(source===norm('Syarah')){
       const hit=extractSyarahCashPrice(`${car?.title||''} ${car?.snippet||''}`);

@@ -37,3 +37,8 @@ test('Haraj detail data is bound to exact ad, not comments or recommendations',(
  const html=`<script type="application/ld+json">${JSON.stringify({'@type':'Thing',url,name:'Camry 2023',description:'ماشية 80 ألف. السعر 70 ألف'})}</script><script type="application/ld+json">${JSON.stringify({'@type':'Car',url:'https://haraj.com.sa/22222222/',description:'الممشى 10000 السعر 90000'})}</script><p>السعر 123000 الممشى 900000</p>`;
  const e=harajListingEvidence(html,url);assert.equal(e.mileage,80000);assert.equal(e.priceHit.price,70000);assert.equal(e.condition,'used');
 });
+test('live Yaris RPM and financing warranty are not selling price or mileage',()=>{
+ assert.equal(extractHarajPrice('القوة القصوى: 97 حصان / 6,000 د.د'),null);
+ assert.equal(extractMileage('ضمان ممتد إلى 3 سنوات او 100 الف كيلو أيهما اولا'),null);
+ assert.equal(resolveCondition({source:'Haraj',description:'حالة السيارة : وكالة'}),'new');
+});

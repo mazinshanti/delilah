@@ -1,0 +1,977 @@
+{
+  "capturedAt": "2026-09-17T11:15:28.577Z",
+  "haraj": [
+    {
+      "url": "https://haraj.com.sa/11188743899/كامري_2021/",
+      "title": "كامري 2021",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": 71000,
+      "price_type": "cash",
+      "priceEvidence": "71,000 ريال",
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745031/كامري_نص_فل_2025le_وارد_جميل/",
+      "title": "كامري نص فل 2025le وارد جميل",
+      "vehicle": true,
+      "mileage_km": 79000,
+      "price_sar": null,
+      "price_type": "contact",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188746219/كامري_للبيع_2022/",
+      "title": "كامري للبيع 2022",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "contact",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188746794/كامري_2009/",
+      "title": "كامري 2009",
+      "vehicle": true,
+      "mileage_km": 600000,
+      "price_sar": null,
+      "price_type": "contact",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188744066/كامري_2021/",
+      "title": "كامري 2021",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188746573/كامري_2016/",
+      "title": "كامري 2016",
+      "vehicle": true,
+      "mileage_km": 330000,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188744093/كامري_2018_ستاندر/",
+      "title": "كامري 2018 ستاندر",
+      "vehicle": true,
+      "mileage_km": 265000,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745026/كامري_2005/",
+      "title": "كامري 2005",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745059/كامري_2020_ستاندر_ليمتد/",
+      "title": "كامري 2020 ستاندر ليمتد",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745157/شماسات_كامري_2002/",
+      "title": "شماسات كامري 2002",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745251/كامري_2024_للبيع/",
+      "title": "كامري 2024 للبيع",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188746258/كامري_2011_فل_كامل_مالك_واحد/",
+      "title": "كامري 2011 فل كامل ( مالك واحد )",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "contact",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745113/كامري_2024_GlE_هايبرد/",
+      "title": "كامري 2024 GlE هايبرد",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "contact",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188746296/كامري_بنزين_صادره_لوحات_سعودي_2026_E_لون_اسود/",
+      "title": "كامري بنزين صادره لوحات سعودي 2026 E لون اسود",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188744107/كورولا_فل_للكاش_او_التقسيط/",
+      "title": "كورولا فل للكاش او التقسيط",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "installment",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188746409/شمعة_كورولا_2014/",
+      "title": "شمعة كورولا 2014",
+      "vehicle": false,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745403/تويوتا_كروس_LXE_هايبرد_للتنازل/",
+      "title": "تويوتا كروس LXE هايبرد للتنازل",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745606/للبيع_كورولا_2015_نص_فل_GLI_ممشى_قليل/",
+      "title": "للبيع كورولا 2015 نص فل GLI ممشى قليل",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188744270/كورولا_20222/",
+      "title": "كورولا 20222",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188686675/تويوتا_يارس_للبيع_استماره_مجدده_ومفحوصه/",
+      "title": "تويوتا يارس للبيع استماره مجدده ومفحوصه",
+      "vehicle": true,
+      "mileage_km": 200000,
+      "price_sar": null,
+      "price_type": "contact",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188743286/تويوتا_كورولا_موديل_2023/",
+      "title": "تويوتا كورولا موديل 2023",
+      "vehicle": true,
+      "mileage_km": 186,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188743285/كورولا_مكينه_1_5_سي_سي_2026_تقسيط_من_رواتب_4000_/",
+      "title": "كورولا مكينه 1.5 سي سي 2026 ( تقسيط من رواتب 4000)",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "new"
+    },
+    {
+      "url": "https://haraj.com.sa/11188742104/كورولا_2_0_مطور_جنوط_COROLLA_2_0_EXECUTIVE_2026/",
+      "title": "كورولا 2.0 مطور جنوط COROLLA 2.0 EXECUTIVE 2026",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "contact",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745056/كامري_2018_فل_كامل/",
+      "title": "كامري 2018 فل كامل",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188740330/كورولا_ستاندر_مطور_2026_عداد_قليل/",
+      "title": "كورولا ستاندر مطور 2026 عداد قليل",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188739960/تويوتا_كورلا_مطور_جنوط_موديل_2026/",
+      "title": "تويوتا - كورلا مطور جنوط موديل 2026",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188739777/كورولا_موديل_2025/",
+      "title": "كورولا موديل 2025",
+      "vehicle": true,
+      "mileage_km": 29000,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188739719/تويوتا_كرولا_2025_فل_كامل_شبة_جديدة/",
+      "title": "تويوتا كرولا 2025 فل كامل شبة جديدة",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188739604/تويوتا_كورولا_استاندر_1500_طيس_2026/",
+      "title": "تويوتا كورولا استاندر 1500 طيس 2026",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188739045/كورولا_2024/",
+      "title": "كورولا 2024",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "contact",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188738585/كورولا_2012/",
+      "title": "كورولا 2012",
+      "vehicle": true,
+      "mileage_km": 400000,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188738126/كورولا_موديل_2010/",
+      "title": "كورولا موديل 2010",
+      "vehicle": true,
+      "mileage_km": 400000,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188737886/كورولا_2021_XLi_فتحة_1_5/",
+      "title": "كورولا 2021 XLi فتحة 1.5",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "contact",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188737664/كورولا_كروس_2022/",
+      "title": "كورولا كروس 2022",
+      "vehicle": true,
+      "mileage_km": 33000,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188744230/تايوتا_كامري_فل_كامل_جير_عادي_محركات_شرط/",
+      "title": "تايوتا كامري فل كامل جير عادي محركات شرط",
+      "vehicle": true,
+      "mileage_km": 350000,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188737645/كورولا_2010/",
+      "title": "كورولا 2010",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188738258/تويوتا_كورولا_1_6_استاندر_طيس_خليجي_2026_73_500رس/",
+      "title": "تويوتا كورولا 1.6 استاندر طيس خليجي 2026 - 73.500رس",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": 73500,
+      "price_type": "cash",
+      "priceEvidence": "73.500رس",
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188744357/نيسان_باترول_2023_SE2بترومينبحالة_الوكالة/",
+      "title": "نيسان باترول 2023 SE2 (بترومين) بحالة الوكالة",
+      "vehicle": true,
+      "mileage_km": 375000,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188746944/باترول_2016_SE_للبيع/",
+      "title": "باترول 2016 SE للبيع",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "contact",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188743977/نيسان_باترول_2023_ستاندر_بحالة_الوكالة/",
+      "title": "نيسان باترول 2023 ستاندر بحالة الوكالة",
+      "vehicle": true,
+      "mileage_km": 352000,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188746343/جيب_نيسان_باترول_بلاتنيوم_موديل_2023/",
+      "title": "جيب نيسان باترول بلاتنيوم موديل 2023",
+      "vehicle": true,
+      "mileage_km": 80000,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188746638/نيسان_باترول_SE_تنفس_طبيعي_2026_افضل_العروض/",
+      "title": "نيسان باترول SE تنفس طبيعي 2026 افضل العروض",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745491/مكينة_باترول_للبيع_نظيفة_جدا_ممتازة/",
+      "title": "مكينة باترول للبيع نظيفة جدا ممتازة",
+      "vehicle": false,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188746717/جنوط_نيسان_باترول_2026_جديدة_بالكفراتوارد_الوكالة_بترومين_/",
+      "title": "جنوط نيسان باترول 2026 جديدة بالكفرات (وارد الوكالة بترومين)",
+      "vehicle": false,
+      "mileage_km": 9,
+      "price_sar": null,
+      "price_type": "contact",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188746322/لمبة_درج_طفاية_اصلي_وكاله_فتك_باترول_سوبر_سفاري/",
+      "title": "لمبة درج طفاية اصلي وكاله فتك باترول سوبر سفاري",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188746346/كامري_2010/",
+      "title": "كامري 2010",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745885/تويوتا_كامري_E_ستاندر_بنزين_2026/",
+      "title": "تويوتا كامري E ستاندر بنزين 2026",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745268/تويوتا_كامري_موديل_2005/",
+      "title": "تويوتا كامري موديل 2005",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188746195/تويوتا_كامري_لؤلؤي/",
+      "title": "تويوتا كامري لؤلؤي",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": 33000,
+      "price_type": "cash",
+      "priceEvidence": "سعره 33 الف",
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188746352/كامري_فل_كامل_هايبرد_2022/",
+      "title": "كامري فل كامل هايبرد 2022",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745774/متوفر_واحد_جنط_جديد_حق_الوكاله_صناعة_تايلندي_حق_تويوتا_يارس/",
+      "title": "متوفر واحد جنط جديد حق الوكاله صناعة تايلندي حق تويوتا يارس",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188747152/يارس_2026/",
+      "title": "يارس 2026",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188743828/تويوتا_يارس_الموديل_2023_السعر_38500/",
+      "title": "تويوتا يارس الموديل 2023 السعر 38500",
+      "vehicle": true,
+      "mileage_km": 188000,
+      "price_sar": 38500,
+      "price_type": "cash",
+      "priceEvidence": "السعر 38500",
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188743645/_تويوتا_يارس2023كاش_او_تمويل_/",
+      "title": "(تويوتا يارس2023 (كاش او تمويل)",
+      "vehicle": true,
+      "mileage_km": 118000,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188743376/للبيع_تويوتا_يارس_استاندر/",
+      "title": "للبيع تويوتا يارس استاندر",
+      "vehicle": true,
+      "mileage_km": 316000,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188743202/للبيع_يارس_موديل_2021/",
+      "title": "للبيع يارس موديل 2021",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188743166/يارس_2026/",
+      "title": "يارس 2026",
+      "vehicle": true,
+      "mileage_km": 3203,
+      "price_sar": null,
+      "price_type": "contact",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188742810/يارس_2019/",
+      "title": "يارس 2019",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "contact",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188742756/يارس_نظيفه_2019/",
+      "title": "يارس نظيفه 2019",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188742665/تويوتايارس2026_استاندر/",
+      "title": "تويوتا -يارس -2026-استاندر",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "new"
+    },
+    {
+      "url": "https://haraj.com.sa/11188742566/تويوتا_يارس_2015/",
+      "title": "تويوتا يارس 2015",
+      "vehicle": true,
+      "mileage_km": 200000,
+      "price_sar": null,
+      "price_type": "contact",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188742458/يارس_2015_للبيع/",
+      "title": "يارس 2015 للبيع",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "contact",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188746033/تويوتا_يارس_2019_سعودي_عبداللطيف_جميل/",
+      "title": "تويوتا يارس 2019 سعودي عبداللطيف جميل",
+      "vehicle": true,
+      "mileage_km": 250000,
+      "price_sar": 30000,
+      "price_type": "cash",
+      "priceEvidence": "الحد : 30000",
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188744799/تويوتا_يارس_2024_y_شبه_جديد/",
+      "title": "تويوتا يارس 2024 y شبه جديد",
+      "vehicle": true,
+      "mileage_km": 16000,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745353/جنوط_النترا_مقاس_16_وكالة/",
+      "title": "جنوط النترا مقاس 16 وكالة",
+      "vehicle": false,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745932/النترا_2011_سياره_في_حاله_جيده_جير_عادي_الجاد_فقط_السوم_6500/",
+      "title": "النترا 2011 سياره في حاله جيده جير عادي الجاد فقط السوم 6500",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "contact",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188746972/النترا_2016_ديزل_للبيع/",
+      "title": "النترا 2016 ديزل للبيع",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188746421/هيونداى_النترا_2009/",
+      "title": "هيونداى النترا 2009",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745669/هيونداي_النترا_سمارت_2026_مكينة_2_0_اقساط_فقط/",
+      "title": "هيونداي النترا - سمارت 2026 مكينة 2.0 اقساط فقط",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188744974/هيونداي_النترا_سمارت_2000_سي_سي_2026/",
+      "title": "هيونداي النترا سمارت 2000 سي سي 2026",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "installment",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745506/النترا_ديزل_2016/",
+      "title": "النترا ديزل 2016",
+      "vehicle": true,
+      "mileage_km": 450000,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745780/النترا_2017/",
+      "title": "النترا 2017",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745010/هيونداي_النترا_2025/",
+      "title": "هيونداي النترا 2025",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188744712/يارس_2016_E/",
+      "title": "يارس 2016 E",
+      "vehicle": true,
+      "mileage_km": 267000,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188746188/تويوتا_يارس_2022_جاهزه_للمستخدم_219km/",
+      "title": "تويوتا يارس 2022 جاهزه للمستخدم 219km",
+      "vehicle": true,
+      "mileage_km": 219,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "used"
+    },
+    {
+      "url": "https://haraj.com.sa/11188744090/يارس_موديل_2016_ممشى_السياره_244_000_ممشى/",
+      "title": "يارس موديل 2016 ممشى السياره 244 000 ممشى",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "contact",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745929/دعاسات_يارس/",
+      "title": "دعاسات يارس",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188745522/يارس_موديل_2024/",
+      "title": "يارس موديل 2024",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    },
+    {
+      "url": "https://haraj.com.sa/11188746074/تويوتا_يارس_y_ستاندر_2026_اقساط_فقط/",
+      "title": "تويوتا يارس - y ستاندر 2026 اقساط فقط",
+      "vehicle": true,
+      "mileage_km": null,
+      "price_sar": null,
+      "price_type": "unknown",
+      "priceEvidence": null,
+      "condition": "unknown"
+    }
+  ],
+  "saleh": [
+    {
+      "url": "https://www.salehcars.com/en/cars/66c6fd5cd4c1cfef85e4a128/mg-rx5-plu--std-2024",
+      "title": "MG RX5 Plus STD  2024",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/693828eb7763c76dda499d52/a4bc732a-84c9-4e91-8454-d59de70f66ac.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66cb3aaebd7379c4e535e311/hyundai-accent-gl-comfort-2025",
+      "title": "HYUNDAI ACCENT  GL Comfort    2025",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/693828eb7763c76dda499d52/ce603858-9d60-4571-b1d3-67ba0b79f9b5.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66cedaeefb2267354d4c2c3a/hyundai-santafe-gl-smart-2024",
+      "title": "HYUNDAI SANTAFE  GL Smart  2024",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/693828eb7763c76dda499d52/20cc013b-81d8-403d-bcfc-495e8ecb54b3.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66cee3b7fb2267354d4c7205/hyundai-tucson-gl-smart-htrac-2025",
+      "title": "HYUNDAI TUCSON GL Smart HTRAC  2025",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/693828eb7763c76dda499d52/3728b4d8-1d6b-4a00-89f7-e265182d5f77.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66d4385f9c229134c94860ba/geely-starray-gf-2024",
+      "title": "GEELY STARRAY GF  2024",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/693828eb7763c76dda499d52/d2bdf1c0-d2d3-41bf-8bcf-6abc70fced67.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66d07dfa8ad3cb8ce28fd720/jeep-wrangler-rubicon-2-door-2024",
+      "title": "jeep Wrangler  RUBICON 2 DOOR   2024",
+      "imageCount": 0,
+      "primary_image": null
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66d6c2ac1efee10efca3cc41/renault-express-van-diesel-2024",
+      "title": "RENAULT EXPRESS VAN DIESEL   2024",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/6a1e8f0e916b42ada294e971/4f573d6d-121b-48ff-947e-3829ae91f63a.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66d6f0801efee10efca62d88/renault-megane-se-2024",
+      "title": "RENAULT Megane  SE    2024",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/6a1e8f0e916b42ada294e971/d79e8159-0b8b-40b3-beab-8717918cb035.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66d84dcc7a5483f6224d82c0/honda-accord-exl-hybrid-2023",
+      "title": "HONDA Accord EXL Hybrid  2023",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/693828eb7763c76dda499d52/f1d73a85-98ae-41c3-b9b6-242317ed0e7a.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66d99f8dc57b1c5a3ab49f85/honda-zr-v-lx-2024",
+      "title": "HONDA ZR-V LX  2024",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/693828eb7763c76dda499d52/ed549ac6-3fb4-4a2b-9130-98336147a90d.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66d96d83a8dcd92a09fd46f8/ford-f150-reg-cab-4x4-xlt-5-0l-v8-mod-to-raptor-r-2023",
+      "title": "FORD F150 Reg Cab 4x4 XLT 5.0L V8 Mod to Raptor R  2023",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/6a1e8f0e916b42ada294e971/bda8706d-f9a2-49f6-a6f4-bf940c4fa05a.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66e05d4adc56dc2c08fd6a40/nissan-sunny-cla-ic-2024",
+      "title": "NISSAN SUNNY  Classic  2024",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/693828eb7763c76dda499d52/092f7866-25e8-4fa5-b1bb-7f78a47a1075.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66dc3bebfd36b93f77ff31b0/gac-emkoo-gl-2025",
+      "title": "GAC EMKOO  GL   2025",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/6a1e8f0e916b42ada294e971/7961e578-e95a-4168-b5a0-68c79308d5c5.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66d9c824c57b1c5a3ab55dab/gac-gs3-emzoom-gl-plus-2025",
+      "title": "GAC GS3  EMZOOM  GL PLUS    2025",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/6a1e8f0e916b42ada294e971/53985812-e603-4970-8775-507554526f92.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66d6ca5b1efee10efca42bab/renault-megane-le-plus-leather-2024",
+      "title": "RENAULT Megane  LE PLUS LEATHER  2024",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/6a1e8f0e916b42ada294e971/26f4d964-23e3-4739-834d-7a5fb2baf001.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66d6ce501efee10efca47f1a/renault-megane-le-plus-2024",
+      "title": "RENAULT Megane  LE PLUS   2024",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/6a1e8f0e916b42ada294e971/88589cf8-9a23-471d-b344-19613682c32b.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66dbf782fd36b93f77fe21b0/gac-gs3-emzoom-sport-plus-2025",
+      "title": "GAC GS3  EMZOOM SPORT PLUS    2025",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/6a1e8f0e916b42ada294e971/58942516-a939-4a0f-8c83-450de79c27c2.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66eaa794173f871b9f2966bb/hyundai-accent-gl-fleet-2025",
+      "title": "HYUNDAI ACCENT  GL FLEET  2025",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/693828eb7763c76dda499d52/45ed8c05-e2e3-4fe7-824f-f21d2371b1c8.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66ee7f03d7e98aa887506114/hyundai-creta-gl-comfort-2025",
+      "title": "HYUNDAI CRETA GL Comfort  2025",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/693828eb7763c76dda499d52/3cda1c20-9c6b-461a-9e82-164344abe01f.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66f41d363ab9fb510754a130/jeep-wrangler-sport-2023",
+      "title": "jeep Wrangler  SPORT   2023",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/6a1e8f0e916b42ada294e971/20ffd26a-508e-4c9c-bd57-83043158d779.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66e2cdbb01fcece87945b7fa/faw-bestune-t77-pro-premium-2023",
+      "title": "FAW BESTUNE T77 Pro Premium  2023",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/6a1e8f0e916b42ada294e971/52f4dfb5-c44d-4a65-b8a5-0442728e280f.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66e2f53401fcece87946c186/link-co-05-hyper-plu--2024",
+      "title": "Link &amp; Co 05 Hyper Plus  2024",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/6a1e8f0e916b42ada294e971/1aeb7dae-f669-40c7-9c4e-b91191871d3d.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66e690dbbfcf36ed292625c8/rolls-royce-cullinan-cullinan-2023",
+      "title": "ROLLS ROYCE Cullinan Cullinan   2023",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/693828eb7763c76dda499d52/46f49ad5-2e7c-42b9-817d-ebe0a7b8ea36.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66eaaae3173f871b9f29c98f/hyundai-accent-gl-smart-2025",
+      "title": "HYUNDAI ACCENT  GL SMART    2025",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/693828eb7763c76dda499d52/cdc492a5-caca-4549-93c5-b3037f2eebc3.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66f929b57a9a8eeaee74f710/renault-arkana-esl-2025",
+      "title": "RENAULT Arkana  ESL  2025",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/6a1e8f0e916b42ada294e971/ae9423a0-3416-404e-a828-608a3cff62a3.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66f92f4c7a9a8eeaee756a44/renault-arkana-e2-2025",
+      "title": "RENAULT Arkana  E2  2025",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/6a1e8f0e916b42ada294e971/3905e64f-355b-4efd-997a-17dae4c5e869.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66e3078101fcece8794717b7/peugeot-3008-active-2025",
+      "title": "PEUGEOT 3008 Active   2025",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/6a1e8f0e916b42ada294e971/c5158b1f-78ba-4b83-9c2e-5b95c2fcdfaf.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66e9679eb8e6177d7d2f3a10/changan-uni-t-elite-2025",
+      "title": "CHANGAN UNI-T Elite   2025",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/693828eb7763c76dda499d52/ff2cf6b1-20f9-4d59-845d-4f6b9b5b8cc4.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66eab634173f871b9f2afef3/hyundai-stargazer-base-2025",
+      "title": "HYUNDAI Stargazer  BASE   2025",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/693828eb7763c76dda499d52/cfd8c72e-0e54-40ab-8ccf-c71b3a8336e9.jpg"
+    },
+    {
+      "url": "https://www.salehcars.com/en/cars/66ee7a94d7e98aa8875041d8/hyundai-creta-gl-smart-2025",
+      "title": "HYUNDAI CRETA GL Smart  2025",
+      "imageCount": 3,
+      "primary_image": "https://saleh-platform-eu.s3.eu-central-1.amazonaws.com/media/693828eb7763c76dda499d52/0ef38b1a-6bde-4ae6-ba7a-fb1a0cec49e4.jpg"
+    }
+  ]
+}

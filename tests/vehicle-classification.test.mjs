@@ -69,3 +69,10 @@ test('query-derived Haraj metadata cannot supply vehicle identity',()=>{
  assert.equal(vehicleIdentity(row).make,'Toyota');assert.equal(vehicleIdentity(row).model,'Corolla');
  assert.equal(strictDirectListings([row],{query:'Bugatti',condition:'all'}).length,0);
 });
+
+test('legacy source parsers cannot reuse requested make/model as listing evidence',()=>{
+ for(const discovery of ['haraj_source_native_search','haraj_direct_volume_search','syarah_source_native_inventory','yallamotor_source_native_search']){
+ const row=car({title:'Toyota Corolla 2022',model:'Camry',discovery});
+ assert.equal(vehicleIdentity(row).model,'Corolla');assert.equal(strictDirectListings([row],{query:'Toyota Camry 2022'}).length,0);
+ }
+});

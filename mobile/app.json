@@ -3,19 +3,35 @@
     "name": "Dalelah",
     "slug": "dalelah",
     "scheme": "dalelah",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#090A0B"
+    },
     "plugins": ["expo-router"],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "sa.dalelah.app"
+      "supportsTablet": false,
+      "bundleIdentifier": "sa.dalelah.app",
+      "buildNumber": "1",
+      "infoPlist": {
+        "CFBundleDevelopmentRegion": "ar",
+        "CFBundleLocalizations": ["ar", "en"]
+      }
     },
     "android": {
       "package": "sa.dalelah.app",
+      "versionCode": 1,
       "adaptiveIcon": {
-        "backgroundColor": "#090A0B"
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#245D4B"
       }
+    },
+    "web": {
+      "bundler": "metro"
     },
     "experiments": {
       "typedRoutes": false

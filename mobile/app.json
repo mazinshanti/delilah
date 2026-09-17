@@ -4,17 +4,20 @@
     "slug": "dalelah",
     "scheme": "dalelah",
     "version": "0.1.0",
+    "icon": "./assets/app-icon.png",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "plugins": ["expo-router"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "sa.dalelah.app"
+      "bundleIdentifier": "sa.dalelah.app",
+      "buildNumber": "1"
     },
     "android": {
       "package": "sa.dalelah.app",
       "adaptiveIcon": {
-        "backgroundColor": "#090A0B"
+        "foregroundImage": "./assets/app-icon.png",
+        "backgroundColor": "#0F4D3A"
       }
     },
     "experiments": {

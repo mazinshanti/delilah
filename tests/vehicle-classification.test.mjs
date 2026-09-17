@@ -46,3 +46,9 @@ test('explicit model filter rejects text-only mentions',()=>{
 });
 
 test('animal words in legitimate model/trim names do not become animal sales',()=>{assert.equal(classifyVehicle(car({make:'Ford',model:'Mustang',title:'Ford Mustang Dark Horse 2022'})).classification,'VEHICLE_FOR_SALE');assert.equal(classifyVehicle(car({title:'horse for sale'})).classification,'NON_AUTOMOTIVE');});
+
+test('ingestion metrics count records separately from repeated retrieval validation',async()=>{
+ const {recordClassification,classificationMetrics}=await import('../lib/vehicle-classification.js');
+ const verdict=classifyVehicle(car());recordClassification('metrics-test',verdict);recordClassification('metrics-test',verdict,'validation');recordClassification('metrics-test',verdict,'validation');
+ const m=classificationMetrics()['metrics-test'];assert.equal(m.ingested,1);assert.equal(m.classes.VEHICLE_FOR_SALE,1);assert.equal(m.validation.evaluated,2);
+});

@@ -27,6 +27,11 @@ jobs:
         env:
           PLAYWRIGHT_MODULE: /tmp/dalelah-browser/node_modules/playwright/index.mjs
         run: node scripts/inventory-media-ui-check.mjs
+      - name: Read-only production search and valuation UX
+        env:
+          PLAYWRIGHT_MODULE: /tmp/dalelah-browser/node_modules/playwright/index.mjs
+          DALELAH_BASE_URL: https://www.dalelah.co
+        run: node scripts/valuation-ui-check.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -1,3 +1,5 @@
+import {extractMileage} from './lib/vehicle-mileage.js';
+import {resolveCondition} from './lib/vehicle-condition.js';
 import "dotenv/config";
 import express from "express";
 import crypto from "node:crypto";
@@ -230,10 +232,11 @@ const PARTS_RE = /(قطع غيار|صدام|طرمبة|فحمات|مساعدات
 function extractFields(text = "", preferredTitle = "") {
   const t = norm(`${preferredTitle} ${text}`), title = norm(preferredTitle || ""); let model = detectModel(title) || detectModel(t), brand = detectBrand(title) || detectBrand(t) || MODEL_BRAND[model] || null;
   const yearTitle = [...title.matchAll(/\b(20\d{2})\b/g)].map(x => +x[1]).find(y => y >= 2000 && y <= 2035), year = yearTitle || [...t.matchAll(/\b(20\d{2})\b/g)].map(x => +x[1]).find(y => y >= 2000 && y <= 2035) || null;
-  const km = t.match(/([0-9][\d,]{0,8})\s*(?:km|kilometers?|كم|كيلو)/i), mileage = km ? +km[1].replace(/,/g, "") : null;
+  const mileage = extractMileage(`${preferredTitle} ${text}`);
   const city = /riyadh|الرياض/i.test(t) ? "Riyadh" : /jeddah|جدة/i.test(t) ? "Jeddah" : /dammam|الدمام/i.test(t) ? "Dammam" : null;
   const pm = t.match(/(?:SAR|ر\.س)\s*([1-9][\d,]{3,8})|([1-9][\d,]{3,8})\s*(?:SAR|ريال|ر\.س)/i), price = pm ? +(pm[1] || pm[2]).replace(/,/g, "") : null;
-  const newSignal = /\bnew\b|brand new|condition\s*:?\s*new|جديد|جديدة|زيرو|صفر كيلو|غير مستخدم/i.test(t), usedSignal = /\bused\b|pre-owned|condition\s*:?\s*used|مستعمل|مستعملة|ممشى/i.test(t);
+  const resolvedCondition=resolveCondition({title:preferredTitle,description:text,mileage});
+  const newSignal=resolvedCondition==='new', usedSignal=resolvedCondition==='used';
   return { brand, model, year, mileage, city, price, newSignal, usedSignal };
 }
 function resultCondition(f, requested, source) { if (source.conditions.length === 1) return source.conditions[0]; if (f.usedSignal || (f.mileage != null && f.mileage > 100)) return "used"; if (f.newSignal) return "new"; return "unknown"; }

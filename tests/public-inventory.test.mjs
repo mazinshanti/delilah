@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {inventoryRecord,parseStructuredInventory,parseSyarahInventory,safePublicUrl} from '../lib/public-inventory.js';
+import {inventoryRecord,parseStructuredInventory,parseSyarahInventory,safePublicUrl,syarahHighResolutionImage} from '../lib/public-inventory.js';
 import {SOURCE_REGISTRY} from '../lib/source-registry.js';
 import {InventoryIndex,deduplicateVehicles,paginateInventory} from '../lib/inventory-index.js';
 import {strictDirectListings} from '../lib/direct-search.js';
@@ -37,6 +37,11 @@ test('Syarah preserves zero mileage and excludes booked vehicles',()=>{
  const parse=p=>parseSyarahInventory('window.FULL_PAGE_DATA = '+JSON.stringify({posts:[p]})+';',src);
  assert.equal(parse(post)[0].mileage,0);assert.equal(parse({...post,is_booked:true}).length,0);
  assert.equal(parse({...post,g4_data_layer:{...post.g4_data_layer,post_mileage:'0'}})[0].mileage,0);
+});
+test('Syarah upgrades only proven CDN thumbnail sizes to the supported 911x683 variant',()=>{
+ const thumb='https://cdn.syarah.com/photos-thumbs/online-v1/0x300/online/posts/314836/orignal-car.jpg?v=3';
+ assert.equal(syarahHighResolutionImage(thumb),'https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/314836/orignal-car.jpg?v=3');
+ assert.equal(syarahHighResolutionImage('https://images.example.test/car.jpg'),'https://images.example.test/car.jpg');
 });
 test('dedup preserves distinct stock and merges evidenced cross-posts',()=>{
  assert.equal(deduplicateVehicles([car,{...car,url:raw.url+'4'}]).length,1);

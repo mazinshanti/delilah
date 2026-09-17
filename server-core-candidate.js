@@ -12,6 +12,7 @@ import {readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {dirname,join} from 'node:path';
 import {searchDirectFirst,mergeDirectListings,strictDirectListings} from './lib/direct-search.js';
+import {prewarmSalehInventory} from './lib/saleh-fast-source.js';
 import {exactYearIntent,enforceExactYear} from './lib/search-intent.js';
 import {extractHarajPrice} from './lib/haraj-price.js';
 import {enrichHarajListingPrices} from './lib/haraj-price-enrichment.js';
@@ -42,6 +43,7 @@ app.get('/api/search/ai-status',(_req,res)=>{const {stats,...status}=intentEngin
 if(process.env.NODE_ENV==='development')app.get('/api/search/ai-metrics',(_req,res)=>res.json(intentEngine.status()));
 app.get('/api/catalog',(_req,res)=>{res.setHeader('Cache-Control','public,max-age=3600');res.json(VEHICLE_CATALOG);});
 await inventoryIndex.load();
+void prewarmSalehInventory();
 installValuationRoutes(app,{inventoryIndex});
 app.get('/api/sources',(_req,res)=>{const stats=inventoryIndex.stats();res.json({generatedAt:stats.generatedAt,sources:publicSourceRegistry(stats.bySource,stats.diagnostics,stats.generatedAt)});});
 app.get('/api/inventory/stats',(_req,res)=>res.json(inventoryIndex.stats()));

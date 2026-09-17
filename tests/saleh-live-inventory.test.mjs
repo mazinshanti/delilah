@@ -1,6 +1,19 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {parseSalehSitemap} from '../lib/saleh-fast-source.js';
+import {detectSalehIntent,parseSalehSitemap} from '../lib/saleh-fast-source.js';
+
+test('Saleh intent accepts canonical make-only new-car searches without weakening model matching',()=>{
+  const english=detectSalehIntent('New Toyota');
+  const arabic=detectSalehIntent('تويوتا جديدة');
+  const exact=detectSalehIntent('Toyota Corolla 2026');
+  assert.equal(english?.key,'toyota');
+  assert.equal(english?.brandOnly,true);
+  assert.equal(arabic?.key,'toyota');
+  assert.equal(arabic?.brandOnly,true);
+  assert.equal(exact?.key,'corolla');
+  assert.equal(exact?.brandOnly,undefined);
+  assert.equal(exact?.year,2026);
+});
 
 test('Saleh sitemap parser discovers current English product URLs and dedupes by product id',()=>{
   const xml=`<?xml version="1.0"?><urlset>

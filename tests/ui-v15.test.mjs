@@ -37,6 +37,7 @@ test('new and used remain separate product modes', () => {
   assert.match(html, /id="usedTab"/);
   assert.match(html, /id="newTab"/);
   assert.match(ui, /condition='used'/);
+  assert.match(ui, /conditionLabel=c\.condition==='new'\|\|c\.condition==='used'\?t\(c\.condition\)/);
 });
 
 test('front service owns the product shell and has a local health check', () => {

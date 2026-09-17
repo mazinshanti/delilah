@@ -22,4 +22,8 @@ test('valuation handoff preserves vehicle fields and expires without contact inf
 test('AI trim assistance accepts only observed equivalent trim labels',async()=>{const r=await matchValuationTrims({...vehicle,trim:'جي ال' },cars,{env:{OPENAI_API_KEY:'test-only'},fetchImpl:async()=>({ok:true,json:async()=>({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify({matchingTrims:['GL']})}]}]})})});assert.equal(r.aiMode,'trim-assist');assert.deepEqual(r.matchingTrims,['GL']);});
 test('mileage/city preference never discards all available exact-year evidence',()=>{const adjacent=cars.map(c=>({...c,year:2021,city:'Jeddah',url:c.url+'near'}));const exact=cars.slice(0,2).map(c=>({...c,mileage:250000}));const r=valueVehicle([...exact,...adjacent],{...vehicle,city:'Jeddah'},opts);assert.equal(r.exactYearCount,2);});
 
+test('materially different comparable mileage lowers confidence and favours closer cars',()=>{const rows=[
+ {mileage:85000,price:83000},{mileage:111000,price:75700},{mileage:134000,price:82500},{mileage:136000,price:77400},{mileage:138000,price:75200},{mileage:145000,price:72500}
+].map((x,i)=>({...cars[i],...x,url:`https://example.com/mileage-gap-${i}`}));const r=valueVehicle(rows,{...vehicle,year:2020,mileageKm:60000},opts);assert(r.available);assert.equal(r.confidence,'limited');assert(r.limitations.includes('limited-mileage-evidence'));assert(r.estimatedMarketValue>=82500);});
+
 test('only newer-year comparables cannot masquerade as the requested year value',()=>{const r=valueVehicle(cars.map(c=>({...c,year:2022})),vehicle,opts);assert.equal(r.available,false);assert.equal(r.reason,'insufficient-year-evidence');assert.equal(r.estimatedMarketValue,null);assert(r.comparableListings.length>0);});

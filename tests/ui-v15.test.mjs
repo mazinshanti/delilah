@@ -63,6 +63,6 @@ test('searches have crawlable landing pages and shareable URLs', () => {
 test('traffic and conversion surfaces are present', () => {
   assert.match(html, /rel="canonical"/);
   assert.match(html, /application\/ld\+json/);
-  assert.match(html, /href="\/sell\.html"/);
+  assert.match(html, /href="\/sell"/);
   assert.match(html, /id="shareSearch"/);
 });

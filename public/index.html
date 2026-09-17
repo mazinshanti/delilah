@@ -32,7 +32,7 @@
   <header class="nav wrap">
    <a class="brand" href="/" aria-label="دليلة — Dalelah"><svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="13" fill="currentColor"/><path d="M13 28V12h6a8 8 0 0 1 0 16h-6m8-12v8m0-4h-5" fill="none" stroke="var(--brand-cut)" stroke-width="2.5" stroke-linecap="round"/></svg><span data-i18n="brand">دليلة</span></a>
    <nav class="mainNav" aria-label="التنقل الرئيسي"><a href="/?q=__all_cars__" data-i18n="cars">السيارات</a><a href="/#homeContent" data-i18n="browseBrand">تصفح حسب الماركة</a></nav>
-   <nav class="navActions" aria-label="Language and appearance"><a class="sell-nav" href="/sell" data-i18n="sell">بيع سيارتك</a><button id="languageToggle" class="text-button" lang="en">English</button><span class="nav-divider"></span><button id="themeToggle" class="icon-button" aria-label="الوضع الليلي"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 15.4A8.5 8.5 0 0 1 8.6 3.5 8.6 8.6 0 1 0 20.5 15.4Z"/></svg></button></nav>
+   <nav class="navActions" aria-label="Language and appearance"><a class="sell-nav" data-seller-entry href="/sell" data-i18n="sell">بيع سيارتك</a><button id="languageToggle" class="text-button" lang="en">English</button><span class="nav-divider"></span><button id="themeToggle" class="icon-button" aria-label="الوضع الليلي"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 15.4A8.5 8.5 0 0 1 8.6 3.5 8.6 8.6 0 1 0 20.5 15.4Z"/></svg></button></nav>
   </header>
 <main id="searchView">
  <div class="heroStage">
@@ -61,7 +61,7 @@
  <div class="wrap popular"><span data-i18n="popular">عمليات بحث شائعة</span><a href="/cars/used/toyota/corolla/2013" data-ar="كورولا 2013" data-en="Corolla 2013">كورولا 2013</a><a href="/cars/used/nissan/patrol" data-ar="نيسان باترول" data-en="Nissan Patrol">نيسان باترول</a><a href="/cars/used/jeep/wrangler" data-ar="جيب رانجلر" data-en="Jeep Wrangler">جيب رانجلر</a></div>
 </main>
 <section id="vehicleView" class="wrap vehicle-view" hidden aria-labelledby="vehicleTitle"></section>
-<footer class="footer wrap"><a href="/" class="footer-brand" data-i18n="brand">دليلة</a><span data-i18n="footer">بحث أبسط. خيارات أوضح.</span><a href="/sell.html" data-i18n="sell">بيع سيارتك</a></footer>
+<footer class="footer wrap"><a href="/" class="footer-brand" data-i18n="brand">دليلة</a><span data-i18n="footer">بحث أبسط. خيارات أوضح.</span><a data-seller-entry href="/sell" data-i18n="sell">بيع سيارتك</a></footer>
 <dialog id="filterDialog" aria-labelledby="filterTitle"><div id="sheetSlot"></div></dialog>
 <aside id="filterPanel" class="filter-panel" aria-labelledby="filterTitle" hidden>
  <div class="filter-heading"><h2 id="filterTitle" data-i18n="filters">الفلاتر</h2><button id="closeFilters" class="icon-button" aria-label="إغلاق الفلاتر">×</button></div>

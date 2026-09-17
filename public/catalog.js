@@ -5,7 +5,8 @@ const normalized=new Map();const cachedText=v=>{if(normalized.has(v))return norm
 const contains=(text,alias)=>` ${cachedText(text)} `.includes(` ${cachedText(alias)} `);
 const makeAliases=VEHICLE_CATALOG.makes.flatMap(make=>[...new Set([make.name,make.ar,...make.aliases].filter(Boolean))].map(alias=>({make,alias}))).sort((a,b)=>b.alias.length-a.alias.length);
 const modelEntries=VEHICLE_CATALOG.makes.flatMap(make=>make.models.map(model=>({make,model})));
-export function catalogMake(query){const hay=` ${cachedText(query)} `;return makeAliases.map(x=>({...x,index:hay.indexOf(` ${cachedText(x.alias)} `)})).filter(x=>x.index>=0).sort((a,b)=>a.index-b.index||b.alias.length-a.alias.length)[0]?.make||null;}
+const makeMatches=new Map();
+export function catalogMake(query){const key=cachedText(query);if(makeMatches.has(key))return makeMatches.get(key);const hay=` ${key} `;const match=makeAliases.map(x=>({...x,index:hay.indexOf(` ${cachedText(x.alias)} `)})).filter(x=>x.index>=0).sort((a,b)=>a.index-b.index||b.alias.length-a.alias.length)[0]?.make||null;if(makeMatches.size>=12000)makeMatches.clear();makeMatches.set(key,match);return match;}
 const intents=new Map();
 export function catalogIntent(query){
  if(intents.has(query))return intents.get(query);

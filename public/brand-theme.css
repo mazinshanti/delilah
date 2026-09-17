@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Tajawal:wght@400;500;600;700&display=swap');
+
+/* Dalelah brand layer — visual tokens only. No layout, flow, or behavior changes. */
+:root{
+  --bg:#FBFCFA;
+  --surface:#F2F6F3;
+  --raised:#FFFFFF;
+  --ink:#10231C;
+  --muted:#63716B;
+  --line:#DDE6E1;
+  --accent:#0F4D3A;
+  --accent-ink:#FFFFFF;
+  --soft:#E8F1EC;
+  --shadow:0 14px 40px rgba(15,77,58,.08);
+  --brand-cut:#FFFFFF;
+}
+:root[data-theme="dark"]{
+  --bg:#09110E;
+  --surface:#111B17;
+  --raised:#0D1612;
+  --ink:#F2F7F4;
+  --muted:#9DAEA6;
+  --line:#22332B;
+  --accent:#88BCA7;
+  --accent-ink:#0A2018;
+  --soft:#14281F;
+  --shadow:none;
+  --brand-cut:#09110E;
+}
+
+body{font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif}
+html[lang="ar"] body{font-family:"Tajawal","Noto Sans Arabic",Tahoma,-apple-system,sans-serif}
+
+/* Brand lockup: preserve the existing header footprint and interaction. */
+.brand{color:var(--ink);font-weight:700}
+.brand .brand-mark{display:none}
+.brand::before{
+  content:"";
+  width:40px;
+  height:40px;
+  flex:0 0 40px;
+  background:url('/dalelah-mark.svg') center/contain no-repeat;
+}
+:root[data-theme="dark"] .brand::before{filter:brightness(0) invert(1)}
+.footer-brand{color:var(--ink);font-weight:700}
+
+/* Deep-green visual system. */
+h1,h2{color:var(--ink)}
+.eyebrow,.text-button{color:var(--accent)}
+.nav{border-color:var(--line)}
+.mainNav a,.navActions a{transition:color .18s ease}
+.mainNav a:hover,.navActions a:hover{color:var(--accent)}
+.sell-nav{border-color:var(--line);background:var(--raised)}
+.sell-nav:hover{border-color:var(--accent);background:var(--soft)}
+
+.primary{
+  background:var(--accent);
+  color:var(--accent-ink);
+  box-shadow:0 8px 22px rgba(15,77,58,.14);
+}
+.primary:hover{filter:none;background:#0C4232}
+:root[data-theme="dark"] .primary:hover{background:#9ACAB7}
+.secondary{border-color:var(--line);background:var(--raised)}
+.secondary:hover{background:var(--soft);border-color:#C8D9D0}
+
+.tab.active{background:var(--accent);color:var(--accent-ink)}
+.tabs{background:var(--surface);border:1px solid var(--line)}
+
+select,input,textarea{border-color:var(--line);background:var(--raised)}
+select:focus,input:focus,textarea:focus{border-color:var(--accent);outline-color:var(--accent)}
+
+.heroStage .query-row{
+  background:var(--raised);
+  border-color:var(--line);
+  box-shadow:0 8px 28px rgba(15,77,58,.06);
+}
+.heroStage .query-row:focus-within{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(15,77,58,.10),0 8px 28px rgba(15,77,58,.06);
+}
+.hero-submit .primary{box-shadow:0 10px 26px rgba(15,77,58,.18)}
+.ai-note{color:var(--muted)}
+
+.brandBtn,.card,.filter-panel,.valuation-car{border-color:var(--line);background:var(--raised)}
+.brandBtn:hover,.brandBtn.active{border-color:var(--accent)}
+.brandBtn.active{background:var(--soft)}
+.card:hover{box-shadow:0 16px 40px rgba(15,77,58,.10)}
+.active-filters button{background:var(--soft);color:var(--accent)}
+
+.sell-tabs [aria-current="page"]{background:var(--accent);color:var(--accent-ink)}
+.valuation-fair,.vehicle-price,.card-price{color:var(--ink)}
+
+::selection{background:#CFE1D8;color:#0A2C20}
+
+@media(max-width:760px){
+  .brand::before{width:34px;height:34px;flex-basis:34px}
+}

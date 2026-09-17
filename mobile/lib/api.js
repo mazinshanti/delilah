@@ -70,10 +70,10 @@ export async function searchCars({ query, condition = 'used', filters = {} }, on
 }
 
 export async function estimateCar(vehicle) {
-  return jsonFetch(`${MARKETPLACE_API}/api/sell/estimate`, {
+  return jsonFetch(`${MARKETPLACE_API}/api/car-valuation`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(vehicle)
+    body: JSON.stringify({ ...vehicle, mileageKm: vehicle.mileageKm ?? vehicle.mileage })
   }, 90_000);
 }
 

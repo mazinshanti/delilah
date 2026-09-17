@@ -1,23 +1,3 @@
-export const colors = {
-  bg: '#090A0B',
-  panel: '#111316',
-  panel2: '#171A1F',
-  line: '#2B3037',
-  text: '#F7F6F1',
-  muted: '#9298A1',
-  accent: '#D8FF5A',
-  ok: '#AAFC8B',
-  bad: '#FF9999',
-  white: '#FFFFFF',
-  black: '#090A0B'
-};
-
-export const money = value => {
-  const n = Number(value);
-  return Number.isFinite(n) && n > 0 ? `${Math.round(n).toLocaleString('en-SA')} SAR` : 'Price unavailable';
-};
-
-export const number = value => {
-  const n = Number(value);
-  return Number.isFinite(n) && n >= 0 ? n.toLocaleString('en-SA') : null;
-};
+export const colors={bg:'#FFFFFF',surface:'#F5F7F5',raised:'#FFFFFF',panel:'#FFFFFF',panel2:'#F5F7F5',line:'#E1E7E3',text:'#17221F',muted:'#69756F',accent:'#0F4D3A',accentInk:'#FFFFFF',soft:'#EAF2ED',danger:'#B53C34',bad:'#B53C34',ok:'#0F4D3A',white:'#FFFFFF',black:'#17221F'};
+export const money=value=>{const n=Number(value);return Number.isFinite(n)&&n>0?`${Math.round(n).toLocaleString('ar-SA-u-nu-latn')} ريال`:'السعر غير معلن';};
+export const number=value=>{const n=Number(value);return Number.isFinite(n)&&n>=0?n.toLocaleString('ar-SA-u-nu-latn'):null;};

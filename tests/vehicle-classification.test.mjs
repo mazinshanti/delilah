@@ -52,3 +52,20 @@ test('ingestion metrics count records separately from repeated retrieval validat
  const verdict=classifyVehicle(car());recordClassification('metrics-test',verdict);recordClassification('metrics-test',verdict,'validation');recordClassification('metrics-test',verdict,'validation');
  const m=classificationMetrics()['metrics-test'];assert.equal(m.ingested,1);assert.equal(m.classes.VEHICLE_FOR_SALE,1);assert.equal(m.validation.evaluated,2);
 });
+
+test('public Haraj structured metadata restores sparse cars and rejects parts',async()=>{
+ const {attachHarajClassificationEvidence}=await import('../lib/haraj-classification-evidence.js');
+ const table=[{_1:2,_3:4,_5:6,_7:8,_9:10},'URL','11188763168/car/','title','كامري 2010','tags',[11,12],'bodyTEXT','كامري للبيع','carInfo',{_13:14},'حراج السيارات','تويوتا كامري','carOrRelated','CAR'];
+ const html='<script>window.__reactRouterContext.streamController.enqueue('+JSON.stringify(JSON.stringify(table))+')</script>';
+ const sparse={title:'كامري 2010',url:'https://haraj.com.sa/11188763168/car/',year:2010,discovery:'haraj_direct_volume_search',brand:'Bugatti',model:'Chiron'};
+ const [result]=attachHarajClassificationEvidence([sparse],html);
+ assert.equal(classifyVehicle(result).classification,'VEHICLE_FOR_SALE');assert.equal(vehicleIdentity(result).make,'Toyota');
+ assert.equal(classifyVehicle({...result,sourceCategory:'حراج السيارات قطع غيار'}).classification,'VEHICLE_PART');
+ assert.equal(attachHarajClassificationEvidence([{...sparse,url:'https://haraj.com.sa/11199999999/other/'}],html)[0].sourceCategory,undefined);
+ assert.equal(attachHarajClassificationEvidence([sparse],'<script>throw Error("do not execute")</script>')[0].sourceCategory,undefined);
+});
+test('query-derived Haraj metadata cannot supply vehicle identity',()=>{
+ const row=car({title:'Toyota Corolla 2022',make:'Bugatti',model:'Chiron',discovery:'haraj_source_native_search'});
+ assert.equal(vehicleIdentity(row).make,'Toyota');assert.equal(vehicleIdentity(row).model,'Corolla');
+ assert.equal(strictDirectListings([row],{query:'Bugatti',condition:'all'}).length,0);
+});

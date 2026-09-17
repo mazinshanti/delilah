@@ -1,3 +1,4 @@
+import {attachHarajClassificationEvidence} from './lib/haraj-classification-evidence.js';
 import express from 'express';
 import {VEHICLE_CATALOG} from './public/catalog.js';
 
@@ -109,7 +110,7 @@ function parseHaraj(html='',base='',body={}){
     if(f.sourceType&&f.sourceType!=='marketplace')continue;
     out.push({source:'Haraj',sourceType:'marketplace',seller:'Haraj',sourceStrict:true,title:r.title,snippet:text.slice(0,650),url:r.url,brand:id.brand?BRAND_ALIAS.get(id.brand)?.en||id.brand:null,model:id.model?MODEL_ALIAS.get(id.model)?.en||id.model:null,year:y||null,mileage:null,city,price:price||null,priceVerified:false,priceSource:price?'haraj_search_card_unverified':null,condition:'used',saleVerified:true,saleEvidence:['haraj_direct_ad_url','haraj_native_search_page'],image:image||null,displayImage:image||null,imageVerified:Boolean(image),imageSource:image?'haraj_native_search_page':null,score:90,discovery:'haraj_source_native_search',harajNativeVerified:true});
   }
-  return out.slice(0,80);
+  return attachHarajClassificationEvidence(out.slice(0,80),html);
 }
 async function scanHaraj(body={}){
   if(body.condition==='new')return[];

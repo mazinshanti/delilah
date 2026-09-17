@@ -21,8 +21,16 @@ jobs:
           /tmp/dalelah-browser/node_modules/.bin/playwright install --with-deps chromium
       - name: Start current frontend with candidate normalizers
         run: |
-          PORT=3000 node server-entry.js > /tmp/dalelah-ui.log 2>&1 &
+          PORT=3100 DALELAH_RUNTIME_ROLE=legacy-deep node server-entry.js > /tmp/dalelah-deep.log 2>&1 &
+          PORT=3000 DALELAH_LEGACY_BASE_URL=http://127.0.0.1:3100 node server-entry.js > /tmp/dalelah-ui.log 2>&1 &
           for i in $(seq 1 20); do curl -fsS http://127.0.0.1:3000/healthz && break; sleep 1; done
+      - name: Candidate live-source depth, exact-year and filter regressions
+        env:
+          DELILAH_URL: http://127.0.0.1:3000
+        run: |
+          node tests/volume-market-v15.mjs
+          node tests/full-market-v15.mjs
+          node tests/production-core-v15.mjs
       - name: Arabic English desktop mobile real-image regressions
         env:
           PLAYWRIGHT_MODULE: /tmp/dalelah-browser/node_modules/playwright/index.mjs

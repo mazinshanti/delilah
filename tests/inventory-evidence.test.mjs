@@ -53,3 +53,12 @@ test('All inventory includes unknown without admitting it to either condition ta
  assert.equal(strictDirectListings([car],{query:'Camry 2023',condition:'new'}).length,0);
  assert.equal(strictDirectListings([car],{query:'Camry 2023',condition:'used'}).length,0);
 });
+import {naturalSearch} from '../public/natural-search.js';
+import {rulesIntent,intentSearchBody} from '../lib/ai-search-intent.js';
+for(const query of ['لاندكروزر ممشى أقل من 100 ألف','لاندكروزر ممشى أقل من ١٠٠ ألف','Land Cruiser mileage under 100k'])test('mileage ceiling never becomes price: '+query,()=>{
+ const parsed=naturalSearch(query);assert.equal(parsed.filters.maxMileage,100000);assert.equal(parsed.filters.maxPrice,undefined);
+ const body=intentSearchBody({query,condition:'used',filters:{}},rulesIntent(query));assert.equal(body.filters.maxMileage,100000);assert.equal(body.filters.maxPrice,undefined);
+ const base={source:'Haraj',condition:'used',saleVerified:true,title:'Toyota Land Cruiser 2020',brand:'Toyota',model:'Land Cruiser',year:2020};
+ const rows=[{...base,url:'https://haraj.com.sa/11111111',mileage:80000},{...base,url:'https://haraj.com.sa/22222222',mileage:500000},{...base,url:'https://haraj.com.sa/33333333',mileage:null}];
+ assert.deepEqual(strictDirectListings(rows,body).map(c=>c.mileage),[80000]);
+});

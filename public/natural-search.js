@@ -1,6 +1,8 @@
 // Conservative extraction: unknown vehicle words remain in the query and cannot broaden it.
 export function naturalSearch(value=''){
  let query=String(value).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));const filters={};let condition=null;
+ // Consume explicit odometer constraints before generic budget phrases.
+ query=query.replace(/(?:الممشى|ممشى|ممشاها|mileage|odometer)\s*(?:أقل من|اقل من|تحت|under|below|less than)\s*([\d,٬]+)\s*(thousand|k\b|ألف|الف)?\s*(?:km|كم|كيلو)?/gi,(_,n,k)=>{filters.maxMileage=Number(n.replace(/[,٬]/g,''))*(k?1000:1);return ' ';});
  query=query.replace(/(?:under|below|budget(?: of)?|أقل من|اقل من|بأقل من|تحت|بحدود|ميزانية)\s*([\d,٬]+)\s*(thousand|k\b|ألف|الف)?\s*(?:SAR|riyals?|ريال)?/gi,(_,n,k)=>{filters.maxPrice=Number(n.replace(/[,٬]/g,''))*(k?1000:1);return ' ';});
  const cities=[['Riyadh','الرياض'],['Jeddah','جدة'],['Dammam','الدمام'],['Khobar','الخبر'],['Makkah','مكة'],['Madinah','المدينة'],['Abha','أبها'],['Tabuk','تبوك']];
  for(const [city,ar]of cities)query=query.replace(new RegExp('(?:^|\\s)(?:in\\s+|في\\s+|ب)?(?:'+city+'|'+ar+')(?=\\s|$)','gi'),()=>{filters.city=city;return ' ';});

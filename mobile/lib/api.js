@@ -70,11 +70,24 @@ export async function searchCars({ query, condition = 'used', filters = {} }, on
 }
 
 export async function estimateCar(vehicle) {
-  return jsonFetch(`${MARKETPLACE_API}/api/sell/estimate`, {
+  const payload = {
+    make: vehicle.make,
+    model: vehicle.model,
+    year: Number(vehicle.year),
+    mileageKm: Number(vehicle.mileageKm ?? vehicle.mileage),
+    city: vehicle.city,
+    ...(vehicle.trim ? { trim: vehicle.trim } : {}),
+    ...(vehicle.vehicleCondition ? { vehicleCondition: vehicle.vehicleCondition } : {})
+  };
+  return jsonFetch(`${PRIMARY_API}/api/car-valuation`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(vehicle)
+    body: JSON.stringify(payload)
   }, 90_000);
+}
+
+export async function fetchCatalog() {
+  return jsonFetch(`${PRIMARY_API}/api/catalog`, {}, 30_000);
 }
 
 export async function marketplaceStatus() {
@@ -84,5 +97,6 @@ export async function marketplaceStatus() {
 export const apiConfig = {
   search: PRIMARY_API,
   searchFallback: SEARCH_FALLBACK_API,
-  marketplace: MARKETPLACE_API
+  marketplace: MARKETPLACE_API,
+  valuation: PRIMARY_API
 };

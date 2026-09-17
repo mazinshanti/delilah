@@ -39,7 +39,7 @@ test('catalog rejects unknown make/model and inferred exploratory exact models',
  assert.throws(()=>normalizeAIIntent(value({make:'Toyota',model:'Camry'}),'something comfortable'));
 });
 test('AI failure keeps safe Arabic exact query functional with rule fallback',async()=>{
- const e=engine(async()=>{throw Error('network');});const r=await e.understand('Camry 2022 الرياض under 100k');assert.equal(r.intentMode,'rules');assert.equal(r.safeFallback,true);assert.equal(r.intent.year,2022);assert(r.fallbackReason);
+ const e=engine(async()=>{throw Error('network');});const r=await e.understand('show me Camry 2022 الرياض under 100k');assert.equal(r.intentMode,'rules');assert.equal(r.safeFallback,true);assert.equal(r.intent.year,2022);assert(r.fallbackReason);
 });
 test('disabled/missing key never calls provider',async()=>{
  for(const env of [{DALELAH_AI_SEARCH_ENABLED:'false'},{OPENAI_API_KEY:''}]){const e=engine(()=>{throw Error('must not run');},env);const r=await e.understand('show me Corolla 2013');assert.equal(r.intentMode,'rules');assert.equal(e.status().stats.calls,0);}

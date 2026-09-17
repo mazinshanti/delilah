@@ -230,6 +230,9 @@ function publicJob(job){
   out.snapshotAt=inventoryIndex.generatedAt;
   out.sourceErrors=[...(scanTimedOut?['scan-deadline-reached']:[]),...(direct.errors||[]),...(job.error?['deep-search-unavailable']:[])];
   out.interpretationUnavailable=interpretationUnavailable;
+  out.aiRequired=needsAI(job.originalQuery);
+  out.parsedIntent=job.intentResult?.parsedIntent||null;
+  out.aiProviderAttempted=Boolean(job.intentResult?.providerAttempted);
   if(job.intentResult){const r=job.intentResult;out.intentMode=r.intentMode;out.intent=r.intent;out.ai={model:r.intentMode==='ai'?r.model:null,latencyMs:r.aiLatencyMs,cacheHit:Boolean(r.cacheHit),fallbackReason:r.fallbackReason||null};out.understanding.normalizedIntent=r.intent;out.unverifiedPreferences=r.intent.priorities;out.resultCount=listings.length;
    if(complete&&!job.intentLogged){job.intentLogged=true;console.info(JSON.stringify({event:'search_intent_results',intentMode:r.intentMode,resultCount:listings.length,zeroResults:listings.length===0,sourcesUsed:Object.keys(counts(listings))}));}
    if(process.env.NODE_ENV==='development')out.intentDebug={originalQuery:job.originalQuery,normalizedIntent:r.intent,intentMode:r.intentMode,catalogMatch:catalogIntent(job.body.query),resultCount:listings.length,sourcesUsed:Object.keys(counts(listings))};

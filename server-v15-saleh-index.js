@@ -1,3 +1,4 @@
+import {extractSalehVehicleGallery} from './lib/saleh-image.js';
 import express from 'express';
 
 const externalPort=Number(process.env.PORT||3000);
@@ -97,8 +98,8 @@ async function parseProduct(url,body){
   if(f.seller&&norm(f.seller)!==norm('Saleh Cars'))return null;
   if(f.sourceType&&f.sourceType!=='dealer')return null;
   if(/not available|غير متوفر|نفدت الكمية/i.test(text)&&!/available upon request|متوفر عند الطلب/i.test(text))return null;
-  const image=imageFrom(html,p.url);
-  return{source:'Saleh Cars',sourceType:'dealer',seller:'Saleh Cars',sourceStrict:true,title,snippet:text.slice(0,650),url:p.url,brand:d.brand,model:d.model,year,price,mileage:0,city:null,condition:'new',saleVerified:true,saleEvidence:['saleh_direct_car_url','saleh_public_product_index'],image:image||null,displayImage:image||null,imageVerified:Boolean(image),priceVerified:Boolean(price),priceSource:price?'saleh_direct_car_page':null,score:97,discovery:'saleh_public_product_index',salehNativeVerified:true};
+  const images=extractSalehVehicleGallery(html,p.url,{title});const image=images[0]||null;
+  return{source:'Saleh Cars',sourceType:'dealer',seller:'Saleh Cars',sourceStrict:true,title,snippet:text.slice(0,650),url:p.url,brand:d.brand,model:d.model,year,price,mileage:null,city:null,condition:'new',saleVerified:true,saleEvidence:['saleh_direct_car_url','saleh_public_product_index'],images,galleryVerified:images.length>0,image:image||null,displayImage:image||null,imageVerified:Boolean(image),priceVerified:Boolean(price),priceSource:price?'saleh_direct_car_page':null,score:97,discovery:'saleh_public_product_index',salehNativeVerified:true};
 }
 async function scan(body={}){
   if(body.condition!=='new')return{listings:[],meta:{mode:'new-only',discovered:0,matched:0}};

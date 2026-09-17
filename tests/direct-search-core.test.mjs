@@ -26,9 +26,9 @@ test('direct core keeps model-only Haraj titles when there is no conflicting bra
 
 test('direct core accepts common Saudi Corolla spelling variants',()=>{
   const input=[
-    {source:'Haraj',title:'كورلا 2026 2.0',url:'https://example.com/korla',year:2026,condition:'new'},
-    {source:'Haraj',title:'كوريلا 2026 سعودي',url:'https://example.com/korela',year:2026,condition:'new'},
-    {source:'Haraj',title:'كامري 2026',url:'https://example.com/camry',year:2026,condition:'new'}
+    {source:'Haraj',title:'كورلا 2026 2.0',url:'https://example.com/korla',year:2026,condition:'new',sourceCondition:'new'},
+    {source:'Haraj',title:'كوريلا 2026 سعودي',url:'https://example.com/korela',year:2026,condition:'new',sourceCondition:'new'},
+    {source:'Haraj',title:'كامري 2026',url:'https://example.com/camry',year:2026,condition:'new',sourceCondition:'new'}
   ];
   const out=strictDirectListings(input,{query:'Toyota Corolla 2026',condition:'new',filters:{}});
   assert.deepEqual(out.map(x=>x.url).sort(),['https://example.com/korela','https://example.com/korla']);

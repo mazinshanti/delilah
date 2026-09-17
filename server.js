@@ -236,7 +236,7 @@ function extractFields(text = "", preferredTitle = "") {
   const newSignal = /\bnew\b|brand new|condition\s*:?\s*new|جديد|جديدة|زيرو|صفر كيلو|غير مستخدم/i.test(t), usedSignal = /\bused\b|pre-owned|condition\s*:?\s*used|مستعمل|مستعملة|ممشى/i.test(t);
   return { brand, model, year, mileage, city, price, newSignal, usedSignal };
 }
-function resultCondition(f, requested, source) { if (source.conditions.length === 1) return source.conditions[0]; if (f.usedSignal || (f.mileage != null && f.mileage > 100)) return "used"; if (f.newSignal || f.mileage === 0) return "new"; return requested; }
+function resultCondition(f, requested, source) { if (source.conditions.length === 1) return source.conditions[0]; if (f.usedSignal || (f.mileage != null && f.mileage > 100)) return "used"; if (f.newSignal) return "new"; return "unknown"; }
 function matches(c, i, condition) {
   if (c.condition !== condition) return false;
   if (i.brand && c.brand && c.brand !== i.brand) return false;

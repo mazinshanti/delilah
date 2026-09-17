@@ -1,5 +1,5 @@
 import express from 'express';
-import {extractSalehVehicleImage} from './lib/saleh-image.js';
+import {extractSalehVehicleImage,extractSalehVehicleGallery} from './lib/saleh-image.js';
 
 const externalPort=Number(process.env.PORT||3000);
 const innerPort=Number(process.env.DALELAH_SALEH_INNER_PORT||6600);
@@ -83,8 +83,8 @@ async function scanSaleh(body={}){
     if(d.model&&!hasAny(matchText,MODELS[d.model]))return null;if(d.brand&&!hasAny(matchText,BRANDS[d.brand]))return null;if(d.exact&&year!==d.exact)return null;
     const price=priceFrom(text.slice(0,5000),p.html),f=body.filters||{};if(f.maxPrice&&price!=null&&price>Number(f.maxPrice))return null;if(f.seller&&norm(f.seller)!==norm('Saleh Cars'))return null;if(f.sourceType&&f.sourceType!=='dealer')return null;
     if(/not available|غير متوفر|نفدت الكمية/i.test(text)&&!/available upon request|متوفر عند الطلب/i.test(text))return null;
-    const image=extractSalehVehicleImage(p.html,p.url,{title});
-    return{source:'Saleh Cars',sourceType:'dealer',seller:'Saleh Cars',sourceStrict:true,title,snippet:text.slice(0,650),url:p.url,salehProductId:salehId(p.url),brand:d.brand,model:d.model,year,price,mileage:0,city:null,condition:'new',saleVerified:true,saleEvidence:['saleh_direct_car_url','saleh_public_product_index'],image:image||null,displayImage:image||null,imageVerified:Boolean(image),priceVerified:Boolean(price),priceSource:price?'saleh_direct_car_page':null,score:96,discovery:'saleh_source_native_inventory',salehNativeVerified:true};
+    const images=extractSalehVehicleGallery(p.html,p.url,{title});const image=images[0]||null;
+    return{source:'Saleh Cars',sourceType:'dealer',seller:'Saleh Cars',sourceStrict:true,title,snippet:text.slice(0,650),url:p.url,salehProductId:salehId(p.url),brand:d.brand,model:d.model,year,price,mileage:null,city:null,condition:'new',saleVerified:true,saleEvidence:['saleh_direct_car_url','saleh_public_product_index'],images,galleryVerified:images.length>0,image:image||null,displayImage:image||null,imageVerified:Boolean(image),priceVerified:Boolean(price),priceSource:price?'saleh_direct_car_page':null,score:96,discovery:'saleh_source_native_inventory',salehNativeVerified:true};
   }));for(const c of batch)if(c)out.push(c);if(out.length>=50)break}
   const dedup=new Map();for(const c of out){const key=c.salehProductId||c.url;if(!dedup.has(key)||/\/en\/cars\//i.test(c.url))dedup.set(key,c)}
   const result=[...dedup.values()];result.discoveryMeta={discoveredBeforeSeeds:discovery.discoveredBeforeSeeds,sitemapCount:discovery.sitemapCount,seedCount:discovery.seedCount,errors:discovery.errors};return result;

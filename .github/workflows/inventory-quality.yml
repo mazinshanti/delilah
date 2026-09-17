@@ -1,0 +1,34 @@
+name: Inventory quality pre-deployment gate
+on:
+  push:
+    branches: [fix/inventory-evidence]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --ignore-scripts
+      - run: npm run check && npm test
+      - run: |
+          npm install --prefix /tmp/dalelah-browser --no-audit --no-fund playwright@1.55.0
+          /tmp/dalelah-browser/node_modules/.bin/playwright install --with-deps chromium
+      - name: Start current frontend with candidate normalizers
+        run: |
+          PORT=3000 node server-entry.js > /tmp/dalelah-ui.log 2>&1 &
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:3000/healthz && break; sleep 1; done
+      - name: Arabic English desktop mobile real-image regressions
+        env:
+          PLAYWRIGHT_MODULE: /tmp/dalelah-browser/node_modules/playwright/index.mjs
+        run: node scripts/inventory-media-ui-check.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: inventory-media-qa
+          path: artifacts/inventory-media/

@@ -139,8 +139,9 @@ function exactFor(body={}){const f=body.filters||{};if(Number(f.minYear)&&Number
 function enrichSourcePrices(listings=[]){
   return (Array.isArray(listings)?listings:[]).map(car=>{
     const source=norm(car?.source||car?.seller||'');
-    if(car.discovery!=='public_inventory_index'&&['haraj','opensooq'].includes(source))car={...car,mileage:extractMileage(`${car.title||''} ${car.snippet||''}`)};
+    if(car.discovery!=='public_inventory_index'&&['haraj','opensooq'].includes(source))car={...car,mileage:car.mileage??extractMileage(`${car.title||''} ${car.description||''} ${car.snippet||''}`)};
     if(source===norm('Haraj')){
+      if(car.priceDiscovery==='haraj_detail_page'&&car.priceVerified===true)return car;
       const hit=extractHarajPrice(`${car?.title||''} ${car?.snippet||''}`,{year:car?.year});
       if(hit)return{...car,price:hit.price,priceVerified:true,priceSource:hit.source,priceEvidence:hit.evidence,harajPriceMatrix:true};
       if(car?.priceVerified===true)return car;

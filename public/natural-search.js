@@ -2,6 +2,7 @@
 export function naturalSearch(value=''){
  let query=String(value).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));const filters={};let condition=null;
  // Consume explicit odometer constraints before generic budget phrases.
+ query=query.replace(/(?:under|below|less than|up to|أقل من|اقل من|تحت|حتى)\s*([\d,٬]+)\s*(thousand|k\b|ألف|الف)?\s*(?:km|كم|كيلو)\b/gi,(_,n,k)=>{filters.maxMileage=Number(n.replace(/[,٬]/g,''))*(k?1000:1);return ' ';});
  query=query.replace(/(?:الممشى|ممشى|ممشاها|mileage|odometer)\s*(?:أقل من|اقل من|تحت|under|below|less than)\s*([\d,٬]+)\s*(thousand|k\b|ألف|الف)?\s*(?:km|كم|كيلو)?/gi,(_,n,k)=>{filters.maxMileage=Number(n.replace(/[,٬]/g,''))*(k?1000:1);return ' ';});
  query=query.replace(/(?:under|below|budget(?: of)?|أقل من|اقل من|بأقل من|تحت|بحدود|ميزانية)\s*([\d,٬]+)\s*(thousand|k\b|ألف|الف)?\s*(?:SAR|riyals?|ريال)?/gi,(_,n,k)=>{filters.maxPrice=Number(n.replace(/[,٬]/g,''))*(k?1000:1);return ' ';});
  const cities=[['Riyadh','الرياض'],['Jeddah','جدة'],['Dammam','الدمام'],['Khobar','الخبر'],['Makkah','مكة'],['Madinah','المدينة'],['Abha','أبها'],['Tabuk','تبوك']];

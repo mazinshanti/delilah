@@ -42,3 +42,14 @@ test('live Yaris RPM and financing warranty are not selling price or mileage',()
  assert.equal(extractMileage('ضمان ممتد إلى 3 سنوات او 100 الف كيلو أيهما اولا'),null);
  assert.equal(resolveCondition({source:'Haraj',description:'حالة السيارة : وكالة'}),'new');
 });
+test('clearing an invalid price cannot resurrect a stale canonical alias',()=>{
+ const car=normalizeInventoryListing({price:90000,priceVerified:true});
+ const cleared=normalizeInventoryListing({...car,price:null,priceVerified:false});
+ assert.equal(cleared.price,null);assert.equal(cleared.price_sar,null);assert.equal(cleared.priceSar,null);
+});
+test('All inventory includes unknown without admitting it to either condition tab',()=>{
+ const car={source:'Haraj',title:'Toyota Camry 2023',year:2023,url:'https://haraj.com.sa/11111111',condition:'unknown',saleVerified:true};
+ assert.equal(strictDirectListings([car],{query:'Camry 2023',condition:'all'}).length,1);
+ assert.equal(strictDirectListings([car],{query:'Camry 2023',condition:'new'}).length,0);
+ assert.equal(strictDirectListings([car],{query:'Camry 2023',condition:'used'}).length,0);
+});

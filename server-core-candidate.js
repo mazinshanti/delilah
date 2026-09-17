@@ -46,7 +46,7 @@ installValuationRoutes(app,{inventoryIndex});
 app.get('/api/sources',(_req,res)=>{const stats=inventoryIndex.stats();res.json({generatedAt:stats.generatedAt,sources:publicSourceRegistry(stats.bySource,stats.diagnostics,stats.generatedAt)});});
 app.get('/api/inventory/stats',(_req,res)=>res.json(inventoryIndex.stats()));
 app.get('/api/inventory',(req,res)=>{
-  if(req.query.condition!=null&&!['new','used'].includes(req.query.condition))return res.status(400).json({error:'invalid-condition'});
+  if(req.query.condition!=null&&!['new','used','all'].includes(req.query.condition))return res.status(400).json({error:'invalid-condition'});
   const filters={};for(const k of ['minYear','maxYear','minPrice','maxPrice','maxMileage','city','seller','category','fuelType','trim'])if(req.query[k]!=null)filters[k]=req.query[k];
   const error=validateFilters(filters);if(error)return res.status(400).json({error});
   if(req.query.q!=null&&(typeof req.query.q!=='string'||req.query.q.length>180))return res.status(400).json({error:'invalid-query'});
@@ -54,7 +54,7 @@ app.get('/api/inventory',(req,res)=>{
   // Conversational queries must go through POST /api/search; never flash unvalidated warm results.
   if(needsAI(req.query.q))return res.json({...paginateInventory([],req.query),intentPending:true,complete:false});
   const started=performance.now();
-  const rows=inventoryIndex.search({query,condition:parsed.condition||(req.query.condition==='new'?'new':'used'),filters});
+  const rows=inventoryIndex.search({query,condition:parsed.condition||(req.query.condition==='all'?'all':req.query.condition==='new'?'new':'used'),filters});
   res.setHeader('Server-Timing',`inventory;dur=${(performance.now()-started).toFixed(2)}`);
   res.setHeader('Cache-Control','public, max-age=30, stale-while-revalidate=60');
   return res.json({...paginateInventory(rows,req.query),understanding:catalogIntent(query),snapshotAt:inventoryIndex.generatedAt,complete:true});

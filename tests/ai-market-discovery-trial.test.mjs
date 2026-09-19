@@ -71,3 +71,21 @@ test('pending candidates survive repeated AI results and are checked only once',
  const r=await runAdaptiveMarketDiscovery({query:'Corolla',condition:'all',filters:{}},{excludedMakes:[]},{maxRounds:2,maxDetails:4,discover:async()=>({status:'completed',webSearchCalls:1,urls}),readDetail:async c=>{reads.push(c.url);return '';}});
  assert.equal(new Set(reads).size,4);assert.equal(r.pendingUrls.length,0);assert.equal(r.discovered,4);
 });
+test('English CarSwitch request matches Arabic schema only for the same ad ID',async()=>{
+ const direct='https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2022/864159';
+ const canonical=direct.replace('/en/','/');
+ const schema=u=>({'@type':'Car',url:u,name:'Toyota Corolla 2022',brand:'Toyota',model:'Corolla',vehicleModelDate:2022,itemCondition:'https://schema.org/UsedCondition',offers:{price:60000}});
+ const page=`<script type="application/ld+json">${JSON.stringify([schema(canonical),schema(canonical.replace('864159','864160'))])}</script>`;
+ const r=await runAdaptiveMarketDiscovery({query:'Corolla',condition:'used',filters:{}},{excludedMakes:[]},{maxRounds:1,discover:async()=>({status:'completed',webSearchCalls:1,urls:[direct,canonical]}),readDetail:async()=>page});
+ assert.equal(r.discovered,1);assert.equal(r.checked,1);assert.equal(r.accepted,1);assert.equal(r.listings[0].url,canonical);
+ assert.ok(marketCandidate('https://syarah.com/cardetail/toyota-corolla-new-283851'));
+});
+test('safe locale redirect obeys robots; cross-host and other-ad redirects never get fetched',async()=>{
+ const direct='https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2022/864159';
+ for(const target of [direct.replace('/en/','/'),'https://evil.test/car',direct.replace('864159','999999')]){
+ const calls=[];const read=createMarketDetailReader({sleep:async()=>{},fetchImpl:async u=>{calls.push(u);if(u.endsWith('robots.txt'))return new Response('User-agent: *\nAllow: /');if(u===direct)return new Response(null,{status:308,headers:{location:target}});return new Response('exact ad');}});
+ if(target===direct.replace('/en/','/'))assert.equal(await read(marketCandidate(direct)),'exact ad');else{await assert.rejects(read(marketCandidate(direct)),/unsafe-source-redirect/);assert.equal(calls.length,2);}
+ }
+ const read=createMarketDetailReader({sleep:async()=>{},fetchImpl:async u=>u.endsWith('robots.txt')?new Response('User-agent: *\nDisallow: /riyadh/'):new Response(null,{status:308,headers:{location:direct.replace('/en/','/')}})});
+ await assert.rejects(read(marketCandidate(direct)),/robots-disallowed/);
+});

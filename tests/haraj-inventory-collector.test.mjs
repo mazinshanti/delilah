@@ -20,6 +20,9 @@ test('transport follows only same-ad redirects with robots checks and a hop boun
  }
  await assert.rejects(fetchHarajInventoryHtml(url,{rules:'User-agent: *\nDisallow: /11188891344/',sleep:async()=>{},fetchImpl:async()=>new Response(null,{status:302,headers:{location:'/11188891344/'}})}),/robots-disallowed/);
 });
+test('transport rejects non-Haraj and unrelated paths before making any request',async()=>{
+ for(const target of ['https://example.com/11188891344/','https://haraj.com.sa/login','https://user@haraj.com.sa/11188891344/'])await assert.rejects(fetchHarajInventoryHtml(target,{fetchImpl:async()=>{throw Error('unexpected fetch');}}),/unsupported-source-url/);
+});
 test('catalog-driven discovery includes all manufacturers and round-robin models without aliases duplicating brands',()=>{
  const qs=harajDiscoveryQueries();assert.ok(qs.length>100);assert.equal(qs.length,new Set(qs).size);
  assert.ok(qs.includes('تويوتا كامري'));assert.ok(qs.some(q=>/لامبور|Lamborghini/.test(q)));
@@ -37,6 +40,11 @@ test('sold ads cannot enter the expanded snapshot',()=>{
 });
 test('Arabic year digits remain searchable as the numeric model year',()=>{
  assert.equal(harajDetailRecord(candidate,html(undefined,{name:'تويوتا كامري ٢٠٢٠'})).year,2020);
+});
+test('explicit model-year detail labels work without guessing from arbitrary description years',()=>{
+ assert.equal(harajDetailRecord(candidate,html('سيارة مستعملة للبيع\nالموديل: ٢٠٢٠',{name:'تويوتا كامري'})).year,2020);
+ assert.equal(harajDetailRecord(candidate,html('سيارة مستعملة للبيع صيانة 2020',{name:'تويوتا كامري'})),null);
+ assert.equal(harajDetailRecord(candidate,html('سيارة مستعملة للبيع\nالموديل: 2021')),null);
 });
 test('parts, wanted and unrelated detail descriptions remain quarantined',()=>{
  for(const description of ['مكينة للبيع تويوتا كامري 2020','مطلوب تويوتا كامري 2020','حساب ببجي لامبورغيني','لعبة سيارة تويوتا','جنوط للبيع','طيور للبيع'])assert.equal(harajDetailRecord(candidate,html(description)),null,description);

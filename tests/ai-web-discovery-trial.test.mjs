@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {discoverHarajWithAI,discoveredHarajUrls} from '../lib/ai-web-discovery-trial.js';
+test('400 diagnostics expose only safe parameter identifiers, not raw provider messages',async()=>{
+ const r=await discoverHarajWithAI('Camry',{env:{OPENAI_API_KEY:'test'},fetchImpl:async()=>new Response(JSON.stringify({error:{type:'invalid_request_error',code:'unsupported_parameter',param:'max_tool_calls',message:'Unsupported parameter with private data'}}),{status:400})});
+ assert.deepEqual(r.providerError,{type:'invalid_request_error',code:'unsupported_parameter',param:'max_tool_calls',reason:'unsupported-setting'});assert.ok(!JSON.stringify(r).includes('private data'));
+});
 const response=urls=>({status:'completed',output:[{type:'web_search_call',status:'completed',action:{sources:urls.map(url=>({url}))}}]});
 test('only tool-returned direct source URLs enter discovery, with stable ID deduplication',()=>{
  const data=response(['https://haraj.com.sa/123456789/car','https://haraj.com.sa/123456789/other','https://haraj.com.sa/search/car/','https://evil.example/123456789/','https://haraj.com.sa.evil.example/123456789/','https://user@haraj.com.sa/123456789/']);

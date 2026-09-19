@@ -1,0 +1,10 @@
+import {runAdaptiveMarketDiscovery} from '../lib/ai-market-discovery-trial.js';
+import {createIntentEngine,intentSearchBody} from '../lib/ai-search-intent.js';
+const [query='كورولا',rawFilters='{}']=process.argv.slice(2);
+const understanding=await createIntentEngine().understand(query);
+if(understanding.fallbackReason&&!understanding.safeFallback)throw Error('Cannot preserve query constraints');
+const body=intentSearchBody({query,condition:'all',filters:JSON.parse(rawFilters)},understanding);
+body.discoveryQuery=query;
+const start=performance.now();
+const result=await runAdaptiveMarketDiscovery(body,understanding.intent,{onProgress:result=>console.log(JSON.stringify({stage:'progress',...result}))});
+console.log(JSON.stringify({...result,totalMs:Math.round(performance.now()-start)},null,2));

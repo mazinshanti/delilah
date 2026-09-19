@@ -1,0 +1,806 @@
+{
+  "mode": "direct-source-audit-not-provider-AI-session",
+  "generatedAt": "2026-09-19T21:18:54.496438+00:00",
+  "uniqueSourceAdsAccepted": 27,
+  "coverageComplete": false,
+  "sourceAccess": [
+    {
+      "source": "Haraj",
+      "url": "https://haraj.com.sa/",
+      "status": "HTTP 200",
+      "bytes": 242965,
+      "accepted": null,
+      "seconds": 23.19,
+      "htmlPath": "/tmp/dalelah-probe-haraj.html"
+    },
+    {
+      "source": "Syarah",
+      "url": "https://syarah.com/en/autos",
+      "status": "HTTP 200",
+      "bytes": 772926,
+      "accepted": null,
+      "seconds": 23.08,
+      "htmlPath": "/tmp/dalelah-probe-syarah.html"
+    },
+    {
+      "source": "Saudi Sale",
+      "url": "https://cars.saudisale.com/en",
+      "status": "HTTP 200",
+      "bytes": 727194,
+      "accepted": null,
+      "seconds": 20.62,
+      "htmlPath": "/tmp/dalelah-probe-saudi-sale.html"
+    },
+    {
+      "source": "Mercedes-Benz Saudi",
+      "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/",
+      "status": "HTTP 200",
+      "bytes": 352077,
+      "accepted": null,
+      "seconds": 21.19,
+      "htmlPath": "/tmp/dalelah-probe-mercedes-benz-saudi.html"
+    },
+    {
+      "source": "Saleh Cars",
+      "url": "https://www.salehcars.com/",
+      "status": "HTTP 200",
+      "bytes": 710761,
+      "accepted": null,
+      "seconds": 19.24,
+      "htmlPath": "/tmp/dalelah-probe-saleh-cars.html"
+    },
+    {
+      "source": "OpenSooq",
+      "url": "https://sa.opensooq.com/en/cars/cars-for-sale/used",
+      "status": "HTTP 200",
+      "bytes": 952616,
+      "accepted": null,
+      "seconds": 20.26,
+      "htmlPath": "/tmp/dalelah-probe-opensooq.html"
+    },
+    {
+      "source": "Carly",
+      "url": "https://www.halacarly.com/buy",
+      "status": "HTTP 200",
+      "bytes": 21271,
+      "accepted": null,
+      "seconds": 19.17,
+      "htmlPath": "/tmp/dalelah-probe-carly.html"
+    },
+    {
+      "source": "ArabWheels",
+      "url": "https://www.arabwheels.sa/en/",
+      "status": "HTTP 200",
+      "bytes": 266532,
+      "accepted": null,
+      "seconds": 19.13,
+      "htmlPath": "/tmp/dalelah-probe-arabwheels.html"
+    },
+    {
+      "source": "Audi Approved",
+      "url": "https://audiapproved.com/en/saudiarabia",
+      "status": "robots-http-307",
+      "accepted": null
+    },
+    {
+      "source": "Volkswagen Certified",
+      "url": "https://vwcertified.me/en/saudiarabia",
+      "status": "robots-http-307",
+      "accepted": null
+    }
+  ],
+  "carSwitchCases": [
+    {
+      "query": "Toyota Corolla",
+      "discovered": 24,
+      "checked": 8,
+      "accepted": 8,
+      "firstResultMs": 45475,
+      "results": [
+        {
+          "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2022/864159",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2021/834075",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2022/879793",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2025/826758",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2025/870659",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2022/873160",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2026/836972",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2022/799038",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        }
+      ]
+    },
+    {
+      "query": "Hyundai Elantra",
+      "discovered": 24,
+      "checked": 8,
+      "accepted": 8,
+      "firstResultMs": 21723,
+      "results": [
+        {
+          "url": "https://ksa.carswitch.com/en/riyadh/used-car/hyundai/elantra/2019/858687",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/al-khobar/used-car/hyundai/elantra/2024/744047",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/riyadh/used-car/hyundai/elantra/2016/878733",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/hail/used-car/hyundai/elantra/2023/873317",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/riyadh/used-car/hyundai/elantra/2016/872189",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/jeddah/used-car/hyundai/elantra/2024/873732",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/riyadh/used-car/hyundai/elantra/2018/815609",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/dammam/used-car/hyundai/elantra/2020/803870",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        }
+      ]
+    },
+    {
+      "query": "Nissan Patrol",
+      "discovered": 24,
+      "checked": 8,
+      "accepted": 4,
+      "firstResultMs": 24222,
+      "results": [
+        {
+          "url": "https://ksa.carswitch.com/en/riyadh/used-car/nissan/patrol/2023/863671",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/jeddah/used-car/nissan/patrol/2024/872124",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/riyadh/used-car/nissan/patrol/2021/863210",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/riyadh/used-car/nissan/patrol/2023/867074",
+          "source": "CarSwitch Saudi",
+          "status": "accepted"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/riyadh/used-car/nissan/patrol/2025/869130",
+          "source": "CarSwitch Saudi",
+          "status": "no-exact-vehicle-evidence"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/riyadh/used-car/nissan/patrol/2018/819783",
+          "source": "CarSwitch Saudi",
+          "status": "no-exact-vehicle-evidence"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/riyadh/used-car/nissan/patrol/2024/828373",
+          "source": "CarSwitch Saudi",
+          "status": "no-exact-vehicle-evidence"
+        },
+        {
+          "url": "https://ksa.carswitch.com/en/riyadh/used-car/nissan/patrol/2021/856172",
+          "source": "CarSwitch Saudi",
+          "status": "no-exact-vehicle-evidence"
+        }
+      ]
+    },
+    {
+      "query": "BMW X5",
+      "discovered": 0,
+      "checked": 0,
+      "accepted": 0,
+      "firstResultMs": null,
+      "results": []
+    },
+    {
+      "query": "Ford F-150",
+      "discovered": 0,
+      "checked": 0,
+      "accepted": 0,
+      "firstResultMs": null,
+      "results": []
+    },
+    {
+      "query": "Mercedes C-Class",
+      "discovered": 0,
+      "checked": 0,
+      "accepted": 0,
+      "firstResultMs": null,
+      "results": []
+    },
+    {
+      "query": "Porsche 911",
+      "discovered": 0,
+      "checked": 0,
+      "accepted": 0,
+      "firstResultMs": null,
+      "results": []
+    },
+    {
+      "query": "MG ZS",
+      "discovered": 0,
+      "checked": 0,
+      "accepted": 0,
+      "firstResultMs": null,
+      "results": []
+    }
+  ],
+  "sourceDetailSamples": [
+    {
+      "source": "Syarah",
+      "discovered": 12,
+      "results": [
+        {
+          "url": "https://syarah.com/en/cardetail/great-wall-tank-300-used-307081",
+          "status": "accepted",
+          "listing": {
+            "title": "Used 2023 Great Wall Tank 300 Conqueror Red Color for sale - 307081 | Syarah",
+            "source": "Syarah",
+            "make": "Great Wall",
+            "model": "Tank 300",
+            "year": 2023,
+            "price": 112600,
+            "mileage": 47262,
+            "condition": "used",
+            "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/307081/orignal-1784461770-586_cut.jpg?v=3"
+          }
+        },
+        {
+          "url": "https://syarah.com/en/cardetail/toyota-rav4-used-315552",
+          "status": "accepted",
+          "listing": {
+            "title": "Used 2023 Toyota RAV4 LE White Color for sale - 315552 | Syarah",
+            "source": "Syarah",
+            "make": "Toyota",
+            "model": "RAV4",
+            "year": 2023,
+            "price": 82000,
+            "mileage": 130017,
+            "condition": "used",
+            "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/315552/orignal-315552-1-1788621471.jpg?v=3"
+          }
+        },
+        {
+          "url": "https://syarah.com/en/cardetail/hyundai-accent-used-314233",
+          "status": "accepted",
+          "listing": {
+            "title": "Used 2025 Hyundai Accent Fleet Silver Color for sale - 314233 | Syarah",
+            "source": "Syarah",
+            "make": "Hyundai",
+            "model": "Accent",
+            "year": 2025,
+            "price": 52900,
+            "mileage": 71767,
+            "condition": "used",
+            "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/314233/orignal-1787835772-221_cut.jpg?v=3"
+          }
+        },
+        {
+          "url": "https://syarah.com/en/cardetail/hyundai-tucson-used-315127",
+          "status": "accepted",
+          "listing": {
+            "title": "Used 2023 Hyundai Tucson Smart leaden Color for sale - 315127 | Syarah",
+            "source": "Syarah",
+            "make": "Hyundai",
+            "model": "Tucson",
+            "year": 2023,
+            "price": 71200,
+            "mileage": 107790,
+            "condition": "used",
+            "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/315127/orignal-1788413574-78_cut.jpg?v=3"
+          }
+        }
+      ]
+    },
+    {
+      "source": "Mercedes-Benz Saudi",
+      "discovered": 24,
+      "results": [
+        {
+          "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/21715788-mercedes-benz-eqa-250",
+          "status": "unsafe-source-redirect"
+        },
+        {
+          "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/20834065-mercedes-benz-eqa-350",
+          "status": "unsafe-source-redirect"
+        },
+        {
+          "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/21232216-mercedes-benz-eqa-350",
+          "status": "unsafe-source-redirect"
+        },
+        {
+          "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/21352849-mercedes-benz-eqa-350",
+          "status": "Command failed: curl -sS --max-time 20 --max-filesize 5000000 -A Dalelah/1.5 (+https://www.dalelah.co; vehicle-search-index) -D /tmp/dalelah-audit-ac6a9236-3e32-459e-89ee-44f08e63b817 -w \n%{http_code} https://www.mercedes-benz-mena.com/ksa/en/buy-used/21352849-mercedes-benz-eqa-350\ncurl: (28) Operation timed out after 20001 milliseconds with 0 bytes received\n"
+        }
+      ]
+    },
+    {
+      "source": "Saudi Sale",
+      "discovered": 39,
+      "results": [
+        {
+          "url": "https://cars.saudisale.com/en/listings/sa591B/2015-audi-a6",
+          "status": "no-exact-vehicle-evidence",
+          "listing": null
+        },
+        {
+          "url": "https://cars.saudisale.com/en/listings/8dtpBa/2025-land-rover-defender-110-se",
+          "status": "no-exact-vehicle-evidence",
+          "listing": null
+        },
+        {
+          "url": "https://cars.saudisale.com/en/listings/aBu4CI/2026-mercedes-benz-gle-450",
+          "status": "no-exact-vehicle-evidence",
+          "listing": null
+        },
+        {
+          "url": "https://cars.saudisale.com/en/listings/6aE73p/2010-land-rover-range-rover-vogue",
+          "status": "no-exact-vehicle-evidence",
+          "listing": null
+        }
+      ]
+    }
+  ],
+  "harajCases": [
+    {
+      "query": "تويوتا كورولا",
+      "diagnostics": {
+        "source": "Haraj",
+        "pages": 1,
+        "successfulPages": 1,
+        "discovered": 21,
+        "detailAttempts": 4,
+        "detailSuccess": 4,
+        "records": 1,
+        "rejected": 8,
+        "rejectedReasons": {
+          "unknown_condition": 3
+        },
+        "duplicateCards": 0,
+        "errors": [],
+        "queryPool": 1,
+        "cursor": 0,
+        "nextCursor": 0,
+        "coverageComplete": false,
+        "completedAt": "2026-09-19T21:16:16.677Z",
+        "durationMs": 63511,
+        "budgetExhausted": true,
+        "acceptanceRate": 0.047619047619047616
+      }
+    },
+    {
+      "query": "نيسان باترول",
+      "diagnostics": {
+        "source": "Haraj",
+        "pages": 1,
+        "successfulPages": 1,
+        "discovered": 17,
+        "detailAttempts": 4,
+        "detailSuccess": 4,
+        "records": 1,
+        "rejected": 10,
+        "rejectedReasons": {
+          "unknown_condition": 1,
+          "missing_title_year": 2
+        },
+        "duplicateCards": 0,
+        "errors": [],
+        "queryPool": 1,
+        "cursor": 0,
+        "nextCursor": 0,
+        "coverageComplete": false,
+        "completedAt": "2026-09-19T21:17:26.007Z",
+        "durationMs": 69327,
+        "budgetExhausted": true,
+        "acceptanceRate": 0.058823529411764705
+      }
+    },
+    {
+      "query": "هيونداي النترا",
+      "diagnostics": {
+        "source": "Haraj",
+        "pages": 1,
+        "successfulPages": 1,
+        "discovered": 19,
+        "detailAttempts": 4,
+        "detailSuccess": 4,
+        "records": 1,
+        "rejected": 12,
+        "rejectedReasons": {
+          "vehicle_boundary": 1,
+          "missing_title_year": 1,
+          "unknown_condition": 1
+        },
+        "duplicateCards": 0,
+        "errors": [],
+        "queryPool": 1,
+        "cursor": 0,
+        "nextCursor": 0,
+        "coverageComplete": false,
+        "completedAt": "2026-09-19T21:18:34.911Z",
+        "durationMs": 68903,
+        "budgetExhausted": true,
+        "acceptanceRate": 0.05263157894736842
+      }
+    }
+  ],
+  "acceptedListings": [
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2022/864159",
+      "title": "Toyota Corolla XLI Executive 2022 1.5",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2022,
+      "condition": "used",
+      "price": 47500,
+      "mileage": 104000,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/863cfa03-2413-41eb-8f6e-d7d5f23b7f64"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2021/834075",
+      "title": "Toyota Corolla XLi 2021 1.5",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2021,
+      "condition": "used",
+      "price": 44000,
+      "mileage": 156613,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/f30404fc-0db5-48a8-94c0-c58a8f9acd6b"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2022/879793",
+      "title": "Toyota Corolla XLI Executive 2022 1.5",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2022,
+      "condition": "used",
+      "price": 58500,
+      "mileage": 81500,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/ea21a0ff-304c-439f-8636-b1478a52a1ad"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2025/826758",
+      "title": "Toyota Corolla 2025 2.0",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2025,
+      "condition": "used",
+      "price": 72000,
+      "mileage": 18500,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/0b71fc3f-1d09-4f0a-abd4-b80ee611bae0"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2025/870659",
+      "title": "Toyota Corolla XLI 2025 1.5",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2025,
+      "condition": "used",
+      "price": 59500,
+      "mileage": 26557,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/10cb07a5-66cb-498c-b544-57c01e4f1b60"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2022/873160",
+      "title": "Toyota Corolla XLI 2022 2.0",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2022,
+      "condition": "used",
+      "price": 46250,
+      "mileage": 182000,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/96f6c0d0-0d49-4f52-932a-b352447e258a"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2026/836972",
+      "title": "Toyota Corolla 2026 2.0",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2026,
+      "condition": "used",
+      "price": 85000,
+      "mileage": 6000,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/8e1f3be0-4679-4b82-a268-f0648331ef52"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2022/799038",
+      "title": "Toyota Corolla XLI 2022 1.5",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2022,
+      "condition": "used",
+      "price": 37500,
+      "mileage": 149298,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/ff203e77-ddb9-4f7d-b576-b7d33c456f10"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/hyundai/elantra/2019/858687",
+      "title": "Hyundai Elantra GL 2019 1.6",
+      "make": "Hyundai",
+      "model": "Elantra",
+      "year": 2019,
+      "condition": "used",
+      "price": 41000,
+      "mileage": 127053,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/709e333f-777e-4a6e-8a51-4f011e658a45"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/al-khobar/used-car/hyundai/elantra/2024/744047",
+      "title": "Hyundai Elantra Smart 2024 1.6",
+      "make": "Hyundai",
+      "model": "Elantra",
+      "year": 2024,
+      "condition": "used",
+      "price": 66000,
+      "mileage": 63330,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/48e81927-f653-43f1-a23a-8d7dd089e982"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/hyundai/elantra/2016/878733",
+      "title": "Hyundai Elantra GL 2016 1.6",
+      "make": "Hyundai",
+      "model": "Elantra",
+      "year": 2016,
+      "condition": "used",
+      "price": 23000,
+      "mileage": 189766,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/71d83204-029d-4437-a07a-689b0695ad9a"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/hail/used-car/hyundai/elantra/2023/873317",
+      "title": "Hyundai Elantra كامله 2023 1.6",
+      "make": "Hyundai",
+      "model": "Elantra",
+      "year": 2023,
+      "condition": "used",
+      "price": 64000,
+      "mileage": 44000,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/38f5b289-153d-42a4-8a40-bc54d0468169"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/hyundai/elantra/2016/872189",
+      "title": "Hyundai Elantra 2016 1.6",
+      "make": "Hyundai",
+      "model": "Elantra",
+      "year": 2016,
+      "condition": "used",
+      "price": 32000,
+      "mileage": 169000,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/685144bd-0ddd-4618-9803-ee2bdf838f8c"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/jeddah/used-car/hyundai/elantra/2024/873732",
+      "title": "Hyundai Elantra 2024 1.5",
+      "make": "Hyundai",
+      "model": "Elantra",
+      "year": 2024,
+      "condition": "used",
+      "price": 68000,
+      "mileage": 40500,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/a8a281ae-040f-441b-8db1-fbc160581ab5"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/hyundai/elantra/2018/815609",
+      "title": "Hyundai Elantra Diesel 2018 1.6",
+      "make": "Hyundai",
+      "model": "Elantra",
+      "year": 2018,
+      "condition": "used",
+      "price": 38000,
+      "mileage": 156819,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/e346f420-5436-4a69-be4c-300dca10edd0"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/dammam/used-car/hyundai/elantra/2020/803870",
+      "title": "Hyundai Elantra GL 2020 1.6",
+      "make": "Hyundai",
+      "model": "Elantra",
+      "year": 2020,
+      "condition": "used",
+      "price": 42300,
+      "mileage": 82600,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/ac576348-ec0d-408b-9c33-e4ee8bc7f727"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/nissan/patrol/2023/863671",
+      "title": "Nissan Patrol SE 2023 4.0",
+      "make": "Nissan",
+      "model": "Patrol",
+      "year": 2023,
+      "condition": "used",
+      "price": 185825,
+      "mileage": 41500,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/7887c5cd-9147-4991-8789-807f468500d6"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/jeddah/used-car/nissan/patrol/2024/872124",
+      "title": "Nissan Patrol SE Platinum 2024 4.0",
+      "make": "Nissan",
+      "model": "Patrol",
+      "year": 2024,
+      "condition": "used",
+      "price": 210000,
+      "mileage": 58000,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/f713634d-f9ba-47ba-a17a-ae7cf0a8953c"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/nissan/patrol/2021/863210",
+      "title": "Nissan Patrol 2021 4.0",
+      "make": "Nissan",
+      "model": "Patrol",
+      "year": 2021,
+      "condition": "used",
+      "price": 173500,
+      "mileage": 102000,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/e809cb14-5f6f-437d-a9ff-ab54b960d726"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/nissan/patrol/2023/867074",
+      "title": "Nissan Patrol SE Platinum 2023 4.0",
+      "make": "Nissan",
+      "model": "Patrol",
+      "year": 2023,
+      "condition": "used",
+      "price": 210000,
+      "mileage": 78000,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/e8184a90-302d-41a2-b56b-cfee81c162d8"
+    },
+    {
+      "title": "Used 2023 Great Wall Tank 300 Conqueror Red Color for sale - 307081 | Syarah",
+      "source": "Syarah",
+      "make": "Great Wall",
+      "model": "Tank 300",
+      "year": 2023,
+      "price": 112600,
+      "mileage": 47262,
+      "condition": "used",
+      "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/307081/orignal-1784461770-586_cut.jpg?v=3",
+      "url": "https://syarah.com/en/cardetail/great-wall-tank-300-used-307081"
+    },
+    {
+      "title": "Used 2023 Toyota RAV4 LE White Color for sale - 315552 | Syarah",
+      "source": "Syarah",
+      "make": "Toyota",
+      "model": "RAV4",
+      "year": 2023,
+      "price": 82000,
+      "mileage": 130017,
+      "condition": "used",
+      "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/315552/orignal-315552-1-1788621471.jpg?v=3",
+      "url": "https://syarah.com/en/cardetail/toyota-rav4-used-315552"
+    },
+    {
+      "title": "Used 2025 Hyundai Accent Fleet Silver Color for sale - 314233 | Syarah",
+      "source": "Syarah",
+      "make": "Hyundai",
+      "model": "Accent",
+      "year": 2025,
+      "price": 52900,
+      "mileage": 71767,
+      "condition": "used",
+      "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/314233/orignal-1787835772-221_cut.jpg?v=3",
+      "url": "https://syarah.com/en/cardetail/hyundai-accent-used-314233"
+    },
+    {
+      "title": "Used 2023 Hyundai Tucson Smart leaden Color for sale - 315127 | Syarah",
+      "source": "Syarah",
+      "make": "Hyundai",
+      "model": "Tucson",
+      "year": 2023,
+      "price": 71200,
+      "mileage": 107790,
+      "condition": "used",
+      "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/315127/orignal-1788413574-78_cut.jpg?v=3",
+      "url": "https://syarah.com/en/cardetail/hyundai-tucson-used-315127"
+    },
+    {
+      "source": "Haraj",
+      "url": "https://haraj.com.sa/11188924379/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7_%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7_2012_XLI_1_6_",
+      "title": "تويوتا كورولا 2012 XLI 1.6.",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2012,
+      "condition": "used",
+      "price": null,
+      "mileage": 450000,
+      "image": "https://img4cdn.haraj.com.sa/userfiles30/2026-09-19/900x506-1_-GO__MTc4OTg1MTY1MDI2ODAwOTE0OTkzNA.jpg"
+    },
+    {
+      "source": "Haraj",
+      "url": "https://haraj.com.sa/11188922834/%D8%A8%D8%A7%D8%AA%D8%B1%D9%88%D9%84_2010_le",
+      "title": "باترول 2010 le",
+      "make": "Nissan",
+      "model": "Patrol",
+      "year": 2010,
+      "condition": "used",
+      "price": null,
+      "mileage": 370000,
+      "image": "https://mimg6cdn.haraj.com.sa/userfiles30/2026-09-19/960x1280_CF86FBCD-C2EF-4842-A3C2-971A513F0047.jpg"
+    },
+    {
+      "source": "Haraj",
+      "url": "https://haraj.com.sa/11188922981/%D8%A7%D9%84%D9%86%D8%AA%D8%B1%D8%A7_2022_%D9%88%D8%A7%D8%B1%D8%AF_%D9%83%D9%88%D8%B1%D9%8A%D8%A7",
+      "title": "النترا 2022 وارد كوريا",
+      "make": "Hyundai",
+      "model": "Elantra",
+      "year": 2022,
+      "condition": "used",
+      "price": 46500,
+      "mileage": 177000,
+      "image": "https://mimg6cdn.haraj.com.sa/userfiles30/2026-09-19/1350x1800_A9DC5145-A13D-49B4-8170-6DBBB390D1C6.jpg"
+    }
+  ]
+}

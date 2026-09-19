@@ -95,3 +95,35 @@ test('session can scope discovery to under-covered connected sources without ena
  assert.deepEqual(payload.tools[0].filters.allowed_domains,['haraj.com.sa','syarah.com']);
  assert.throws(()=>discoverMarketWithAI('Toyota',[],{sourceIds:['dubizzle']}),/no-supported-discovery-sources/);
 });
+
+test('observed Haraj English advertisements resolve to the same existing numeric route',async()=>{
+ const {marketListingKey}=await import('../lib/ai-market-discovery-trial.js');
+ for(const path of ['/en/11174107507/Toyota_Corolla/','/en/11174107507/','/en/11174107507']){
+  assert.equal(marketCandidate('https://haraj.com.sa'+path)?.url,'https://haraj.com.sa/11174107507/');
+  assert.equal(marketListingKey('https://haraj.com.sa'+path),marketListingKey('https://haraj.com.sa/11174107507/'));
+ }
+ for(const path of ['/en/tags/Corolla/','/en/pic/Corolla/','/en/11174107507/slug/extra','/en/not-an-id/'])assert.equal(marketCandidate('https://haraj.com.sa'+path),null);
+ const en='https://haraj.com.sa/en/12345678901/Toyota_Corolla/';let reads=0;
+ const result=await runAdaptiveMarketDiscovery({query:'Corolla',condition:'used',filters:{}},{excludedMakes:[]},{maxRounds:1,discover:async()=>({status:'completed',urls:[en,url]}),readDetail:async()=>{reads++;return html;}});
+ assert.equal(reads,1);assert.equal(result.accepted,1);
+ // A valid route is only a candidate: unrelated ads must still fail classification.
+ const bad=await runAdaptiveMarketDiscovery({query:'Corolla',condition:'all',filters:{}},{excludedMakes:[]},{maxRounds:1,discover:async()=>({status:'completed',urls:[en]}),readDetail:async()=>html.replace('تويوتا كورولا 2020','قطع غيار تويوتا كورولا 2020')});
+ assert.equal(bad.accepted,0);
+});
+test('Saudi Sale locale and index.php routes share exact source ad identity',async()=>{
+ const {marketListingKey,parseMarketDetail}=await import('../lib/ai-market-discovery-trial.js');
+ const variants=['/index.php/en/listings/8786aC/2026-toyota-corolla','/en/listings/8786aC/2026-toyota-corolla','/index.php/listings/8786aC/كورولا','/listings/8786aC/كورولا'];
+ for(const p of variants)assert.equal(marketListingKey('https://cars.saudisale.com'+p),'saudisale:8786aC');
+ assert.notEqual(marketListingKey('https://cars.saudisale.com/en/listings/other/2026-toyota-corolla'),'saudisale:8786aC');
+ const schema=id=>({'@type':'Car',url:`https://cars.saudisale.com/en/listings/${id}/2026-toyota-corolla`,name:'Toyota Corolla 2026',brand:'Toyota',model:'Corolla',vehicleModelDate:2026,itemCondition:'https://schema.org/NewCondition',offers:{price:80000}});
+ const result=parseMarketDetail(marketCandidate('https://cars.saudisale.com'+variants[0]),`<script type="application/ld+json">${JSON.stringify([schema('8786aC'),schema('other')])}</script>`);
+ assert.equal(result.records.length,1);assert.match(result.records[0].url,/8786aC/);
+});
+test('observed model inventory and double-encoded Arabic pages are discovery-only inputs',()=>{
+ const arabic='/saudi/حراج-السيارات/تويوتا/كورولا';
+ const encoded=arabic.split('/').map(s=>encodeURIComponent(encodeURIComponent(s))).join('/');
+ const page=marketDiscoveryPage('https://ksa.carswitch.com'+encoded);
+ assert.ok(page);assert.equal(decodeURIComponent(new URL(page.url).pathname),arabic);assert.equal(marketCandidate(page.url),null);
+ for(const u of ['https://syarah.com/en/autos/mg/zs','https://syarah.com/autos/toyota/corolla','https://cars.saudisale.com/en/car-models/2377/standard/listings'])assert.ok(marketDiscoveryPage(u));
+ for(const u of ['https://syarah.com/en/prices/mg/zs','https://ksa.carswitch.com/en/saudi/new-cars/toyota/corolla','https://haraj.com.sa/pic/Corolla','https://syarah.com/en/autos/%253Fadmin'])assert.equal(marketDiscoveryPage(u),null);
+});

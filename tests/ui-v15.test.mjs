@@ -33,6 +33,20 @@ test('frontend follows progressive market scan results', () => {
   assert.match(ui, /mergeListings\(d\.listings\|\|\[\]\)/);
 });
 
+test('card identity changes on language, image and metadata updates', () => {
+  const stateSource=ui.match(/function cardState\(c\)\{[^\n]+\}/)?.[0];
+  assert.ok(stateSource);
+  const context=vm.createContext({language:'ar',listingTitle:c=>c.title,galleryImages:c=>c.images||[],detailsHref:c=>c.url});
+  vm.runInContext(stateSource,context);
+  const car={url:'https://example.com/car',title:'Toyota Camry',images:['https://example.com/car.jpg'],price:90000};
+  const original=context.cardState(car);
+  assert.equal(context.cardState({...car}),original);
+  assert.notEqual(context.cardState({...car,price:80000}),original);
+  assert.notEqual(context.cardState({...car,images:['https://example.com/new.jpg']}),original);
+  context.language='en';
+  assert.notEqual(context.cardState(car),original);
+});
+
 test('new and used remain separate product modes', () => {
   assert.match(html, /id="usedTab"/);
   assert.match(html, /id="newTab"/);

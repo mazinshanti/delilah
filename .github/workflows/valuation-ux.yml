@@ -1,7 +1,7 @@
 name: Valuation and search UX
 on:
   push:
-    branches: [main]
+    branches: [main, dalelah-release-candidate]
     paths: ['public/**', 'lib/*valuation*', 'server-core-candidate.js', 'scripts/valuation-ui-check.mjs', '.github/workflows/valuation-ux.yml']
   workflow_dispatch:
 permissions:
@@ -26,7 +26,7 @@ jobs:
         env:
           PLAYWRIGHT_MODULE: /tmp/dalelah-browser/node_modules/playwright/index.mjs
           EXPECTED_COMMIT: ${{ github.sha }}
-          DALELAH_BASE_URL: https://www.dalelah.co
+          DALELAH_BASE_URL: ${{ github.ref == 'refs/heads/main' && 'https://www.dalelah.co' || 'https://dalelah-release-candidate.onrender.com' }}
         run: node scripts/valuation-ui-check.mjs
       - uses: actions/upload-artifact@v4
         if: always()

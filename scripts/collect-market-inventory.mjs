@@ -1,4 +1,5 @@
 import {filterVehicleSaleListings} from '../lib/listing-quality.js';
+import {collectHarajInventory} from '../lib/haraj-inventory-collector.js';
 import {normalizeInventoryListing} from '../lib/inventory-normalizer.js';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
@@ -11,7 +12,8 @@ const exec=promisify(execFile),sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const maxPages=Number(process.env.MARKET_PAGES||100);
 await mkdir('data',{recursive:true});await mkdir('audit',{recursive:true});
 const all=new Map(),diagnostics=[];
-try{const old=JSON.parse(gunzipSync(await readFile('data/market-inventory.json.gz')));for(const r of old.listings||[])if(Date.now()-Date.parse(r.lastSeenAt)<36*3600000)all.set(r.url,r);}catch{}
+let harajCursor=0;
+try{const old=JSON.parse(gunzipSync(await readFile('data/market-inventory.json.gz')));harajCursor=old.diagnostics?.find(d=>d.source==='Haraj')?.nextCursor||0;for(const r of old.listings||[])if(Date.now()-Date.parse(r.lastSeenAt)<36*3600000)all.set(r.url,r);}catch{}
 async function get(url){const {stdout}=await exec('curl',['-sS','--max-time','30','--max-filesize','12000000','-A','Dalelah/1.5 (+https://dalelah.co; vehicle-search-index)','-w','\n%{http_code}',url],{maxBuffer:12_000_000});const i=stdout.lastIndexOf('\n');const status=Number(stdout.slice(i+1));if(status!==200)throw new Error('HTTP '+status);return stdout.slice(0,i);}
 const parsers={jsonld:parseStructuredInventory,syarah:parseSyarahInventory,saudisale:parseSaudiSaleInventory};
 async function collect(source){
@@ -35,6 +37,9 @@ async function collect(source){
  
 }
 await Promise.all(SOURCE_REGISTRY.filter(s=>parsers[s.adapter]).map(collect));
+const haraj=await collectHarajInventory({cursor:harajCursor,maxQueries:process.env.HARAJ_QUERIES,maxDetails:process.env.HARAJ_DETAILS,onProgress:d=>console.log(JSON.stringify({source:'Haraj',queries:d.pages,details:d.detailAttempts,accepted:d.records,errors:d.errors.length}))});
+for(const record of haraj.listings)all.set(record.url,record);
+diagnostics.push(haraj.diagnostics);
 if(!diagnostics.some(d=>d.records>0))throw new Error('No source successfully refreshed; preserving previous snapshot');
 await writeFile('data/market-inventory.json.gz',gzipSync(JSON.stringify({generatedAt:new Date().toISOString(),listings:filterVehicleSaleListings([...all.values()].map(c=>normalizeInventoryListing(c,{recordMetrics:true}))),diagnostics})));
 console.log(JSON.stringify({totalUnique:all.size,diagnostics}));

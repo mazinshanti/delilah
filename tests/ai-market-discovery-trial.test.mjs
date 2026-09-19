@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {AI_MARKET_SOURCES,marketCandidate,marketToolUrls,createMarketDetailReader,runAdaptiveMarketDiscovery,discoverMarketWithAI} from '../lib/ai-market-discovery-trial.js';
+import {AI_MARKET_SOURCES,marketCandidate,marketToolUrls,createMarketDetailReader,runAdaptiveMarketDiscovery,discoverMarketWithAI,marketDiscoveryPage,detailLinksFromDiscoveryPage} from '../lib/ai-market-discovery-trial.js';
 const url='https://haraj.com.sa/12345678901/';
 const html=`<script type="application/ld+json">${JSON.stringify({'@type':'Car',url,name:'تويوتا كورولا 2020',description:'سيارة مستعملة للبيع الممشى 50000 كم السعر 60000 ريال'})}</script>`;
 test('registry restricts discovery to connected sources and exact trusted detail routes',()=>{
@@ -39,6 +39,20 @@ test('Saudi multi-source schema keeps only the fetched car and rejects related r
 
 test('grounded citation annotations supplement tool sources but arbitrary answer URLs do not',()=>{
  const output=[{type:'web_search_call',status:'completed',action:{sources:[]}},{type:'message',content:[{text:'https://haraj.com.sa/99999999999/',annotations:[{type:'url_citation',url},{type:'url_citation',url:'https://cars.saudisale.com/en/car-classes/155/corolla/listings'}]}]}];
- const result=marketToolUrls({output});assert.deepEqual(result.urls,[url]);assert.equal(result.diagnostics.citations,2);assert.equal(result.diagnostics.rejectedRoutes,1);
+ const result=marketToolUrls({output});assert.deepEqual(result.urls,[url]);assert.equal(result.diagnostics.citations,2);assert.equal(result.discoveryPages.length,1);assert.equal(result.diagnostics.rejectedRoutes,0);
  assert.equal(marketToolUrls({output:output.slice(1)}).urls.length,0);
+});
+
+test('inventory pages expand only to same-source direct ads, never articles or external links',()=>{
+ const page=marketDiscoveryPage('https://ksa.carswitch.com/hail/حراج-السيارات/تويوتا/كورولا');assert.ok(page);
+ const direct='https://ksa.carswitch.com/en/hail/used-car/toyota/corolla/2020/12345';
+ assert.deepEqual(detailLinksFromDiscoveryPage(`<a href="${direct}">car</a><a href="${direct}">duplicate</a><a href="${url}">other source</a><a href="/newsroom/car">article</a>`,page),[direct]);
+ for(const raw of ['https://syarah.com/carsguide/corolla/','https://syarah.com/prices/toyota/corolla','https://ksa.carswitch.com/newsroom/car'])assert.equal(marketDiscoveryPage(raw),null);
+});
+test('discovered inventory page feeds its ads through the unchanged evidence gate',async()=>{
+ const page='https://cars.saudisale.com/en/car-classes/155/corolla/listings';
+ const direct='https://cars.saudisale.com/en/listings/abc/2020-toyota-corolla';
+ const schema={'@type':'Car',url:direct,name:'Toyota Corolla 2020',brand:'Toyota',model:'Corolla',vehicleModelDate:2020,itemCondition:'https://schema.org/UsedCondition',offers:{price:60000}};
+ const result=await runAdaptiveMarketDiscovery({query:'Corolla',condition:'used',filters:{}},{excludedMakes:[]},{maxRounds:1,discover:async()=>({status:'completed',webSearchCalls:1,urls:[],discoveryPages:[page,page]}),readDetail:async c=>c.discoveryPage?`<a href="${direct}">car</a>`:`<script type="application/ld+json">${JSON.stringify(schema)}</script>`});
+ assert.equal(result.discoveryPages.length,1);assert.equal(result.checked,1);assert.equal(result.accepted,1);assert.equal(result.coverageComplete,false);
 });

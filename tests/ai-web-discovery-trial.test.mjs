@@ -14,7 +14,7 @@ test('only tool-returned direct source URLs enter discovery, with stable ID dedu
 test('model text alone never counts as executed web search',()=>{assert.equal(discoveredHarajUrls({output:[{type:'message',content:[]}]}).webSearchCalls,0);});
 test('trial requires real web-search tool use with allowed domain and bounded calls',async()=>{
  let payload;const result=await discoverHarajWithAI('Toyota Camry',{env:{OPENAI_API_KEY:'test'},fetchImpl:async(_,options)=>{payload=JSON.parse(options.body);return new Response(JSON.stringify(response(['https://haraj.com.sa/123456789/'])));}});
- assert.equal(result.webSearchCalls,1);assert.equal(payload.tool_choice,'required');assert.equal(payload.max_tool_calls,2);assert.deepEqual(payload.tools[0].filters.allowed_domains,['haraj.com.sa']);assert.deepEqual(payload.include,['web_search_call.action.sources']);
+ assert.equal(result.webSearchCalls,1);assert.equal(payload.model,'gpt-5-mini');assert.deepEqual(payload.reasoning,{effort:'low'});assert.equal(payload.max_output_tokens,4000);assert.equal(payload.tool_choice,'required');assert.equal(payload.max_tool_calls,2);assert.deepEqual(payload.tools[0].filters.allowed_domains,['haraj.com.sa']);assert.deepEqual(payload.include,['web_search_call.action.sources']);
 });
 test('provider errors and missing configuration cannot look like successful search',async()=>{
  assert.equal((await discoverHarajWithAI('Camry',{env:{}})).status,'not-configured');

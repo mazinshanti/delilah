@@ -1,0 +1,10 @@
+{
+  "source": "Syarah",
+  "model": "MG ZS",
+  "firstPage": "https://syarah.com/en/autos/mg/zs",
+  "nextPage": "https://syarah.com/en/autos/mg/zs?page=2",
+  "firstPageCandidates": 12,
+  "secondPageCandidates": 11,
+  "additionalUniqueCandidates": 11,
+  "detailVerified": false
+}

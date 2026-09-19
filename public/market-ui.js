@@ -61,17 +61,22 @@ function renderCards(rows){
   template.innerHTML=card(c);const fresh=template.content.firstElementChild;
   if(old){
    const oldPhoto=old.querySelector('.photo'),newPhoto=fresh.querySelector('.photo');
-   // Preserve loaded, pending and failed-image state through metadata enrichment.
+   // Update metadata in place: even reparenting a lazy image can restart its load.
    if(oldPhoto&&newPhoto&&JSON.parse(old.dataset.cardState)[4]===galleryImages(c)[0]){
     const img=oldPhoto.querySelector('img');if(img)img.alt=c.title||listingTitle(c);
-    newPhoto.replaceWith(oldPhoto);
+    const oldLink=old.querySelector('.card-link'),newLink=fresh.querySelector('.card-link');
+    oldLink.href=newLink.href;oldLink.setAttribute('aria-label',newLink.getAttribute('aria-label'));
+    old.querySelector('.card-body').replaceWith(fresh.querySelector('.card-body'));
+    old.dataset.cardState=state;
+    if(!img)oldPhoto.innerHTML=placeholder();
+    return old;
    }
   }
   return fresh;
  });
  // Leave unchanged nodes connected; only insert, move or remove changed cards.
  const keep=new Set(nodes);for(const node of [...host.children])if(!keep.has(node))node.remove();
- nodes.forEach((node,index)=>{if(host.children[index]!==node)host.insertBefore(node,host.children[index]||null);});
+ nodes.forEach((node,index)=>{if(host.children[index]!==node){const next=host.children[index]||null;if(host.moveBefore&&node.parentNode===host)host.moveBefore(node,next);else host.insertBefore(node,next);}});
  wireImages(host);
 }
 function paintChips(){const f=appliedFilters,keys={minPrice:'minPrice',maxPrice:'maxPrice',minYear:'minYear',maxYear:'maxYear',maxMileage:'maxMileage',city:'city',seller:'source',trim:'trim',fuelType:'fuel',category:'bodyType'};$('activeFilters').innerHTML=searchStarted?Object.entries(f).filter(([,v])=>v).map(([k,v])=>`<button data-remove="${k}" aria-label="${esc(t('remove')+' '+t(keys[k]))}">${t(keys[k])}: ${esc(label(v))} ×</button>`).join(''):'';$('activeFilters').querySelectorAll('button').forEach(b=>b.onclick=()=>{const k=b.dataset.remove;$(k==='seller'?'source':k==='fuelType'?'category':k==='category'?'bodyType':k).value='';if(k==='city')$('homeCity').value='';if(k==='maxPrice')$('budget').value='';run(lastQuery);});}

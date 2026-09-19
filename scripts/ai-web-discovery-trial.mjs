@@ -1,12 +1,15 @@
+import {runDiscoveryPlan} from '../lib/market-discovery-plan.js';
 import {discoverHarajWithAI} from '../lib/ai-web-discovery-trial.js';
 import {fetchHarajInventoryHtml,harajDetailRecord} from '../lib/haraj-inventory-collector.js';
 import {robotsPolicy} from '../lib/robots-policy.js';
 import {strictDirectListings} from '../lib/direct-search.js';
 import {createIntentEngine,intentSearchBody,applyIntentConstraints} from '../lib/ai-search-intent.js';
 const [query='Toyota Camry',rawFilters='{}']=process.argv.slice(2),filters=JSON.parse(rawFilters),start=performance.now();
-const discovery=await discoverHarajWithAI(query);
+const discovery=process.env.DALELAH_AI_WEB_BROAD==='1'
+ ?await runDiscoveryPlan(query,{discover:discoverHarajWithAI,maxQueries:Number(process.env.DALELAH_AI_WEB_QUERIES||6),cursor:Number(process.env.DALELAH_AI_WEB_CURSOR||0),onProgress:attempt=>console.log(JSON.stringify({stage:'discovery-progress',...attempt}))})
+ :await discoverHarajWithAI(query);
 console.log(JSON.stringify({stage:'actual-web-search',...discovery}));
-if(discovery.status!=='completed'){process.exitCode=2;}
+if(discovery.status!=='completed'&&!discovery.urls.length){process.exitCode=2;}
 else if(discovery.urls.length){
  const understanding=await createIntentEngine().understand(query);
  if(understanding.fallbackReason&&!understanding.safeFallback)throw Error('Cannot preserve query constraints');

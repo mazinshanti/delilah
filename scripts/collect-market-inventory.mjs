@@ -1,5 +1,5 @@
 import {filterVehicleSaleListings} from '../lib/listing-quality.js';
-import {collectHarajInventory} from '../lib/haraj-inventory-collector.js';
+import {collectHarajInventory,mergeHarajSnapshot} from '../lib/haraj-inventory-collector.js';
 import {normalizeInventoryListing} from '../lib/inventory-normalizer.js';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
@@ -38,7 +38,8 @@ async function collect(source){
 }
 await Promise.all(SOURCE_REGISTRY.filter(s=>parsers[s.adapter]).map(collect));
 const haraj=await collectHarajInventory({cursor:harajCursor,maxQueries:process.env.HARAJ_QUERIES,maxDetails:process.env.HARAJ_DETAILS,onProgress:d=>console.log(JSON.stringify({source:'Haraj',queries:d.pages,details:d.detailAttempts,accepted:d.records,errors:d.errors.length}))});
-for(const record of haraj.listings)all.set(record.url,record);
+const merged=mergeHarajSnapshot([...all.values()],haraj.listings);
+all.clear();for(const record of merged)all.set(record.url,record);
 diagnostics.push(haraj.diagnostics);
 if(!diagnostics.some(d=>d.records>0))throw new Error('No source successfully refreshed; preserving previous snapshot');
 await writeFile('data/market-inventory.json.gz',gzipSync(JSON.stringify({generatedAt:new Date().toISOString(),listings:filterVehicleSaleListings([...all.values()].map(c=>normalizeInventoryListing(c,{recordMetrics:true}))),diagnostics})));

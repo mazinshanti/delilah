@@ -1,11 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {collectHarajInventory,harajDetailRecord,harajDiscoveryQueries,fetchHarajInventoryHtml} from '../lib/haraj-inventory-collector.js';
+import {collectHarajInventory,harajDetailRecord,harajDiscoveryQueries,fetchHarajInventoryHtml,mergeHarajSnapshot} from '../lib/haraj-inventory-collector.js';
 import {parseHarajFastPage} from '../lib/haraj-fast-source.js';
 const url='https://haraj.com.sa/11188891344/toyota';
 const candidate={url,title:'تويوتا كامري 2020',city:'Riyadh',condition:'used',price:20000};
 const html=(description='سيارة مستعملة للبيع الممشى 50000 كم',overrides={})=>`<script type="application/ld+json">${JSON.stringify({'@type':'Car',url,name:'تويوتا كامري 2020',description,...overrides})}</script>`;
 const card=(id='11188891344',title=candidate.title)=>`<a href="/${id}/toyota">${title}</a><div>الرياض</div>`;
+test('refresh merges Haraj by ad id across changed title slugs and preserves other sources',()=>{
+ const old={source:'Haraj',url,price:10000},fresh={...old,url:'https://haraj.com.sa/11188891344/updated-title',price:null};
+ const other={source:'Syarah',url:'https://syarah.com/en/cardetail/example'};
+ assert.deepEqual(mergeHarajSnapshot([old,other],[fresh]),[other,fresh]);
+});
 test('transport follows only same-ad redirects with robots checks and a hop bound',async()=>{
  let calls=0;
  const data=await fetchHarajInventoryHtml(url,{sleep:async()=>{},fetchImpl:async()=>++calls===1?new Response(null,{status:302,headers:{location:'/11188891344/'}}):new Response('detail')});

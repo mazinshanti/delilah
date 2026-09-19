@@ -17,3 +17,9 @@ Limitations: no persisted cross-run cache, no exhaustive-market guarantee, regis
 ## Inventory-page expansion
 
 Grounded search sources/citations can now nominate allowlisted inventory pages (CarSwitch city/model inventory, Saudi Sale car-class inventory, Syarah /en/autos). Editorial /newsroom, /carsguide and /prices routes remain excluded. At most four unique inventory pages are fetched per run with the same robots, delay, size and access checks. Only same-source direct listing anchors become candidates; each candidate is independently fetched and checked using the original query and filters. No inventory page is counted as a vehicle. This is a bounded first-page expansion, not exhaustive pagination. AI instructions explicitly target transactional route patterns and exclude editorial paths.
+
+## Budget sharing after live CarSwitch result
+
+User-provided Render output recorded 24 checks, 22 accepted CarSwitch Corolla advertisements, 2 HTTP 404 responses, and 82,560ms total time in one round. This establishes one-source trial success, not complete market coverage or production deployment.
+
+The next revision spreads the unchanged total detail budget over the configured rounds. Candidates remain queued during the run; each batch rotates among available source queues, starting with sources checked least often. AI feedback includes per-source discovery/check/acceptance/pending counts and sources with zero checks. This does not force source diversity in result ranking: final accepted records use the existing relevance ranker. Pending URLs are returned but not persisted or automatically resumed across runs. First-result timing is measured; no latency improvement is asserted without live measurement. CLI output is compact by default; DALELAH_AI_VERBOSE=1 includes complete listing objects.

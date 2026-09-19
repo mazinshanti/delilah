@@ -6,5 +6,6 @@ if(understanding.fallbackReason&&!understanding.safeFallback)throw Error('Cannot
 const body=intentSearchBody({query,condition:'all',filters:JSON.parse(rawFilters)},understanding);
 body.discoveryQuery=query;
 const start=performance.now();
-const result=await runAdaptiveMarketDiscovery(body,understanding.intent,{maxRounds:Number(process.env.DALELAH_AI_MARKET_ROUNDS||3),onProgress:result=>console.log(JSON.stringify({stage:'progress',...result}))});
-console.log(JSON.stringify({...result,totalMs:Math.round(performance.now()-start)},null,2));
+const result=await runAdaptiveMarketDiscovery(body,understanding.intent,{maxRounds:Number(process.env.DALELAH_AI_MARKET_ROUNDS||3),onProgress:result=>{const {listing,...event}=result;console.log(JSON.stringify({stage:'progress',...event,...(listing?{listing:{title:listing.title,source:listing.source,price:listing.price,mileage:listing.mileage,condition:listing.condition,url:listing.url}}:{})}));}});
+const {listings,...summary}=result;
+console.log(JSON.stringify({...summary,listingCount:listings.length,totalMs:Math.round(performance.now()-start),...(process.env.DALELAH_AI_VERBOSE==='1'?{listings}:{})},null,2));

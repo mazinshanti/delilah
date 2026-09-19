@@ -56,3 +56,18 @@ test('discovered inventory page feeds its ads through the unchanged evidence gat
  const result=await runAdaptiveMarketDiscovery({query:'Corolla',condition:'used',filters:{}},{excludedMakes:[]},{maxRounds:1,discover:async()=>({status:'completed',webSearchCalls:1,urls:[],discoveryPages:[page,page]}),readDetail:async c=>c.discoveryPage?`<a href="${direct}">car</a>`:`<script type="application/ld+json">${JSON.stringify(schema)}</script>`});
  assert.equal(result.discoveryPages.length,1);assert.equal(result.checked,1);assert.equal(result.accepted,1);assert.equal(result.coverageComplete,false);
 });
+test('a large first-source queue cannot consume all rounds and later sources receive checks',async()=>{
+ const haraj=Array.from({length:10},(_,i)=>`https://haraj.com.sa/${12345678901+i}/`);
+ const carSwitch='https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2020/12345';
+ let calls=0;const feedbacks=[],read=[];
+ const result=await runAdaptiveMarketDiscovery({query:'Corolla',condition:'all',filters:{}},{excludedMakes:[]},{maxRounds:2,maxDetails:4,discover:async(q,f)=>{feedbacks.push(structuredClone(f));return {status:'completed',webSearchCalls:1,urls:calls++?[carSwitch]:haraj};},readDetail:async c=>{read.push(c.url);return '';}});
+ assert.equal(calls,2);assert.equal(read.length,4);assert.equal(read[2],carSwitch);
+ assert.equal(result.discovered,11);assert.equal(result.pendingUrls.length,7);assert.equal(result.sourceStats.find(s=>s.source==='CarSwitch Saudi').checked,1);
+ assert.ok(feedbacks[1][0].prioritySources.includes('CarSwitch Saudi'));assert.ok(!feedbacks[1][0].prioritySources.includes('Haraj'));
+ assert.equal(result.firstResultMs,null);assert.equal(result.stopReason,'detail-budget');
+});
+test('pending candidates survive repeated AI results and are checked only once',async()=>{
+ const urls=Array.from({length:4},(_,i)=>`https://haraj.com.sa/${12345678901+i}/`);const reads=[];
+ const r=await runAdaptiveMarketDiscovery({query:'Corolla',condition:'all',filters:{}},{excludedMakes:[]},{maxRounds:2,maxDetails:4,discover:async()=>({status:'completed',webSearchCalls:1,urls}),readDetail:async c=>{reads.push(c.url);return '';}});
+ assert.equal(new Set(reads).size,4);assert.equal(r.pendingUrls.length,0);assert.equal(r.discovered,4);
+});

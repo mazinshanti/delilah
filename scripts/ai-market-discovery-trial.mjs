@@ -6,5 +6,5 @@ if(understanding.fallbackReason&&!understanding.safeFallback)throw Error('Cannot
 const body=intentSearchBody({query,condition:'all',filters:JSON.parse(rawFilters)},understanding);
 body.discoveryQuery=query;
 const start=performance.now();
-const result=await runAdaptiveMarketDiscovery(body,understanding.intent,{onProgress:result=>console.log(JSON.stringify({stage:'progress',...result}))});
+const result=await runAdaptiveMarketDiscovery(body,understanding.intent,{maxRounds:Number(process.env.DALELAH_AI_MARKET_ROUNDS||3),onProgress:result=>console.log(JSON.stringify({stage:'progress',...result}))});
 console.log(JSON.stringify({...result,totalMs:Math.round(performance.now()-start)},null,2));

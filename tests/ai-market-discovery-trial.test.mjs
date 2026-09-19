@@ -36,3 +36,9 @@ test('Saudi multi-source schema keeps only the fetched car and rejects related r
  const result=await runAdaptiveMarketDiscovery({query:'Toyota Corolla',condition:'used',filters:{}},{excludedMakes:[]},{maxRounds:1,discover:async()=>({status:'completed',webSearchCalls:1,urls:[direct]}),readDetail:async()=>page});
  assert.equal(result.accepted,1);assert.equal(result.listings[0].url,direct);assert.equal(result.listings[0].source,'CarSwitch Saudi');
 });
+
+test('grounded citation annotations supplement tool sources but arbitrary answer URLs do not',()=>{
+ const output=[{type:'web_search_call',status:'completed',action:{sources:[]}},{type:'message',content:[{text:'https://haraj.com.sa/99999999999/',annotations:[{type:'url_citation',url},{type:'url_citation',url:'https://cars.saudisale.com/en/car-classes/155/corolla/listings'}]}]}];
+ const result=marketToolUrls({output});assert.deepEqual(result.urls,[url]);assert.equal(result.diagnostics.citations,2);assert.equal(result.diagnostics.rejectedRoutes,1);
+ assert.equal(marketToolUrls({output:output.slice(1)}).urls.length,0);
+});

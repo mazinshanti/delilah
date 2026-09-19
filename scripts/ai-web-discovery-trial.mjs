@@ -13,7 +13,7 @@ if(discovery.status!=='completed'&&!discovery.urls.length){process.exitCode=2;}
 else if(discovery.urls.length){
  const understanding=await createIntentEngine().understand(query);
  if(understanding.fallbackReason&&!understanding.safeFallback)throw Error('Cannot preserve query constraints');
- const body=intentSearchBody({query,condition:'used',filters},understanding),results=[];
+ const body=intentSearchBody({query,condition:'all',filters},understanding),results=[];
  const rules=await fetchHarajInventoryHtml('https://haraj.com.sa/robots.txt');
  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
  for(const url of discovery.urls){

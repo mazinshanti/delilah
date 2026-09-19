@@ -89,3 +89,9 @@ test('safe locale redirect obeys robots; cross-host and other-ad redirects never
  const read=createMarketDetailReader({sleep:async()=>{},fetchImpl:async u=>u.endsWith('robots.txt')?new Response('User-agent: *\nDisallow: /riyadh/'):new Response(null,{status:308,headers:{location:direct.replace('/en/','/')}})});
  await assert.rejects(read(marketCandidate(direct)),/robots-disallowed/);
 });
+
+test('session can scope discovery to under-covered connected sources without enabling new hosts',async()=>{
+ let payload;await discoverMarketWithAI('Toyota Corolla',[],{sourceIds:['haraj','syarah','dubizzle'],env:{OPENAI_API_KEY:'test'},fetchImpl:async(u,o)=>{payload=JSON.parse(o.body);return new Response(JSON.stringify({status:'completed',output:[]}));}});
+ assert.deepEqual(payload.tools[0].filters.allowed_domains,['haraj.com.sa','syarah.com']);
+ assert.throws(()=>discoverMarketWithAI('Toyota',[],{sourceIds:['dubizzle']}),/no-supported-discovery-sources/);
+});

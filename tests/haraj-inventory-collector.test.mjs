@@ -60,6 +60,17 @@ test('collector stops on access restrictions and never retries or bypasses',asyn
  const result=await collectHarajInventory({queries:['Toyota','BMW'],sleep:async()=>{},get:async u=>{calls++;if(u.endsWith('/robots.txt'))return 'User-agent: *\nAllow: /';throw Error('HTTP 403');}});
  assert.equal(calls,2);assert.equal(result.listings.length,0);assert.match(result.diagnostics.errors[0].error,/403/);
 });
+test('detail workers are bounded and preserve original source links',async()=>{
+ let active=0,maximum=0;const requests=[];
+ const r=await collectHarajInventory({queries:['Toyota'],maxDetails:8,concurrency:99,sleep:async()=>{},get:async u=>{
+  requests.push(u);if(u.endsWith('/robots.txt'))return 'User-agent: *\nAllow: /';
+  if(u.includes('/search/'))return Array.from({length:8},(_,i)=>card(String(11188891000+i))).join('');
+  active++;maximum=Math.max(maximum,active);await new Promise(r=>setTimeout(r,5));active--;return html(undefined,{url:u});
+ }});
+ assert.equal(r.listings.length,8);assert.equal(maximum,3);
+ assert.ok(requests.filter(x=>!/robots|search/.test(x)).every(x=>/^https:\/\/haraj\.com\.sa\/\d+\/$/.test(x)));
+ assert.ok(r.listings.every(x=>x.url.endsWith('/toyota')));
+});
 test('robots-disallowed discovery never fetches the restricted page',async()=>{
  let calls=0;const r=await collectHarajInventory({queries:['Toyota'],sleep:async()=>{},get:async()=>{calls++;return 'User-agent: *\nDisallow: /search/';}});
  assert.equal(calls,1);assert.equal(r.listings.length,0);

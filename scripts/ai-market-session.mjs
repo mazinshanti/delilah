@@ -13,7 +13,7 @@ const cases=[
 if(!process.env.OPENAI_API_KEY){console.error('OPENAI_API_KEY is unavailable. Run this benchmark in the configured Render Shell; do not paste the key.');process.exit(1);}
 const output=process.argv[2]||'/tmp/dalelah-ai-market-session.json';
 const engine=createIntentEngine(),read=createMarketDetailReader(),cache=new Map();let cacheHits=0,cacheBytes=0;
-const readDetail=async c=>{if(cache.has(c.url)){cacheHits++;return cache.get(c.url);}const html=await read(c),bytes=Buffer.byteLength(html);while(cache.size&&cacheBytes+bytes>20_000_000){const key=cache.keys().next().value;cacheBytes-=Buffer.byteLength(cache.get(key));cache.delete(key);}if(bytes<=20_000_000){cache.set(c.url,html);cacheBytes+=bytes;}return html;};
+const readDetail=async c=>{const cacheKey=marketListingKey(c.url)||c.url;if(cache.has(cacheKey)){cacheHits++;return cache.get(cacheKey);}const html=await read(c),bytes=Buffer.byteLength(html);while(cache.size&&cacheBytes+bytes>20_000_000){const key=cache.keys().next().value;cacheBytes-=Buffer.byteLength(cache.get(key));cache.delete(key);}if(bytes<=20_000_000){cache.set(cacheKey,html);cacheBytes+=bytes;}return html;};
 const started=Date.now(),report={mode:'live-ai-multi-brand-session',startedAt:new Date().toISOString(),limits:{cases:cases.length,maxRoundsPerCase:2,maxDetailsPerCase:24,maxProviderToolCalls:48},coverageComplete:false,cases:[],sourcesOutsideTrial:SOURCE_REGISTRY.filter(s=>!AI_MARKET_SOURCES.some(a=>a.id===s.id)).map(({name,status,reason})=>({name,status,reason,tested:false}))};
 const unique=new Map(),checked=new Set(),discovered=new Set();
 for(const [query,segment]of cases){

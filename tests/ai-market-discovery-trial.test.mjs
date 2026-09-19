@@ -127,3 +127,26 @@ test('observed model inventory and double-encoded Arabic pages are discovery-onl
  for(const u of ['https://syarah.com/en/autos/mg/zs','https://syarah.com/autos/toyota/corolla','https://cars.saudisale.com/en/car-models/2377/standard/listings'])assert.ok(marketDiscoveryPage(u));
  for(const u of ['https://syarah.com/en/prices/mg/zs','https://ksa.carswitch.com/en/saudi/new-cars/toyota/corolla','https://haraj.com.sa/pic/Corolla','https://syarah.com/en/autos/%253Fadmin'])assert.equal(marketDiscoveryPage(u),null);
 });
+
+test('direct accepted results are emitted before slower category traversal starts',async()=>{
+ const events=[],page='https://syarah.com/en/autos';
+ await runAdaptiveMarketDiscovery({query:'Corolla',condition:'used',filters:{}},{excludedMakes:[]},{maxRounds:1,discover:async()=>({status:'completed',urls:[url],discoveryPages:[page]}),readDetail:async c=>{events.push(c.discoveryPage?'page':'detail');return c.discoveryPage?'':html;},onProgress:e=>{if(e.status==='accepted')events.push('accepted');}});
+ assert.deepEqual(events.slice(0,3),['detail','accepted','page']);
+});
+test('reader overlaps independent sources but serializes same-origin requests and robots',async()=>{
+ const started=[],release=new Map(),robots=[];
+ const read=createMarketDetailReader({sleep:async()=>{},fetchImpl:async u=>{if(u.endsWith('/robots.txt')){robots.push(u);return new Response('User-agent: *\nAllow: /');}started.push(u);await new Promise(r=>release.set(u,r));return new Response('body');}});
+ const second='https://haraj.com.sa/12345678902/',other='https://syarah.com/en/cardetail/toyota-corolla-12345';
+ const jobs=[read(marketCandidate(url)),read(marketCandidate(second)),read(marketCandidate(other))];
+ await new Promise(r=>setImmediate(r));assert.deepEqual(new Set(started),new Set([url,other]));assert.equal(robots.length,2);
+ release.get(url)();release.get(other)();await new Promise(r=>setImmediate(r));assert.ok(started.includes(second));release.get(second)();await Promise.all(jobs);assert.equal(robots.length,2);
+});
+test('bounded source pagination follows only observed next-page links and keeps detail validation',async()=>{
+ const {nextMarketDiscoveryPage}=await import('../lib/ai-market-discovery-trial.js');
+ const page='https://syarah.com/en/autos/toyota/corolla',next=page+'?page=2',ad1='https://syarah.com/en/cardetail/toyota-corolla-111',ad2='https://syarah.com/en/cardetail/toyota-corolla-222';
+ assert.equal(nextMarketDiscoveryPage('<a href="?page=2">next</a>',marketDiscoveryPage(page))?.url,next);
+ for(const href of ['https://evil.test/en/autos/toyota/corolla?page=2','?page=99','?page=2&redirect=https://evil.test','/en/autos/bmw/x5?page=2'])assert.equal(nextMarketDiscoveryPage(`<a href="${href}">next</a>`,marketDiscoveryPage(page)),null);
+ const schema=u=>`<script type="application/ld+json">${JSON.stringify({'@type':'Car',url:u,name:'Toyota Corolla 2020',brand:'Toyota',model:'Corolla',vehicleModelDate:2020,itemCondition:'UsedCondition',offers:{price:60000}})}</script>`;
+ const r=await runAdaptiveMarketDiscovery({query:'Corolla',condition:'used',filters:{}},{excludedMakes:[]},{maxRounds:1,maxPages:2,maxDetails:4,discover:async()=>({status:'completed',urls:[],discoveryPages:[page]}),readDetail:async c=>c.url===page?`<a href="${ad1}">car</a><a href="?page=2">next</a>`:c.url===next?`<a href="${ad2}">car</a><a href="?page=3">next</a>`:schema(c.url)});
+ assert.equal(r.accepted,2);assert.equal(r.discoveryPages.length,2);assert.deepEqual(r.pendingDiscoveryPages,[page+'?page=3']);assert.equal(r.coverageComplete,false);
+});

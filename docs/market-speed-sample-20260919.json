@@ -1,0 +1,50 @@
+[
+  {
+    "label": "before",
+    "totalMs": 68040,
+    "firstResultMs": 23840,
+    "checked": 3,
+    "accepted": 3,
+    "results": [
+      {
+        "url": "https://haraj.com.sa/11188219621/",
+        "source": "Haraj",
+        "status": "accepted"
+      },
+      {
+        "url": "https://syarah.com/en/cardetail/nissan-patrol-new-295461",
+        "source": "Syarah",
+        "status": "accepted"
+      },
+      {
+        "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2022/864159",
+        "source": "CarSwitch Saudi",
+        "status": "accepted"
+      }
+    ]
+  },
+  {
+    "label": "after",
+    "totalMs": 23600,
+    "firstResultMs": 20497,
+    "checked": 3,
+    "accepted": 3,
+    "results": [
+      {
+        "url": "https://haraj.com.sa/11188219621/",
+        "source": "Haraj",
+        "status": "accepted"
+      },
+      {
+        "url": "https://syarah.com/en/cardetail/nissan-patrol-new-295461",
+        "source": "Syarah",
+        "status": "accepted"
+      },
+      {
+        "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2022/864159",
+        "source": "CarSwitch Saudi",
+        "status": "accepted"
+      }
+    ]
+  }
+]

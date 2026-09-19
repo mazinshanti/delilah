@@ -8,6 +8,16 @@ const car=harajDetailRecord({url,title},`<script type="application/ld+json">${JS
 const review=()=>({vehicleForSale:true,make:{value:null,quote:null},model:{value:null,quote:null},year:{value:2020,quote:'2020'},condition:{value:'used',quote:'مستعملة'},price:{value:null,quote:null},mileage:{value:50000,quote:'الممشى 50000 كم'}});
 const provider=value=>async()=>new Response(JSON.stringify({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify(value)}]}]}));
 const engine=value=>createListingTrial({env:{OPENAI_API_KEY:'test-only'},fetchImpl:provider(value)});
+test('canonical Arabic aliases agree but wrong models and keyword additions do not',async()=>{
+ const r=review();r.make={value:'تويوتا',quote:'تويوتا'};r.model={value:'كامري',quote:'كامري'};
+ assert.equal((await engine(r).inspect(car)).status,'accepted');
+ for(const value of ['Corolla','Camry toy']){r.model.value=value;assert.equal((await engine(r).inspect(car)).status,'evidence-disagreement');}
+});
+test('provider status is diagnosed without disclosing error bodies or credentials',async()=>{
+ const e=createListingTrial({env:{OPENAI_API_KEY:'test-only'},fetchImpl:async()=>new Response('private error detail',{status:429})});
+ assert.equal((await e.inspect(car)).reason,'provider-http-429');
+ const r=review();r.year.quote='invented';assert.equal((await engine(r).inspect(car)).reason,'unsupported-evidence');
+});
 test('AI trial preserves source fields and existing Arabic/English filter behavior',async()=>{
  const e=engine(review());
  for(const query of ['Toyota Camry 2020','تويوتا كامري 2020']){const r=await e.inspect(car,{query});assert.equal(r.status,'accepted');assert.equal(r.listing.url,url);assert.equal(r.listing.price,null);assert.deepEqual(r.listing.images,car.images);}

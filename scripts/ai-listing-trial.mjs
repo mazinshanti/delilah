@@ -19,7 +19,7 @@ else{
   const start=performance.now(),result=await engine.inspect(record,body);
   if(result.listing&&firstResultMs===null)firstResultMs=performance.now()-started;
   const car=result.listing;
-  results.push({status:result.status,latencyMs:Math.round(performance.now()-start),source:record.source,url:record.url,conflicts:result.conflicts||[],listing:car?{title:car.title,make:car.make,model:car.model,year:car.year,price:car.price,mileage:car.mileage,condition:car.condition,city:car.city,image:car.image}:null});
+  results.push({status:result.status,reason:result.reason||null,latencyMs:Math.round(performance.now()-start),source:record.source,url:record.url,conflicts:result.conflicts||[],listing:car?{title:car.title,make:car.make,model:car.model,year:car.year,price:car.price,mileage:car.mileage,condition:car.condition,city:car.city,image:car.image}:null});
  }));
  console.log(JSON.stringify({...engine.status(),query,filters,intentMode:understanding.intentMode,discoveryMs,firstResultMs,totalMs:Math.round(performance.now()-started),sourceDiagnostics:audit.diagnostics,results},null,2));
 }

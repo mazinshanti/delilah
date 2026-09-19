@@ -10,6 +10,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  progressive-images:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --no-audit --no-fund
+      - name: Install isolated browser regression tooling
+        run: |
+          npm install --prefix /tmp/dalelah-browser --no-audit --no-fund playwright@1.55.0
+          /tmp/dalelah-browser/node_modules/.bin/playwright install --with-deps chromium
+      - name: Test progressive images in Arabic and English on desktop and mobile
+        env:
+          PLAYWRIGHT_MODULE: /tmp/dalelah-browser/node_modules/playwright/index.mjs
+        run: node scripts/progressive-images-check.mjs
   regression:
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -166,7 +183,7 @@ jobs:
 
   deploy-ready:
     if: github.ref == 'refs/heads/main'
-    needs: [regression, mobile-build]
+    needs: [regression, mobile-build, progressive-images]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

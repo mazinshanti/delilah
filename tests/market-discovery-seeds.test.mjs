@@ -3,7 +3,7 @@ import {marketDiscoverySeeds,createSeededDiscovery} from '../lib/market-discover
 import {marketCandidate,marketDiscoveryPage} from '../lib/ai-market-discovery-trial.js';
 test('Arabic and English catalog aliases share source category coverage',()=>{
  const english=marketDiscoverySeeds('Toyota Corolla'),arabic=marketDiscoverySeeds('كورولا');
- assert.deepEqual(english.slice(1),arabic.slice(1));assert.equal(english.length,3);
+ assert.deepEqual(english.slice(1),arabic.slice(1));assert.equal(english.length,6);
  for(const u of [...english,...arabic]){assert.ok(marketDiscoveryPage(u));assert.equal(marketCandidate(u),null);}
 });
 test('seed planning keeps filters out of listing evidence and handles malformed input',()=>{
@@ -19,7 +19,7 @@ test('official Mercedes seed stays within Saudi used inventory',()=>{
 test('seed batch returns while provider is pending and prefetch is consumed exactly once',async()=>{
  let release,calls=0;const wait=new Promise(r=>release=r);
  const discover=createSeededDiscovery('Toyota Corolla',async()=>{calls++;await wait;return {status:'completed',urls:['https://haraj.com.sa/12345678901/'],webSearchCalls:1};});
- const seed=await discover('Toyota Corolla',[]);assert.equal(seed.webSearchCalls,0);assert.equal(seed.discoveryPages.length,3);assert.equal(calls,1);
+ const seed=await discover('Toyota Corolla',[]);assert.equal(seed.webSearchCalls,0);assert.equal(seed.discoveryPages.length,6);assert.equal(calls,1);
  release();const found=await discover('Toyota Corolla',[]);assert.equal(found.urls.length,1);assert.equal(calls,1);await discover('Toyota Corolla',[]);assert.equal(calls,2);
 });
 test('provider rejection does not prevent initial source seeds or become unhandled',async()=>{
@@ -33,4 +33,14 @@ test('a validated source result is delivered before a pending AI discovery compl
  const discover=createSeededDiscovery('Toyota Corolla',async()=>{await gate;events.push('provider-finished');return {status:'completed',urls:[],webSearchCalls:1};});
  const r=await runAdaptiveMarketDiscovery({query:'Toyota Corolla',condition:'used',filters:{}},{excludedMakes:[]},{discover,maxRounds:2,maxDetails:2,maxPages:3,readDetail:async c=>c.discoveryPage?`<a href="${url}">Toyota Corolla</a>`:`<script type="application/ld+json">${JSON.stringify({'@type':'Car',url,name:'Toyota Corolla 2020',brand:'Toyota',model:'Corolla',vehicleModelDate:2020,itemCondition:'UsedCondition',offers:{price:60000}})}</script>`,onProgress:e=>{if(e.listing){events.push('verified-source-result');release();}}});
  assert.deepEqual(events,['verified-source-result','provider-finished']);assert.equal(r.accepted,1);
+});
+
+test('verified dealer seeds are additive, encoded and never include restricted sources',()=>{
+ const seeds=marketDiscoverySeeds('Toyota Corolla');
+ assert.ok(seeds[0].includes('haraj.com.sa/search/'));
+ assert.ok(seeds[1].includes('syarah.com/en/autos/'));
+ assert.ok(seeds[2].includes('carswitch.com/en/saudi/used-cars/'));
+ assert.equal(seeds.filter(u=>u.includes('/users/')).length,3);
+ assert.ok(seeds.every(u=>!u.includes(' ')&&!u.includes('dubizzle')&&!u.includes('otm.com')));
+ for(const u of seeds.filter(u=>u.includes('/users/'))){assert.ok(marketDiscoveryPage(u));assert.equal(marketCandidate(u),null);}
 });

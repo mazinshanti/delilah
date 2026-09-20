@@ -1,3 +1,6 @@
+import {collectBulkInventory} from '../lib/bulk-inventory-collector.js';
+import {mergeAdditionalSnapshot} from '../lib/stock-frontier.js';
+import {ADDITIONAL_MARKET_SOURCES} from '../lib/additional-market-sources.js';
 import {collectAdditionalStock} from '../lib/additional-stock-collector.js';
 import {curlFetch} from './support/curl-fetch.mjs';
 import {filterVehicleSaleListings} from '../lib/listing-quality.js';
@@ -6,46 +9,32 @@ import {normalizeInventoryListing} from '../lib/inventory-normalizer.js';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import {gzipSync,gunzipSync} from 'node:zlib';
-import {robotsPolicy} from '../lib/robots-policy.js';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {SOURCE_REGISTRY} from '../lib/source-registry.js';
 import {parseStructuredInventory,parseSyarahInventory,parseSaudiSaleInventory} from '../lib/public-inventory.js';
-const exec=promisify(execFile),sleep=ms=>new Promise(r=>setTimeout(r,ms));
-const maxPages=Number(process.env.MARKET_PAGES||100);
+const exec=promisify(execFile);
+const maxPages=Math.max(1,Math.min(1000,Number(process.env.MARKET_PAGES)||500));
 await mkdir('data',{recursive:true});await mkdir('audit',{recursive:true});
 const all=new Map(),diagnostics=[];
-let harajCursor=0,previousDiagnostics=[];
+let harajCursor=0,previousDiagnostics=[],crawlState={};
+try{crawlState=JSON.parse(gunzipSync(await readFile('data/stock-crawl-state.json.gz')));}catch{}
 try{const old=JSON.parse(gunzipSync(await readFile('data/market-inventory.json.gz')));previousDiagnostics=old.diagnostics||[];harajCursor=old.diagnostics?.find(d=>d.source==='Haraj')?.nextCursor||0;for(const r of old.listings||[])if(Date.now()-Date.parse(r.lastSeenAt)<36*3600000)all.set(r.url,r);}catch{}
 async function get(url){const {stdout}=await exec('curl',['-sS','--max-time','30','--max-filesize','12000000','-A','Dalelah/1.5 (+https://dalelah.co; vehicle-search-index)','-w','\n%{http_code}',url],{maxBuffer:12_000_000});const i=stdout.lastIndexOf('\n');const status=Number(stdout.slice(i+1));if(status!==200)throw new Error('HTTP '+status);return stdout.slice(0,i);}
 const parsers={jsonld:parseStructuredInventory,syarah:parseSyarahInventory,saudisale:parseSaudiSaleInventory};
 async function collect(source){
- const started=Date.now(),seen=new Set(),errors=[];let attempted=0,successfulPages=0,duplicates=0,robots='';
- try{robots=await get(new URL('/robots.txt',source.url).href);}catch(e){diagnostics.push({source:source.name,records:0,errors:[{error:'robots-unavailable: '+e.message}]});return;}
- for(let page=1;page<=(source.id==='mercedes'?1:maxPages);page++){
-  const url=new URL(source.path,source.url);if(page>1)url.searchParams.set('page',String(page));
-  attempted++;
-  try{
-   const policy=robotsPolicy(robots,url.href);if(!policy.allowed)throw new Error('robots-disallowed');
-   await sleep(policy.delayMs);
-   const stdout=await get(url.href);
-   const records=parsers[source.adapter](stdout,source);successfulPages++;let added=0;
-   for(const r of records){if(seen.has(r.url)){duplicates++;continue;}seen.add(r.url);all.set(r.url,r);added++;}
-   console.log(JSON.stringify({source:source.name,page,records:records.length,added,total:seen.size}));
-   if(!added){if(!records.length)errors.push({page,error:'no-parseable-records-or-source-blocked'});break;}
-  }catch(e){errors.push({page,error:e.message.slice(0,180)});break;}
-  await sleep(1100);
- }
- diagnostics.push({source:source.name,pages:attempted,successfulPages,completedAt:new Date().toISOString(),records:seen.size,duplicateCards:duplicates,errors,durationMs:Date.now()-started});
- 
+ const r=await collectBulkInventory({source,get,parse:parsers[source.adapter],previous:previousDiagnostics.find(d=>d.source===source.name),state:crawlState['bulk:'+source.id],maxPages,onRecords:records=>{for(const c of records)all.set(c.url,c);},onProgress:d=>console.log(JSON.stringify(d))});
+ crawlState['bulk:'+source.id]=r.state;diagnostics.push(r.diagnostics);
 }
+
 await Promise.all([
  ...SOURCE_REGISTRY.filter(s=>parsers[s.adapter]).map(collect),
- collectAdditionalStock({previousDiagnostics,fetchImpl:curlFetch,maxPages:process.env.ADDITIONAL_MARKET_PAGES,maxDetails:process.env.ADDITIONAL_MARKET_DETAILS,onProgress:d=>console.log(JSON.stringify({source:d.source,details:d.detailAttempts,accepted:d.records}))}).then(result=>{for(const r of result.listings)all.set(r.url,r);diagnostics.push(...result.diagnostics);})
+ collectAdditionalStock({previousDiagnostics,previousListings:[...all.values()],state:crawlState,fetchImpl:curlFetch,maxDurationMs:process.env.ADDITIONAL_MARKET_DURATION_MS,maxSitemaps:process.env.ADDITIONAL_MARKET_SITEMAPS,maxPages:process.env.ADDITIONAL_MARKET_PAGES,maxDetails:process.env.ADDITIONAL_MARKET_DETAILS,onProgress:d=>console.log(JSON.stringify({source:d.source,details:d.detailAttempts,accepted:d.records}))}).then(result=>{const merged=mergeAdditionalSnapshot([...all.values()],result.listings,result.removedUrls,ADDITIONAL_MARKET_SOURCES);all.clear();for(const r of merged)all.set(r.url,r);crawlState={...crawlState,...result.state};diagnostics.push(...result.diagnostics);})
 ]);
-const haraj=await collectHarajInventory({cursor:harajCursor,maxQueries:process.env.HARAJ_QUERIES,maxDetails:process.env.HARAJ_DETAILS,onProgress:d=>console.log(JSON.stringify({source:'Haraj',queries:d.pages,details:d.detailAttempts,accepted:d.records,errors:d.errors.length}))});
+const haraj=await collectHarajInventory({cursor:harajCursor,previousListings:[...all.values()],pendingCandidates:previousDiagnostics.find(d=>d.source==='Haraj')?.pendingCandidates,maxDurationMs:process.env.HARAJ_DURATION_MS,maxQueries:process.env.HARAJ_QUERIES,maxDetails:process.env.HARAJ_DETAILS,onProgress:d=>console.log(JSON.stringify({source:'Haraj',queries:d.pages,details:d.detailAttempts,accepted:d.records,errors:d.errors.length}))});
 const merged=mergeHarajSnapshot([...all.values()],haraj.listings);
 all.clear();for(const record of merged)all.set(record.url,record);
 diagnostics.push(haraj.diagnostics);
 if(!diagnostics.some(d=>d.records>0))throw new Error('No source successfully refreshed; preserving previous snapshot');
 await writeFile('data/market-inventory.json.gz',gzipSync(JSON.stringify({generatedAt:new Date().toISOString(),listings:filterVehicleSaleListings([...all.values()].map(c=>normalizeInventoryListing(c,{recordMetrics:true}))),diagnostics})));
-console.log(JSON.stringify({totalUnique:all.size,diagnostics}));
+await writeFile('data/stock-crawl-state.json.gz',gzipSync(JSON.stringify(crawlState)));
+console.log(JSON.stringify({target:50000,totalUnique:all.size,diagnostics}));

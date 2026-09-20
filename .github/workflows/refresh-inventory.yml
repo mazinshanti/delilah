@@ -1,7 +1,7 @@
 name: Refresh public Saudi inventory
 on:
   schedule:
-    - cron: '17 2,14 * * *'
+    - cron: '17 */2 * * *'
   workflow_dispatch:
 permissions:
   contents: write
@@ -20,14 +20,21 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - run: node scripts/collect-market-inventory.mjs
         env:
-          MARKET_PAGES: 200
+          MARKET_PAGES: 500
+          HARAJ_QUERIES: 200
+          HARAJ_DETAILS: 2000
+          HARAJ_DURATION_MS: 1500000
+          ADDITIONAL_MARKET_PAGES: 250
+          ADDITIONAL_MARKET_DETAILS: 2500
+          ADDITIONAL_MARKET_SITEMAPS: 25
+          ADDITIONAL_MARKET_DURATION_MS: 1800000
       - run: npm test
       - run: node scripts/validate-market-inventory.mjs
       - name: Save validated public inventory
         run: |
           git config user.name 'Dalelah inventory refresh'
           git config user.email 'inventory@users.noreply.github.com'
-          git add data/market-inventory.json.gz
+          git add data/market-inventory.json.gz data/stock-crawl-state.json.gz
           if ! git diff --cached --quiet; then
             git commit -m 'Refresh validated Saudi inventory snapshot'
             git pull --rebase origin main

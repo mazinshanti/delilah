@@ -123,3 +123,10 @@ test('exact-ad gallery preserves observed originals and excludes foreign or thum
  const r=harajDetailRecord(candidate,html(' ',{name:'Toyota Corolla'})+structured({imagesList:[original,'https://evil.test/car.jpg','https://haraj.com.sa/thumb/car.jpg']}));
  assert.equal(r.image,original);assert.ok(r.images.includes(original));assert.ok(!r.images.some(u=>u.includes('evil.test')||u.includes('/thumb/')));
 });
+test('unfinished Haraj detail work resumes before new discovery; fresh accepted ads are not refetched',async()=>{
+ const cards=card('11188891001')+card('11188891002')+card('11188891003'),calls=[];
+ const get=async u=>{calls.push(u);return u.endsWith('/robots.txt')?'User-agent: *\nAllow: /':u.includes('/search/')?cards:html(undefined,{url:u});};
+ const first=await collectHarajInventory({queries:['Toyota'],maxDetails:1,get,sleep:async()=>{}});assert.equal(first.diagnostics.pendingCandidates.length,2);
+ calls.length=0;const second=await collectHarajInventory({queries:['Toyota'],maxDetails:1,get,sleep:async()=>{},previousListings:first.listings,pendingCandidates:first.diagnostics.pendingCandidates});
+ assert.equal(second.listings.length,1);assert.equal(second.diagnostics.pages,0);assert.equal(second.diagnostics.pendingCandidates.length,1);assert.ok(!calls.some(u=>u.includes('/search/')));assert.ok(!calls.includes('https://haraj.com.sa/11188891001/'));
+});

@@ -24,12 +24,11 @@ for(const [query,segment]of cases){
  const start=Date.now(),understanding=await engine.understand(query);
  if(understanding.fallbackReason&&!understanding.safeFallback){report.cases.push({query,segment,status:'unsafe-intent-fallback',accepted:0});await writeFile(output,JSON.stringify(report,null,2));continue;}
  const body=intentSearchBody({query,condition:'all',filters:{}},understanding);body.discoveryQuery=query;
- let discoveryRound=0;
- const providerDiscover=(q,feedback)=>discoverMarketWithAI(q,feedback,{sourceIds:discoveryRound++===0?['haraj','syarah']:['carswitch','saudisale',...(understanding.intent.make==='Mercedes'?['mercedes']:[])]});
+ const providerDiscover=(q,feedback)=>discoverMarketWithAI(q,feedback,{scope:'open-market'});
  const discover=createSeededDiscovery(query,providerDiscover);
  const r=await runAdaptiveMarketDiscovery(body,understanding.intent,{discover,readDetail,cachedListings:validated.get(body,understanding.intent),maxRounds:3,maxDetails:24,onProgress:e=>{
   if(e.listing)console.log(JSON.stringify({stage:'accepted',query,origin:e.origin||'source-fetch',source:e.source,url:e.url,title:e.listing.title,price:e.listing.price,mileage:e.listing.mileage}));
-  else if(e.stage==='discovery-diagnostics')console.log(JSON.stringify({query,...e}));
+  else if(['discovery-diagnostics','external-source-discovered'].includes(e.stage))console.log(JSON.stringify({query,...e}));
  }});
  const freshKeys=new Set(r.results.filter(r=>r.status==='accepted').map(r=>marketListingKey(r.url)));
  validated.put(r.listings.filter(c=>freshKeys.has(marketListingKey(c.url))));
@@ -37,6 +36,7 @@ for(const [query,segment]of cases){
  for(const row of r.results){const key=marketListingKey(row.url);checked.add(key);discovered.add(key);}for(const url of r.pendingUrls)discovered.add(marketListingKey(url));
  for(const car of r.listings)unique.set(marketListingKey(car.url),car);
  const {listings,...summary}=r;report.cases.push({query,segment,totalMs:Date.now()-start,...summary});
+ report.externalCandidates=[...new Map(report.cases.flatMap(c=>c.externalCandidates||[]).map(c=>[c.url,c])).values()];report.externalSourceCount=new Set(report.externalCandidates.map(c=>c.host)).size;report.externalDiscovered=report.externalCandidates.length;
  report.uniqueDiscovered=discovered.size;report.uniqueChecked=checked.size;report.uniqueAccepted=unique.size;report.cacheHits=cacheHits;report.totalMs=Date.now()-started;
  report.listings=[...unique.values()].map(c=>({source:c.source,url:c.url,title:c.title,make:c.make,model:c.model,year:c.year,condition:c.condition,price:c.price,mileage:c.mileage,image:c.image}));
  report.sourceTotals=AI_MARKET_SOURCES.map(s=>{const rows=report.cases.flatMap(c=>c.results||[]).filter(r=>r.source===s.name);const cars=report.listings.filter(c=>c.source===s.name);return {source:s.name,uniqueChecked:new Set(rows.map(r=>marketListingKey(r.url))).size,uniqueAccepted:cars.length,withImageUrl:cars.filter(c=>c.image).length,withPrice:cars.filter(c=>c.price!=null).length,withMileage:cars.filter(c=>c.mileage!=null).length,withKnownCondition:cars.filter(c=>['new','used'].includes(c.condition)).length,imageHttpSuccess:null};});
@@ -44,4 +44,4 @@ for(const [query,segment]of cases){
  if(/provider-http-(401|403|429)|not-configured/.test(r.stopReason)){report.stopReason=r.stopReason;break;}
 }
 report.finishedAt=new Date().toISOString();await writeFile(output,JSON.stringify(report,null,2));
-console.log(JSON.stringify({stage:'session-complete',uniqueDiscovered:report.uniqueDiscovered,uniqueChecked:report.uniqueChecked,uniqueAccepted:report.uniqueAccepted,sourceTotals:report.sourceTotals,totalMs:report.totalMs,reportPath:output,coverageComplete:false},null,2));
+console.log(JSON.stringify({stage:'session-complete',externalDiscovered:report.externalDiscovered,externalSourceCount:report.externalSourceCount,uniqueDiscovered:report.uniqueDiscovered,uniqueChecked:report.uniqueChecked,uniqueAccepted:report.uniqueAccepted,sourceTotals:report.sourceTotals,totalMs:report.totalMs,reportPath:output,coverageComplete:false},null,2));

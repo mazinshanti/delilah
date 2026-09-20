@@ -16,15 +16,16 @@ try {
   page.on('pageerror',e=>errors.push(e.message));
   const car={url:'https://haraj.com.sa/123456789/camry',title:'Toyota Camry 2023',brand:'Toyota',model:'Camry',year:2023,price:90000,mileage:40000,city:'Riyadh',condition:'used',source:'Haraj',image:'https://qa-images.example/car.png'};
   const second={...car,url:'https://sa.opensooq.com/en/search/123456789',source:'OpenSooq',image:'https://qa-images.example/second.png'};
-  let phase=0,imageRequests=0;
+  let phase=0,imageRequests=0,partial=false;
   await page.route('https://qa-images.example/**',route=>{
    if(route.request().url().endsWith('/car.png'))imageRequests++;
    return route.fulfill({contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=','base64')});
   });
   await page.route('**/api/inventory?**',route=>route.fulfill({json:{listings:[]}}));
   await page.route('**/api/search',route=>route.fulfill({json:{listings:[car],searchId:'qa-progress',complete:false}}));
-  await page.route('**/api/search/progress/qa-progress',route=>route.fulfill({json:{listings:phase===0?[car]:[{...car,price:88000},second],complete:phase===2}}));
+  await page.route('**/api/search/progress/qa-progress',route=>route.fulfill({json:{listings:phase===0?[car]:[{...car,price:88000},second],complete:phase===2,partial}}));
   await page.goto(base);
+  assert.equal(await page.locator('#searchProgress').isVisible(),false,'bar must be hidden before search');
   if(language==='en')await page.locator('#languageToggle').click();
   await page.locator('#q').fill(language==='ar'?'تويوتا كامري 2023':'Toyota Camry 2023');
   await page.locator('#ask').click();
@@ -33,6 +34,9 @@ try {
   const original=await page.locator('#grid .photo img').first().elementHandle();
   await page.waitForTimeout(1800);
   assert.equal(await original.evaluate(el=>el.isConnected),true,'unchanged poll disconnected the image');
+  assert.equal(await page.locator('#searchProgress').getAttribute('data-state'),'scanning','poll must not end active progress');
+  assert.equal(await page.locator('#searchProgressBar').getAttribute('value'),null,'no invented percentage');
+  assert.match(await page.locator('#searchProgressText').innerText(),language==='ar'?/نبحث عن المزيد/:/Searching for more/);
   phase=1;
   await page.waitForFunction(()=>document.querySelectorAll('#grid .card').length===2);
   assert.equal(await original.evaluate(el=>el.isConnected),true,'metadata enrichment replaced the image');
@@ -44,8 +48,31 @@ try {
   phase=2;
   await page.waitForTimeout(1800);
   assert.equal(await original.evaluate(el=>el.isConnected),true,'completion replaced the image');
+  assert.equal(await page.locator('#searchProgress').getAttribute('data-state'),'complete');
+  assert.equal(await page.locator('#searchProgressBar').getAttribute('value'),'1');
+  assert.match(await page.locator('#searchProgressText').innerText(),language==='ar'?/Search completed/:/اكتمل البحث/);
+  partial=true;phase=0;
+  await page.locator('#ask').click();
+  await page.waitForFunction(()=>document.querySelector('#searchProgress')?.dataset.state==='scanning');
+  assert.equal(await page.locator('#searchProgressBar').getAttribute('value'),null,'new search must reset completion');
+  phase=2;
+  await page.waitForFunction(()=>document.querySelector('#searchProgress')?.dataset.state==='partial');
+  assert.equal(await page.locator('#searchProgressBar').isVisible(),false,'partial completion must not show a full bar');
+  assert.match(await page.locator('#searchProgressText').innerText(),language==='ar'?/could not finish/:/لم يكتمل/);
+  await page.emulateMedia({reducedMotion:'reduce'});
+  partial=false;phase=0;
+  await page.locator('#ask').click();
+  await page.waitForFunction(()=>document.querySelector('#searchProgress')?.dataset.state==='scanning');
+  assert.equal(await page.locator('#searchProgressBar').evaluate(el=>getComputedStyle(el).animationName),'none');
+  // Rapid replacement must not let an older poll finish the newer search.
+  await page.locator('#ask').click();
+  await page.waitForTimeout(1800);
+  assert.equal(await page.locator('#searchProgress').getAttribute('data-state'),'scanning');
+  phase=2;
+  await page.waitForFunction(()=>document.querySelector('#searchProgress')?.dataset.state==='complete');
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
   assert.deepEqual(errors,[]);
-  console.log(`PASS progressive image identity, enrichment, language toggle, completion and overflow: ${width}px ${language}`);
+  console.log(`PASS progress scanning/reset/partial/completion/reduced-motion, image identity, language toggle and overflow: ${width}px ${language}`);
   await page.close();
  }
 }finally{await browser?.close();server.kill('SIGTERM');}

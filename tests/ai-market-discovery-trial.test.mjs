@@ -227,3 +227,18 @@ test('explicitly off-query source URLs cannot consume checks ahead of unknown or
  const calls=[];const r=await runAdaptiveMarketDiscovery({query:'Porsche 911',condition:'all',filters:{}},{excludedMakes:[]},{maxRounds:1,maxDetails:1,discover:async()=>({status:'completed',urls:[wrong,url]}),readDetail:async c=>{calls.push(c.url);return '';}});
  assert.deepEqual(calls,[url]);assert.ok(r.pendingUrls.includes(wrong));assert.equal(r.accepted,0);
 });
+test('Haraj showroom discovery reuses the same strict individual-ad reader',()=>{
+ const page=marketDiscoveryPage('https://haraj.com.sa/users/فوركارز للسيارات/');assert.ok(page);assert.ok(page.url.includes('%20'));
+ assert.equal(marketCandidate(page.url),null);
+ const links=detailLinksFromDiscoveryPage(`<a href="/12345678901/">car</a><a href="https://evil.test/12345678901/">bad</a><a href="/users/another/">seller</a>`,page);
+ assert.deepEqual(links,['https://haraj.com.sa/12345678901/']);
+ assert.equal(marketDiscoveryPage('https://haraj.com.sa/users/a/b'),null);
+});
+test('existing OpenSooq connector participates in exact-ad validation without guessing condition',async()=>{
+ const direct='https://sa.opensooq.com/en/search/123456789';
+ assert.ok(marketCandidate(direct));assert.ok(marketDiscoveryPage('https://sa.opensooq.com/en/cars/cars-for-sale/toyota/corolla'));
+ const schema={'@type':'Vehicle',url:direct,name:'Toyota Corolla 2020',brand:'Toyota',model:'Corolla',vehicleModelDate:2020,itemCondition:'https://schema.org/UsedCondition',offers:{price:60000,priceCurrency:'SAR'}};
+ const run=condition=>runAdaptiveMarketDiscovery({query:'Toyota Corolla',condition:'used',filters:{}},{excludedMakes:[]},{maxRounds:1,discover:async()=>({status:'completed',urls:[direct]}),readDetail:async()=>`<script type="application/ld+json">${JSON.stringify({...schema,itemCondition:condition})}</script>`});
+ assert.equal((await run(schema.itemCondition)).accepted,1);assert.equal((await run(undefined)).accepted,0);
+ assert.equal(marketCandidate('https://ae.opensooq.com/en/search/123456789'),null);
+});

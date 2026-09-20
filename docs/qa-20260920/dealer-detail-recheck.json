@@ -1,0 +1,76 @@
+{
+  "mode": "public-dealer-sample",
+  "coverageComplete": false,
+  "rows": [
+    {
+      "source": "4Cars Showroom",
+      "discovered": 20,
+      "checked": 2,
+      "accepted": 0,
+      "results": [
+        {
+          "url": "https://haraj.com.sa/11188890561/",
+          "status": "The operation was aborted"
+        },
+        {
+          "url": "https://haraj.com.sa/11188890096/",
+          "status": "vehicle_boundary",
+          "records": []
+        }
+      ]
+    },
+    {
+      "source": "Nojoom Al Falah Cars",
+      "discovered": 20,
+      "checked": 2,
+      "accepted": 0,
+      "results": [
+        {
+          "url": "https://haraj.com.sa/11188939962/",
+          "status": "missing_title_year",
+          "records": []
+        },
+        {
+          "url": "https://haraj.com.sa/11188939954/",
+          "status": "missing_title_year",
+          "records": []
+        }
+      ]
+    },
+    {
+      "source": "Ramz Al Asalah Showroom",
+      "discovered": 21,
+      "checked": 2,
+      "accepted": 1,
+      "results": [
+        {
+          "url": "https://haraj.com.sa/11188944761/",
+          "status": "unresolved_identity",
+          "records": []
+        },
+        {
+          "url": "https://haraj.com.sa/11188944596/",
+          "status": "accepted",
+          "records": [
+            {
+              "title": "نيسان باترول بلاتينيوم فل كامل موديل 2022",
+              "make": "Nissan",
+              "model": "Patrol",
+              "year": 2022,
+              "price": 180000,
+              "mileage": null,
+              "condition": "used",
+              "image": "https://mimg6cdn.haraj.com.sa/userfiles30/2026-09-20/1800x1350_A683C995-88CD-410B-852B-7FB4800D4D18.jpg",
+              "imageHttpSuccess": true,
+              "imageDimensions": [
+                900,
+                675
+              ],
+              "imageDecodable": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

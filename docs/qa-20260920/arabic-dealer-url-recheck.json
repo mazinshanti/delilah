@@ -1,0 +1,61 @@
+{
+  "startedAt": "2026-09-20T11:00:11.341Z",
+  "mode": "public-source-readiness",
+  "sources": [
+    {
+      "id": "fourcars",
+      "name": "4Cars Showroom",
+      "url": "https://haraj.com.sa/users/فوركارز للسيارات/",
+      "registryStatus": "not-connected",
+      "robotsStatus": 200,
+      "checkedAt": "2026-09-20T11:00:21.087Z",
+      "acceptedVehicles": 0,
+      "httpStatus": 200,
+      "bytes": 341771,
+      "sha256": "60c31e2c32bf9378c768963b1b24f80643f9f982a2f7832662bfe8375a2b04bf",
+      "title": "فوركارز للسيارات | موقع حراج",
+      "status": "page-readable",
+      "jsonLdBlocks": 3,
+      "observedLinks": 111,
+      "elapsedMs": 10010
+    },
+    {
+      "id": "nojoom-alfalah",
+      "name": "Nojoom Al Falah Cars",
+      "url": "https://haraj.com.sa/users/شركة نجوم الفلاح للسيارات/",
+      "registryStatus": "not-connected",
+      "robotsStatus": 200,
+      "checkedAt": "2026-09-20T11:00:31.099Z",
+      "acceptedVehicles": 0,
+      "httpStatus": 200,
+      "bytes": 302782,
+      "sha256": "d55db18f2907e05ac8f78800e84a321de580e8e2865255fc6a11032a5f39771a",
+      "title": "شركة نجوم الفلاح للسيارات | موقع حراج",
+      "status": "page-readable",
+      "jsonLdBlocks": 3,
+      "observedLinks": 111,
+      "elapsedMs": 9709
+    },
+    {
+      "id": "ramz-alasalah",
+      "name": "Ramz Al Asalah Showroom",
+      "url": "https://haraj.com.sa/users/معرض رمز الاصالة/",
+      "registryStatus": "not-connected",
+      "robotsStatus": 200,
+      "checkedAt": "2026-09-20T11:00:40.809Z",
+      "acceptedVehicles": 0,
+      "httpStatus": 200,
+      "bytes": 301794,
+      "sha256": "79e27bdb778862fe0cb4b57df7e8f23fbaefab40587f083b0804a2af27450063",
+      "title": "معرض رمز الاصالة | موقع حراج",
+      "status": "page-readable",
+      "jsonLdBlocks": 3,
+      "observedLinks": 115,
+      "elapsedMs": 9914
+    }
+  ],
+  "acceptedVehicles": 0,
+  "coverageComplete": false,
+  "completedAt": "2026-09-20T11:00:50.723Z",
+  "totalTargets": 3
+}

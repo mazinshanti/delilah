@@ -1,0 +1,101 @@
+{
+  "checkedAt": "2026-09-20T13:05:05.216Z",
+  "sample": true,
+  "coverageComplete": false,
+  "totalAccepted": 44,
+  "sources": [
+    {
+      "source": "Mstaml",
+      "discovered": 6,
+      "checked": 6,
+      "accepted": 1,
+      "acceptanceRate": 0.16666666666666666,
+      "usablePrimaryImages": 1,
+      "highResolutionPrimaryImages": 1,
+      "withPrice": 0,
+      "withMileage": 0,
+      "withKnownMakeModel": 1,
+      "withKnownCondition": 1,
+      "detailHttpSuccess": 6,
+      "errors": [],
+      "rejectedReasons": {
+        "unresolved-vehicle-identity": 3,
+        "vehicle-boundary": 1,
+        "rental-or-lease": 1
+      }
+    },
+    {
+      "source": "Motory",
+      "discovered": 20,
+      "checked": 15,
+      "accepted": 14,
+      "acceptanceRate": 0.9333333333333333,
+      "usablePrimaryImages": 14,
+      "highResolutionPrimaryImages": 14,
+      "withPrice": 10,
+      "withMileage": 13,
+      "withKnownMakeModel": 14,
+      "withKnownCondition": 14,
+      "detailHttpSuccess": 14,
+      "errors": [],
+      "rejectedReasons": {
+        "The operation was aborted": 1
+      }
+    },
+    {
+      "source": "SAMACO Automotive",
+      "discovered": 24,
+      "checked": 15,
+      "accepted": 13,
+      "acceptanceRate": 0.8666666666666667,
+      "usablePrimaryImages": 8,
+      "highResolutionPrimaryImages": 8,
+      "withPrice": 13,
+      "withMileage": 13,
+      "withKnownMakeModel": 13,
+      "withKnownCondition": 13,
+      "detailHttpSuccess": 15,
+      "errors": [],
+      "rejectedReasons": {
+        "vehicle-boundary": 2
+      }
+    },
+    {
+      "source": "ArabWheels Saudi",
+      "discovered": 25,
+      "checked": 15,
+      "accepted": 9,
+      "acceptanceRate": 0.6,
+      "usablePrimaryImages": 8,
+      "highResolutionPrimaryImages": 8,
+      "withPrice": 5,
+      "withMileage": 9,
+      "withKnownMakeModel": 9,
+      "withKnownCondition": 9,
+      "detailHttpSuccess": 15,
+      "errors": [],
+      "rejectedReasons": {
+        "vehicle-boundary": 3,
+        "unresolved-identity": 3
+      }
+    },
+    {
+      "source": "Kayishha",
+      "discovered": 158,
+      "checked": 8,
+      "accepted": 7,
+      "acceptanceRate": 0.875,
+      "usablePrimaryImages": 7,
+      "highResolutionPrimaryImages": 7,
+      "withPrice": 0,
+      "withMileage": 7,
+      "withKnownMakeModel": 7,
+      "withKnownCondition": 7,
+      "detailHttpSuccess": 8,
+      "errors": [],
+      "rejectedReasons": {
+        "unresolved-identity": 1
+      }
+    }
+  ]
+}

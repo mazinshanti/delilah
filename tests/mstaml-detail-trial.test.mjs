@@ -30,3 +30,6 @@ test('new condition conflicts and related products cannot replace the main ad',(
  const html=fixture({sku:'7654321'})+'إعلانات مشابهة'+fixture();assert.equal(parseMarketDetail(marketCandidate(url),html).records.length,0);
  const r=parse({condition:'غير معروف',mileage:''}).records[0];assert.ok(r);assert.notEqual(r.condition,'new');
 });
+test('rent-to-own monthly offers are not cash vehicle inventory',()=>{
+ assert.equal(parse({description:'ايجار منتهي بالتمليك للمقيمين فقط'}).records.length,0);
+});

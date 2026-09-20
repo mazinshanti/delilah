@@ -29,7 +29,7 @@ jobs:
           ADDITIONAL_MARKET_SITEMAPS: 25
           ADDITIONAL_MARKET_DURATION_MS: 1800000
       - run: npm test
-      - run: node scripts/validate-market-inventory.mjs
+      - run: node --max-old-space-size=320 scripts/validate-market-inventory.mjs
       - name: Save validated public inventory
         run: |
           git config user.name 'Dalelah inventory refresh'

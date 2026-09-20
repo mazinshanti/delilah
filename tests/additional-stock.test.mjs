@@ -34,6 +34,13 @@ test('Motory placeholder one-riyal price stays unavailable',()=>{
  const c=car();c.offers.price=1;assert.equal(parseAdditionalStock(json(c),url,source).records[0].price,null);
  assert.equal(stockIdentity(source,url),stockIdentity(source,url.slice(0,-1)));
 });
+test('a refreshed sold Motory listing is removed instead of remaining in the previous snapshot',async()=>{
+ const {mergeAdditionalSnapshot}=await import('../lib/stock-frontier.js');
+ const old=parseAdditionalStock(json(car()),url,source).records[0];old.lastSeenAt='2020-01-01T00:00:00Z';
+ const sold=car({offers:{availability:'https://schema.org/SoldOut',priceCurrency:'SAR'}});
+ const r=await collectAdditionalStock({sources:[source],previousListings:[old],maxDetails:1,wait:async()=>{},fetchImpl:async u=>String(u).endsWith('/robots.txt')?new Response('User-agent: *\nAllow: /'):new Response(json(sold))});
+ assert.deepEqual(r.removedUrls,[old.url]);assert.equal(mergeAdditionalSnapshot([old],r.listings,r.removedUrls,[source]).length,0);
+});
 test('Kayishha needs exact identity, sale evidence and an explicit used odometer',()=>{
  const s=sources.find(s=>s.id==='kayishha'),u='https://buy.kayishha.com/cars/details/hyundai-palisade-2021-87488';
  const c={'@type':'Car',name:'2021 Hyundai Palisade for Sale - White, 250K KM',description:'Buy this white 2021 Hyundai Palisade with 250000 KM on BuyAnyCar.',url:u.replace('/cars/','/ar/cars/'),image:'https://ik.imagekit.io/yk64cmkix/bac-api-v2/carImages/87488-test.jpg'};
@@ -52,4 +59,11 @@ test('remaining detail work resumes on the next refresh instead of restarting pa
  const nextUrl=url.replace('123456','123457'),calls=[];
  const r=await collectAdditionalStock({sources:[source],previousDiagnostics:[{source:source.name,pendingUrls:[nextUrl],pendingPages:[]}],maxDetails:1,wait:async()=>{},fetchImpl:async u=>{calls.push(String(u));return String(u).endsWith('/robots.txt')?new Response('User-agent: *\nAllow: /'):new Response(json(car({url:nextUrl})));}});
  assert.equal(r.listings.length,1);assert.equal(calls[1],nextUrl);assert.equal(r.diagnostics[0].pages,0);
+});
+test('batch checkpoints preserve validated records and remaining work before collection returns',async()=>{
+ const nextUrl=url.replace('123456','123457');let checkpoint;
+ await collectAdditionalStock({sources:[source],maxDetails:1,wait:async()=>{},onCheckpoint:async c=>{checkpoint=c;},fetchImpl:async u=>String(u).endsWith('/robots.txt')?new Response('User-agent: *\nAllow: /'):String(u)===new URL(source.path,source.url).href?new Response(`<a href="${url}">Car</a><a href="${nextUrl}">Car</a>`):new Response(json(car()))});
+ assert.equal(checkpoint.listings.length,1);assert.equal(checkpoint.state.entries.length,2);assert.equal(checkpoint.state.entries.filter(e=>e.outcome==='accepted').length,1);
+ const calls=[];const resumed=await collectAdditionalStock({sources:[source],maxDetails:1,state:{[source.id]:checkpoint.state},previousListings:checkpoint.listings,wait:async()=>{},fetchImpl:async u=>{calls.push(String(u));return String(u).endsWith('/robots.txt')?new Response('User-agent: *\nAllow: /'):new Response(json(car({url:nextUrl})));}});
+ assert.equal(resumed.listings.length,1);assert.equal(calls[1],nextUrl);
 });

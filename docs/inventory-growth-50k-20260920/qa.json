@@ -1,0 +1,222 @@
+{
+  "checkedAt": "2026-09-20T14:04:32.033Z",
+  "status": "candidate-not-deployed",
+  "productionBaselineSha": "521b0e961fddb87e57d0627c9451437c4d834602",
+  "target": 50000,
+  "beforeFresh": 3462,
+  "candidateFresh": 3463,
+  "beforeStored": 3520,
+  "candidateStored": 3521,
+  "knownAdditionalUrls": 1665,
+  "pendingAdditionalUrls": 1621,
+  "sourceQA": [
+    {
+      "source": "CarSwitch Saudi",
+      "beforeFresh": 817,
+      "candidateFresh": 817,
+      "withImageUrl": 817,
+      "withPrice": 817,
+      "withMileage": 817,
+      "withMakeModel": 817,
+      "withKnownCondition": 817,
+      "imageHttpSuccess": null,
+      "highResolutionSuccess": null,
+      "sourceLinkHttpSuccess": null,
+      "acceptanceRate": null
+    },
+    {
+      "source": "Syarah",
+      "beforeFresh": 2576,
+      "candidateFresh": 2577,
+      "withImageUrl": 2577,
+      "withPrice": 2577,
+      "withMileage": 1961,
+      "withMakeModel": 2577,
+      "withKnownCondition": 2577,
+      "imageHttpSuccess": null,
+      "highResolutionSuccess": null,
+      "sourceLinkHttpSuccess": null,
+      "acceptanceRate": null
+    },
+    {
+      "source": "Saudi Sale",
+      "beforeFresh": 1,
+      "candidateFresh": 1,
+      "withImageUrl": 1,
+      "withPrice": 1,
+      "withMileage": 1,
+      "withMakeModel": 1,
+      "withKnownCondition": 1,
+      "imageHttpSuccess": null,
+      "highResolutionSuccess": null,
+      "sourceLinkHttpSuccess": null,
+      "acceptanceRate": null
+    },
+    {
+      "source": "Mstaml",
+      "beforeFresh": 1,
+      "candidateFresh": 1,
+      "withImageUrl": 1,
+      "withPrice": 0,
+      "withMileage": 0,
+      "withMakeModel": 1,
+      "withKnownCondition": 1,
+      "imageHttpSuccess": null,
+      "highResolutionSuccess": null,
+      "sourceLinkHttpSuccess": null,
+      "acceptanceRate": null
+    },
+    {
+      "source": "Motory",
+      "beforeFresh": 14,
+      "candidateFresh": 14,
+      "withImageUrl": 14,
+      "withPrice": 10,
+      "withMileage": 13,
+      "withMakeModel": 14,
+      "withKnownCondition": 14,
+      "imageHttpSuccess": null,
+      "highResolutionSuccess": null,
+      "sourceLinkHttpSuccess": null,
+      "acceptanceRate": null
+    },
+    {
+      "source": "SAMACO Automotive",
+      "beforeFresh": 13,
+      "candidateFresh": 13,
+      "withImageUrl": 8,
+      "withPrice": 13,
+      "withMileage": 13,
+      "withMakeModel": 13,
+      "withKnownCondition": 13,
+      "imageHttpSuccess": null,
+      "highResolutionSuccess": null,
+      "sourceLinkHttpSuccess": null,
+      "acceptanceRate": null
+    },
+    {
+      "source": "ArabWheels Saudi",
+      "beforeFresh": 9,
+      "candidateFresh": 9,
+      "withImageUrl": 8,
+      "withPrice": 5,
+      "withMileage": 9,
+      "withMakeModel": 9,
+      "withKnownCondition": 9,
+      "imageHttpSuccess": null,
+      "highResolutionSuccess": null,
+      "sourceLinkHttpSuccess": null,
+      "acceptanceRate": null
+    },
+    {
+      "source": "Kayishha",
+      "beforeFresh": 7,
+      "candidateFresh": 7,
+      "withImageUrl": 7,
+      "withPrice": 0,
+      "withMileage": 7,
+      "withMakeModel": 7,
+      "withKnownCondition": 7,
+      "imageHttpSuccess": null,
+      "highResolutionSuccess": null,
+      "sourceLinkHttpSuccess": null,
+      "acceptanceRate": null
+    },
+    {
+      "source": "Mercedes-Benz Saudi",
+      "beforeFresh": 24,
+      "candidateFresh": 24,
+      "withImageUrl": 0,
+      "withPrice": 24,
+      "withMileage": 24,
+      "withMakeModel": 24,
+      "withKnownCondition": 24,
+      "imageHttpSuccess": null,
+      "highResolutionSuccess": null,
+      "sourceLinkHttpSuccess": null,
+      "acceptanceRate": null
+    },
+    {
+      "source": "Haraj",
+      "beforeFresh": 0,
+      "candidateFresh": 0,
+      "withImageUrl": 0,
+      "withPrice": 0,
+      "withMileage": 0,
+      "withMakeModel": 0,
+      "withKnownCondition": 0,
+      "imageHttpSuccess": null,
+      "highResolutionSuccess": null,
+      "sourceLinkHttpSuccess": null,
+      "acceptanceRate": null,
+      "note": "Existing live-on-demand connector remains enabled; no fresh stored records in this snapshot."
+    },
+    {
+      "source": "OpenSooq",
+      "beforeFresh": 0,
+      "candidateFresh": 0,
+      "withImageUrl": 0,
+      "withPrice": 0,
+      "withMileage": 0,
+      "withMakeModel": 0,
+      "withKnownCondition": 0,
+      "imageHttpSuccess": null,
+      "highResolutionSuccess": null,
+      "sourceLinkHttpSuccess": null,
+      "acceptanceRate": null,
+      "note": "Existing live-on-demand connector remains enabled; no fresh stored records in this snapshot."
+    },
+    {
+      "source": "Saleh Cars",
+      "beforeFresh": 0,
+      "candidateFresh": 0,
+      "withImageUrl": 0,
+      "withPrice": 0,
+      "withMileage": 0,
+      "withMakeModel": 0,
+      "withKnownCondition": 0,
+      "imageHttpSuccess": null,
+      "highResolutionSuccess": null,
+      "sourceLinkHttpSuccess": null,
+      "acceptanceRate": null,
+      "note": "Existing live-on-demand connector remains enabled; no fresh stored records in this snapshot."
+    }
+  ],
+  "sourceState": {
+    "bulk:syarah": {
+      "nextPage": 203,
+      "completedAt": "2026-09-20T13:49:25.229Z"
+    },
+    "mstaml": {
+      "known": 7,
+      "pending": 6
+    },
+    "motory": {
+      "known": 1437,
+      "pending": 1423
+    },
+    "arabwheels": {
+      "known": 9,
+      "pending": 0
+    },
+    "kayishha": {
+      "known": 199,
+      "pending": 192
+    },
+    "samaco": {
+      "known": 13,
+      "pending": 0
+    }
+  },
+  "unpersistedLiveObservations": {
+    "Motory": 114,
+    "Kayishha": 194,
+    "ArabWheels Saudi": 35
+  },
+  "limitations": [
+    "Expanded batch interrupted by workspace network policy before final records were saved; progress observations are not candidate or production inventory.",
+    "Snapshot presence metrics are not fresh HTTP validations of all images or listing links.",
+    "50k synthetic capacity test exceeded current 512 MB service memory budget.",
+    "41 directory targets are not 41 working feeds."
+  ]
+}

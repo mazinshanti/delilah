@@ -76,7 +76,7 @@ jobs:
       - name: Test indexed inventory, security and parsers
         run: node --test tests/public-inventory.test.mjs tests/source-registry.test.mjs tests/vehicle-mileage.test.mjs
       - name: Validate real inventory and model coverage
-        run: node scripts/validate-market-inventory.mjs
+        run: node --max-old-space-size=320 scripts/validate-market-inventory.mjs
       - name: Test direct search core
         run: npm run test:direct-core
       - name: Test Haraj price import matrix

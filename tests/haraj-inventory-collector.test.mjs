@@ -6,6 +6,24 @@ const url='https://haraj.com.sa/11188891344/toyota';
 const candidate={url,title:'تويوتا كامري 2020',city:'Riyadh',condition:'used',price:20000};
 const html=(description='سيارة مستعملة للبيع الممشى 50000 كم',overrides={})=>`<script type="application/ld+json">${JSON.stringify({'@type':'Car',url,name:'تويوتا كامري 2020',description,...overrides})}</script>`;
 const card=(id='11188891344',title=candidate.title)=>`<a href="/${id}/toyota">${title}</a><div>الرياض</div>`;
+const structured=(changes={})=>{
+ const table=[],encode=value=>{const i=table.length;table.push(null);if(value&&typeof value==='object'){const object={};for(const [k,v]of Object.entries(value))object['_'+encode(k)]=encode(v);table[i]=object;}else table[i]=value;return i;};
+ encode({URL:'11188891344/toyota',title:'Toyota Corolla',carInfo:{model:2013,condition:'USED',carOrRelated:'CAR',sellOrWaiver:'SELL'},...changes});
+ return `<script>window.__reactRouterContext.streamController.enqueue(${JSON.stringify(JSON.stringify(table))});</script>`;
+};
+test('exact structured Haraj car fields recover a sparse title without guessing year or condition',()=>{
+ const r=harajDetailRecord(candidate,html(' ',{name:'Toyota Corolla'})+structured());
+ assert.equal(r.year,2013);assert.equal(r.condition,'used');assert.equal(r.model,'Corolla');assert.equal(r.price,null);assert.equal(r.mileage,null);
+});
+test('foreign ad, different title, non-car and non-sale structured fields cannot rescue sparse metadata',()=>{
+ for(const patch of [{URL:'99999999999/other'},{URL:'https://evil.test/11188891344/'},{title:'Toyota Camry'},{carInfo:{model:2013,condition:'USED',carOrRelated:'PART',sellOrWaiver:'SELL'}},{carInfo:{model:2013,condition:'USED',carOrRelated:'CAR',sellOrWaiver:'WANTED'}}])assert.equal(harajDetailRecord(candidate,html(' ',{name:'Toyota Corolla'})+structured(patch)),null);
+ assert.equal(harajDetailRecord(candidate,html(' ',{name:'Toyota Corolla'})+structured()+structured()),null);
+});
+test('structured car metadata cannot override conflicting year or condition or the non-vehicle boundary',()=>{
+ assert.equal(harajDetailRecord(candidate,html(' ',{name:'Toyota Corolla 2020'})+structured({title:'Toyota Corolla 2020'})),null);
+ assert.equal(harajDetailRecord(candidate,html(' ',{name:'Toyota Corolla',itemCondition:'https://schema.org/NewCondition'})+structured()),null);
+ for(const title of ['Toyota Corolla spare parts','مطلوب تويوتا كورولا','حساب ببجي تويوتا كورولا','لعبة تويوتا كورولا'])assert.equal(harajDetailRecord(candidate,html(' ',{name:title})+structured({title})),null,title);
+});
 test('refresh merges Haraj by ad id across changed title slugs and preserves other sources',()=>{
  const old={source:'Haraj',url,price:10000},fresh={...old,url:'https://haraj.com.sa/11188891344/updated-title',price:null};
  const other={source:'Syarah',url:'https://syarah.com/en/cardetail/example'};

@@ -90,6 +90,27 @@ test('safe locale redirect obeys robots; cross-host and other-ad redirects never
  await assert.rejects(read(marketCandidate(direct)),/robots-disallowed/);
 });
 
+test('official dealer trailing slash redirects keep identity and still reject another car or host',async()=>{
+ const direct='https://www.mercedes-benz-mena.com/ksa/en/buy-used/21715788-mercedes-benz-eqa-250';
+ for(const target of [direct+'/',direct.replace('21715788','99999999')+'/',direct.replace('www.mercedes-benz-mena.com','evil.test')+'/']){
+  const calls=[];
+  const read=createMarketDetailReader({sleep:async()=>{},fetchImpl:async u=>{calls.push(u);if(u.endsWith('/robots.txt'))return new Response('User-agent: *\nAllow: /');if(u===direct)return new Response(null,{status:301,headers:{location:target}});return new Response('same dealer advertisement');}});
+  if(target===direct+'/')assert.equal(await read(marketCandidate(direct)),'same dealer advertisement');
+  else {await assert.rejects(read(marketCandidate(direct)),/unsafe-source-redirect/);assert.equal(calls.length,2);}
+ }
+});
+
+test('dealer URL-less Offer requires a unique matching breadcrumb and cannot borrow another car',async()=>{
+ const {parseMarketDetail}=await import('../lib/ai-market-discovery-trial.js');
+ const url='https://www.mercedes-benz-mena.com/ksa/en/buy-used/21715788-mercedes-benz-eqa-250/';
+ const car={'@type':'Car',name:'Mercedes-Benz EQA 250',brand:'Mercedes-Benz',model:'EQA 250',modelDate:'2024',itemCondition:'Used',mileageFromOdometer:'11000'};
+ const offer={'@type':'Offer',price:'130000',priceCurrency:'SAR',itemOffered:car};
+ const crumb={'@type':'BreadcrumbList',itemListElement:[{item:{'@id':url.replace('/buy-used/','/buy-used/vehicle/'),name:car.name}}]};
+ const parse=graph=>parseMarketDetail(marketCandidate(url),`<script type="application/ld+json">${JSON.stringify({'@graph':graph})}</script>`).records;
+ const accepted=parse([offer,crumb]);assert.equal(accepted.length,1);assert.equal(accepted[0].price,130000);assert.equal(accepted[0].mileage,11000);assert.equal(accepted[0].condition,'used');
+ for(const graph of [[offer],[offer,offer,crumb],[{...offer,priceCurrency:'USD'},crumb],[{...offer,itemOffered:{...car,url:url.replace('21715788','99999999')}},crumb],[offer,JSON.parse(JSON.stringify(crumb).replace('21715788','99999999'))],[offer,JSON.parse(JSON.stringify(crumb).replace(car.name,'Mercedes-Benz GLC'))]])assert.equal(parse(graph).length,0);
+});
+
 test('session can scope discovery to under-covered connected sources without enabling new hosts',async()=>{
  let payload;await discoverMarketWithAI('Toyota Corolla',[],{sourceIds:['haraj','syarah','dubizzle'],env:{OPENAI_API_KEY:'test'},fetchImpl:async(u,o)=>{payload=JSON.parse(o.body);return new Response(JSON.stringify({status:'completed',output:[]}));}});
  assert.deepEqual(payload.tools[0].filters.allowed_domains,['haraj.com.sa','syarah.com']);

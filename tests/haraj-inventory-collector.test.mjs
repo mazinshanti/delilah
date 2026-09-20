@@ -7,7 +7,7 @@ const candidate={url,title:'تويوتا كامري 2020',city:'Riyadh',conditio
 const html=(description='سيارة مستعملة للبيع الممشى 50000 كم',overrides={})=>`<script type="application/ld+json">${JSON.stringify({'@type':'Car',url,name:'تويوتا كامري 2020',description,...overrides})}</script>`;
 const card=(id='11188891344',title=candidate.title)=>`<a href="/${id}/toyota">${title}</a><div>الرياض</div>`;
 const structured=(changes={})=>{
- const table=[],encode=value=>{const i=table.length;table.push(null);if(value&&typeof value==='object'){const object={};for(const [k,v]of Object.entries(value))object['_'+encode(k)]=encode(v);table[i]=object;}else table[i]=value;return i;};
+ const table=[],encode=value=>{const i=table.length;table.push(null);if(Array.isArray(value)){table[i]=value.map(encode);}else if(value&&typeof value==='object'){const object={};for(const [k,v]of Object.entries(value))object['_'+encode(k)]=encode(v);table[i]=object;}else table[i]=value;return i;};
  encode({URL:'11188891344/toyota',title:'Toyota Corolla',carInfo:{model:2013,condition:'USED',carOrRelated:'CAR',sellOrWaiver:'SELL'},...changes});
  return `<script>window.__reactRouterContext.streamController.enqueue(${JSON.stringify(JSON.stringify(table))});</script>`;
 };
@@ -108,4 +108,18 @@ test('multi-trim dealer advertisements do not assign one asking price to all tri
   const r=harajDetailRecord(candidate,html('سيارة جديدة للبيع السعر 249550 ريال',{name}));assert.ok(r);assert.equal(r.price,null);assert.equal(r.priceVerified,false);
  }
  assert.equal(harajDetailRecord(candidate,html('سيارة مستعملة للبيع السعر 60000 ريال')).price,60000);
+});
+test('exact structured price requires agreeing numeric fields and excludes financing and multi-trim offers',()=>{
+ const run=(price,description=' ',name='Toyota Corolla')=>harajDetailRecord(candidate,html(description,{name})+structured({title:name,price}));
+ assert.equal(run({inputPrice:'59000',formattedPrice:'59,000'}).price,59000);
+ for(const price of [{inputPrice:'59000',formattedPrice:'69,000'},{inputPrice:'900',formattedPrice:'900'},{inputPrice:'59000 monthly',formattedPrice:'59,000'}])assert.equal(run(price).price,null);
+ assert.equal(run({inputPrice:'59000',formattedPrice:'59,000'},'تمويل أقساط شهرية').price,null);
+ assert.equal(run({inputPrice:'59000',formattedPrice:'59,000'},'السعر 65000 ريال').price,null);
+ assert.equal(run({inputPrice:'59000',formattedPrice:'59,000'},' ','Toyota Corolla جميع الفئات').price,null);
+});
+
+test('exact-ad gallery preserves observed originals and excludes foreign or thumbnail routes',()=>{
+ const original='https://img4cdn.haraj.com.sa/userfiles30/2026-05-19/900x900-car.jpg';
+ const r=harajDetailRecord(candidate,html(' ',{name:'Toyota Corolla'})+structured({imagesList:[original,'https://evil.test/car.jpg','https://haraj.com.sa/thumb/car.jpg']}));
+ assert.equal(r.image,original);assert.ok(r.images.includes(original));assert.ok(!r.images.some(u=>u.includes('evil.test')||u.includes('/thumb/')));
 });

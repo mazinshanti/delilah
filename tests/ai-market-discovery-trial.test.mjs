@@ -184,3 +184,10 @@ test('fast category emits a validated car while a different source page is still
  assert.equal(early,true);assert.equal(r.accepted,1);assert.equal(r.checked,1);
  }finally{clearTimeout(timer);release();}
 });
+
+test('observed Haraj search pages expand only into exact detail candidates',()=>{
+ const page=marketDiscoveryPage('https://haraj.com.sa/en/search/Toyota%20Corolla/');
+ assert.ok(page);assert.equal(marketCandidate(page.url),null);
+ assert.deepEqual(detailLinksFromDiscoveryPage('<a href="/en/12345678901/Toyota/">car</a><a href="/tags/Corolla/">tag</a><a href="https://evil.test/12345678901/">foreign</a>',page),['https://haraj.com.sa/12345678901/']);
+ for(const u of ['https://haraj.com.sa/pic/Corolla/','https://haraj.com.sa/tags/Corolla/','https://haraj.com.sa/search/a/b/'])assert.equal(marketDiscoveryPage(u),null);
+});

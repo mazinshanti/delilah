@@ -103,3 +103,9 @@ test('detail budget and cursor bound work; existing fast lane retains its 24-car
  const r=await collectHarajInventory({queries:['Toyota','BMW'],maxDetails:1,sleep:async()=>{},get:async u=>u.endsWith('/robots.txt')?'User-agent: *\nAllow: /':u.includes('/search/')?cards:html('',{url:u})});
  assert.equal(r.diagnostics.detailAttempts,1);assert.equal(r.diagnostics.nextCursor,1);assert.equal(r.diagnostics.coverageComplete,false);
 });
+test('multi-trim dealer advertisements do not assign one asking price to all trims',()=>{
+ for(const name of ['نيسان باترول بفئات متعددة موديل 2026','تويوتا كورولا 2026 جميع الفئات','تويوتا كورولا 2026 جميع الفائات']){
+  const r=harajDetailRecord(candidate,html('سيارة جديدة للبيع السعر 249550 ريال',{name}));assert.ok(r);assert.equal(r.price,null);assert.equal(r.priceVerified,false);
+ }
+ assert.equal(harajDetailRecord(candidate,html('سيارة مستعملة للبيع السعر 60000 ريال')).price,60000);
+});

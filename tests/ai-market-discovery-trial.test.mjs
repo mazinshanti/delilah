@@ -171,3 +171,16 @@ test('bounded source pagination follows only observed next-page links and keeps 
  const r=await runAdaptiveMarketDiscovery({query:'Corolla',condition:'used',filters:{}},{excludedMakes:[]},{maxRounds:1,maxPages:2,maxDetails:4,discover:async()=>({status:'completed',urls:[],discoveryPages:[page]}),readDetail:async c=>c.url===page?`<a href="${ad1}">car</a><a href="?page=2">next</a>`:c.url===next?`<a href="${ad2}">car</a><a href="?page=3">next</a>`:schema(c.url)});
  assert.equal(r.accepted,2);assert.equal(r.discoveryPages.length,2);assert.deepEqual(r.pendingDiscoveryPages,[page+'?page=3']);assert.equal(r.coverageComplete,false);
 });
+test('fast category emits a validated car while a different source page is still pending',async()=>{
+ const fast='https://syarah.com/en/autos/toyota/corolla',slow='https://ksa.carswitch.com/en/saudi/used-cars/toyota/corolla',ad='https://syarah.com/en/cardetail/toyota-corolla-123';
+ let release,slowFinished=false,early=false;
+ const held=new Promise(r=>release=r),timer=setTimeout(()=>release(),1000);
+ try{
+ const r=await runAdaptiveMarketDiscovery({query:'Corolla',condition:'used',filters:{}},{excludedMakes:[]},{maxRounds:1,maxPages:2,maxDetails:1,discover:async()=>({status:'completed',urls:[],discoveryPages:[fast,slow]}),readDetail:async c=>{
+  if(c.url===slow){await held;slowFinished=true;return '';}
+  if(c.url===fast)return `<a href="${ad}">car</a>`;
+  return `<script type="application/ld+json">${JSON.stringify({'@type':'Car',url:ad,name:'Toyota Corolla 2020',brand:'Toyota',model:'Corolla',vehicleModelDate:2020,itemCondition:'UsedCondition',offers:{price:60000}})}</script>`;
+ },onProgress:e=>{if(e.status==='accepted'){early=!slowFinished;release();}}});
+ assert.equal(early,true);assert.equal(r.accepted,1);assert.equal(r.checked,1);
+ }finally{clearTimeout(timer);release();}
+});

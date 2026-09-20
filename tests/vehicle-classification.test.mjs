@@ -46,3 +46,10 @@ test('explicit model filter rejects text-only mentions',()=>{
 });
 
 test('animal words in legitimate model/trim names do not become animal sales',()=>{assert.equal(classifyVehicle(car({make:'Ford',model:'Mustang',title:'Ford Mustang Dark Horse 2022'})).classification,'VEHICLE_FOR_SALE');assert.equal(classifyVehicle(car({title:'horse for sale'})).classification,'NON_AUTOMOTIVE');});
+test('standalone luxury sedan demand description is not a wanted ad; real requests remain excluded',()=>{
+ const description='مرسيدس موديل 2024\nسيدان فاخرة مطلوبة | دفع رباعي | شكل الجيل الجديد';
+ assert.equal(classifyVehicle(car({description})).classification,'VEHICLE_FOR_SALE');
+ for(const extra of ['\nمطلوب كامري','\nابحث عن سيارة','\nwant to buy Toyota'])assert.equal(classifyVehicle(car({description:description+extra})).classification,'WANTED_VEHICLE');
+ for(const description of ['سيدان مطلوبة','سيارة مطلوبة للشراء','مطلوب سيارة فاخرة','ابحث عن سيدان فاخرة مطلوبة'])assert.equal(classifyVehicle(car({description})).classification,'WANTED_VEHICLE');
+ assert.equal(classifyVehicle(car({title:'مطلوب Toyota Camry',description})).classification,'WANTED_VEHICLE');
+});

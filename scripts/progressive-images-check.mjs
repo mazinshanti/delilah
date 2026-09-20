@@ -21,12 +21,35 @@ try {
    if(route.request().url().endsWith('/car.png'))imageRequests++;
    return route.fulfill({contentType:'image/png',body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=','base64')});
   });
-  await page.route('**/api/inventory?**',route=>route.fulfill({json:{listings:[]}}));
+  let releaseNewHome;
+  const newHomeGate=new Promise(resolve=>{releaseNewHome=resolve;});
+  const newCar={...car,url:'https://syarah.com/cardetail/toyota-camry-new-123456',condition:'new',mileage:0};
+  await page.route('**/api/inventory?**',async route=>{
+   const params=new URL(route.request().url()).searchParams;
+   if(params.has('q'))return route.fulfill({json:{listings:[]}});
+   if(params.get('condition')==='new'){await newHomeGate;return route.fulfill({json:{listings:[newCar]}});}
+   return route.fulfill({json:{listings:[car]}});
+  });
   await page.route('**/api/search',route=>route.fulfill({json:{listings:[car],searchId:'qa-progress',complete:false}}));
   await page.route('**/api/search/progress/qa-progress',route=>route.fulfill({json:{listings:phase===0?[car]:[{...car,price:88000},second],complete:phase===2,partial}}));
   await page.goto(base);
   assert.equal(await page.locator('#searchProgress').isVisible(),false,'bar must be hidden before search');
   if(language==='en')await page.locator('#languageToggle').click();
+  await page.locator('#grid .card').first().waitFor();
+  await page.locator('#newTab').click();
+  assert.equal(await page.locator('#newTab').getAttribute('aria-pressed'),'true');
+  assert.equal(await page.locator('#grid .card').count(),0,'New tab must not retain Used cards while loading');
+  await page.locator('#usedTab').click();
+  await page.locator('#grid .card').first().waitFor();
+  releaseNewHome();
+  await page.waitForTimeout(200);
+  assert.match(await page.locator('#grid [data-vehicle]').first().getAttribute('data-vehicle'),/haraj/,'late New response must not replace Used');
+  await page.locator('#newTab').click();
+  await page.waitForFunction(()=>document.querySelector('#grid [data-vehicle]')?.dataset.vehicle.includes('syarah'));
+  assert.match(await page.locator('#grid .facts').innerText(),language==='ar'?/جديدة/:/New/);
+  await page.locator('#usedTab').click();
+  await page.waitForFunction(()=>document.querySelector('#grid [data-vehicle]')?.dataset.vehicle.includes('haraj'));
+  imageRequests=0;
   await page.locator('#q').fill(language==='ar'?'تويوتا كامري 2023':'Toyota Camry 2023');
   await page.locator('#ask').click();
   await page.locator('#grid .photo img').first().waitFor();

@@ -1,3 +1,4 @@
+import {waitForSearchProgress} from './lib/search-progress-wait.js';
 import {naturalSearch} from './public/natural-search.js';
 import {createIntentEngine,intentSearchBody,applyIntentConstraints,needsAI} from './lib/ai-search-intent.js';
 import express from 'express';
@@ -299,7 +300,7 @@ function startJob(body={},meta={}){
   return job;
 }
 
-async function advanceFull(job){
+async function refreshFull(job){
   if(!job.fullPromise)kickFull(job);
   if(!job.fullData&&!job.fullDone)await Promise.race([job.fullPromise,sleep(60)]);
   if(!job.fullData)return;
@@ -311,6 +312,8 @@ async function advanceFull(job){
     if(response.ok){job.fullData={...job.fullData,...data};job.upstreamId=data?.searchId||job.upstreamId||upstream;kickSyarahPriceEnrichment(job);}
   }catch(error){job.progressError=error?.message||String(error);}
 }
+
+async function advanceFull(job){return waitForSearchProgress(job,refreshFull);}
 
 function isBroad(body={}){const q=String(body.query||'').trim();return !q||q==='__all_cars__';}
 

@@ -1,0 +1,52 @@
+{
+  "synthetic": true,
+  "productionInventoryUnchanged": true,
+  "requestedRecords": 10000,
+  "indexedRecords": 10000,
+  "loadMs": 1282,
+  "heapMB": 157,
+  "results": [
+    {
+      "query": "Toyota Corolla",
+      "condition": "used",
+      "count": 107,
+      "coldMs": 20,
+      "repeatMs": 0
+    },
+    {
+      "query": "تويوتا كورولا",
+      "condition": "used",
+      "count": 107,
+      "coldMs": 14,
+      "repeatMs": 0
+    },
+    {
+      "query": "BMW X5",
+      "condition": "used",
+      "count": 13,
+      "coldMs": 3,
+      "repeatMs": 0
+    },
+    {
+      "query": "GAC GS3",
+      "condition": "new",
+      "count": 2,
+      "coldMs": 3,
+      "repeatMs": 0
+    },
+    {
+      "query": "",
+      "condition": "new",
+      "count": 1215,
+      "coldMs": 225,
+      "repeatMs": 0
+    },
+    {
+      "query": "__all_cars__",
+      "condition": "used",
+      "count": 5264,
+      "coldMs": 753,
+      "repeatMs": 2
+    }
+  ]
+}

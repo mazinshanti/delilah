@@ -20,7 +20,7 @@ const onCheckpoint=c=>{const source=sources.find(s=>s.id===c.sourceId),base=resu
 const started=Date.now();
 const result=await collectAdditionalStock({sources,state,previousListings,onCheckpoint,previousDiagnostics:snapshot.diagnostics,fetchImpl:curlFetch,maxDetails:process.env.ADDITIONAL_MARKET_DETAILS,maxPages:process.env.ADDITIONAL_MARKET_PAGES,maxSitemaps:process.env.ADDITIONAL_MARKET_SITEMAPS,maxDurationMs:process.env.ADDITIONAL_MARKET_DURATION_MS,onProgress:d=>{if(d.detailAttempts%20===0)console.log(JSON.stringify({source:d.source,checked:d.detailAttempts,accepted:d.records,known:d.knownUrls,pending:d.pending}));}});
 const listings=mergeAdditionalSnapshot(previousListings,result.listings,result.removedUrls,sources);
-const report={target:50000,recoveredCheckpointListings:resumed.reduce((n,c)=>n+(c.listings||[]).length,0),newlyValidated:result.listings.length,removed:result.removedUrls.length,stored:listings.length,fresh:listings.filter(c=>Date.now()-Date.parse(c.lastSeenAt)<36*3600000).length,durationMs:Date.now()-started,diagnostics:result.diagnostics};
+const report={target:10000,longTermTarget:50000,recoveredCheckpointListings:resumed.reduce((n,c)=>n+(c.listings||[]).length,0),newlyValidated:result.listings.length,removed:result.removedUrls.length,stored:listings.length,fresh:listings.filter(c=>Date.now()-Date.parse(c.lastSeenAt)<36*3600000).length,durationMs:Date.now()-started,diagnostics:result.diagnostics};
 await mkdir('audit',{recursive:true});await writeFile('audit/stock-expansion.json',JSON.stringify(report,null,2));
 await writeFile('audit/stock-expansion-records.json',JSON.stringify(result.listings));
 await writeFile('audit/stock-expansion-state.json.gz',gzipSync(JSON.stringify({...state,...result.state})));

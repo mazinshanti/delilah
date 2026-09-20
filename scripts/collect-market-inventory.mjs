@@ -37,4 +37,4 @@ diagnostics.push(haraj.diagnostics);
 if(!diagnostics.some(d=>d.records>0))throw new Error('No source successfully refreshed; preserving previous snapshot');
 await writeFile('data/market-inventory.json.gz',gzipSync(JSON.stringify({generatedAt:new Date().toISOString(),listings:filterVehicleSaleListings([...all.values()].map(c=>normalizeInventoryListing(c,{recordMetrics:true}))),diagnostics})));
 await writeFile('data/stock-crawl-state.json.gz',gzipSync(JSON.stringify(crawlState)));
-console.log(JSON.stringify({target:50000,totalUnique:all.size,diagnostics}));
+console.log(JSON.stringify({target:10000,longTermTarget:50000,totalUnique:all.size,diagnostics}));

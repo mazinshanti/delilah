@@ -23,12 +23,13 @@ try {
   });
   let releaseNewHome;
   const newHomeGate=new Promise(resolve=>{releaseNewHome=resolve;});
-  const newCar={...car,url:'https://syarah.com/cardetail/toyota-camry-new-123456',condition:'new',mileage:0};
+  const homeCar={...car,image:'https://qa-images.example/home.png'};
+  const newCar={...homeCar,url:'https://syarah.com/cardetail/toyota-camry-new-123456',condition:'new',mileage:0};
   await page.route('**/api/inventory?**',async route=>{
    const params=new URL(route.request().url()).searchParams;
    if(params.has('q'))return route.fulfill({json:{listings:[]}});
    if(params.get('condition')==='new'){await newHomeGate;return route.fulfill({json:{listings:[newCar]}});}
-   return route.fulfill({json:{listings:[car]}});
+   return route.fulfill({json:{listings:[homeCar]}});
   });
   await page.route('**/api/search',route=>route.fulfill({json:{listings:[car],searchId:'qa-progress',complete:false}}));
   await page.route('**/api/search/progress/qa-progress',route=>route.fulfill({json:{listings:phase===0?[car]:[{...car,price:88000},second],complete:phase===2,partial}}));

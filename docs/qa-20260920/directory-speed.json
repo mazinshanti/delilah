@@ -1,0 +1,81 @@
+{
+  "firstSample": {
+    "mode": "live-source-no-ai",
+    "cold": {
+      "firstResultMs": 50043,
+      "totalMs": 87702,
+      "accepted": 5,
+      "checked": 6,
+      "results": [
+        {
+          "url": "https://syarah.com/en/cardetail/toyota-corolla-used-317363",
+          "source": "Syarah",
+          "status": "source-fetch-failed"
+        },
+        {
+          "url": "https://syarah.com/en/cardetail/toyota-corolla-used-317091",
+          "source": "Syarah",
+          "status": "accepted"
+        },
+        {
+          "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316935",
+          "source": "Syarah",
+          "status": "accepted"
+        },
+        {
+          "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316865",
+          "source": "Syarah",
+          "status": "accepted"
+        },
+        {
+          "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316454",
+          "source": "Syarah",
+          "status": "accepted"
+        },
+        {
+          "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316290",
+          "source": "Syarah",
+          "status": "accepted"
+        }
+      ]
+    },
+    "warm": {
+      "firstResultMs": 3,
+      "totalMs": 5,
+      "cachedAccepted": 5
+    },
+    "coverageComplete": false
+  },
+  "threePageSample": {
+    "mode": "live-source-no-ai-three-pages",
+    "firstResultMs": 24764,
+    "totalMs": 26766,
+    "accepted": 3,
+    "checked": 3,
+    "results": [
+      {
+        "url": "https://haraj.com.sa/11188951118/",
+        "source": "Haraj",
+        "status": "accepted"
+      },
+      {
+        "url": "https://syarah.com/en/cardetail/toyota-corolla-used-317363",
+        "source": "Syarah",
+        "status": "accepted"
+      },
+      {
+        "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2022/864159",
+        "source": "CarSwitch Saudi",
+        "status": "accepted"
+      }
+    ],
+    "pending": 54,
+    "readPages": [
+      "https://syarah.com/en/autos/toyota/corolla",
+      "https://haraj.com.sa/search/Toyota%20Corolla/",
+      "https://ksa.carswitch.com/en/saudi/used-cars/toyota/corolla"
+    ],
+    "coverageComplete": false
+  },
+  "productionDeployed": false
+}

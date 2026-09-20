@@ -39,3 +39,28 @@ test('checkpoint precedes source reading and unused detail work survives exhaust
  const resumed=await runDirectoryMarketSession(body,intent,{previous:r,taskBudget:0,detailBudget:1,discover:async()=>{throw Error('no discovery on resume');},readDetail:async()=>html});
  assert.equal(resumed.accepted,1);assert.equal(resumed.pendingUrls.length,0);
 });
+test('seed results arrive while AI discovery is still waiting',async()=>{
+ let release;const blocked=new Promise(r=>release=r);let acceptedBeforeDiscovery=false,finished=false;
+ const page='https://ksa.carswitch.com/en/saudi/used-cars/toyota/corolla';
+ const r=await runDirectoryMarketSession(body,intent,{taskBudget:1,detailBudget:1,seedPages:[page],discover:async()=>{await blocked;finished=true;return {status:'completed',leads:[]};},readDetail:async c=>c.discoveryPage?`<a href="${url}">car</a>`:html,onProgress:e=>{if(e.listing){acceptedBeforeDiscovery=!finished;release();}}});
+ assert.equal(acceptedBeforeDiscovery,true);assert.equal(r.accepted,1);
+});
+test('temporary source failure retries on resume but a rejected ad or access denial does not',async()=>{
+ for(const status of ['HTTP 503','HTTP 403','query-filter-rejected']){
+  let reads=0;const request=status==='query-filter-rejected'?{...body,filters:{maxPrice:50000}}:body;
+  const r=await runDirectoryMarketSession(request,intent,{taskBudget:1,detailBudget:1,discover:async()=>({status:'completed',leads:[{url}]}),readDetail:async()=>{reads++;if(status==='query-filter-rejected')return html;throw Error(status);}});
+  const resumed=await runDirectoryMarketSession(request,intent,{previous:r,taskBudget:0,detailBudget:1,readDetail:async()=>{reads++;return html;}});
+  assert.equal(reads,status==='HTTP 503'?2:1);assert.equal(resumed.accepted,status==='HTTP 503'?1:0);
+ }
+});
+test('temporary failures have a bounded cross-session retry count',async()=>{
+ let previous=null,reads=0;
+ for(let n=0;n<5;n++)previous=await runDirectoryMarketSession(body,intent,{previous,taskBudget:n?0:1,detailBudget:1,discover:async()=>({status:'completed',leads:[{url}]}),readDetail:async()=>{reads++;throw Error('HTTP 502');}});
+ assert.equal(reads,3);assert.equal(previous.accepted,0);
+});
+test('validated warm results are emitted and returned without renewing source checks',async()=>{
+ const first=await runDirectoryMarketSession(body,intent,{taskBudget:1,detailBudget:1,discover:async()=>({status:'completed',leads:[{url}]}),readDetail:async()=>html});
+ const events=[];const warm=await runDirectoryMarketSession(body,intent,{taskBudget:0,detailBudget:0,cachedListings:first.listings,onProgress:e=>events.push(e)});
+ assert.equal(warm.accepted,1);assert.equal(warm.cachedAccepted,1);assert.equal(warm.results.length,0);assert.equal(events[0].origin,'validated-cache');
+ const filtered=await runDirectoryMarketSession({...body,filters:{maxPrice:50000}},intent,{taskBudget:0,detailBudget:0,cachedListings:first.listings});assert.equal(filtered.accepted,0);
+});

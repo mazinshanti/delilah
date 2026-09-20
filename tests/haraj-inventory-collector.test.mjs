@@ -60,6 +60,10 @@ test('Arabic year digits remain searchable as the numeric model year',()=>{
  assert.equal(harajDetailRecord(candidate,html(undefined,{name:'تويوتا كامري ٢٠٢٠'})).year,2020);
 });
 test('explicit model-year detail labels work without guessing from arbitrary description years',()=>{
+ assert.equal(harajDetailRecord(candidate,html('سيارة مستعملة للبيع &ndash; موديل 2020',{name:'تويوتا كامري'})).year,2020);
+ assert.equal(harajDetailRecord(candidate,html('سيارة مستعملة للبيع — model year: 2020',{name:'Toyota Camry'})).year,2020);
+ assert.equal(harajDetailRecord(candidate,html('سيارة مستعملة للبيع &ndash; صيانة 2020',{name:'تويوتا كامري'})),null);
+ assert.equal(harajDetailRecord(candidate,html('سيارة مستعملة للبيع &ndash; موديل 2021')),null);
  assert.equal(harajDetailRecord(candidate,html('سيارة مستعملة للبيع\nالموديل: ٢٠٢٠',{name:'تويوتا كامري'})).year,2020);
  assert.equal(harajDetailRecord(candidate,html('سيارة مستعملة للبيع صيانة 2020',{name:'تويوتا كامري'})),null);
  assert.equal(harajDetailRecord(candidate,html('سيارة مستعملة للبيع\nالموديل: 2021')),null);

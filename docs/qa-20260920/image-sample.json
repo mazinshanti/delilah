@@ -1,0 +1,58 @@
+[
+  {
+    "source": "CarSwitch Saudi",
+    "url": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/863cfa03-2413-41eb-8f6e-d7d5f23b7f64",
+    "status": "decoded",
+    "width": 1215,
+    "height": 546
+  },
+  {
+    "source": "CarSwitch Saudi",
+    "url": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/f30404fc-0db5-48a8-94c0-c58a8f9acd6b",
+    "status": "decoded",
+    "width": 1215,
+    "height": 911
+  },
+  {
+    "source": "Syarah",
+    "url": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/317363/orignal-317363-1-1789830759.jpg?v=3",
+    "status": "decoded",
+    "width": 911,
+    "height": 683
+  },
+  {
+    "source": "Syarah",
+    "url": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/317091/orignal-317091-1-1789576211.jpg?v=3",
+    "status": "decoded",
+    "width": 911,
+    "height": 683
+  },
+  {
+    "source": "Haraj",
+    "url": "https://mimg6cdn.haraj.com.sa/userfiles30/2026-9-19/768x1024-1_-zqTzcHOWdwKm9a.jpg",
+    "status": "decoded",
+    "width": 768,
+    "height": 1024
+  },
+  {
+    "source": "Haraj",
+    "url": "https://mimg6cdn.haraj.com.sa/userfiles30/2026-9-19/594x1024-1_-5CVZZQEDUquaQ4.jpg",
+    "status": "decoded",
+    "width": 594,
+    "height": 1024
+  },
+  {
+    "source": "Mercedes-Benz Saudi",
+    "url": "https://s3-eu-west-1.amazonaws.com/nd-stock-ireland-production/ndstock/images/stock/79ad96bc39bfeb740c2d805599100ca1fd57a644/NDS21715788_J095526_1.png?last_modified=1789565693",
+    "status": "decoded",
+    "width": 1536,
+    "height": 1024
+  },
+  {
+    "source": "Mercedes-Benz Saudi",
+    "url": "https://s3-eu-west-1.amazonaws.com/nd-stock-ireland-production/ndstock/images/stock/79ad96bc39bfeb740c2d805599100ca1fd57a644/NDS20834065_J065270_2.jpg?last_modified=1779364672",
+    "status": "decoded",
+    "width": 1401,
+    "height": 934
+  }
+]

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {AI_MARKET_SOURCES,marketCandidate,marketToolUrls,createMarketDetailReader,runAdaptiveMarketDiscovery,discoverMarketWithAI,marketDiscoveryPage,detailLinksFromDiscoveryPage} from '../lib/ai-market-discovery-trial.js';
+import {AI_MARKET_SOURCES,marketDiscoveryFallback,marketCandidate,marketToolUrls,createMarketDetailReader,runAdaptiveMarketDiscovery,discoverMarketWithAI,marketDiscoveryPage,detailLinksFromDiscoveryPage} from '../lib/ai-market-discovery-trial.js';
 const url='https://haraj.com.sa/12345678901/';
 const html=`<script type="application/ld+json">${JSON.stringify({'@type':'Car',url,name:'تويوتا كورولا 2020',description:'سيارة مستعملة للبيع الممشى 50000 كم السعر 60000 ريال'})}</script>`;
 test('registry restricts discovery to connected sources and exact trusted detail routes',()=>{
@@ -190,4 +190,40 @@ test('observed Haraj search pages expand only into exact detail candidates',()=>
  assert.ok(page);assert.equal(marketCandidate(page.url),null);
  assert.deepEqual(detailLinksFromDiscoveryPage('<a href="/en/12345678901/Toyota/">car</a><a href="/tags/Corolla/">tag</a><a href="https://evil.test/12345678901/">foreign</a>',page),['https://haraj.com.sa/12345678901/']);
  for(const u of ['https://haraj.com.sa/pic/Corolla/','https://haraj.com.sa/tags/Corolla/','https://haraj.com.sa/search/a/b/'])assert.equal(marketDiscoveryPage(u),null);
+});
+test('official OfferCatalog links expand without treating category records as verified cars',()=>{
+ const page=marketDiscoveryPage('https://www.mercedes-benz-mena.com/ksa/en/buy-used/');
+ const url='https://www.mercedes-benz-mena.com/ksa/en/buy-used/21715788-mercedes-benz-eqa-250/';
+ const json={'@type':'OfferCatalog',itemListElement:[{url},{url},{url:'https://evil.test/ksa/en/buy-used/21715788-mercedes-benz-eqa-250/'},{url:'https://www.mercedes-benz-mena.com/qatar/en/models/'}]};
+ assert.deepEqual(detailLinksFromDiscoveryPage(`<script type="application/ld+json">${JSON.stringify(json)}</script>`,page),[url]);
+ assert.equal(marketCandidate(page.url),null);
+});
+test('empty source responses are transport failures rather than missing vehicle evidence',async()=>{
+ const read=createMarketDetailReader({sleep:async()=>{},fetchImpl:async u=>new Response(u.endsWith('/robots.txt')?'User-agent: *\nAllow: /':'',{status:200})});
+ const r=await runAdaptiveMarketDiscovery({query:'Toyota Corolla',condition:'all',filters:{}},{excludedMakes:[]},{maxRounds:1,readDetail:read,discover:async()=>({status:'completed',urls:[url],webSearchCalls:0})});
+ assert.equal(r.results[0].status,'empty-source-response');assert.equal(r.accepted,0);
+});
+
+test('missing source model categories can fall back to the same make without changing intent',async()=>{
+ const page=marketDiscoveryPage('https://syarah.com/en/autos/bmw/x5');
+ assert.equal(marketDiscoveryFallback(page).url,'https://syarah.com/en/autos/bmw');
+ assert.equal(marketDiscoveryFallback(marketDiscoveryPage('https://syarah.com/en/autos/bmw')),null);
+ const calls=[];const r=await runAdaptiveMarketDiscovery({query:'BMW X5',condition:'all',filters:{}},{excludedMakes:[]},{maxRounds:1,maxPages:2,maxDetails:2,discover:async()=>({status:'completed',urls:[],discoveryPages:[page.url]}),readDetail:async c=>{calls.push(c.url);if(c.url===page.url)throw Error('HTTP 410');return '<html></html>';}});
+ assert.deepEqual(calls,[page.url,'https://syarah.com/en/autos/bmw']);assert.equal(r.accepted,0);
+});
+test('discovery reserves a check for a fallback instead of spending everything on the first source',async()=>{
+ const hp='https://haraj.com.sa/search/Toyota/',sp='https://syarah.com/en/autos/toyota/corolla';
+ const su='https://syarah.com/en/cardetail/toyota-corolla-used-12345';const calls=[];
+ const r=await runAdaptiveMarketDiscovery({query:'Toyota Corolla',condition:'used',filters:{}},{excludedMakes:[]},{maxRounds:1,maxPages:3,maxDetails:3,discover:async()=>({status:'completed',urls:[],discoveryPages:[hp,sp]}),readDetail:async c=>{
+  calls.push(c.url);if(c.url===sp)throw Error('HTTP 410');
+  if(c.url===hp)return [12345678901,12345678902,12345678903].map(id=>`<a href="https://haraj.com.sa/${id}/">car</a>`).join('');
+  if(c.discoveryPage)return `<a href="${su}">car</a>`;
+  return `<script type="application/ld+json">${JSON.stringify({'@type':'Car',url:c.url,name:'Toyota Corolla 2020',description:'Used car for sale mileage 50000 km price 60000 SAR',brand:'Toyota',model:'Corolla',vehicleModelDate:2020,itemCondition:'UsedCondition',offers:{price:60000}})}</script>`;
+ }});
+ assert.ok(calls.includes(su));assert.equal(r.checked,3);assert.ok(r.results.some(x=>x.source==='Syarah'&&x.status==='accepted'));
+});
+test('explicitly off-query source URLs cannot consume checks ahead of unknown or matching candidates',async()=>{
+ const wrong='https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2022/12345';
+ const calls=[];const r=await runAdaptiveMarketDiscovery({query:'Porsche 911',condition:'all',filters:{}},{excludedMakes:[]},{maxRounds:1,maxDetails:1,discover:async()=>({status:'completed',urls:[wrong,url]}),readDetail:async c=>{calls.push(c.url);return '';}});
+ assert.deepEqual(calls,[url]);assert.ok(r.pendingUrls.includes(wrong));assert.equal(r.accepted,0);
 });

@@ -1,0 +1,199 @@
+{
+  "coverageComplete": false,
+  "uniqueDiscovered": 425,
+  "uniqueChecked": 174,
+  "uniqueAccepted": 95,
+  "cases": [
+    {
+      "query": "Toyota Corolla",
+      "discovered": 57,
+      "checked": 18,
+      "accepted": 15,
+      "firstResultMs": 38234,
+      "totalMs": 107028,
+      "warmLookupMs": 6.49835599999642
+    },
+    {
+      "query": "كورولا",
+      "discovered": 57,
+      "checked": 18,
+      "accepted": 15,
+      "firstResultMs": 37819,
+      "totalMs": 92727,
+      "warmLookupMs": 8.4117129999795
+    },
+    {
+      "query": "Hyundai Elantra",
+      "discovered": 57,
+      "checked": 18,
+      "accepted": 17,
+      "firstResultMs": 20721,
+      "totalMs": 76894,
+      "warmLookupMs": 10.201583000016399
+    },
+    {
+      "query": "Nissan Patrol",
+      "discovered": 57,
+      "checked": 18,
+      "accepted": 10,
+      "firstResultMs": 18493,
+      "totalMs": 79427,
+      "warmLookupMs": 14.059522000025027
+    },
+    {
+      "query": "BMW X5",
+      "discovered": 21,
+      "checked": 18,
+      "accepted": 13,
+      "firstResultMs": 20147,
+      "totalMs": 234651,
+      "warmLookupMs": 23.476586999953724
+    },
+    {
+      "query": "Mercedes C-Class",
+      "discovered": 39,
+      "checked": 18,
+      "accepted": 1,
+      "firstResultMs": 113737,
+      "totalMs": 117716,
+      "warmLookupMs": 22.480520000099204
+    },
+    {
+      "query": "Ford F-150",
+      "discovered": 21,
+      "checked": 18,
+      "accepted": 7,
+      "firstResultMs": 22348,
+      "totalMs": 221382,
+      "warmLookupMs": 18.335104000056162
+    },
+    {
+      "query": "Porsche 911",
+      "discovered": 51,
+      "checked": 18,
+      "accepted": 2,
+      "firstResultMs": 20393,
+      "totalMs": 93834,
+      "warmLookupMs": 10.137956000049599
+    },
+    {
+      "query": "MG ZS",
+      "discovered": 38,
+      "checked": 18,
+      "accepted": 14,
+      "firstResultMs": 22431,
+      "totalMs": 89894,
+      "warmLookupMs": 15.624031000072137
+    },
+    {
+      "query": "dealer inventory sample",
+      "discovered": 39,
+      "checked": 12,
+      "accepted": 0,
+      "firstResultMs": null,
+      "totalMs": 150769
+    },
+    {
+      "query": "dealer inventory sample",
+      "discovered": 24,
+      "checked": 12,
+      "accepted": 11,
+      "firstResultMs": 32897,
+      "totalMs": 177924
+    }
+  ],
+  "sourceTotals": [
+    {
+      "source": "Haraj",
+      "checked": 81,
+      "checkAttempts": 81,
+      "validParsedVehicles": 41,
+      "accepted": 41,
+      "withImage": 41,
+      "withPrice": 16,
+      "withMileage": 20,
+      "withKnownCondition": 41,
+      "attemptOutcomes": {
+        "vehicle_boundary": 16,
+        "accepted": 41,
+        "unknown_condition": 6,
+        "missing_title_year": 14,
+        "source-fetch-failed": 3,
+        "sold": 1
+      }
+    },
+    {
+      "source": "Syarah",
+      "checked": 30,
+      "checkAttempts": 36,
+      "validParsedVehicles": 29,
+      "accepted": 24,
+      "withImage": 24,
+      "withPrice": 24,
+      "withMileage": 22,
+      "withKnownCondition": 24,
+      "attemptOutcomes": {
+        "accepted": 29,
+        "source-fetch-failed": 2,
+        "query-filter-rejected": 5
+      }
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "checked": 39,
+      "checkAttempts": 45,
+      "validParsedVehicles": 33,
+      "accepted": 19,
+      "withImage": 19,
+      "withPrice": 19,
+      "withMileage": 19,
+      "withKnownCondition": 19,
+      "attemptOutcomes": {
+        "accepted": 24,
+        "source-fetch-failed": 2,
+        "no-exact-vehicle-evidence": 5,
+        "query-filter-rejected": 14
+      }
+    },
+    {
+      "source": "Saudi Sale",
+      "checked": 12,
+      "checkAttempts": 12,
+      "validParsedVehicles": 0,
+      "accepted": 0,
+      "withImage": 0,
+      "withPrice": 0,
+      "withMileage": 0,
+      "withKnownCondition": 0,
+      "attemptOutcomes": {
+        "no-exact-vehicle-evidence": 12
+      }
+    },
+    {
+      "source": "Mercedes-Benz Saudi",
+      "checked": 12,
+      "checkAttempts": 12,
+      "validParsedVehicles": 11,
+      "accepted": 11,
+      "withImage": 11,
+      "withPrice": 11,
+      "withMileage": 11,
+      "withKnownCondition": 11,
+      "attemptOutcomes": {
+        "accepted": 11,
+        "source-fetch-failed": 1
+      }
+    }
+  ],
+  "limitations": [
+    "Read-only local source sample, not a production UI benchmark.",
+    "Warm lookup excludes network, AI intent and UI rendering.",
+    "Discovered links and accepted listings are distinct counts.",
+    "Sources and requests were bounded; complete Saudi-market coverage is not claimed."
+  ],
+  "inputs": [
+    "direct-source sample: nine query cases",
+    "Saudi Sale and Mercedes root sample before OfferCatalog fix",
+    "Mercedes-only recheck after OfferCatalog fix"
+  ]
+}

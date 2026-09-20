@@ -1,4 +1,5 @@
 // Read-only benchmark. Does not write to production inventory or enable sources.
+import {createSeededDiscovery} from '../lib/market-discovery-seeds.js';
 import {createMarketSessionCache} from '../lib/market-session-cache.js';
 import {readFile,writeFile} from 'node:fs/promises';
 import {runAdaptiveMarketDiscovery,discoverMarketWithAI,createMarketDetailReader,marketListingKey,AI_MARKET_SOURCES} from '../lib/ai-market-discovery-trial.js';
@@ -17,15 +18,16 @@ const validated=createMarketSessionCache(),cachePath=output+'.validated-cache.js
 try{validated.restore(JSON.parse(await readFile(cachePath,'utf8')));}catch(e){if(e.code!=='ENOENT')throw e;}
 const engine=createIntentEngine(),read=createMarketDetailReader(),cache=new Map();let cacheHits=0,cacheBytes=0;
 const readDetail=async c=>{const cacheKey=marketListingKey(c.url)||c.url;if(cache.has(cacheKey)){cacheHits++;return cache.get(cacheKey);}const html=await read(c),bytes=Buffer.byteLength(html);while(cache.size&&cacheBytes+bytes>20_000_000){const key=cache.keys().next().value;cacheBytes-=Buffer.byteLength(cache.get(key));cache.delete(key);}if(bytes<=20_000_000){cache.set(cacheKey,html);cacheBytes+=bytes;}return html;};
-const started=Date.now(),report={mode:'live-ai-multi-brand-session',startedAt:new Date().toISOString(),limits:{cases:cases.length,maxRoundsPerCase:2,maxDetailsPerCase:24,maxProviderToolCalls:48},coverageComplete:false,cases:[],sourcesOutsideTrial:SOURCE_REGISTRY.filter(s=>!AI_MARKET_SOURCES.some(a=>a.id===s.id)).map(({name,status,reason})=>({name,status,reason,tested:false}))};
+const started=Date.now(),report={mode:'live-ai-multi-brand-session',startedAt:new Date().toISOString(),limits:{cases:cases.length,maxRoundsPerCase:3,seedRoundsPerCase:1,maxDetailsPerCase:24,maxProviderToolCalls:48},coverageComplete:false,cases:[],sourcesOutsideTrial:SOURCE_REGISTRY.filter(s=>!AI_MARKET_SOURCES.some(a=>a.id===s.id)).map(({name,status,reason})=>({name,status,reason,tested:false}))};
 const unique=new Map(),checked=new Set(),discovered=new Set();
 for(const [query,segment]of cases){
  const start=Date.now(),understanding=await engine.understand(query);
  if(understanding.fallbackReason&&!understanding.safeFallback){report.cases.push({query,segment,status:'unsafe-intent-fallback',accepted:0});await writeFile(output,JSON.stringify(report,null,2));continue;}
  const body=intentSearchBody({query,condition:'all',filters:{}},understanding);body.discoveryQuery=query;
  let discoveryRound=0;
- const discover=(q,feedback)=>discoverMarketWithAI(q,feedback,{sourceIds:discoveryRound++===0?['haraj','syarah']:['carswitch','saudisale',...(understanding.intent.make==='Mercedes'?['mercedes']:[])]});
- const r=await runAdaptiveMarketDiscovery(body,understanding.intent,{discover,readDetail,cachedListings:validated.get(body,understanding.intent),maxRounds:2,maxDetails:24,onProgress:e=>{
+ const providerDiscover=(q,feedback)=>discoverMarketWithAI(q,feedback,{sourceIds:discoveryRound++===0?['haraj','syarah']:['carswitch','saudisale',...(understanding.intent.make==='Mercedes'?['mercedes']:[])]});
+ const discover=createSeededDiscovery(query,providerDiscover);
+ const r=await runAdaptiveMarketDiscovery(body,understanding.intent,{discover,readDetail,cachedListings:validated.get(body,understanding.intent),maxRounds:3,maxDetails:24,onProgress:e=>{
   if(e.listing)console.log(JSON.stringify({stage:'accepted',query,origin:e.origin||'source-fetch',source:e.source,url:e.url,title:e.listing.title,price:e.listing.price,mileage:e.listing.mileage}));
   else if(e.stage==='discovery-diagnostics')console.log(JSON.stringify({query,...e}));
  }});

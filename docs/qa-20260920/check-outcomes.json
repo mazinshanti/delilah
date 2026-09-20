@@ -1,0 +1,1118 @@
+[
+  {
+    "query": "Toyota Corolla",
+    "url": "https://haraj.com.sa/11188890751/",
+    "source": "Haraj",
+    "status": "vehicle_boundary"
+  },
+  {
+    "query": "Toyota Corolla",
+    "url": "https://syarah.com/en/cardetail/toyota-corolla-used-317363",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "Toyota Corolla",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2022/864159",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "Toyota Corolla",
+    "url": "https://haraj.com.sa/11188881316/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Toyota Corolla",
+    "url": "https://syarah.com/en/cardetail/toyota-corolla-used-317091",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "Toyota Corolla",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2021/834075",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "Toyota Corolla",
+    "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316935",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "Toyota Corolla",
+    "url": "https://haraj.com.sa/11188877605/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Toyota Corolla",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2025/870659",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "Toyota Corolla",
+    "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316454",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "Toyota Corolla",
+    "url": "https://haraj.com.sa/11188860626/",
+    "source": "Haraj",
+    "status": "unknown_condition"
+  },
+  {
+    "query": "Toyota Corolla",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2025/826758",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "Toyota Corolla",
+    "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316290",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "Toyota Corolla",
+    "url": "https://haraj.com.sa/11188863500/",
+    "source": "Haraj",
+    "status": "missing_title_year"
+  },
+  {
+    "query": "Toyota Corolla",
+    "url": "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2024/810630",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "Toyota Corolla",
+    "url": "https://syarah.com/en/cardetail/toyota-corolla-used-315547",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "Toyota Corolla",
+    "url": "https://haraj.com.sa/11188853913/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Toyota Corolla",
+    "url": "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2022/873160",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "كورولا",
+    "url": "https://syarah.com/en/cardetail/toyota-corolla-used-317363",
+    "source": "Syarah",
+    "status": "source-fetch-failed"
+  },
+  {
+    "query": "كورولا",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2022/864159",
+    "source": "CarSwitch Saudi",
+    "status": "source-fetch-failed"
+  },
+  {
+    "query": "كورولا",
+    "url": "https://haraj.com.sa/11188943081/",
+    "source": "Haraj",
+    "status": "source-fetch-failed"
+  },
+  {
+    "query": "كورولا",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2021/834075",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "كورولا",
+    "url": "https://syarah.com/en/cardetail/toyota-corolla-used-317091",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "كورولا",
+    "url": "https://haraj.com.sa/11188940366/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "كورولا",
+    "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316935",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "كورولا",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2025/870659",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "كورولا",
+    "url": "https://haraj.com.sa/11188941406/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "كورولا",
+    "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316454",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "كورولا",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2025/826758",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "كورولا",
+    "url": "https://haraj.com.sa/11188942266/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "كورولا",
+    "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316290",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "كورولا",
+    "url": "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2024/810630",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "كورولا",
+    "url": "https://syarah.com/en/cardetail/toyota-corolla-used-315547",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "كورولا",
+    "url": "https://haraj.com.sa/11188942444/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "كورولا",
+    "url": "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2022/873160",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "كورولا",
+    "url": "https://haraj.com.sa/11188943234/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Hyundai Elantra",
+    "url": "https://haraj.com.sa/11188941181/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Hyundai Elantra",
+    "url": "https://syarah.com/en/cardetail/hyundai-elantra-used-316973",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "Hyundai Elantra",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/hyundai/elantra/2019/858687",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "Hyundai Elantra",
+    "url": "https://syarah.com/en/cardetail/hyundai-elantra-used-316771",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "Hyundai Elantra",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/hyundai/elantra/2018/815609",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "Hyundai Elantra",
+    "url": "https://haraj.com.sa/11188920224/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Hyundai Elantra",
+    "url": "https://haraj.com.sa/11188906314/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Hyundai Elantra",
+    "url": "https://syarah.com/en/cardetail/hyundai-elantra-used-316306",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "Hyundai Elantra",
+    "url": "https://ksa.carswitch.com/en/jeddah/used-car/hyundai/elantra/2024/873732",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "Hyundai Elantra",
+    "url": "https://haraj.com.sa/11188887099/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Hyundai Elantra",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/hyundai/elantra/2016/874939",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "Hyundai Elantra",
+    "url": "https://syarah.com/en/cardetail/hyundai-elantra-used-316264",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "Hyundai Elantra",
+    "url": "https://syarah.com/en/cardetail/hyundai-elantra-used-316135",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "Hyundai Elantra",
+    "url": "https://haraj.com.sa/11188872222/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Hyundai Elantra",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/hyundai/elantra/2016/872189",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "Hyundai Elantra",
+    "url": "https://syarah.com/en/cardetail/hyundai-elantra-used-316131",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "Hyundai Elantra",
+    "url": "https://haraj.com.sa/11188803914/",
+    "source": "Haraj",
+    "status": "unknown_condition"
+  },
+  {
+    "query": "Hyundai Elantra",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/hyundai/elantra/2016/878733",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "Nissan Patrol",
+    "url": "https://syarah.com/en/cardetail/nissan-patrol-used-315285",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "Nissan Patrol",
+    "url": "https://haraj.com.sa/11188750580/",
+    "source": "Haraj",
+    "status": "missing_title_year"
+  },
+  {
+    "query": "Nissan Patrol",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/nissan/patrol/2023/863671",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "Nissan Patrol",
+    "url": "https://ksa.carswitch.com/en/jeddah/used-car/nissan/patrol/2024/872124",
+    "source": "CarSwitch Saudi",
+    "status": "no-exact-vehicle-evidence"
+  },
+  {
+    "query": "Nissan Patrol",
+    "url": "https://haraj.com.sa/11188732794/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Nissan Patrol",
+    "url": "https://syarah.com/en/cardetail/nissan-patrol-used-314125",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "Nissan Patrol",
+    "url": "https://haraj.com.sa/11188524700/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Nissan Patrol",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/nissan/patrol/2021/863210",
+    "source": "CarSwitch Saudi",
+    "status": "no-exact-vehicle-evidence"
+  },
+  {
+    "query": "Nissan Patrol",
+    "url": "https://syarah.com/en/cardetail/nissan-patrol-used-313625",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "Nissan Patrol",
+    "url": "https://haraj.com.sa/11188709325/",
+    "source": "Haraj",
+    "status": "vehicle_boundary"
+  },
+  {
+    "query": "Nissan Patrol",
+    "url": "https://syarah.com/en/cardetail/nissan-patrol-used-313615",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "Nissan Patrol",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/nissan/patrol/2018/819783",
+    "source": "CarSwitch Saudi",
+    "status": "no-exact-vehicle-evidence"
+  },
+  {
+    "query": "Nissan Patrol",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/nissan/patrol/2024/828373",
+    "source": "CarSwitch Saudi",
+    "status": "no-exact-vehicle-evidence"
+  },
+  {
+    "query": "Nissan Patrol",
+    "url": "https://haraj.com.sa/11188515228/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Nissan Patrol",
+    "url": "https://syarah.com/en/cardetail/nissan-patrol-used-311993",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "Nissan Patrol",
+    "url": "https://syarah.com/en/cardetail/nissan-patrol-used-310647",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "Nissan Patrol",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/nissan/patrol/2025/869130",
+    "source": "CarSwitch Saudi",
+    "status": "no-exact-vehicle-evidence"
+  },
+  {
+    "query": "Nissan Patrol",
+    "url": "https://haraj.com.sa/11176172687/",
+    "source": "Haraj",
+    "status": "missing_title_year"
+  },
+  {
+    "query": "BMW X5",
+    "url": "https://haraj.com.sa/11188930752/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "BMW X5",
+    "url": "https://haraj.com.sa/11188922372/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "BMW X5",
+    "url": "https://haraj.com.sa/11188894259/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "BMW X5",
+    "url": "https://haraj.com.sa/11188891913/",
+    "source": "Haraj",
+    "status": "missing_title_year"
+  },
+  {
+    "query": "BMW X5",
+    "url": "https://haraj.com.sa/11188890970/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "BMW X5",
+    "url": "https://haraj.com.sa/11188907598/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "BMW X5",
+    "url": "https://haraj.com.sa/11188876605/",
+    "source": "Haraj",
+    "status": "unknown_condition"
+  },
+  {
+    "query": "BMW X5",
+    "url": "https://haraj.com.sa/11188895978/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "BMW X5",
+    "url": "https://haraj.com.sa/11188860631/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "BMW X5",
+    "url": "https://haraj.com.sa/11188858517/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "BMW X5",
+    "url": "https://haraj.com.sa/11188834353/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "BMW X5",
+    "url": "https://haraj.com.sa/11187012574/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "BMW X5",
+    "url": "https://haraj.com.sa/11167921998/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "BMW X5",
+    "url": "https://haraj.com.sa/11188823214/",
+    "source": "Haraj",
+    "status": "source-fetch-failed"
+  },
+  {
+    "query": "BMW X5",
+    "url": "https://haraj.com.sa/11186062830/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "BMW X5",
+    "url": "https://haraj.com.sa/11181379025/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "BMW X5",
+    "url": "https://haraj.com.sa/11188941643/",
+    "source": "Haraj",
+    "status": "unknown_condition"
+  },
+  {
+    "query": "BMW X5",
+    "url": "https://haraj.com.sa/11188779076/",
+    "source": "Haraj",
+    "status": "vehicle_boundary"
+  },
+  {
+    "query": "Mercedes C-Class",
+    "url": "https://haraj.com.sa/11188926138/",
+    "source": "Haraj",
+    "status": "missing_title_year"
+  },
+  {
+    "query": "Mercedes C-Class",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/mercedes/c200/2025/849350",
+    "source": "CarSwitch Saudi",
+    "status": "query-filter-rejected"
+  },
+  {
+    "query": "Mercedes C-Class",
+    "url": "https://haraj.com.sa/11173753752/",
+    "source": "Haraj",
+    "status": "vehicle_boundary"
+  },
+  {
+    "query": "Mercedes C-Class",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/mercedes/c200/2024/875648",
+    "source": "CarSwitch Saudi",
+    "status": "query-filter-rejected"
+  },
+  {
+    "query": "Mercedes C-Class",
+    "url": "https://haraj.com.sa/11186907002/",
+    "source": "Haraj",
+    "status": "missing_title_year"
+  },
+  {
+    "query": "Mercedes C-Class",
+    "url": "https://ksa.carswitch.com/en/dammam/used-car/mercedes/c200/2020/849164",
+    "source": "CarSwitch Saudi",
+    "status": "query-filter-rejected"
+  },
+  {
+    "query": "Mercedes C-Class",
+    "url": "https://haraj.com.sa/11188543955/",
+    "source": "Haraj",
+    "status": "vehicle_boundary"
+  },
+  {
+    "query": "Mercedes C-Class",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/mercedes/c200/2019/865392",
+    "source": "CarSwitch Saudi",
+    "status": "query-filter-rejected"
+  },
+  {
+    "query": "Mercedes C-Class",
+    "url": "https://haraj.com.sa/11173244491/",
+    "source": "Haraj",
+    "status": "vehicle_boundary"
+  },
+  {
+    "query": "Mercedes C-Class",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/mercedes/c180/2022/857995",
+    "source": "CarSwitch Saudi",
+    "status": "query-filter-rejected"
+  },
+  {
+    "query": "Mercedes C-Class",
+    "url": "https://haraj.com.sa/11186962960/",
+    "source": "Haraj",
+    "status": "vehicle_boundary"
+  },
+  {
+    "query": "Mercedes C-Class",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/mercedes/c200/2017/859082",
+    "source": "CarSwitch Saudi",
+    "status": "query-filter-rejected"
+  },
+  {
+    "query": "Mercedes C-Class",
+    "url": "https://haraj.com.sa/11175939105/",
+    "source": "Haraj",
+    "status": "vehicle_boundary"
+  },
+  {
+    "query": "Mercedes C-Class",
+    "url": "https://ksa.carswitch.com/en/jeddah/used-car/mercedes/c200/2024/867199",
+    "source": "CarSwitch Saudi",
+    "status": "query-filter-rejected"
+  },
+  {
+    "query": "Mercedes C-Class",
+    "url": "https://haraj.com.sa/11176337980/",
+    "source": "Haraj",
+    "status": "missing_title_year"
+  },
+  {
+    "query": "Mercedes C-Class",
+    "url": "https://ksa.carswitch.com/en/jeddah/used-car/mercedes/c200/2025/773032",
+    "source": "CarSwitch Saudi",
+    "status": "query-filter-rejected"
+  },
+  {
+    "query": "Mercedes C-Class",
+    "url": "https://haraj.com.sa/11186404950/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Mercedes C-Class",
+    "url": "https://ksa.carswitch.com/en/dammam/used-car/mercedes/c200/2023/864153",
+    "source": "CarSwitch Saudi",
+    "status": "query-filter-rejected"
+  },
+  {
+    "query": "Ford F-150",
+    "url": "https://haraj.com.sa/11188938613/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Ford F-150",
+    "url": "https://haraj.com.sa/11188919815/",
+    "source": "Haraj",
+    "status": "vehicle_boundary"
+  },
+  {
+    "query": "Ford F-150",
+    "url": "https://haraj.com.sa/11178153145/",
+    "source": "Haraj",
+    "status": "vehicle_boundary"
+  },
+  {
+    "query": "Ford F-150",
+    "url": "https://haraj.com.sa/11188816847/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Ford F-150",
+    "url": "https://haraj.com.sa/11188738802/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Ford F-150",
+    "url": "https://haraj.com.sa/11188703695/",
+    "source": "Haraj",
+    "status": "missing_title_year"
+  },
+  {
+    "query": "Ford F-150",
+    "url": "https://haraj.com.sa/11188896260/",
+    "source": "Haraj",
+    "status": "vehicle_boundary"
+  },
+  {
+    "query": "Ford F-150",
+    "url": "https://haraj.com.sa/11188479369/",
+    "source": "Haraj",
+    "status": "missing_title_year"
+  },
+  {
+    "query": "Ford F-150",
+    "url": "https://haraj.com.sa/11188619794/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Ford F-150",
+    "url": "https://haraj.com.sa/11188532918/",
+    "source": "Haraj",
+    "status": "unknown_condition"
+  },
+  {
+    "query": "Ford F-150",
+    "url": "https://haraj.com.sa/11188212746/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Ford F-150",
+    "url": "https://haraj.com.sa/11188009002/",
+    "source": "Haraj",
+    "status": "vehicle_boundary"
+  },
+  {
+    "query": "Ford F-150",
+    "url": "https://haraj.com.sa/11188142140/",
+    "source": "Haraj",
+    "status": "sold"
+  },
+  {
+    "query": "Ford F-150",
+    "url": "https://haraj.com.sa/11188186379/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Ford F-150",
+    "url": "https://haraj.com.sa/11188821056/",
+    "source": "Haraj",
+    "status": "missing_title_year"
+  },
+  {
+    "query": "Ford F-150",
+    "url": "https://haraj.com.sa/1186193418/",
+    "source": "Haraj",
+    "status": "unknown_condition"
+  },
+  {
+    "query": "Ford F-150",
+    "url": "https://haraj.com.sa/11188456951/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Ford F-150",
+    "url": "https://haraj.com.sa/11177514551/",
+    "source": "Haraj",
+    "status": "missing_title_year"
+  },
+  {
+    "query": "Porsche 911",
+    "url": "https://haraj.com.sa/11188943574/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Porsche 911",
+    "url": "https://syarah.com/en/cardetail/porsche-macan-used-316322",
+    "source": "Syarah",
+    "status": "query-filter-rejected"
+  },
+  {
+    "query": "Porsche 911",
+    "url": "https://ksa.carswitch.com/en/jeddah/used-car/porsche/911-carrera/2026/865339",
+    "source": "CarSwitch Saudi",
+    "status": "query-filter-rejected"
+  },
+  {
+    "query": "Porsche 911",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/porsche/911-carrera/2015/868159",
+    "source": "CarSwitch Saudi",
+    "status": "query-filter-rejected"
+  },
+  {
+    "query": "Porsche 911",
+    "url": "https://syarah.com/en/cardetail/porsche-cayenne-used-309622",
+    "source": "Syarah",
+    "status": "query-filter-rejected"
+  },
+  {
+    "query": "Porsche 911",
+    "url": "https://haraj.com.sa/11188901123/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "Porsche 911",
+    "url": "https://syarah.com/en/cardetail/porsche-cayenne-used-307725",
+    "source": "Syarah",
+    "status": "source-fetch-failed"
+  },
+  {
+    "query": "Porsche 911",
+    "url": "https://haraj.com.sa/11188872171/",
+    "source": "Haraj",
+    "status": "source-fetch-failed"
+  },
+  {
+    "query": "Porsche 911",
+    "url": "https://ksa.carswitch.com/en/al-khobar/used-car/bmw/650/2013/875638",
+    "source": "CarSwitch Saudi",
+    "status": "source-fetch-failed"
+  },
+  {
+    "query": "Porsche 911",
+    "url": "https://syarah.com/en/cardetail/porsche-cayenne-used-304807",
+    "source": "Syarah",
+    "status": "query-filter-rejected"
+  },
+  {
+    "query": "Porsche 911",
+    "url": "https://haraj.com.sa/11188861481/",
+    "source": "Haraj",
+    "status": "missing_title_year"
+  },
+  {
+    "query": "Porsche 911",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/ford/mustang/2024/874631",
+    "source": "CarSwitch Saudi",
+    "status": "query-filter-rejected"
+  },
+  {
+    "query": "Porsche 911",
+    "url": "https://syarah.com/en/cardetail/porsche-macan-used-310462",
+    "source": "Syarah",
+    "status": "query-filter-rejected"
+  },
+  {
+    "query": "Porsche 911",
+    "url": "https://ksa.carswitch.com/en/jeddah/used-car/chevrolet/camaro/2022/829314",
+    "source": "CarSwitch Saudi",
+    "status": "query-filter-rejected"
+  },
+  {
+    "query": "Porsche 911",
+    "url": "https://haraj.com.sa/11188540546/",
+    "source": "Haraj",
+    "status": "missing_title_year"
+  },
+  {
+    "query": "Porsche 911",
+    "url": "https://syarah.com/en/cardetail/porsche-cayenne-used-308133",
+    "source": "Syarah",
+    "status": "query-filter-rejected"
+  },
+  {
+    "query": "Porsche 911",
+    "url": "https://haraj.com.sa/11188834471/",
+    "source": "Haraj",
+    "status": "vehicle_boundary"
+  },
+  {
+    "query": "Porsche 911",
+    "url": "https://ksa.carswitch.com/en/jeddah/used-car/bmw/m240/2023/866467",
+    "source": "CarSwitch Saudi",
+    "status": "query-filter-rejected"
+  },
+  {
+    "query": "MG ZS",
+    "url": "https://haraj.com.sa/11188939980/",
+    "source": "Haraj",
+    "status": "vehicle_boundary"
+  },
+  {
+    "query": "MG ZS",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/mg/zs/2022/836455",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "MG ZS",
+    "url": "https://syarah.com/en/cardetail/mg-zs-used-315089",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "MG ZS",
+    "url": "https://haraj.com.sa/11188932609/",
+    "source": "Haraj",
+    "status": "vehicle_boundary"
+  },
+  {
+    "query": "MG ZS",
+    "url": "https://syarah.com/en/cardetail/mg-zs-used-314571",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "MG ZS",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/mg/zs/2024/800342",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "MG ZS",
+    "url": "https://syarah.com/en/cardetail/mg-zs-used-311855",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "MG ZS",
+    "url": "https://haraj.com.sa/11188925890/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "MG ZS",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/mg/zs/2021/863241",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "MG ZS",
+    "url": "https://syarah.com/en/cardetail/mg-zs-new-312890",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "MG ZS",
+    "url": "https://haraj.com.sa/11188911551/",
+    "source": "Haraj",
+    "status": "vehicle_boundary"
+  },
+  {
+    "query": "MG ZS",
+    "url": "https://ksa.carswitch.com/en/jeddah/used-car/mg/zs/2019/853550",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "MG ZS",
+    "url": "https://haraj.com.sa/11188908472/",
+    "source": "Haraj",
+    "status": "missing_title_year"
+  },
+  {
+    "query": "MG ZS",
+    "url": "https://syarah.com/en/cardetail/mg-zs-new-312889",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "MG ZS",
+    "url": "https://ksa.carswitch.com/en/jeddah/used-car/mg/zs/2022/792623",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "MG ZS",
+    "url": "https://syarah.com/en/cardetail/mg-zs-used-311465",
+    "source": "Syarah",
+    "status": "accepted"
+  },
+  {
+    "query": "MG ZS",
+    "url": "https://haraj.com.sa/11188887743/",
+    "source": "Haraj",
+    "status": "accepted"
+  },
+  {
+    "query": "MG ZS",
+    "url": "https://ksa.carswitch.com/en/riyadh/used-car/mg/zs/2021/846330",
+    "source": "CarSwitch Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://cars.saudisale.com/en/listings/yb924G/2023-jeep-grand-cherokee-limited-blus",
+    "source": "Saudi Sale",
+    "status": "no-exact-vehicle-evidence"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://cars.saudisale.com/en/listings/2NTe1z/2024-bmw-x-series-1",
+    "source": "Saudi Sale",
+    "status": "no-exact-vehicle-evidence"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://cars.saudisale.com/en/listings/25g97o/2024-ford-expedition-xlt",
+    "source": "Saudi Sale",
+    "status": "no-exact-vehicle-evidence"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://cars.saudisale.com/en/listings/597q8a/2027-bmw-x-series-2",
+    "source": "Saudi Sale",
+    "status": "no-exact-vehicle-evidence"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://cars.saudisale.com/en/listings/peGg3Y/2022-audi-a7-55-tfsi",
+    "source": "Saudi Sale",
+    "status": "no-exact-vehicle-evidence"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://cars.saudisale.com/en/listings/I0OZ6b/2019-bmw-x-series-5-m-kit",
+    "source": "Saudi Sale",
+    "status": "no-exact-vehicle-evidence"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://cars.saudisale.com/en/listings/4G7B6j/2017-chevrolet-silverado",
+    "source": "Saudi Sale",
+    "status": "no-exact-vehicle-evidence"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://cars.saudisale.com/en/listings/3Q381u/2019-nissan-patrol-le",
+    "source": "Saudi Sale",
+    "status": "no-exact-vehicle-evidence"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://cars.saudisale.com/en/listings/ReV0sy/2024-cfmoto-zforce-1000",
+    "source": "Saudi Sale",
+    "status": "no-exact-vehicle-evidence"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://cars.saudisale.com/en/listings/aAb03n/2026-mercedes-benz-g-63-amg",
+    "source": "Saudi Sale",
+    "status": "no-exact-vehicle-evidence"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://cars.saudisale.com/en/listings/bYNcpI/2024-mercedes-benz-e-200",
+    "source": "Saudi Sale",
+    "status": "no-exact-vehicle-evidence"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://cars.saudisale.com/en/listings/OnDe1E/2024-porsche-macan",
+    "source": "Saudi Sale",
+    "status": "no-exact-vehicle-evidence"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/21715788-mercedes-benz-eqa-250/",
+    "source": "Mercedes-Benz Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/20834065-mercedes-benz-eqa-350/",
+    "source": "Mercedes-Benz Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/21232216-mercedes-benz-eqa-350/",
+    "source": "Mercedes-Benz Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/21352849-mercedes-benz-eqa-350/",
+    "source": "Mercedes-Benz Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/21452948-mercedes-benz-a-200-hatchback/",
+    "source": "Mercedes-Benz Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/21715558-mercedes-benz-a-200-hatchback/",
+    "source": "Mercedes-Benz Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/20835879-mercedes-benz-a-200-hatchback/",
+    "source": "Mercedes-Benz Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/20628419-mercedes-benz-a-200/",
+    "source": "Mercedes-Benz Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/21239200-mercedes-benz-a-200/",
+    "source": "Mercedes-Benz Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/21239285-mercedes-benz-a-200/",
+    "source": "Mercedes-Benz Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/20658539-mercedes-benz-gla/",
+    "source": "Mercedes-Benz Saudi",
+    "status": "accepted"
+  },
+  {
+    "query": "dealer sample",
+    "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/20832935-mercedes-benz-gla/",
+    "source": "Mercedes-Benz Saudi",
+    "status": "source-fetch-failed"
+  }
+]

@@ -1,3 +1,4 @@
+import {searchProgressState} from './search-progress.js';
 import {naturalSearch} from './natural-search.js';
 import {needsAI} from './search-route.js';
 import {catalogIntent,catalogLabel} from './catalog.js';
@@ -80,7 +81,17 @@ function renderCards(rows){
  wireImages(host);
 }
 function paintChips(){const f=appliedFilters,keys={minPrice:'minPrice',maxPrice:'maxPrice',minYear:'minYear',maxYear:'maxYear',maxMileage:'maxMileage',city:'city',seller:'source',trim:'trim',fuelType:'fuel',category:'bodyType'};$('activeFilters').innerHTML=searchStarted?Object.entries(f).filter(([,v])=>v).map(([k,v])=>`<button data-remove="${k}" aria-label="${esc(t('remove')+' '+t(keys[k]))}">${t(keys[k])}: ${esc(label(v))} ×</button>`).join(''):'';$('activeFilters').querySelectorAll('button').forEach(b=>b.onclick=()=>{const k=b.dataset.remove;$(k==='seller'?'source':k==='fuelType'?'category':k==='category'?'bodyType':k).value='';if(k==='city')$('homeCity').value='';if(k==='maxPrice')$('budget').value='';run(lastQuery);});}
+function renderSearchProgress(){
+ const state=searchProgressState({started:searchStarted,busy,response:lastResponse,count:listings.length,language});
+ $('searchProgress').hidden=state.hidden;
+ $('searchProgress').dataset.state=state.kind;
+ $('searchProgressText').textContent=state.text;
+ const bar=$('searchProgressBar');
+ bar.hidden=state.kind==='partial';
+ if(state.kind==='complete')bar.value=1;else bar.removeAttribute('value');
+}
 function render(){
+ renderSearchProgress();
  const all=searchStarted?listings:homeListings,loading=searchStarted?busy:homeLoading;$('grid').setAttribute('aria-busy',String(loading));$('homeContent').hidden=searchStarted;$('valuationEntry').hidden=searchStarted;document.querySelector('.hero').hidden=searchStarted;document.querySelector('.benefitStrip').hidden=searchStarted;document.querySelector('.heroStage').classList.toggle('search-mode',searchStarted);$('resultEyebrow').hidden=searchStarted;$('resultTitle').textContent=t(searchStarted?'results':'selectedCars');$('sort').hidden=!searchStarted;$('shareSearch').hidden=!searchStarted;$('mobileFilters').hidden=!searchStarted;$('browseGo').hidden=searchStarted;$('ask').querySelector('span').textContent=t(busy?'searching':'search');
  $('sub').textContent=searchStarted?`${num(all.length)} ${t('matches')}${busy?' · '+t('scanning'):lastResponse.partial?' · '+t('partial'):''}${appliedFilters.category?' '+t('bodyHint'):''}`:homeError?t('unavailable'):'';
  if(searchStarted&&lastResponse.intentMode==='ai')$('sub').textContent+=' · '+(language==='ar'?'فهمنا بحثك':'AI understood your search');
@@ -90,7 +101,7 @@ function render(){
 }
 function paintStatus(d={},scanning=false){lastResponse=d;busy=scanning;render();}
 async function json(url,options={},controller=activeController){const r=await fetch(url,{...options,signal:controller?AbortSignal.any([controller.signal,AbortSignal.timeout(20000)]):AbortSignal.timeout(20000)});const d=await r.json();if(!r.ok)throw new Error(d.error||'Search unavailable');return d;}
-async function pollSearch(id,seq){const started=Date.now();let latest={};while(Date.now()-started<95000&&seq===runSeq){await sleep(1500);if(seq!==runSeq)return latest;try{const d=await json(`/api/search/progress/${encodeURIComponent(id)}`);if(seq!==runSeq)return latest;latest=d;mergeListings(d.listings||[]);const done=d.complete===true||d.marketScanComplete===true;paintStatus(d,false);if(done)return d;}catch(e){if(activeController.signal.aborted)return latest;latest={...latest,partial:true};}}return {...latest,partial:true};}
+async function pollSearch(id,seq){const started=Date.now();let latest={};while(Date.now()-started<95000&&seq===runSeq){await sleep(1500);if(seq!==runSeq)return latest;try{const d=await json(`/api/search/progress/${encodeURIComponent(id)}`);if(seq!==runSeq)return latest;latest=d;mergeListings(d.listings||[]);const done=d.complete===true||d.marketScanComplete===true;paintStatus(d,!done);if(done)return d;}catch(e){if(activeController.signal.aborted)return latest;latest={...latest,partial:true};}}return {...latest,partial:true};}
 async function run(override,options={}){
  const query=String(override??buildQuery());const parsed=naturalSearch(query),f={...filters()};if(parsed.condition)setCondition(parsed.condition,false);if(!validRanges(f)){$('sub').textContent=t('invalidRange');$('announcement').textContent=t('invalidRange');return;}
  lastQuery=query;appliedFilters={...f};activeController?.abort();activeController=new AbortController();const seq=++runSeq;busy=true;searchStarted=true;visible=36;listings=[];lastResponse={};render();const params=searchParams(query,condition,f);if(options.updateUrl!==false)history.replaceState(null,'',`/?${params}${location.hash}`);updateSearchMetadata();if(!location.hash&&!options.noScroll)$('discover').scrollIntoView({behavior:'smooth',block:'start'});

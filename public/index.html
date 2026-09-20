@@ -21,7 +21,7 @@
   <script>try{const t=localStorage.getItem('dalelah.theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'),l=localStorage.getItem('dalelah.language')||'ar';document.documentElement.dataset.theme=t;document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';document.querySelector('meta[name="theme-color"]').content=t==='dark'?'#000000':'#ffffff'}catch{}</script>
 
 
-  <link rel="stylesheet" href="/experience.css?v=ux2">
+  <link rel="stylesheet" href="/experience.css?v=progress1">
   <link rel="stylesheet" href="/search-priority.css?v=valuation1">
   <title>دليلة — سيارتك القادمة، أقرب</title>
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","name":"Dalelah","alternateName":"دليلة","url":"https://www.dalelah.co/"},{"@type":"WebSite","name":"Dalelah","url":"https://www.dalelah.co/","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://www.dalelah.co/?q={search_term_string}"},"query-input":"required name=search_term_string"}}]}</script>
@@ -42,6 +42,7 @@
    <form id="searchForm">
     <div class="searchTop"><div class="tabs" role="group" aria-label="حالة السيارة"><button id="usedTab" type="button" aria-pressed="true" class="tab active" data-i18n="used">مستعملة</button><button id="newTab" type="button" aria-pressed="false" class="tab" data-i18n="new">جديدة</button></div><span class="search-note" data-i18n="searchNote">خيارات حقيقية، من مصادر متعددة</span></div>
 <label class="sr-only" for="q" data-i18n="queryLabel">صف السيارة التي تبحث عنها</label><div class="query-row"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg><input list="catalogSuggestions" id="q" aria-label="صف السيارة التي تبحث عنها" placeholder="مثال: أبي جيب عائلي تحت 120 ألف في الرياض" autocomplete="off"></div><div class="hero-submit"><button id="ask" type="submit" class="primary"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg><span data-i18n="search">ابحث في السوق</span></button></div><p class="ai-note" data-i18n="aiNote">بحث ذكي مدعوم بالذكاء الاصطناعي</p><details class="structured-search"><summary data-i18n="chooseFilters">أو حدد الماركة والميزانية والمدينة</summary>    <div class="search-fields"><div class="field"><label for="make" data-i18n="make">الماركة</label><select id="make"></select></div><div class="field"><label for="model" data-i18n="model">الموديل</label><select id="model" disabled></select></div><div class="field"><label for="budget" data-i18n="budget">الميزانية</label><select id="budget"></select></div><div class="field"><label for="homeCity" data-i18n="city">المدينة</label><select id="homeCity"></select></div></div><button id="filterBtn" type="button" class="text-button" data-i18n="allFilters">كل الفلاتر</button></details>   <datalist id="catalogSuggestions"></datalist></form>
+   <div id="searchProgress" class="search-progress" hidden><p id="searchProgressText" role="status" aria-live="polite"></p><progress id="searchProgressBar" max="1" aria-labelledby="searchProgressText"></progress></div>
   </section>
  </div>
  <section id="valuationEntry" class="valuation-entry wrap"><p data-i18n="valuationInvite">عندك سيارة وتبي تعرف قيمتها؟</p><a class="secondary" href="/car-valuation" data-i18n="valueCar">قيّم سيارتك</a></section>
@@ -78,5 +79,5 @@
  <div class="filter-footer"><button id="applyFilters" class="primary" data-i18n="apply">عرض النتائج</button><button id="resetFilters" class="text-button" data-i18n="reset">مسح الفلاتر</button></div>
 </aside>
 <div id="announcement" class="sr-only" role="status" aria-live="polite"></div>
-<script type="module" src="/market-ui.js?v=valuation1"></script>
+<script type="module" src="/market-ui.js?v=progress1"></script>
 </body></html>

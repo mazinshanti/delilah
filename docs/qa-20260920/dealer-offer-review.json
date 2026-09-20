@@ -1,0 +1,442 @@
+{
+  "mode": "dealer-offer-review",
+  "observedAt": "2026-09-20",
+  "uniqueVehicleOffers": 3,
+  "acceptedInventory": 0,
+  "productionDeployed": false,
+  "coverageComplete": false,
+  "results": [
+    {
+      "url": "https://khaledcars.com/ar/car/toyota_corolla_xli_20_standard_with_hubcaps/401",
+      "status": "dealer-offer-review",
+      "acceptedVehicles": 0,
+      "offer": {
+        "source": "Khaled Cars",
+        "sourceListingId": "khaledcars:401",
+        "originalUrl": "https://khaledcars.com/ar/car/toyota_corolla_xli_20_standard_with_hubcaps/401",
+        "title": "تويوتا كورولا XLI 2.0 (ستاندر طيس) 2026",
+        "make": "Toyota",
+        "model": "Corolla",
+        "year": 2026,
+        "condition": "new",
+        "mileage": null,
+        "trim": null,
+        "fuelType": "بنزين",
+        "transmission": "CVT",
+        "bodyType": "sedan",
+        "drivetrain": "دفع امامي",
+        "engineRaw": "2.0 لتر CC",
+        "priceSar": null,
+        "startingPriceSar": 88550,
+        "priceType": "starting",
+        "vatIncluded": null,
+        "availability": "https://schema.org/InStock",
+        "stockVerified": false,
+        "images": [
+          "https://khaledcars.com/admin/images/uploads/41736754067_0523.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_1775.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_2920.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_3391.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_4213.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_5687.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_6998.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_7430.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_8984.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_9280.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_10576.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_11252.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_12345.webp"
+        ],
+        "imageHttpVerified": false,
+        "evidence": [
+          {
+            "field": "identity",
+            "origin": "Car JSON-LD + primary h1 + purchase ID",
+            "value": {
+              "title": "تويوتا كورولا XLI 2.0 (ستاندر طيس) 2026",
+              "id": "401"
+            }
+          },
+          {
+            "field": "year",
+            "origin": "primary specification panel",
+            "value": 2026
+          },
+          {
+            "field": "condition",
+            "origin": "المسافة المقطوعة / Mileage",
+            "value": "جديد"
+          },
+          {
+            "field": "startingPriceSar",
+            "origin": "visible starting-price label + matching SAR Offer",
+            "value": 88550
+          },
+          {
+            "field": "fuelType",
+            "origin": "primary specification panel",
+            "value": "بنزين"
+          },
+          {
+            "field": "transmission",
+            "origin": "primary specification panel",
+            "value": "CVT"
+          },
+          {
+            "field": "bodyType",
+            "origin": "primary specification panel",
+            "value": "sedan"
+          },
+          {
+            "field": "drivetrain",
+            "origin": "primary specification panel",
+            "value": "دفع امامي"
+          },
+          {
+            "field": "engineRaw",
+            "origin": "primary specification panel",
+            "value": "2.0 لتر CC"
+          }
+        ]
+      },
+      "imageSample": {
+        "url": "https://khaledcars.com/admin/images/uploads/41736754067_0523.webp",
+        "status": "decoded",
+        "width": 1600,
+        "height": 900,
+        "format": "webp"
+      },
+      "totalMs": 17020
+    },
+    {
+      "url": "https://khaledcars.com/en/car/toyota_corolla_xli_20_standard_with_hubcaps/401",
+      "status": "dealer-offer-review",
+      "acceptedVehicles": 0,
+      "offer": {
+        "source": "Khaled Cars",
+        "sourceListingId": "khaledcars:401",
+        "originalUrl": "https://khaledcars.com/en/car/toyota_corolla_xli_20_standard_with_hubcaps/401",
+        "title": "Toyota Corolla XLI 2.0 (Standard with Hubcaps) 2026",
+        "make": "Toyota",
+        "model": "Corolla",
+        "year": 2026,
+        "condition": "new",
+        "mileage": null,
+        "trim": null,
+        "fuelType": "بنزين",
+        "transmission": "CVT",
+        "bodyType": "sedan",
+        "drivetrain": "دفع امامي",
+        "engineRaw": "2.0 لتر CC",
+        "priceSar": null,
+        "startingPriceSar": 88550,
+        "priceType": "starting",
+        "vatIncluded": null,
+        "availability": "https://schema.org/InStock",
+        "stockVerified": false,
+        "images": [
+          "https://khaledcars.com/admin/images/uploads/41736754067_0523.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_1775.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_2920.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_3391.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_4213.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_5687.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_6998.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_7430.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_8984.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_9280.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_10576.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_11252.webp",
+          "https://khaledcars.com/admin/images/uploads/41736754067_12345.webp"
+        ],
+        "imageHttpVerified": false,
+        "evidence": [
+          {
+            "field": "identity",
+            "origin": "Car JSON-LD + primary h1 + purchase ID",
+            "value": {
+              "title": "Toyota Corolla XLI 2.0 (Standard with Hubcaps) 2026",
+              "id": "401"
+            }
+          },
+          {
+            "field": "year",
+            "origin": "primary specification panel",
+            "value": 2026
+          },
+          {
+            "field": "condition",
+            "origin": "المسافة المقطوعة / Mileage",
+            "value": "New"
+          },
+          {
+            "field": "startingPriceSar",
+            "origin": "visible starting-price label + matching SAR Offer",
+            "value": 88550
+          },
+          {
+            "field": "fuelType",
+            "origin": "primary specification panel",
+            "value": "بنزين"
+          },
+          {
+            "field": "transmission",
+            "origin": "primary specification panel",
+            "value": "CVT"
+          },
+          {
+            "field": "bodyType",
+            "origin": "primary specification panel",
+            "value": "sedan"
+          },
+          {
+            "field": "drivetrain",
+            "origin": "primary specification panel",
+            "value": "دفع امامي"
+          },
+          {
+            "field": "engineRaw",
+            "origin": "primary specification panel",
+            "value": "2.0 لتر CC"
+          }
+        ]
+      },
+      "imageSample": {
+        "url": "https://khaledcars.com/admin/images/uploads/41736754067_0523.webp",
+        "status": "decoded",
+        "width": 1600,
+        "height": 900,
+        "format": "webp"
+      },
+      "totalMs": 16313
+    },
+    {
+      "url": "https://khaledcars.com/ar/car/hyundai-accent-fleet-15/161",
+      "status": "dealer-offer-review",
+      "acceptedVehicles": 0,
+      "offer": {
+        "source": "Khaled Cars",
+        "sourceListingId": "khaledcars:161",
+        "originalUrl": "https://khaledcars.com/ar/car/hyundai-accent-fleet-15/161",
+        "title": "هيونداي اكسنت فليت 1.5 2026",
+        "make": "Hyundai",
+        "model": "Accent",
+        "year": 2026,
+        "condition": "new",
+        "mileage": null,
+        "trim": null,
+        "fuelType": "بنزين",
+        "transmission": "اتوماتيك",
+        "bodyType": "sedan",
+        "drivetrain": "دفع امامي",
+        "engineRaw": "1.5 لتر CC",
+        "priceSar": null,
+        "startingPriceSar": 64400,
+        "priceType": "starting",
+        "vatIncluded": null,
+        "availability": "https://schema.org/InStock",
+        "stockVerified": false,
+        "images": [
+          "https://khaledcars.com/admin/images/uploads/91732436195_0923.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_1454.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_2778.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_3419.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_4430.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_5349.webp",
+          "https://khaledcars.com/admin/images/uploads/EmdHlbDgR77U04BZK4N5.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_7721.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_8646.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_9405.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_10970.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_11697.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_12127.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_13294.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_14379.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_15606.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_16558.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_17107.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_18767.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_19101.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_20577.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_21322.webp",
+          "https://khaledcars.com/admin/images/uploads/91732436195_22133.webp"
+        ],
+        "imageHttpVerified": false,
+        "evidence": [
+          {
+            "field": "identity",
+            "origin": "Car JSON-LD + primary h1 + purchase ID",
+            "value": {
+              "title": "هيونداي اكسنت فليت 1.5 2026",
+              "id": "161"
+            }
+          },
+          {
+            "field": "year",
+            "origin": "primary specification panel",
+            "value": 2026
+          },
+          {
+            "field": "condition",
+            "origin": "المسافة المقطوعة / Mileage",
+            "value": "جديد"
+          },
+          {
+            "field": "startingPriceSar",
+            "origin": "visible starting-price label + matching SAR Offer",
+            "value": 64400
+          },
+          {
+            "field": "fuelType",
+            "origin": "primary specification panel",
+            "value": "بنزين"
+          },
+          {
+            "field": "transmission",
+            "origin": "primary specification panel",
+            "value": "اتوماتيك"
+          },
+          {
+            "field": "bodyType",
+            "origin": "primary specification panel",
+            "value": "sedan"
+          },
+          {
+            "field": "drivetrain",
+            "origin": "primary specification panel",
+            "value": "دفع امامي"
+          },
+          {
+            "field": "engineRaw",
+            "origin": "primary specification panel",
+            "value": "1.5 لتر CC"
+          }
+        ]
+      },
+      "imageSample": {
+        "url": "https://khaledcars.com/admin/images/uploads/91732436195_0923.webp",
+        "status": "decoded",
+        "width": 1600,
+        "height": 1200,
+        "format": "webp"
+      },
+      "totalMs": 17349
+    },
+    {
+      "url": "https://khaledcars.com/ar/car/kia-k3-gl/1552",
+      "status": "dealer-offer-review",
+      "acceptedVehicles": 0,
+      "offer": {
+        "source": "Khaled Cars",
+        "sourceListingId": "khaledcars:1552",
+        "originalUrl": "https://khaledcars.com/ar/car/kia-k3-gl/1552",
+        "title": "كيا كي 3 جي ال 2025",
+        "make": "Kia",
+        "model": "K3",
+        "year": 2025,
+        "condition": "new",
+        "mileage": null,
+        "trim": null,
+        "fuelType": "بنزين",
+        "transmission": "اتوماتيك",
+        "bodyType": "sedan",
+        "drivetrain": "أمامي (FWD)",
+        "engineRaw": "1.6 لتر CC",
+        "priceSar": null,
+        "startingPriceSar": 70150,
+        "priceType": "starting",
+        "vatIncluded": null,
+        "availability": "https://schema.org/InStock",
+        "stockVerified": false,
+        "images": [
+          "https://khaledcars.com/admin/images/uploads/C9LetrgqR7ZoxMaT3it5.webp",
+          "https://khaledcars.com/admin/images/uploads/mRFHWA45dddIosCcU9eM.webp",
+          "https://khaledcars.com/admin/images/uploads/55IRiRPy64mYMhK5PNTL.webp",
+          "https://khaledcars.com/admin/images/uploads/Alnzw1mS1wJzJIv7uUae.webp",
+          "https://khaledcars.com/admin/images/uploads/KekVneDFkNkeBvvVfUqZ.webp",
+          "https://khaledcars.com/admin/images/uploads/YYfeWmZzUDASXFiP6TQK.webp",
+          "https://khaledcars.com/admin/images/uploads/hmx7wTs7YFfK6xEDPUFS.webp",
+          "https://khaledcars.com/admin/images/uploads/avg8GGsKX1NALRDxHszY.webp",
+          "https://khaledcars.com/admin/images/uploads/WGIdqo4Q2s1otBTusBWW.webp",
+          "https://khaledcars.com/admin/images/uploads/VPrpHrWnfmJGY2xyvX6Y.webp",
+          "https://khaledcars.com/admin/images/uploads/xPeSI0TPVlTOSEs5vqJq.webp",
+          "https://khaledcars.com/admin/images/uploads/hMlVYrPkVljbUdkYTapE.webp",
+          "https://khaledcars.com/admin/images/uploads/ejQH0v4UagkQojBSLn60.webp",
+          "https://khaledcars.com/admin/images/uploads/DDMdf1IEEIhEQLRCK29W.webp"
+        ],
+        "imageHttpVerified": false,
+        "evidence": [
+          {
+            "field": "identity",
+            "origin": "Car JSON-LD + primary h1 + purchase ID",
+            "value": {
+              "title": "كيا كي 3 جي ال 2025",
+              "id": "1552"
+            }
+          },
+          {
+            "field": "year",
+            "origin": "primary specification panel",
+            "value": 2025
+          },
+          {
+            "field": "condition",
+            "origin": "المسافة المقطوعة / Mileage",
+            "value": "جديد"
+          },
+          {
+            "field": "startingPriceSar",
+            "origin": "visible starting-price label + matching SAR Offer",
+            "value": 70150
+          },
+          {
+            "field": "fuelType",
+            "origin": "primary specification panel",
+            "value": "بنزين"
+          },
+          {
+            "field": "transmission",
+            "origin": "primary specification panel",
+            "value": "اتوماتيك"
+          },
+          {
+            "field": "bodyType",
+            "origin": "primary specification panel",
+            "value": "sedan"
+          },
+          {
+            "field": "drivetrain",
+            "origin": "primary specification panel",
+            "value": "أمامي (FWD)"
+          },
+          {
+            "field": "engineRaw",
+            "origin": "primary specification panel",
+            "value": "1.6 لتر CC"
+          }
+        ]
+      },
+      "imageSample": {
+        "url": "https://khaledcars.com/admin/images/uploads/C9LetrgqR7ZoxMaT3it5.webp",
+        "status": "decoded",
+        "width": 960,
+        "height": 438,
+        "format": "webp"
+      },
+      "totalMs": 15852
+    }
+  ],
+  "otherSourceChecks": [
+    {
+      "source": "tj4cars",
+      "httpStatus": 406,
+      "parsed": false
+    }
+  ],
+  "thumbnailSample": {
+    "source": "Khaled Cars",
+    "width": 300,
+    "height": 200,
+    "image": "https://khaledcars.com/admin/images/thumbnail1/poES56NcYRP1ak6VLcvI.webp"
+  }
+}

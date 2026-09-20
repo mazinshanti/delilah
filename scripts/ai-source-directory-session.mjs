@@ -1,6 +1,6 @@
 // Read-only resumable source-by-source web discovery. Never imports inventory.
 import {readFile,writeFile,rename} from 'node:fs/promises';
-import {saudiMarketSearchPlan,prioritizeExternalLead} from '../lib/saudi-market-search-plan.js';
+import {saudiMarketSearchPlan,prioritizeExternalLead,reviewDiscoveryLeads} from '../lib/saudi-market-search-plan.js';
 import {discoverHarajWithAI} from '../lib/ai-web-discovery-trial.js';
 import {marketToolUrls} from '../lib/ai-market-discovery-trial.js';
 const query=process.argv[2]||'Toyota Corolla',output=process.argv[3]||'/tmp/dalelah-source-directory.json';
@@ -17,7 +17,7 @@ for(let n=0;n<budget&&report.nextCursor<plan.length;n++){
  const {urls,externalCandidates,discoveryPages,...diagnostics}=result;
  report.attempts.push({task:task.id,...diagnostics,listingRouteCount:urls?.length||0,categoryCount:discoveryPages?.length||0,externalCount:externalCandidates?.length||0});
  if(result.status==='completed')report.nextCursor++;
- report.leads=[...leads.values()];report.planComplete=report.nextCursor===plan.length;report.updatedAt=new Date().toISOString();
+ report.leads=[...leads.values()];const {leads:reviewedLeads,...reviewSummary}=reviewDiscoveryLeads(report.leads);report.reviewSummary=reviewSummary;report.planComplete=report.nextCursor===plan.length;report.updatedAt=new Date().toISOString();
  await writeFile(output+'.tmp',JSON.stringify(report,null,2));await rename(output+'.tmp',output);
  console.log(JSON.stringify({stage:'source-search-complete',source:task.id,status:result.status,nextCursor:report.nextCursor,totalTargets:plan.length,uniqueLeads:leads.size,planComplete:report.planComplete}));
  if(result.status!=='completed')break;

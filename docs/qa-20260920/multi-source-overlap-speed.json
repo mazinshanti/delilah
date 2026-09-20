@@ -1,0 +1,143 @@
+{
+  "scope": "workspace-live-source-pipeline-not-browser",
+  "checkedAt": "2026-09-20T11:24:41.698Z",
+  "progress": [
+    {
+      "ms": 18957,
+      "source": "Haraj",
+      "status": "accepted",
+      "listing": true
+    },
+    {
+      "ms": 25748,
+      "source": "Syarah",
+      "status": "expanded",
+      "listing": false
+    },
+    {
+      "ms": 33438,
+      "source": "Syarah",
+      "status": "accepted",
+      "listing": true
+    },
+    {
+      "ms": 40709,
+      "source": "Syarah",
+      "status": "accepted",
+      "listing": true
+    }
+  ],
+  "mode": "adaptive-multi-source-trial",
+  "externalCandidates": [],
+  "externalDiscovered": 0,
+  "sources": [
+    "Haraj",
+    "OpenSooq",
+    "Syarah",
+    "CarSwitch Saudi",
+    "Saudi Sale",
+    "Mercedes-Benz Saudi",
+    "Mstaml"
+  ],
+  "webSearchCalls": 0,
+  "cachedAccepted": 0,
+  "discoveryPages": [
+    {
+      "url": "https://syarah.com/en/autos/nissan/patrol",
+      "source": "Syarah",
+      "status": "expanded",
+      "detailLinks": 12
+    }
+  ],
+  "sourceStats": [
+    {
+      "source": "Haraj",
+      "discovered": 1,
+      "checked": 1,
+      "accepted": 1,
+      "pending": 0
+    },
+    {
+      "source": "OpenSooq",
+      "discovered": 0,
+      "checked": 0,
+      "accepted": 0,
+      "pending": 0
+    },
+    {
+      "source": "Syarah",
+      "discovered": 12,
+      "checked": 2,
+      "accepted": 2,
+      "pending": 10
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "discovered": 0,
+      "checked": 0,
+      "accepted": 0,
+      "pending": 0
+    },
+    {
+      "source": "Saudi Sale",
+      "discovered": 0,
+      "checked": 0,
+      "accepted": 0,
+      "pending": 0
+    },
+    {
+      "source": "Mercedes-Benz Saudi",
+      "discovered": 0,
+      "checked": 0,
+      "accepted": 0,
+      "pending": 0
+    },
+    {
+      "source": "Mstaml",
+      "discovered": 0,
+      "checked": 0,
+      "accepted": 0,
+      "pending": 0
+    }
+  ],
+  "firstResultMs": 18957,
+  "pendingDiscoveryPages": [
+    "https://syarah.com/en/autos/nissan/patrol?page=2"
+  ],
+  "pendingUrls": [
+    "https://syarah.com/en/cardetail/nissan-patrol-used-313625",
+    "https://syarah.com/en/cardetail/nissan-patrol-used-313615",
+    "https://syarah.com/en/cardetail/nissan-patrol-used-311993",
+    "https://syarah.com/en/cardetail/nissan-patrol-used-310647",
+    "https://syarah.com/en/cardetail/nissan-patrol-used-310342",
+    "https://syarah.com/en/cardetail/nissan-patrol-used-304306",
+    "https://syarah.com/en/cardetail/nissan-patrol-used-317246",
+    "https://syarah.com/en/cardetail/nissan-patrol-used-316265",
+    "https://syarah.com/en/cardetail/nissan-patrol-used-315751",
+    "https://syarah.com/en/cardetail/nissan-patrol-used-315005"
+  ],
+  "discovered": 13,
+  "checked": 3,
+  "accepted": 3,
+  "results": [
+    {
+      "url": "https://haraj.com.sa/11188944596/",
+      "source": "Haraj",
+      "status": "accepted"
+    },
+    {
+      "url": "https://syarah.com/en/cardetail/nissan-patrol-used-315285",
+      "source": "Syarah",
+      "status": "accepted"
+    },
+    {
+      "url": "https://syarah.com/en/cardetail/nissan-patrol-used-314125",
+      "source": "Syarah",
+      "status": "accepted"
+    }
+  ],
+  "rounds": 1,
+  "stopReason": "detail-budget",
+  "coverageComplete": false,
+  "totalMs": 40710
+}

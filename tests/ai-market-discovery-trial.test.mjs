@@ -149,10 +149,10 @@ test('observed model inventory and double-encoded Arabic pages are discovery-onl
  for(const u of ['https://syarah.com/en/prices/mg/zs','https://ksa.carswitch.com/en/saudi/new-cars/toyota/corolla','https://haraj.com.sa/pic/Corolla','https://syarah.com/en/autos/%253Fadmin'])assert.equal(marketDiscoveryPage(u),null);
 });
 
-test('direct accepted results are emitted before slower category traversal starts',async()=>{
- const events=[],page='https://syarah.com/en/autos';
- await runAdaptiveMarketDiscovery({query:'Corolla',condition:'used',filters:{}},{excludedMakes:[]},{maxRounds:1,discover:async()=>({status:'completed',urls:[url],discoveryPages:[page]}),readDetail:async c=>{events.push(c.discoveryPage?'page':'detail');return c.discoveryPage?'':html;},onProgress:e=>{if(e.status==='accepted')events.push('accepted');}});
- assert.deepEqual(events.slice(0,3),['detail','accepted','page']);
+test('direct accepted results do not wait for slow category traversal',{timeout:2000},async()=>{
+ const events=[],page='https://syarah.com/en/autos';let release;const wait=new Promise(r=>release=r);
+ try{await runAdaptiveMarketDiscovery({query:'Corolla',condition:'used',filters:{}},{excludedMakes:[]},{maxRounds:1,discover:async()=>({status:'completed',urls:[url],discoveryPages:[page]}),readDetail:async c=>{if(c.discoveryPage){await wait;events.push('page-complete');return '';}events.push('detail');return html;},onProgress:e=>{if(e.status==='accepted'){events.push('accepted');release();}}});
+ assert.deepEqual(events,['detail','accepted','page-complete']);}finally{release();}
 });
 test('reader overlaps independent sources but serializes same-origin requests and robots',async()=>{
  const started=[],release=new Map(),robots=[];

@@ -1,0 +1,878 @@
+{
+  "mode": "resumable-exact-model-sample",
+  "version": 1,
+  "body": {
+    "query": "Toyota Corolla",
+    "condition": "all",
+    "filters": {}
+  },
+  "startedAt": "2026-09-20T10:05:19.279Z",
+  "updatedAt": "2026-09-20T10:10:32.443Z",
+  "coverageComplete": false,
+  "marketCoveragePercent": null,
+  "accepted": 36,
+  "checked": 42,
+  "pending": 62,
+  "results": [
+    {
+      "url": "https://haraj.com.sa/11188948342/",
+      "source": "Haraj",
+      "status": "accepted"
+    },
+    {
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-317363",
+      "source": "Syarah",
+      "status": "accepted"
+    },
+    {
+      "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2022/864159",
+      "source": "CarSwitch Saudi",
+      "status": "accepted"
+    },
+    {
+      "url": "https://haraj.com.sa/11188890751/",
+      "source": "Haraj",
+      "status": "vehicle_boundary"
+    },
+    {
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-317091",
+      "source": "Syarah",
+      "status": "accepted"
+    },
+    {
+      "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2021/834075",
+      "source": "CarSwitch Saudi",
+      "status": "accepted"
+    },
+    {
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316935",
+      "source": "Syarah",
+      "status": "accepted"
+    },
+    {
+      "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2025/870659",
+      "source": "CarSwitch Saudi",
+      "status": "accepted"
+    },
+    {
+      "url": "https://haraj.com.sa/11188881316/",
+      "source": "Haraj",
+      "status": "accepted"
+    },
+    {
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316865",
+      "source": "Syarah",
+      "status": "accepted"
+    },
+    {
+      "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2025/826758",
+      "source": "CarSwitch Saudi",
+      "status": "accepted"
+    },
+    {
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316454",
+      "source": "Syarah",
+      "status": "accepted"
+    },
+    {
+      "url": "https://haraj.com.sa/11188877605/",
+      "source": "Haraj",
+      "status": "accepted"
+    },
+    {
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316290",
+      "source": "Syarah",
+      "status": "accepted"
+    },
+    {
+      "url": "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2024/810630",
+      "source": "CarSwitch Saudi",
+      "status": "accepted"
+    },
+    {
+      "url": "https://haraj.com.sa/11188860626/",
+      "source": "Haraj",
+      "status": "unknown_condition"
+    },
+    {
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-315547",
+      "source": "Syarah",
+      "status": "accepted"
+    },
+    {
+      "url": "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2022/873160",
+      "source": "CarSwitch Saudi",
+      "status": "accepted"
+    },
+    {
+      "url": "https://haraj.com.sa/11188853913/",
+      "source": "Haraj",
+      "status": "accepted"
+    },
+    {
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-315542",
+      "source": "Syarah",
+      "status": "accepted"
+    },
+    {
+      "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2021/852301",
+      "source": "CarSwitch Saudi",
+      "status": "accepted"
+    },
+    {
+      "url": "https://haraj.com.sa/11188854242/",
+      "source": "Haraj",
+      "status": "accepted"
+    },
+    {
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-315538",
+      "source": "Syarah",
+      "status": "accepted"
+    },
+    {
+      "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2026/836972",
+      "source": "CarSwitch Saudi",
+      "status": "accepted"
+    },
+    {
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-314768",
+      "source": "Syarah",
+      "status": "accepted"
+    },
+    {
+      "url": "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2018/844000",
+      "source": "CarSwitch Saudi",
+      "status": "accepted"
+    },
+    {
+      "url": "https://haraj.com.sa/11188947113/",
+      "source": "Haraj",
+      "status": "accepted"
+    },
+    {
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-314665",
+      "source": "Syarah",
+      "status": "accepted"
+    },
+    {
+      "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2022/799038",
+      "source": "CarSwitch Saudi",
+      "status": "accepted"
+    },
+    {
+      "url": "https://haraj.com.sa/11188941834/",
+      "source": "Haraj",
+      "status": "vehicle_boundary"
+    },
+    {
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-313184",
+      "source": "Syarah",
+      "status": "accepted"
+    },
+    {
+      "url": "https://haraj.com.sa/11188507341/",
+      "source": "Haraj",
+      "status": "vehicle_boundary"
+    },
+    {
+      "url": "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2015/828030",
+      "source": "CarSwitch Saudi",
+      "status": "accepted"
+    },
+    {
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-313097",
+      "source": "Syarah",
+      "status": "accepted"
+    },
+    {
+      "url": "https://haraj.com.sa/11188847983/",
+      "source": "Haraj",
+      "status": "accepted"
+    },
+    {
+      "url": "https://ksa.carswitch.com/en/al-khobar/used-car/toyota/corolla/2024/833732",
+      "source": "CarSwitch Saudi",
+      "status": "accepted"
+    },
+    {
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-313078",
+      "source": "Syarah",
+      "status": "accepted"
+    },
+    {
+      "url": "https://haraj.com.sa/11188843850/",
+      "source": "Haraj",
+      "status": "query-filter-rejected",
+      "previousStatus": "accepted"
+    },
+    {
+      "url": "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2024/859256",
+      "source": "CarSwitch Saudi",
+      "status": "accepted"
+    },
+    {
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-313024",
+      "source": "Syarah",
+      "status": "accepted"
+    },
+    {
+      "url": "https://haraj.com.sa/11188827241/",
+      "source": "Haraj",
+      "status": "missing_title_year"
+    },
+    {
+      "url": "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2021/873180",
+      "source": "CarSwitch Saudi",
+      "status": "accepted"
+    }
+  ],
+  "discoveryPages": [
+    {
+      "url": "https://syarah.com/en/autos/toyota/corolla",
+      "source": "Syarah",
+      "status": "expanded",
+      "detailLinks": 12
+    },
+    {
+      "url": "https://haraj.com.sa/search/Toyota%20Corolla/",
+      "source": "Haraj",
+      "status": "expanded",
+      "detailLinks": 21
+    },
+    {
+      "url": "https://ksa.carswitch.com/en/saudi/used-cars/toyota/corolla",
+      "source": "CarSwitch Saudi",
+      "status": "expanded",
+      "detailLinks": 48
+    },
+    {
+      "url": "https://syarah.com/en/autos/toyota/corolla?page=2",
+      "source": "Syarah",
+      "status": "expanded",
+      "detailLinks": 12
+    },
+    {
+      "url": "https://ksa.carswitch.com/en/saudi/used-cars/toyota/corolla?page=2",
+      "source": "CarSwitch Saudi",
+      "status": "expanded",
+      "detailLinks": 46
+    },
+    {
+      "url": "https://syarah.com/en/autos/toyota/corolla?page=3",
+      "source": "Syarah",
+      "status": "expanded",
+      "detailLinks": 12
+    }
+  ],
+  "listings": [
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2022/864159",
+      "title": "Toyota Corolla XLI Executive 2022 1.5",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2022,
+      "condition": "used",
+      "price": 47500,
+      "mileage": 104000,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/863cfa03-2413-41eb-8f6e-d7d5f23b7f64"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2021/834075",
+      "title": "Toyota Corolla XLi 2021 1.5",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2021,
+      "condition": "used",
+      "price": 44000,
+      "mileage": 156613,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/f30404fc-0db5-48a8-94c0-c58a8f9acd6b"
+    },
+    {
+      "source": "Syarah",
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-317363",
+      "title": "Used 2023 Toyota Corolla XLI White Color for sale - 317363 | Syarah",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2023,
+      "condition": "used",
+      "price": 49800,
+      "mileage": 77081,
+      "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/317363/orignal-317363-1-1789830759.jpg?v=3"
+    },
+    {
+      "source": "Syarah",
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-317091",
+      "title": "Used 2024 Toyota Corolla XLI Executive White Color for sale - 317091 | Syarah",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2024,
+      "condition": "used",
+      "price": 61000,
+      "mileage": 101731,
+      "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/317091/orignal-317091-1-1789576211.jpg?v=3"
+    },
+    {
+      "source": "Haraj",
+      "url": "https://haraj.com.sa/11188948342",
+      "title": "تويوتا كورولا 2014 16 أوتوماتيك للبيع",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2014,
+      "condition": "used",
+      "price": 33000,
+      "mileage": 131000,
+      "image": "https://img4cdn.haraj.com.sa/userfiles30/2026-09-20/900x1200-1_-GO__MTc4OTg5NTk2OTAwNDM1OTU4NzM5NQ.jpg"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2025/870659",
+      "title": "Toyota Corolla XLI 2025 1.5",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2025,
+      "condition": "used",
+      "price": 59500,
+      "mileage": 26557,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/10cb07a5-66cb-498c-b544-57c01e4f1b60"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2025/826758",
+      "title": "Toyota Corolla 2025 2.0",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2025,
+      "condition": "used",
+      "price": 72000,
+      "mileage": 18500,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/0b71fc3f-1d09-4f0a-abd4-b80ee611bae0"
+    },
+    {
+      "source": "Syarah",
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316935",
+      "title": "Used 2024 Toyota Corolla XLI Black Color for sale - 316935 | Syarah",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2024,
+      "condition": "used",
+      "price": 62000,
+      "mileage": 130065,
+      "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/316935/orignal-1789610544-745_cut.jpg?v=3"
+    },
+    {
+      "source": "Syarah",
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316865",
+      "title": "Used 2024 Toyota Corolla XLI White Color for sale - 316865 | Syarah",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2024,
+      "condition": "used",
+      "price": 51700,
+      "mileage": 78260,
+      "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/316865/orignal-1789586855-13_cut.jpg?v=3"
+    },
+    {
+      "source": "Syarah",
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316454",
+      "title": "Used 2023 Toyota Corolla XLI Grey Color for sale - 316454 | Syarah",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2023,
+      "condition": "used",
+      "price": 50500,
+      "mileage": 109798,
+      "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/316454/orignal-1789338001-676_cut.jpg?v=3"
+    },
+    {
+      "source": "Haraj",
+      "url": "https://haraj.com.sa/11188881316",
+      "title": "تويوتا كورولا 2016",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2016,
+      "condition": "used",
+      "price": 28500,
+      "mileage": 304000,
+      "image": "https://mimg6cdn.haraj.com.sa/userfiles30/2026-9-19/768x1024-1_-zqTzcHOWdwKm9a.jpg"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2024/810630",
+      "title": "Toyota Corolla XLI Executive 2024 2.0",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2024,
+      "condition": "used",
+      "price": 64750,
+      "mileage": 41600,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/1d19765b-8dc8-4dfa-978f-7e4a793d8d82"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2022/873160",
+      "title": "Toyota Corolla XLI 2022 2.0",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2022,
+      "condition": "used",
+      "price": 44125,
+      "mileage": 182000,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/96f6c0d0-0d49-4f52-932a-b352447e258a"
+    },
+    {
+      "source": "Syarah",
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316290",
+      "title": "Used 2024 Toyota Corolla XLI Light Grey Color for sale - 316290 | Syarah",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2024,
+      "condition": "used",
+      "price": 61000,
+      "mileage": 108214,
+      "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/316290/orignal-1789661857-25_cut.jpg?v=3"
+    },
+    {
+      "source": "Syarah",
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-315547",
+      "title": "Used 2024 Toyota Corolla XLI Light Grey Color for sale - 315547 | Syarah",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2024,
+      "condition": "used",
+      "price": 51000,
+      "mileage": 118569,
+      "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/315547/orignal-1788676871-880_cut.jpg?v=3"
+    },
+    {
+      "source": "Haraj",
+      "url": "https://haraj.com.sa/11188877605",
+      "title": "تويوتا كورولا 2024",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2024,
+      "condition": "used",
+      "price": null,
+      "mileage": null,
+      "image": "https://mimg6cdn.haraj.com.sa/userfiles30/2026-9-19/3000x4000-1_-BxTKGrrENEnb6P.jpg"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2021/852301",
+      "title": "Toyota Corolla XLi Executive 2021 1.5",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2021,
+      "condition": "used",
+      "price": 45000,
+      "mileage": 150992,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/5c86142a-877b-40d1-b5f9-596ae7cf5752"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2026/836972",
+      "title": "Toyota Corolla 2026 2.0",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2026,
+      "condition": "used",
+      "price": 85000,
+      "mileage": 6000,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/8e1f3be0-4679-4b82-a268-f0648331ef52"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2018/844000",
+      "title": "Toyota Corolla 2018 1.6",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2018,
+      "condition": "used",
+      "price": 34000,
+      "mileage": 272777,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/ccad28e0-09c2-4c33-9331-6b377d8dbfee"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2022/799038",
+      "title": "Toyota Corolla XLI 2022 1.5",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2022,
+      "condition": "used",
+      "price": 37500,
+      "mileage": 149298,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/ff203e77-ddb9-4f7d-b576-b7d33c456f10"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2015/828030",
+      "title": "Toyota Corolla XLI 2015 1.6",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2015,
+      "condition": "used",
+      "price": 35625,
+      "mileage": 144000,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/8a86b825-737d-4f6a-a13b-c26ccfda45b9"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/al-khobar/used-car/toyota/corolla/2024/833732",
+      "title": "Toyota Corolla 2024 1.5",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2024,
+      "condition": "used",
+      "price": 52000,
+      "mileage": 142200,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/bbf6173d-6600-496c-80dd-5be3204350e4"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2024/859256",
+      "title": "Toyota Corolla XLI 2024 2.0",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2024,
+      "condition": "used",
+      "price": 59100,
+      "mileage": 59252,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/03dd52ab-de02-4b6c-a8cd-1992f4a5f0e7"
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "url": "https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2021/873180",
+      "title": "Toyota Corolla GLi Executive 2021 1.5",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2021,
+      "condition": "used",
+      "price": 45000,
+      "mileage": 246090,
+      "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/ce305d53-f0eb-4c85-b948-2105827e73fb"
+    },
+    {
+      "source": "Syarah",
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-315542",
+      "title": "Used 2024 Toyota Corolla XLI leaden Color for sale - 315542 | Syarah",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2024,
+      "condition": "used",
+      "price": 54000,
+      "mileage": 83232,
+      "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/315542/orignal-1788676875-735_cut.jpg?v=3"
+    },
+    {
+      "source": "Syarah",
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-315538",
+      "title": "Used 2024 Toyota Corolla XLI leaden Color for sale - 315538 | Syarah",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2024,
+      "condition": "used",
+      "price": 54500,
+      "mileage": 80651,
+      "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/315538/orignal-1788676813-667_cut.jpg?v=3"
+    },
+    {
+      "source": "Syarah",
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-314768",
+      "title": "Used 2024 Toyota Corolla XLI leaden Color for sale - 314768 | Syarah",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2024,
+      "condition": "used",
+      "price": 59700,
+      "mileage": 121223,
+      "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/314768/orignal-314768-1-1788088437.jpg?v=3"
+    },
+    {
+      "source": "Syarah",
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-314665",
+      "title": "Used 2021 Toyota Corolla XLI White Color for sale - 314665 | Syarah",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2021,
+      "condition": "used",
+      "price": 42700,
+      "mileage": 155473,
+      "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/314665/orignal-314665-1-1788012370.jpg?v=3"
+    },
+    {
+      "source": "Syarah",
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-313184",
+      "title": "Used 2024 Toyota Corolla XLI White Color for sale - 313184 | Syarah",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2024,
+      "condition": "used",
+      "price": 53900,
+      "mileage": 91974,
+      "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/313184/orignal-313184-1-1786974652.jpg?v=3"
+    },
+    {
+      "source": "Syarah",
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-313097",
+      "title": "Used 2025 Toyota Corolla XLI Silver Color for sale - 313097 | Syarah",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2025,
+      "condition": "used",
+      "price": 66600,
+      "mileage": 44802,
+      "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/313097/orignal-313097-1-1786952730.jpg?v=3"
+    },
+    {
+      "source": "Syarah",
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-313078",
+      "title": "Used 2024 Toyota Corolla XLI leaden Color for sale - 313078 | Syarah",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2024,
+      "condition": "used",
+      "price": 48500,
+      "mileage": 106198,
+      "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/313078/orignal-1787042516-898_cut.jpg?v=3"
+    },
+    {
+      "source": "Syarah",
+      "url": "https://syarah.com/en/cardetail/toyota-corolla-used-313024",
+      "title": "Used 2024 Toyota Corolla XLI Silver Color for sale - 313024 | Syarah",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2024,
+      "condition": "used",
+      "price": 51300,
+      "mileage": 90496,
+      "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/313024/orignal-1787035193-849_cut.jpg?v=3"
+    },
+    {
+      "source": "Haraj",
+      "url": "https://haraj.com.sa/11188853913",
+      "title": "تويوتا كورولا 2017",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2017,
+      "condition": "used",
+      "price": null,
+      "mileage": 280000,
+      "image": "https://mimg6cdn.haraj.com.sa/userfiles30/2026-9-19/594x1024-1_-5CVZZQEDUquaQ4.jpg"
+    },
+    {
+      "source": "Haraj",
+      "url": "https://haraj.com.sa/11188854242",
+      "title": "تويوتا كورولا 2017 للبيع",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2017,
+      "condition": "used",
+      "price": 36000,
+      "mileage": null,
+      "image": "https://mimg6cdn.haraj.com.sa/userfiles30/2026-9-19/1200x1600-1_-Eagl3Y8yWwwlg9.jpg"
+    },
+    {
+      "source": "Haraj",
+      "url": "https://haraj.com.sa/11188947113",
+      "title": "TOYOTA COROLLA 2008 FOR SALE Clean Reliable Used Car",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2008,
+      "condition": "used",
+      "price": 8500,
+      "mileage": null,
+      "image": "https://mimg6cdn.haraj.com.sa/userfiles30/2026-9-20/682x1024-1_-4fKw4f5xq0RJn2.jpg"
+    },
+    {
+      "source": "Haraj",
+      "url": "https://haraj.com.sa/11188847983",
+      "title": "Toyota Corolla 2018 model",
+      "make": "Toyota",
+      "model": "Corolla",
+      "year": 2018,
+      "condition": "used",
+      "price": null,
+      "mileage": null,
+      "image": "https://mimg6cdn.haraj.com.sa/userfiles30/2026-09-18/828x1800_17961329-6186-4B78-83DD-72C8C85524E8.jpg"
+    }
+  ],
+  "pendingUrls": [
+    "https://haraj.com.sa/11188864251/",
+    "https://haraj.com.sa/11188778145/",
+    "https://haraj.com.sa/11188767447/",
+    "https://haraj.com.sa/11188771394/",
+    "https://haraj.com.sa/11188671954/",
+    "https://haraj.com.sa/11188756072/",
+    "https://haraj.com.sa/11188758895/",
+    "https://haraj.com.sa/11188731452/",
+    "https://ksa.carswitch.com/en/al-khobar/used-car/toyota/corolla/2021/819588",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2020/838932",
+    "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2022/879793",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2024/859935",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2023/819429",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2024/873692",
+    "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2024/823580",
+    "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2014/875835",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2023/874464",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2021/857436",
+    "https://syarah.com/en/cardetail/toyota-corolla-used-311999",
+    "https://syarah.com/en/cardetail/toyota-corolla-used-309754",
+    "https://syarah.com/en/cardetail/toyota-corolla-used-309503",
+    "https://syarah.com/en/cardetail/toyota-corolla-used-307672",
+    "https://syarah.com/en/cardetail/toyota-corolla-used-307335",
+    "https://syarah.com/en/cardetail/toyota-corolla-used-307013",
+    "https://syarah.com/en/cardetail/toyota-corolla-used-305917",
+    "https://syarah.com/en/cardetail/toyota-corolla-used-305186",
+    "https://syarah.com/en/cardetail/toyota-corolla-used-298152",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2015/817378",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2022/848419",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2020/822469",
+    "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2020/810833",
+    "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2018/876958",
+    "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2020/843613",
+    "https://ksa.carswitch.com/en/dammam/used-car/toyota/corolla/2021/876505",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2020/875478",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2024/788929",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2024/788920",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2024/789349",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2022/789147",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2022/789143",
+    "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2022/789313",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2023/789405",
+    "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2022/789182",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2023/789190",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2024/789042",
+    "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2024/789106",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2023/788986",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2023/789193",
+    "https://ksa.carswitch.com/en/riyadh/used-car/toyota/corolla/2020/789030",
+    "https://ksa.carswitch.com/en/jeddah/used-car/toyota/corolla/2025/789107",
+    "https://syarah.com/en/cardetail/toyota-corolla-used-317277",
+    "https://syarah.com/en/cardetail/toyota-corolla-used-317258",
+    "https://syarah.com/en/cardetail/toyota-corolla-used-316393",
+    "https://syarah.com/en/cardetail/toyota-corolla-used-316367",
+    "https://syarah.com/en/cardetail/toyota-corolla-used-315049",
+    "https://syarah.com/en/cardetail/toyota-corolla-used-313720",
+    "https://syarah.com/en/cardetail/toyota-corolla-used-313612",
+    "https://syarah.com/en/cardetail/toyota-corolla-used-311627",
+    "https://syarah.com/en/cardetail/toyota-corolla-used-309144",
+    "https://syarah.com/en/cardetail/toyota-corolla-used-298884",
+    "https://syarah.com/en/cardetail/toyota-corolla-new-291100",
+    "https://syarah.com/en/cardetail/toyota-corolla-new-288427"
+  ],
+  "pendingDiscoveryPages": [
+    "https://syarah.com/en/autos/toyota/corolla?page=4"
+  ],
+  "runs": [
+    {
+      "newChecked": 6,
+      "newAccepted": 5,
+      "firstResultMs": 32898,
+      "totalMs": 47601,
+      "stopReason": "detail-budget"
+    },
+    {
+      "newChecked": 6,
+      "newAccepted": 6,
+      "firstResultMs": 19261,
+      "totalMs": 63370,
+      "stopReason": "detail-budget"
+    },
+    {
+      "pageBudget": 0,
+      "newChecked": 6,
+      "newAccepted": 5,
+      "firstResultMs": 18183,
+      "totalMs": 33775,
+      "stopReason": "detail-budget"
+    },
+    {
+      "detailBudget": 24,
+      "pageBudget": 0,
+      "newChecked": 24,
+      "newAccepted": 21,
+      "firstResultMs": 18994,
+      "totalMs": 99306,
+      "stopReason": "detail-budget"
+    }
+  ],
+  "sourceStats": [
+    {
+      "source": "Haraj",
+      "knownCandidateCount": 21,
+      "pending": 8,
+      "checked": 13,
+      "accepted": 7,
+      "checkedShareOfKnownCandidates": 0.6190476190476191,
+      "acceptanceRate": 0.5384615384615384,
+      "rejectionReasons": {
+        "vehicle_boundary": 3,
+        "unknown_condition": 1,
+        "query-filter-rejected": 1,
+        "missing_title_year": 1
+      },
+      "marketCoveragePercent": null
+    },
+    {
+      "source": "Syarah",
+      "knownCandidateCount": 36,
+      "pending": 21,
+      "checked": 15,
+      "accepted": 15,
+      "checkedShareOfKnownCandidates": 0.4166666666666667,
+      "acceptanceRate": 1.0,
+      "rejectionReasons": {},
+      "marketCoveragePercent": null
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "knownCandidateCount": 47,
+      "pending": 33,
+      "checked": 14,
+      "accepted": 14,
+      "checkedShareOfKnownCandidates": 0.2978723404255319,
+      "acceptanceRate": 1.0,
+      "rejectionReasons": {},
+      "marketCoveragePercent": null
+    },
+    {
+      "source": "Saudi Sale",
+      "knownCandidateCount": 0,
+      "pending": 0,
+      "checked": 0,
+      "accepted": 0,
+      "checkedShareOfKnownCandidates": null,
+      "acceptanceRate": null,
+      "rejectionReasons": {},
+      "marketCoveragePercent": null
+    },
+    {
+      "source": "Mercedes-Benz Saudi",
+      "knownCandidateCount": 0,
+      "pending": 0,
+      "checked": 0,
+      "accepted": 0,
+      "checkedShareOfKnownCandidates": null,
+      "acceptanceRate": null,
+      "rejectionReasons": {},
+      "marketCoveragePercent": null
+    }
+  ],
+  "acceptedBeforeIdentityRecheck": 37,
+  "identityRecheck": {
+    "url": "https://haraj.com.sa/11188843850/",
+    "parsed": [
+      {
+        "title": "Toyota Corolla Cross 2021 XLE HEV 4X2 1.8 PETROL SUV 5Dr AUT",
+        "make": "Toyota",
+        "model": "Corolla Cross"
+      }
+    ],
+    "corollaAccepted": 0,
+    "crossAccepted": 1
+  },
+  "uniqueKnownCandidates": 104,
+  "imageHttpSuccess": null
+}

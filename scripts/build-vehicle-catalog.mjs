@@ -4,7 +4,7 @@ import {MODEL_GROUPS} from '../lib/search-model-relevance.js';
 import {AR_NAMES} from '../public/experience-model.js';
 const seed=JSON.parse(await readFile(new URL('../data/catalog-seed.json',import.meta.url)));
 const extras={
- Toyota:'Camry|Corolla|Land Cruiser|Land Cruiser Prado|Prado|Yaris|Fortuner|Hilux|RAV4|Avalon|Veloz|Raize|Rush|Highlander|Crown|Supra|86|GR86|Sequoia|Tacoma|Tundra|Innova|Hiace|Coaster|FJ Cruiser|Cressida|Previa|Celica|Prius|bZ4X',
+ Toyota:'Camry|Corolla|Corolla Cross|Land Cruiser|Land Cruiser Prado|Prado|Yaris|Fortuner|Hilux|RAV4|Avalon|Veloz|Raize|Rush|Highlander|Crown|Supra|86|GR86|Sequoia|Tacoma|Tundra|Innova|Hiace|Coaster|FJ Cruiser|Cressida|Previa|Celica|Prius|bZ4X',
  Nissan:'Patrol|Sunny|Altima|Maxima|Sentra|X-Trail|X-Terra|Xterra|Pathfinder|Kicks|Juke|Micra|Tiida|Armada|Navara|Urvan|GT-R|350Z|370Z|Z|Murano|Leaf|Ariya',
  Hyundai:'Accent|Elantra|Sonata|Azera|Tucson|Santa Fe|Grand Santa Fe|Palisade|Creta|Staria|Stargazer|Kona|Venue|Veloster|Ioniq|Ioniq 5|Ioniq 6|i10|i20|i30|H1|Genesis|Getz|Centennial',
  Kia:'Pegas|Cerato|K3|K4|K5|K8|K9|Sportage|Sorento|Carnival|Seltos|Sonet|Telluride|Stinger|Cadenza|Optima|Rio|Picanto|Mohave|Soul|EV3|EV5|EV6|EV9|Niro',

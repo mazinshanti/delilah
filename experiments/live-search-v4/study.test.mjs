@@ -15,3 +15,10 @@ test('aborting the scheduled search cancels delayed source discovery',async()=>{
  await sources.discover(benchmark[0].intent,{signal:controller.signal,onBatch:()=>{},diagnostics:[]});clearTimeout(timer);
  assert.ok(hosts.length);assert.ok(hosts.every(h=>['ksa.carswitch.com','syarah.com','ksa.motory.com'].includes(h)));
 });
+test('existing Render Brave variable is accepted without renaming the secret',async()=>{
+ for(const path of ['./providers.mjs','../../lib/on-demand/providers.mjs']){
+  const {provider:create}=await import(path);let credential;
+  const discover=create('brave',{env:{BRAVE_SEARCH_API_KEY:'existing-test-key'},fetchImpl:async(u,o)=>{credential=o.headers['X-Subscription-Token'];return {ok:true,status:200,json:async()=>({web:{results:[]}})};}});
+  assert.equal(typeof discover,'function');await discover(benchmark[0].intent);assert.equal(credential,'existing-test-key');
+ }
+});

@@ -8,7 +8,7 @@ Configure secrets through the hosting platform's secure environment UI, never in
 
 - `DALELAH_ON_DEMAND_ENABLED=true` enables preview routes. Unset/false disables them on restart.
 - `DALELAH_ON_DEMAND_TOKEN`: a cryptographically random secret of at least 32 characters, required for every preview endpoint.
-- `DALELAH_ON_DEMAND_PROVIDER=tavily` or `brave`; requires `TAVILY_API_KEY` or `BRAVE_API_KEY` respectively.
+- `DALELAH_ON_DEMAND_PROVIDER=tavily` or `brave`; requires `TAVILY_API_KEY` or `BRAVE_SEARCH_API_KEY` (also accepts `BRAVE_API_KEY`) respectively.
 - `direct` is an explicit diagnostic mode without hosted discovery. It is not silently selected when a key is missing.
 - Existing intent-engine configuration applies, including its OpenAI key and request limits. No production secrets were accessed or copied during implementation.
 

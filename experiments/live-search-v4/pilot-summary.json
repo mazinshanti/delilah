@@ -1,0 +1,25 @@
+{
+  "at": "2026-09-21T09:06:36.464Z",
+  "casesExpected": 4,
+  "runsExpected": 8,
+  "runsCompleted": 8,
+  "providerStudyCompleted": false,
+  "arms": {
+    "baseline": {
+      "queries": 4,
+      "noResultQueries": 3,
+      "acceptedAds": 2,
+      "firstResultMedianAmongSuccessesMs": 18638,
+      "detailAttempts": 26,
+      "networkRequests": 69
+    },
+    "scheduled": {
+      "queries": 4,
+      "noResultQueries": 1,
+      "acceptedAds": 9,
+      "firstResultMedianAmongSuccessesMs": 15839,
+      "detailAttempts": 30,
+      "networkRequests": 69
+    }
+  }
+}

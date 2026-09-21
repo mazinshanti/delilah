@@ -1,0 +1,291 @@
+{
+  "at": "2026-09-21T14:41:19.597Z",
+  "scope": "isolated-candidate-not-production",
+  "before": {
+    "checkedAt": "2026-09-21T14:41:20.322Z",
+    "snapshotAt": "2026-09-20T14:03:29.292Z",
+    "target": 50000,
+    "rawRows": 3521,
+    "validVehicleRows": 3521,
+    "freshRows": 80,
+    "staleRows": 3441,
+    "deduplicatedFreshListings": 80,
+    "remainingToTarget": 49920,
+    "targetReached": false,
+    "physicalVehicleUniquenessGuaranteed": false,
+    "bySource": {
+      "Mercedes-Benz Saudi": {
+        "stored": 24,
+        "fresh": 0,
+        "stale": 24
+      },
+      "CarSwitch Saudi": {
+        "stored": 845,
+        "fresh": 0,
+        "stale": 845
+      },
+      "Syarah": {
+        "stored": 2607,
+        "fresh": 36,
+        "stale": 2571
+      },
+      "Saudi Sale": {
+        "stored": 1,
+        "fresh": 0,
+        "stale": 1
+      },
+      "Mstaml": {
+        "stored": 1,
+        "fresh": 1,
+        "stale": 0
+      },
+      "Motory": {
+        "stored": 14,
+        "fresh": 14,
+        "stale": 0
+      },
+      "SAMACO Automotive": {
+        "stored": 13,
+        "fresh": 13,
+        "stale": 0
+      },
+      "ArabWheels Saudi": {
+        "stored": 9,
+        "fresh": 9,
+        "stale": 0
+      },
+      "Kayishha": {
+        "stored": 7,
+        "fresh": 7,
+        "stale": 0
+      }
+    },
+    "refreshQueues": []
+  },
+  "after": {
+    "checkedAt": "2026-09-21T14:41:21.751Z",
+    "snapshotAt": "2026-09-21T14:41:19.597Z",
+    "target": 50000,
+    "rawRows": 3551,
+    "validVehicleRows": 3551,
+    "freshRows": 110,
+    "staleRows": 3441,
+    "deduplicatedFreshListings": 110,
+    "remainingToTarget": 49890,
+    "targetReached": false,
+    "physicalVehicleUniquenessGuaranteed": false,
+    "bySource": {
+      "Mercedes-Benz Saudi": {
+        "stored": 24,
+        "fresh": 0,
+        "stale": 24
+      },
+      "CarSwitch Saudi": {
+        "stored": 845,
+        "fresh": 0,
+        "stale": 845
+      },
+      "Syarah": {
+        "stored": 2607,
+        "fresh": 36,
+        "stale": 2571
+      },
+      "Saudi Sale": {
+        "stored": 1,
+        "fresh": 0,
+        "stale": 1
+      },
+      "Mstaml": {
+        "stored": 1,
+        "fresh": 1,
+        "stale": 0
+      },
+      "Motory": {
+        "stored": 44,
+        "fresh": 44,
+        "stale": 0
+      },
+      "SAMACO Automotive": {
+        "stored": 13,
+        "fresh": 13,
+        "stale": 0
+      },
+      "ArabWheels Saudi": {
+        "stored": 9,
+        "fresh": 9,
+        "stale": 0
+      },
+      "Kayishha": {
+        "stored": 7,
+        "fresh": 7,
+        "stale": 0
+      }
+    },
+    "refreshQueues": [
+      {
+        "sourceId": "motory",
+        "known": 59,
+        "due": 13,
+        "failedLastCheck": 0,
+        "paused": false
+      }
+    ]
+  },
+  "netStoredChange": 30,
+  "netFreshDeduplicatedChange": 30,
+  "verifiedThisPass": 44,
+  "removedThisPass": 0,
+  "bySource": [
+    {
+      "source": "Motory",
+      "pages": 4,
+      "successfulPages": 4,
+      "sitemaps": 3,
+      "successfulSitemaps": 2,
+      "discovered": 45,
+      "detailAttempts": 46,
+      "detailSuccess": 46,
+      "records": 44,
+      "rejectedReasons": {
+        "vehicle-boundary": 2
+      },
+      "errors": [
+        {
+          "stage": "sitemap",
+          "url": "https://ksa.motory.com/sitemap/en/sitemap.xml",
+          "error": "HTTP 404"
+        }
+      ],
+      "coverageComplete": false,
+      "knownUrls": 59,
+      "pending": 13,
+      "due": 13,
+      "frontierOverflow": 0,
+      "pendingUrls": [
+        "https://ksa.motory.com/en/cars-for-sale/riyadh-haraj/kia/rio/2022/281130/",
+        "https://ksa.motory.com/en/cars-for-sale/riyadh-haraj/kia/cerato/2020/281090/",
+        "https://ksa.motory.com/en/cars-for-sale/jeddah-haraj/kia/cerato/2010/281047/",
+        "https://ksa.motory.com/en/cars-for-sale/riyadh-haraj/kia/pegas/2023/280961/",
+        "https://ksa.motory.com/en/cars-for-sale/jeddah-haraj/kia/pegas/2023/280960/",
+        "https://ksa.motory.com/en/cars-for-sale/jeddah-haraj/kia/k3/2024/280959/",
+        "https://ksa.motory.com/en/cars-for-sale/dammam-haraj/kia/cerato/2024/280958/",
+        "https://ksa.motory.com/en/cars-for-sale/riyadh-haraj/kia/k5/2026/277726/",
+        "https://ksa.motory.com/en/cars-for-sale/jeddah-haraj/kia/k5/2026/269017/",
+        "https://ksa.motory.com/en/cars-for-sale/jeddah-haraj/kia/k8/2023/280931/",
+        "https://ksa.motory.com/en/cars-for-sale/riyadh-haraj/kia/pegas/2026/272667/",
+        "https://ksa.motory.com/en/cars-for-sale/riyadh-haraj/kia/sportage/2026/272646/",
+        "https://ksa.motory.com/en/cars-for-sale/makkah-haraj/kia/rio/2015/280862/"
+      ],
+      "pendingPages": [
+        "https://ksa.motory.com/en/cars-for-sale/hyundai/",
+        "https://ksa.motory.com/en/cars-for-sale/lexus/",
+        "https://ksa.motory.com/en/cars-for-sale/ford/",
+        "https://ksa.motory.com/en/cars-for-sale/lincoln/",
+        "https://ksa.motory.com/en/cars-for-sale/peugeot/",
+        "https://ksa.motory.com/en/cars-for-sale/mitsubishi/",
+        "https://ksa.motory.com/en/cars-for-sale/geely/",
+        "https://ksa.motory.com/en/cars-for-sale/nissan/",
+        "https://ksa.motory.com/en/cars-for-sale/honda/",
+        "https://ksa.motory.com/en/cars-for-sale/infiniti/",
+        "https://ksa.motory.com/en/cars-for-sale/chevrolet/",
+        "https://ksa.motory.com/en/cars-for-sale/gmc/",
+        "https://ksa.motory.com/en/cars-for-sale/cadillac/",
+        "https://ksa.motory.com/en/cars-for-sale/dodge/",
+        "https://ksa.motory.com/en/cars-for-sale/chrysler/",
+        "https://ksa.motory.com/en/cars-for-sale/jeep/",
+        "https://ksa.motory.com/en/cars-for-sale/mazda/",
+        "https://ksa.motory.com/en/cars-for-sale/renault/",
+        "https://ksa.motory.com/en/cars-for-sale/mercedes/",
+        "https://ksa.motory.com/en/cars-for-sale/bmw/",
+        "https://ksa.motory.com/en/cars-for-sale/porsche/",
+        "https://ksa.motory.com/en/cars-for-sale/audi/",
+        "https://ksa.motory.com/en/cars-for-sale/volkswagen/",
+        "https://ksa.motory.com/en/cars-for-sale/jaguar/",
+        "https://ksa.motory.com/en/cars-for-sale/range-rover/",
+        "https://ksa.motory.com/en/cars-for-sale/isuzu/",
+        "https://ksa.motory.com/en/cars-for-sale/suzuki/",
+        "https://ksa.motory.com/en/cars-for-sale/daihatsu/",
+        "https://ksa.motory.com/en/cars-for-sale/riyadh-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/jeddah-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/dammam-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/abha-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/mg/",
+        "https://ksa.motory.com/en/cars-for-sale/bestune/",
+        "https://ksa.motory.com/en/cars-for-sale/chery/",
+        "https://ksa.motory.com/en/cars-for-sale/genesis/",
+        "https://ksa.motory.com/en/cars-for-sale/lucid/",
+        "https://ksa.motory.com/en/cars-for-sale/jmc/",
+        "https://ksa.motory.com/en/cars-for-sale/haval/",
+        "https://ksa.motory.com/en/cars-for-sale/maserati/",
+        "https://ksa.motory.com/en/cars-for-sale/changan/",
+        "https://ksa.motory.com/en/cars-for-sale/jetour/",
+        "https://ksa.motory.com/en/cars-for-sale/dongfeng/",
+        "https://ksa.motory.com/en/cars-for-sale/hongqi/",
+        "https://ksa.motory.com/en/cars-for-sale/gac/",
+        "https://ksa.motory.com/en/cars-for-sale/fiat/",
+        "https://ksa.motory.com/en/cars-for-sale/ram/",
+        "https://ksa.motory.com/en/cars-for-sale/land-rover/",
+        "https://ksa.motory.com/en/cars-for-sale/baic/",
+        "https://ksa.motory.com/en/cars-for-sale/byd/",
+        "https://ksa.motory.com/en/cars-for-sale/great-wall/",
+        "https://ksa.motory.com/en/cars-for-sale/maxus/",
+        "https://ksa.motory.com/en/cars-for-sale/foton/",
+        "https://ksa.motory.com/en/cars-for-sale/rover/",
+        "https://ksa.motory.com/en/cars-for-sale/citroen/",
+        "https://ksa.motory.com/en/cars-for-sale/bentley/",
+        "https://ksa.motory.com/en/cars-for-sale/volvo/",
+        "https://ksa.motory.com/en/cars-for-sale/mini/",
+        "https://ksa.motory.com/en/cars-for-sale/jac/",
+        "https://ksa.motory.com/en/cars-for-sale/mercury/",
+        "https://ksa.motory.com/en/cars-for-sale/hummer/",
+        "https://ksa.motory.com/en/cars-for-sale/rox/",
+        "https://ksa.motory.com/en/cars-for-sale/soueast/",
+        "https://ksa.motory.com/en/cars-for-sale/omoda/",
+        "https://ksa.motory.com/en/cars-for-sale/jaecoo/",
+        "https://ksa.motory.com/en/cars-for-sale/2026/",
+        "https://ksa.motory.com/en/cars-for-sale/2025/",
+        "https://ksa.motory.com/en/cars-for-sale/2024/",
+        "https://ksa.motory.com/en/cars-for-sale/?page=2",
+        "https://ksa.motory.com/en/cars-for-sale/?page=3",
+        "https://ksa.motory.com/en/cars-for-sale/makkah-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/al-khobar-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/madinah-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/jubail-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/al-ahsa-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/tabouk-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/taif-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/jazan-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/khamis-mushayt-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/hofuf-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/buraidah-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/al-baha-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/other-cities-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/hafar-al-batin-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/yanbu-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/al-kharj-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/al-qunfudhah-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/arar-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/saihat-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/al-qassim-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/unizah-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/qatif-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/majmaah-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/al-gurayat-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/rabigh-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/al-jouf-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/sakaka-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/hail-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/bisha-haraj/",
+        "https://ksa.motory.com/en/cars-for-sale/khafji-haraj/"
+      ],
+      "pendingSitemaps": 0,
+      "completedAt": "2026-09-21T14:41:19.578Z",
+      "durationMs": 120952,
+      "budgetExhausted": true,
+      "discoveryExhausted": false
+    }
+  ],
+  "mediaMode": "links-only",
+  "target": 10000,
+  "targetReached": false
+}

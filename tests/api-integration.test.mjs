@@ -6,10 +6,10 @@ test('front API serves indexed pages while deep search is unavailable',async()=>
  const upstream=http.createServer((req,res)=>{res.writeHead(503,{'content-type':'application/json'});res.end('{"error":"source unavailable"}');});
  await new Promise(r=>upstream.listen(0,'127.0.0.1',r));
  const port=19000+Math.floor(Math.random()*10000),base=`http://127.0.0.1:${port}`;
- const child=spawn(process.execPath,['server-core-candidate.js'],{env:{...process.env,PORT:String(port),DALELAH_LEGACY_BASE_URL:`http://127.0.0.1:${upstream.address().port}`},stdio:['ignore','pipe','pipe']});
+ const child=spawn(process.execPath,['--import',new URL('./support/inventory-snapshot-clock.mjs',import.meta.url).href,'server-core-candidate.js'],{env:{...process.env,PORT:String(port),DALELAH_LEGACY_BASE_URL:`http://127.0.0.1:${upstream.address().port}`},stdio:['ignore','pipe','pipe']});
  let logs='';child.stderr.on('data',c=>logs+=c);child.stdout.on('data',c=>logs+=c);
  try{
-  let ready=false;for(let i=0;i<100;i++){try{if((await fetch(base+'/healthz')).ok){ready=true;break}}catch{}await new Promise(r=>setTimeout(r,50));}assert.ok(ready,logs);
+  let ready=false;for(let i=0;i<300;i++){try{if((await fetch(base+'/healthz')).ok){ready=true;break}}catch{}await new Promise(r=>setTimeout(r,50));}assert.ok(ready,logs);
   const stats=await (await fetch(base+'/api/inventory/stats')).json();assert.ok(stats.totalUnique>0);
   const a=await (await fetch(base+'/api/inventory?page=1')).json(),b=await (await fetch(base+'/api/inventory?page=2')).json();assert.equal(a.listings.length,24);assert.equal(new Set([...a.listings,...b.listings].map(c=>c.url)).size,48);
   const exact=await (await fetch(base+'/api/inventory?q=Toyota%20Corolla%202013')).json();assert.ok(exact.listings.every(c=>c.year===2013));

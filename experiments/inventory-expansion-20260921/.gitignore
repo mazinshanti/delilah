@@ -1,0 +1,4 @@
+checkpoint-*.json.gz
+primary-*.json.gz
+verified-this-pass.json.gz
+motory-check/

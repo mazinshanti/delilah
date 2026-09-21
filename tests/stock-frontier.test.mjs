@@ -58,3 +58,34 @@ test('successful changed price is published and prioritized; timeouts never remo
  const r=await collectAdditionalStock({sources:[source],previousListings:[old],now:()=>now,maxDetails:1,wait,fetchImpl:async u=>String(u).endsWith('/robots.txt')?new Response('User-agent: *\nAllow: /'):new Response(car(url))});
  assert.equal(r.listings[0].price,50000);assert.equal(r.state.motory.entries[0].nextCheckAt,now+4*3600000);
 });
+test('metadata-only expansion verifies exact ads without downloading image files',async()=>{
+ const url=ad(234567),calls=[];
+ const html=car(url).replace('"offers":','"image":"https://s3.eu-central-1.amazonaws.com/example-car.jpg","offers":');
+ const result=await collectAdditionalStock({sources:[source],mediaMode:'links-only',wait,maxDetails:1,fetchImpl:async u=>{
+  calls.push(String(u));if(String(u).endsWith('/robots.txt'))return new Response('User-agent: *\nAllow: /');
+  if(u===base+'en/cars-for-sale/')return new Response('<a href="'+url+'">Car</a>');
+  assert.equal(u,url);return new Response(html);
+ }});
+ assert.equal(result.listings.length,1);const row=result.listings[0];
+ assert.equal(row.detailChecked,true);assert.ok(Date.parse(row.lastDetailAt));assert.equal(row.imageVerified,false);assert.equal(row.mediaValidation,'source-url-only');assert.ok(row.image);assert.equal(calls.length,3);
+ await assert.rejects(collectAdditionalStock({mediaMode:'skip-everything'}),/invalid-media-mode/);
+});
+test('opt-in expansion follows observed brand navigation and excludes ads, offsite links and non-stock pages',async()=>{
+ const model=base+'en/cars-for-sale/toyota/corolla/',url=ad(345678),calls=[];
+ const result=await collectAdditionalStock({sources:[source],expandNavigation:true,mediaMode:'links-only',wait,maxDetails:1,fetchImpl:async u=>{
+  calls.push(String(u));if(String(u).endsWith('/robots.txt'))return new Response('User-agent: *\nAllow: /');
+  if(u===base+'en/cars-for-sale/')return new Response('<a href="'+model+'">Corolla</a><a href="https://evil.test/en/cars-for-sale/toyota/">bad</a><a href="/en/news/">news</a>');
+  if(u===model)return new Response('<a href="'+url+'">Car</a>');assert.equal(u,url);return new Response(car(url));
+ }});
+ assert.equal(result.listings.length,1);assert.ok(calls.includes(model));assert.equal(result.state.motory.navigationExpanded,true);assert.equal(result.diagnostics[0].successfulPages,2);
+});
+test('a removed published sitemap does not block remaining inventory navigation',async()=>{
+ const sitemap=base+'sitemap/en/sitemap.xml',page=base+'en/cars-for-sale/?page=2',url=ad(456789);
+ const result=await collectAdditionalStock({sources:[source],mediaMode:'links-only',wait,maxDetails:1,fetchImpl:async u=>{
+  if(String(u).endsWith('/robots.txt'))return new Response('User-agent: *\nAllow: /\nSitemap: '+sitemap);
+  if(u===sitemap)return new Response('',{status:404});
+  if(u===base+'en/cars-for-sale/')return new Response('<a href="?page=2">next</a>');
+  if(u===page)return new Response('<a href="'+url+'">Car</a>');assert.equal(u,url);return new Response(car(url));
+ }});
+ assert.equal(result.listings.length,1);assert.match(result.diagnostics[0].errors[0].error,/404/);assert.equal(result.state.motory.pauseUntil,0);
+});

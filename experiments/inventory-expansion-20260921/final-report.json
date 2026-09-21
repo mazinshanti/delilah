@@ -1,0 +1,206 @@
+{
+  "at": "2026-09-21T14:41:58.760Z",
+  "scope": "isolated-candidate-not-production",
+  "before": {
+    "checkedAt": "2026-09-21T14:42:00.177Z",
+    "snapshotAt": "2026-09-20T14:03:29.292Z",
+    "target": 50000,
+    "rawRows": 3521,
+    "validVehicleRows": 3521,
+    "freshRows": 80,
+    "staleRows": 3441,
+    "deduplicatedFreshListings": 80,
+    "remainingToTarget": 49920,
+    "targetReached": false,
+    "physicalVehicleUniquenessGuaranteed": false,
+    "bySource": {
+      "Mercedes-Benz Saudi": {
+        "stored": 24,
+        "fresh": 0,
+        "stale": 24
+      },
+      "CarSwitch Saudi": {
+        "stored": 845,
+        "fresh": 0,
+        "stale": 845
+      },
+      "Syarah": {
+        "stored": 2607,
+        "fresh": 36,
+        "stale": 2571
+      },
+      "Saudi Sale": {
+        "stored": 1,
+        "fresh": 0,
+        "stale": 1
+      },
+      "Mstaml": {
+        "stored": 1,
+        "fresh": 1,
+        "stale": 0
+      },
+      "Motory": {
+        "stored": 14,
+        "fresh": 14,
+        "stale": 0
+      },
+      "SAMACO Automotive": {
+        "stored": 13,
+        "fresh": 13,
+        "stale": 0
+      },
+      "ArabWheels Saudi": {
+        "stored": 9,
+        "fresh": 9,
+        "stale": 0
+      },
+      "Kayishha": {
+        "stored": 7,
+        "fresh": 7,
+        "stale": 0
+      }
+    },
+    "refreshQueues": []
+  },
+  "after": {
+    "checkedAt": "2026-09-21T14:42:01.653Z",
+    "snapshotAt": "2026-09-21T14:41:58.760Z",
+    "target": 50000,
+    "rawRows": 4473,
+    "validVehicleRows": 4473,
+    "freshRows": 3669,
+    "staleRows": 804,
+    "deduplicatedFreshListings": 3669,
+    "remainingToTarget": 46331,
+    "targetReached": false,
+    "physicalVehicleUniquenessGuaranteed": false,
+    "bySource": {
+      "Mercedes-Benz Saudi": {
+        "stored": 24,
+        "fresh": 0,
+        "stale": 24
+      },
+      "CarSwitch Saudi": {
+        "stored": 1082,
+        "fresh": 648,
+        "stale": 434
+      },
+      "Syarah": {
+        "stored": 2925,
+        "fresh": 2580,
+        "stale": 345
+      },
+      "Saudi Sale": {
+        "stored": 1,
+        "fresh": 0,
+        "stale": 1
+      },
+      "Mstaml": {
+        "stored": 67,
+        "fresh": 67,
+        "stale": 0
+      },
+      "Motory": {
+        "stored": 44,
+        "fresh": 44,
+        "stale": 0
+      },
+      "SAMACO Automotive": {
+        "stored": 21,
+        "fresh": 21,
+        "stale": 0
+      },
+      "ArabWheels Saudi": {
+        "stored": 132,
+        "fresh": 132,
+        "stale": 0
+      },
+      "Kayishha": {
+        "stored": 177,
+        "fresh": 177,
+        "stale": 0
+      }
+    },
+    "refreshQueues": [
+      {
+        "sourceId": "mstaml",
+        "known": 127,
+        "due": 0,
+        "failedLastCheck": 0,
+        "paused": false
+      },
+      {
+        "sourceId": "motory",
+        "known": 59,
+        "due": 13,
+        "failedLastCheck": 0,
+        "paused": false
+      },
+      {
+        "sourceId": "arabwheels",
+        "known": 254,
+        "due": 14,
+        "failedLastCheck": 0,
+        "paused": false
+      },
+      {
+        "sourceId": "kayishha",
+        "known": 327,
+        "due": 87,
+        "failedLastCheck": 0,
+        "paused": false
+      },
+      {
+        "sourceId": "samaco",
+        "known": 24,
+        "due": 0,
+        "failedLastCheck": 0,
+        "paused": false
+      }
+    ]
+  },
+  "netStoredChange": 952,
+  "netFreshDeduplicatedChange": 3589,
+  "primaryEvidence": "source-published inventory cards; not individual detail rechecks",
+  "primary": [
+    {
+      "source": "CarSwitch Saudi",
+      "acceptedCards": 648,
+      "diagnostics": {
+        "source": "CarSwitch Saudi",
+        "nextPage": 28,
+        "continuationExhausted": false,
+        "pages": 28,
+        "successfulPages": 27,
+        "completedAt": "2026-09-21T14:35:49.846Z",
+        "records": 648,
+        "duplicateCards": 0,
+        "errors": [
+          {
+            "page": 28,
+            "error": "http-202"
+          }
+        ],
+        "durationMs": 72823
+      }
+    },
+    {
+      "source": "Syarah",
+      "acceptedCards": 2578,
+      "diagnostics": {
+        "source": "Syarah",
+        "nextPage": 216,
+        "continuationExhausted": false,
+        "pages": 215,
+        "successfulPages": 215,
+        "completedAt": "2026-09-21T14:40:37.008Z",
+        "records": 2578,
+        "duplicateCards": 2,
+        "errors": [],
+        "durationMs": 360009
+      }
+    }
+  ],
+  "target": 10000,
+  "targetReached": false
+}

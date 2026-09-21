@@ -1,0 +1,434 @@
+{
+  "at": "2026-09-21T14:33:47.610Z",
+  "scope": "isolated-candidate-not-production",
+  "before": {
+    "checkedAt": "2026-09-21T14:33:48.523Z",
+    "snapshotAt": "2026-09-20T14:03:29.292Z",
+    "target": 50000,
+    "rawRows": 3521,
+    "validVehicleRows": 3521,
+    "freshRows": 668,
+    "staleRows": 2853,
+    "deduplicatedFreshListings": 668,
+    "remainingToTarget": 49332,
+    "targetReached": false,
+    "physicalVehicleUniquenessGuaranteed": false,
+    "bySource": {
+      "Mercedes-Benz Saudi": {
+        "stored": 24,
+        "fresh": 0,
+        "stale": 24
+      },
+      "CarSwitch Saudi": {
+        "stored": 845,
+        "fresh": 0,
+        "stale": 845
+      },
+      "Syarah": {
+        "stored": 2607,
+        "fresh": 624,
+        "stale": 1983
+      },
+      "Saudi Sale": {
+        "stored": 1,
+        "fresh": 0,
+        "stale": 1
+      },
+      "Mstaml": {
+        "stored": 1,
+        "fresh": 1,
+        "stale": 0
+      },
+      "Motory": {
+        "stored": 14,
+        "fresh": 14,
+        "stale": 0
+      },
+      "SAMACO Automotive": {
+        "stored": 13,
+        "fresh": 13,
+        "stale": 0
+      },
+      "ArabWheels Saudi": {
+        "stored": 9,
+        "fresh": 9,
+        "stale": 0
+      },
+      "Kayishha": {
+        "stored": 7,
+        "fresh": 7,
+        "stale": 0
+      }
+    },
+    "refreshQueues": []
+  },
+  "after": {
+    "checkedAt": "2026-09-21T14:33:49.824Z",
+    "snapshotAt": "2026-09-21T14:33:47.610Z",
+    "target": 50000,
+    "rawRows": 3679,
+    "validVehicleRows": 3679,
+    "freshRows": 826,
+    "staleRows": 2853,
+    "deduplicatedFreshListings": 826,
+    "remainingToTarget": 49174,
+    "targetReached": false,
+    "physicalVehicleUniquenessGuaranteed": false,
+    "bySource": {
+      "Mercedes-Benz Saudi": {
+        "stored": 24,
+        "fresh": 0,
+        "stale": 24
+      },
+      "CarSwitch Saudi": {
+        "stored": 845,
+        "fresh": 0,
+        "stale": 845
+      },
+      "Syarah": {
+        "stored": 2607,
+        "fresh": 624,
+        "stale": 1983
+      },
+      "Saudi Sale": {
+        "stored": 1,
+        "fresh": 0,
+        "stale": 1
+      },
+      "Mstaml": {
+        "stored": 31,
+        "fresh": 31,
+        "stale": 0
+      },
+      "Motory": {
+        "stored": 22,
+        "fresh": 22,
+        "stale": 0
+      },
+      "SAMACO Automotive": {
+        "stored": 21,
+        "fresh": 21,
+        "stale": 0
+      },
+      "ArabWheels Saudi": {
+        "stored": 54,
+        "fresh": 54,
+        "stale": 0
+      },
+      "Kayishha": {
+        "stored": 74,
+        "fresh": 74,
+        "stale": 0
+      }
+    },
+    "refreshQueues": [
+      {
+        "sourceId": "mstaml",
+        "known": 59,
+        "due": 0,
+        "failedLastCheck": 0,
+        "paused": false
+      },
+      {
+        "sourceId": "motory",
+        "known": 23,
+        "due": 0,
+        "failedLastCheck": 0,
+        "paused": false
+      },
+      {
+        "sourceId": "arabwheels",
+        "known": 125,
+        "due": 5,
+        "failedLastCheck": 0,
+        "paused": false
+      },
+      {
+        "sourceId": "kayishha",
+        "known": 327,
+        "due": 207,
+        "failedLastCheck": 0,
+        "paused": false
+      },
+      {
+        "sourceId": "samaco",
+        "known": 24,
+        "due": 0,
+        "failedLastCheck": 0,
+        "paused": false
+      }
+    ]
+  },
+  "netStoredChange": 158,
+  "netFreshDeduplicatedChange": 158,
+  "verifiedThisPass": 202,
+  "removedThisPass": 0,
+  "bySource": [
+    {
+      "source": "Mstaml",
+      "pages": 1,
+      "successfulPages": 1,
+      "sitemaps": 10,
+      "successfulSitemaps": 10,
+      "discovered": 58,
+      "detailAttempts": 59,
+      "detailSuccess": 59,
+      "records": 31,
+      "rejectedReasons": {
+        "sale-evidence-required": 2,
+        "unresolved-vehicle-identity": 17,
+        "vehicle-boundary": 6,
+        "rental-or-lease": 1,
+        "conflicting-condition": 2
+      },
+      "errors": [],
+      "coverageComplete": false,
+      "knownUrls": 59,
+      "pending": 0,
+      "due": 0,
+      "frontierOverflow": 0,
+      "pendingUrls": [],
+      "pendingPages": [],
+      "pendingSitemaps": 3853,
+      "completedAt": "2026-09-21T14:32:43.079Z",
+      "durationMs": 108071,
+      "budgetExhausted": false,
+      "discoveryExhausted": false
+    },
+    {
+      "source": "Motory",
+      "pages": 1,
+      "successfulPages": 1,
+      "sitemaps": 1,
+      "successfulSitemaps": 0,
+      "discovered": 9,
+      "detailAttempts": 23,
+      "detailSuccess": 23,
+      "records": 22,
+      "rejectedReasons": {
+        "vehicle-boundary": 1
+      },
+      "errors": [
+        {
+          "stage": "sitemap",
+          "url": "https://ksa.motory.com/sitemap/en/sitemap.xml",
+          "error": "HTTP 404"
+        }
+      ],
+      "coverageComplete": false,
+      "knownUrls": 23,
+      "pending": 0,
+      "due": 0,
+      "frontierOverflow": 0,
+      "pendingUrls": [],
+      "pendingPages": [
+        "https://ksa.motory.com/en/cars-for-sale/?page=2",
+        "https://ksa.motory.com/en/cars-for-sale/?page=3"
+      ],
+      "pendingSitemaps": 2,
+      "completedAt": "2026-09-21T14:32:00.220Z",
+      "durationMs": 65189,
+      "budgetExhausted": false,
+      "discoveryExhausted": false
+    },
+    {
+      "source": "ArabWheels Saudi",
+      "pages": 5,
+      "successfulPages": 5,
+      "sitemaps": 0,
+      "successfulSitemaps": 0,
+      "discovered": 116,
+      "detailAttempts": 120,
+      "detailSuccess": 120,
+      "records": 54,
+      "rejectedReasons": {
+        "vehicle-boundary": 3,
+        "unresolved-identity": 63
+      },
+      "errors": [],
+      "coverageComplete": false,
+      "knownUrls": 125,
+      "pending": 5,
+      "due": 5,
+      "frontierOverflow": 0,
+      "pendingUrls": [
+        "https://www.arabwheels.sa/used-cars/nissan-patrol-2018-for-sale-in-riyadh-8199",
+        "https://www.arabwheels.sa/used-cars/nissan-patrol-2023-for-sale-in-riyadh-8200",
+        "https://www.arabwheels.sa/used-cars/nissan-sunny-2023-for-sale-in-riyadh-8201",
+        "https://www.arabwheels.sa/used-cars/nissan-urvan-2021-for-sale-in-riyadh-8204",
+        "https://www.arabwheels.sa/used-cars/nissan-kicks-2024-for-sale-in-riyadh-8194"
+      ],
+      "pendingPages": [
+        "https://www.arabwheels.sa/used-cars/search/-/?page=65",
+        "https://www.arabwheels.sa/used-cars/search/-/?page=6",
+        "https://www.arabwheels.sa/used-cars/search/-/?page=7",
+        "https://www.arabwheels.sa/used-cars/search/-/?page=8",
+        "https://www.arabwheels.sa/used-cars/search/-/?page=9"
+      ],
+      "pendingSitemaps": 0,
+      "completedAt": "2026-09-21T14:33:40.003Z",
+      "durationMs": 164968,
+      "budgetExhausted": true,
+      "discoveryExhausted": false
+    },
+    {
+      "source": "Kayishha",
+      "pages": 1,
+      "successfulPages": 1,
+      "sitemaps": 1,
+      "successfulSitemaps": 1,
+      "discovered": 320,
+      "detailAttempts": 120,
+      "detailSuccess": 120,
+      "records": 74,
+      "rejectedReasons": {
+        "unresolved-identity": 5,
+        "sale-evidence-required": 41
+      },
+      "errors": [],
+      "coverageComplete": false,
+      "knownUrls": 327,
+      "pending": 207,
+      "due": 207,
+      "frontierOverflow": 0,
+      "pendingUrls": [
+        "https://buy.kayishha.com/cars/details/renault-duster-2015-92014",
+        "https://buy.kayishha.com/cars/details/mercedes-benz-glb-class-2023-92016",
+        "https://buy.kayishha.com/cars/details/bmw-x7-2022-92019",
+        "https://buy.kayishha.com/cars/details/hyundai-azera-2016-92057",
+        "https://buy.kayishha.com/cars/details/jeep-grand-cherokee-2023-92145",
+        "https://buy.kayishha.com/cars/details/mazda-3-2015-92149",
+        "https://buy.kayishha.com/cars/details/audi-a3-2022-92152",
+        "https://buy.kayishha.com/cars/details/hyundai-tucson-2022-92242",
+        "https://buy.kayishha.com/cars/details/fiat-500-2020-92244",
+        "https://buy.kayishha.com/cars/details/bmw-5-series-2019-92249",
+        "https://buy.kayishha.com/cars/details/mercedes-benz-s-class-2016-92302",
+        "https://buy.kayishha.com/cars/details/changan-uni-k-2024-92348",
+        "https://buy.kayishha.com/cars/details/toyota-hiace-2002-92382",
+        "https://buy.kayishha.com/cars/details/kia-sportage-2025-92403",
+        "https://buy.kayishha.com/cars/details/kia-cerato-2014-92459",
+        "https://buy.kayishha.com/cars/details/toyota-fortuner-2024-92545",
+        "https://buy.kayishha.com/cars/details/nissan-patrol-2017-92552",
+        "https://buy.kayishha.com/cars/details/cadillac-escalade-2019-92575",
+        "https://buy.kayishha.com/cars/details/chevrolet-captiva-2023-92640",
+        "https://buy.kayishha.com/cars/details/bmw-x5-2021-92648",
+        "https://buy.kayishha.com/cars/details/renault-symbol-2020-92649",
+        "https://buy.kayishha.com/cars/details/chevrolet-traverse-2020-92651",
+        "https://buy.kayishha.com/cars/details/ford-explorer-2011-92655",
+        "https://buy.kayishha.com/cars/details/toyota-corolla-2024-92699",
+        "https://buy.kayishha.com/cars/details/hyundai-creta-2024-92781",
+        "https://buy.kayishha.com/cars/details/dodge-charger-2010-92796",
+        "https://buy.kayishha.com/cars/details/cadillac-escalade-2011-92816",
+        "https://buy.kayishha.com/cars/details/hyundai-elantra-2024-92823",
+        "https://buy.kayishha.com/cars/details/nissan-patrol-2018-92891",
+        "https://buy.kayishha.com/cars/details/honda-city-2024-92893",
+        "https://buy.kayishha.com/cars/details/gmc-terrain-2020-92899",
+        "https://buy.kayishha.com/cars/details/hyundai-elantra-2024-92948",
+        "https://buy.kayishha.com/cars/details/bmw-7-series-2023-93016",
+        "https://buy.kayishha.com/cars/details/nissan-patrol-2022-93023",
+        "https://buy.kayishha.com/cars/details/jeep-grand-cherokee-2012-93026",
+        "https://buy.kayishha.com/cars/details/nissan-patrol-2025-93027",
+        "https://buy.kayishha.com/cars/details/cadillac-ct4-2021-93028",
+        "https://buy.kayishha.com/cars/details/jeep-grand-cherokee-2015-93031",
+        "https://buy.kayishha.com/cars/details/jac-gs3-2019-93210",
+        "https://buy.kayishha.com/cars/details/audi-q2-2024-93211",
+        "https://buy.kayishha.com/cars/details/suzuki-baleno-2024-93212",
+        "https://buy.kayishha.com/cars/details/toyota-rav4-2024-93222",
+        "https://buy.kayishha.com/cars/details/volkswagen-touareg-2023-93227",
+        "https://buy.kayishha.com/en/cars/details/ford-fusion-2016-84121",
+        "https://buy.kayishha.com/en/cars/details/bentley-continental-gt-2008-84146",
+        "https://buy.kayishha.com/en/cars/details/chrysler-300-2016-84214",
+        "https://buy.kayishha.com/en/cars/details/mercedes-benz-300350380-2009-84362",
+        "https://buy.kayishha.com/en/cars/details/ford-expedition-2013-84369",
+        "https://buy.kayishha.com/en/cars/details/skoda-octavia-2002-84592",
+        "https://buy.kayishha.com/en/cars/details/changan-alsvin-v7-2025-84600",
+        "https://buy.kayishha.com/en/cars/details/mercedes-benz-s-class-2018-84613",
+        "https://buy.kayishha.com/en/cars/details/skoda-octavia-2002-84637",
+        "https://buy.kayishha.com/en/cars/details/land-rover-range-rover-2020-84748",
+        "https://buy.kayishha.com/en/cars/details/renault-koleos-2017-84815",
+        "https://buy.kayishha.com/en/cars/details/lexus-es-series-2013-84887",
+        "https://buy.kayishha.com/en/cars/details/audi-q8-2023-84890",
+        "https://buy.kayishha.com/en/cars/details/mercedes-benz-glc-class-2020-85172",
+        "https://buy.kayishha.com/en/cars/details/audi-q7-2011-85180",
+        "https://buy.kayishha.com/en/cars/details/chery-tiggo-2-2022-85534",
+        "https://buy.kayishha.com/en/cars/details/nissan-xtrail-2025-85540",
+        "https://buy.kayishha.com/en/cars/details/mercedes-benz-s-class-2009-85633",
+        "https://buy.kayishha.com/en/cars/details/toyota-corolla-2023-85655",
+        "https://buy.kayishha.com/en/cars/details/volkswagen-touareg-2014-85677",
+        "https://buy.kayishha.com/en/cars/details/audi-s6-2022-85761",
+        "https://buy.kayishha.com/en/cars/details/mercedes-benz-gle-class-2023-85934",
+        "https://buy.kayishha.com/en/cars/details/lincoln-avaitor-2022-85962",
+        "https://buy.kayishha.com/en/cars/details/gmc-suburban-2016-86041",
+        "https://buy.kayishha.com/en/cars/details/volvo-xc60-2014-86059",
+        "https://buy.kayishha.com/en/cars/details/toyota-land-cruiser-2010-86071",
+        "https://buy.kayishha.com/en/cars/details/toyota-corolla-2013-86084",
+        "https://buy.kayishha.com/en/cars/details/mitsubishi-space-star-2020-86161",
+        "https://buy.kayishha.com/en/cars/details/range-rover-evoque-2013-86180",
+        "https://buy.kayishha.com/en/cars/details/hyundai-santa-fe-2019-86334",
+        "https://buy.kayishha.com/en/cars/details/hyundai-veloster-2015-86359",
+        "https://buy.kayishha.com/en/cars/details/toyota-fortuner-2021-86364",
+        "https://buy.kayishha.com/en/cars/details/nissan-patrol-2021-86498",
+        "https://buy.kayishha.com/en/cars/details/gmc-yukon-2017-86514",
+        "https://buy.kayishha.com/en/cars/details/kia-carnival-2023-86571",
+        "https://buy.kayishha.com/en/cars/details/land-rover-defender-2023-86584",
+        "https://buy.kayishha.com/en/cars/details/hyundai-sonata-2013-86707",
+        "https://buy.kayishha.com/en/cars/details/changan-cs75-2019-86711",
+        "https://buy.kayishha.com/en/cars/details/gmc-yukon-2022-86714",
+        "https://buy.kayishha.com/en/cars/details/honda-odyssey-2007-86718",
+        "https://buy.kayishha.com/en/cars/details/mercedes-benz-e-class-2025-86720",
+        "https://buy.kayishha.com/en/cars/details/ford-expedition-2012-86725",
+        "https://buy.kayishha.com/en/cars/details/changan-alsvin-v7-2020-86812",
+        "https://buy.kayishha.com/en/cars/details/toyota-fortuner-2022-86832",
+        "https://buy.kayishha.com/en/cars/details/lexus-es-series-2011-86914",
+        "https://buy.kayishha.com/en/cars/details/toyota-camry-2010-86921",
+        "https://buy.kayishha.com/en/cars/details/toyota-fj-cruiser-2021-86926",
+        "https://buy.kayishha.com/en/cars/details/hyundai-elantra-2016-86933",
+        "https://buy.kayishha.com/en/cars/details/peugeot-2008-2022-86946",
+        "https://buy.kayishha.com/en/cars/details/mazda-cx-9-2019-86948",
+        "https://buy.kayishha.com/en/cars/details/cadillac-srx-2015-86967",
+        "https://buy.kayishha.com/en/cars/details/ford-explorer-2010-86968",
+        "https://buy.kayishha.com/en/cars/details/nissan-pathfinder-2014-86995",
+        "https://buy.kayishha.com/en/cars/details/hyundai-elantra-2018-87003",
+        "https://buy.kayishha.com/en/cars/details/changan-alsvin-2020-87094",
+        "https://buy.kayishha.com/en/cars/details/lincoln-navigator-2021-87095",
+        "https://buy.kayishha.com/en/cars/details/jaguar-e-pace-2021-87107"
+      ],
+      "pendingPages": [],
+      "pendingSitemaps": 0,
+      "completedAt": "2026-09-21T14:33:47.578Z",
+      "durationMs": 172539,
+      "budgetExhausted": true,
+      "discoveryExhausted": true
+    },
+    {
+      "source": "SAMACO Automotive",
+      "pages": 1,
+      "successfulPages": 1,
+      "sitemaps": 1,
+      "successfulSitemaps": 1,
+      "discovered": 11,
+      "detailAttempts": 24,
+      "detailSuccess": 24,
+      "records": 21,
+      "rejectedReasons": {
+        "vehicle-boundary": 3
+      },
+      "errors": [],
+      "coverageComplete": false,
+      "knownUrls": 24,
+      "pending": 0,
+      "due": 0,
+      "frontierOverflow": 0,
+      "pendingUrls": [],
+      "pendingPages": [],
+      "pendingSitemaps": 0,
+      "completedAt": "2026-09-21T14:31:42.198Z",
+      "durationMs": 47157,
+      "budgetExhausted": false,
+      "discoveryExhausted": true
+    }
+  ],
+  "mediaMode": "links-only",
+  "target": 10000,
+  "targetReached": false
+}

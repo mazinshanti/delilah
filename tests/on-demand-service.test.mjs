@@ -1,0 +1,28 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {createOnDemandService} from '../lib/on-demand/service.js';
+import {installOnDemandRoutes} from '../lib/on-demand/routes.js';
+import {rulesIntent} from '../lib/ai-search-intent.js';
+const url='https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2022/873160';
+const car={source:'CarSwitch Saudi',url,title:'Toyota Corolla 2022',schemaType:'Car',make:'Toyota',model:'Corolla',year:2022,condition:'used',price:44000,priceVerified:true,city:'Jeddah',mileage:180000,listingVerified:true,detailChecked:true};
+const intentEngine={understand:async q=>rulesIntent(q)};
+const adapters={discover:async(i,o)=>o.onBatch([car]),verify:async()=>[car]};
+const body={query:'Toyota Corolla',condition:'used',filters:{maxPrice:45000,city:'Jeddah'}};
+test('service returns async compatible payload and preserves explicit filters',async()=>{const s=createOnDemandService({intentEngine,adapters});const j=s.start(body);assert.equal(j.statusCode,202);await s.settled(j.searchId);const done=s.get(j.searchId);assert.equal(done.listings.length,1);assert.equal(done.complete,true);assert.equal(done.coverageComplete,false);const blocked=s.start({...body,filters:{maxPrice:40000}});await s.settled(blocked.searchId);assert.equal(s.get(blocked.searchId).listings.length,0);});
+test('capacity is reserved before intent calls and cancellation reaches discovery',async()=>{let called=0;const s=createOnDemandService({maxActive:1,intentEngine,adapters:{discover:async(i,{signal})=>{called++;await new Promise(r=>{if(signal.aborted)return r();signal.addEventListener('abort',r,{once:true});});},verify:async()=>[]}});const j=s.start(body);assert.equal(s.start(body).statusCode,429);await new Promise(r=>setTimeout(r,10));s.cancel(j.searchId);await s.settled(j.searchId);assert.equal(called,1);assert.equal(s.get(j.searchId).status,'cancelled');assert.equal(s.metrics().active,0);});
+test('invalid and unsupported filters never invoke intent',()=>{const s=createOnDemandService({intentEngine:{understand:()=>assert.fail()},adapters});for(const b of [{query:''},{...body,filters:{maxMileage:50000}},{...body,condition:'all'},{...body,filters:{minPrice:50000,maxPrice:10000}}])assert.equal(s.start(b).statusCode,400);});
+test('hourly cap, expiry and job bounds are enforced',async()=>{let now=0;const s=createOnDemandService({intentEngine,adapters,clock:()=>now,requestsPerHour:1,ttlMs:100,maxJobs:1});const j=s.start(body);await s.settled(j.searchId);assert.equal(s.start(body).statusCode,429);now=3600001;assert.equal(s.get(j.searchId),null);const next=s.start(body);assert.equal(next.statusCode,202);await s.settled(next.searchId);});
+test('unexpected failures do not expose query, credentials or exception text',async()=>{const s=createOnDemandService({intentEngine:{understand:async()=>{throw Error('secret-api-key');}},adapters});const j=s.start(body);await s.settled(j.searchId);assert.equal(s.get(j.searchId).error,'search-unavailable');assert.ok(!JSON.stringify(s.metrics()).includes('secret'));assert.equal(s.metrics().active,0);});
+test('disabled installation registers no routes; enabled mode requires token and key',()=>{const app={post:()=>assert.fail(),get:()=>assert.fail(),delete:()=>assert.fail()};assert.equal(installOnDemandRoutes(app,{env:{}}),null);assert.throws(()=>installOnDemandRoutes(app,{env:{DALELAH_ON_DEMAND_ENABLED:'true'}}),/token/);assert.throws(()=>installOnDemandRoutes(app,{env:{DALELAH_ON_DEMAND_ENABLED:'true',DALELAH_ON_DEMAND_TOKEN:'x'.repeat(32)}}),/key-missing/);});
+test('preview routes enforce authentication and preserve numeric HTTP status',async()=>{
+ const routes=new Map(),app=Object.fromEntries(['get','post','delete'].map(method=>[method,(path,...handlers)=>routes.set(method+path,handlers)]));
+ const s=createOnDemandService({intentEngine,adapters});installOnDemandRoutes(app,{env:{DALELAH_ON_DEMAND_ENABLED:'true',DALELAH_ON_DEMAND_TOKEN:'x'.repeat(32),DALELAH_ON_DEMAND_PROVIDER:'direct'},service:s});
+ const [auth,handler]=routes.get('post/api/search/on-demand');const res={setHeader(){},status(n){this.code=n;return this;},json(v){this.body=v;return this;}};
+ auth({get:()=>''},res,()=>assert.fail());assert.equal(res.code,401);
+ auth({get:()=> 'Bearer '+'x'.repeat(32)},res,()=>handler({body},res));assert.equal(res.code,202);await s.settled(res.body.searchId);
+});
+test('HTTP preview supports authenticated search, polling and private metrics',async()=>{
+ const {default:express}=await import('express');const app=express();app.use(express.json());const service=createOnDemandService({intentEngine,adapters});
+ installOnDemandRoutes(app,{env:{DALELAH_ON_DEMAND_ENABLED:'true',DALELAH_ON_DEMAND_TOKEN:'t'.repeat(32),DALELAH_ON_DEMAND_PROVIDER:'direct'},service});
+ const server=app.listen(0,'127.0.0.1');await new Promise(r=>server.once('listening',r));const base=`http://127.0.0.1:${server.address().port}/api/search/on-demand`,headers={authorization:'Bearer '+'t'.repeat(32),'content-type':'application/json'};
+ try{assert.equal((await fetch(base+'/metrics')).status,401);const response=await fetch(base,{method:'POST',headers,body:JSON.stringify(body)});assert.equal(response.status,202);const created=await response.json();await service.settled(created.searchId);const done=await(await fetch(base+'/'+created.searchId,{headers})).json();assert.equal(done.listings.length,1);assert.equal(done.complete,true);const metrics=await(await fetch(base+'/metrics',{headers})).json();assert.equal(metrics.active,0);assert.equal(metrics.started,1);assert.ok(!JSON.stringify(metrics).includes(body.query));}finally{service.close();server.closeAllConnections();await new Promise(r=>server.close(r));}
+});

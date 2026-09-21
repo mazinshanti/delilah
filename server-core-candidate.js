@@ -40,6 +40,10 @@ installSellerRoutes(app);
 app.use(express.json({limit:'32kb'}));
 const inventoryIndex=new InventoryIndex();
 const intentEngine=createIntentEngine();
+if(process.env.DALELAH_ON_DEMAND_ENABLED==='true'){
+ const {installOnDemandRoutes}=await import('./lib/on-demand/routes.js');
+ installOnDemandRoutes(app,{intentEngine});
+}
 app.get('/api/search/ai-status',(_req,res)=>{const {stats,...status}=intentEngine.status();res.json(status);});
 if(process.env.NODE_ENV==='development')app.get('/api/search/ai-metrics',(_req,res)=>res.json(intentEngine.status()));
 app.get('/api/catalog',(_req,res)=>{res.setHeader('Cache-Control','public,max-age=3600');res.json(VEHICLE_CATALOG);});

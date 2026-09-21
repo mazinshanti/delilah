@@ -9,10 +9,11 @@ import {normalizeInventoryListing} from '../lib/inventory-normalizer.js';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
 import {gzipSync,gunzipSync} from 'node:zlib';
-import {readFile,mkdir,writeFile} from 'node:fs/promises';
+import {readFile,mkdir,writeFile,rename} from 'node:fs/promises';
 import {SOURCE_REGISTRY} from '../lib/source-registry.js';
 import {parseStructuredInventory,parseSyarahInventory,parseSaudiSaleInventory} from '../lib/public-inventory.js';
 const exec=promisify(execFile);
+async function atomicGzip(path,value){const temporary=path+'.'+process.pid+'.tmp';await writeFile(temporary,gzipSync(JSON.stringify(value)));await rename(temporary,path);}
 const maxPages=Math.max(1,Math.min(1000,Number(process.env.MARKET_PAGES)||500));
 await mkdir('data',{recursive:true});await mkdir('audit',{recursive:true});
 const all=new Map(),diagnostics=[];
@@ -34,7 +35,8 @@ const haraj=await collectHarajInventory({cursor:harajCursor,previousListings:[..
 const merged=mergeHarajSnapshot([...all.values()],haraj.listings);
 all.clear();for(const record of merged)all.set(record.url,record);
 diagnostics.push(haraj.diagnostics);
-if(!diagnostics.some(d=>d.records>0))throw new Error('No source successfully refreshed; preserving previous snapshot');
-await writeFile('data/market-inventory.json.gz',gzipSync(JSON.stringify({generatedAt:new Date().toISOString(),listings:filterVehicleSaleListings([...all.values()].map(c=>normalizeInventoryListing(c,{recordMetrics:true}))),diagnostics})));
-await writeFile('data/stock-crawl-state.json.gz',gzipSync(JSON.stringify(crawlState)));
+if(!diagnostics.some(d=>d.records>0)){await atomicGzip('data/stock-crawl-state.json.gz',crawlState);throw new Error('No source successfully refreshed; preserving previous snapshot');}
+await atomicGzip('data/market-inventory.json.gz',{generatedAt:new Date().toISOString(),listings:filterVehicleSaleListings([...all.values()].map(c=>normalizeInventoryListing(c,{recordMetrics:true}))),diagnostics});
+
+await atomicGzip('data/stock-crawl-state.json.gz',crawlState);
 console.log(JSON.stringify({target:10000,longTermTarget:50000,totalUnique:all.size,diagnostics}));

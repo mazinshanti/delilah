@@ -30,13 +30,20 @@ jobs:
           ADDITIONAL_MARKET_DURATION_MS: 1800000
       - run: npm test
       - run: node --max-old-space-size=320 scripts/validate-market-inventory.mjs
+      - run: node scripts/inventory-refresh-report.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: inventory-refresh-status
+          path: audit/inventory-refresh-status.json
       - name: Save validated public inventory
+        env:
+          REFRESH_BRANCH: ${{ github.ref_name }}
         run: |
           git config user.name 'Dalelah inventory refresh'
           git config user.email 'inventory@users.noreply.github.com'
           git add data/market-inventory.json.gz data/stock-crawl-state.json.gz
           if ! git diff --cached --quiet; then
             git commit -m 'Refresh validated Saudi inventory snapshot'
-            git pull --rebase origin main
-            git push origin HEAD:main
+            git pull --rebase origin "$REFRESH_BRANCH"
+            git push origin "HEAD:$REFRESH_BRANCH"
           fi

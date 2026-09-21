@@ -40,3 +40,21 @@ test('mixed classified sitemaps enqueue only Saudi car categories before fetchin
  assert.equal(f.add(s.url+'sa/product/car?id=1234568&type=4.41'),true);
  assert.equal(f.due().length,1);
 });
+test('changed listings return in four hours, errors back off and preserve last successful check',()=>{
+ const at=Date.now(),url=ad(123456);let f=createStockFrontier(source,{},[],at);f.add(url);f.finish(url,'accepted',at,{changed:true});
+ let entry=f.save().entries[0];assert.equal(entry.nextCheckAt,at+4*3600000);assert.equal(entry.lastSuccessfulAt,new Date(at).toISOString());
+ f.finish(url,'HTTP 503',at+4*3600000);entry=f.save().entries[0];assert.equal(entry.failures,1);assert.equal(entry.nextCheckAt,at+5*3600000);assert.equal(entry.lastSuccessfulAt,new Date(at).toISOString());
+ f=createStockFrontier(source,f.save(),[],at+5*3600000);f.finish(url,'timeout',at+5*3600000);entry=f.save().entries[0];assert.equal(entry.nextCheckAt,at+7*3600000);assert.equal(entry.failures,2);
+ f.finish(url,'accepted',at+7*3600000);assert.equal(f.save().entries[0].failures,0);
+});
+test('source cooldown survives runs and prevents network calls without deleting listings',async()=>{
+ const now=Date.now(),url=ad(123456),old={source:source.name,url,lastSeenAt:new Date(now-48*3600000).toISOString()};
+ const r=await collectAdditionalStock({sources:[source],previousListings:[old],now:()=>now,wait,fetchImpl:async u=>String(u).endsWith('/robots.txt')?new Response('User-agent: *\nAllow: /'):new Response('',{status:429,headers:{'retry-after':'7200'}})});
+ assert.equal(r.removedUrls.length,0);assert.equal(r.state.motory.pauseUntil,now+7200000);
+ const again=await collectAdditionalStock({sources:[source],state:r.state,now:()=>now+1000,fetchImpl:()=>assert.fail('paused source fetched')});assert.equal(again.diagnostics[0].paused,true);assert.deepEqual(again.state,r.state);
+});
+test('successful changed price is published and prioritized; timeouts never remove old rows',async()=>{
+ const now=Date.now(),url=ad(123456),old={source:source.name,url,price:60000,mileage:10000,condition:'used',lastSeenAt:new Date(now-48*3600000).toISOString()};
+ const r=await collectAdditionalStock({sources:[source],previousListings:[old],now:()=>now,maxDetails:1,wait,fetchImpl:async u=>String(u).endsWith('/robots.txt')?new Response('User-agent: *\nAllow: /'):new Response(car(url))});
+ assert.equal(r.listings[0].price,50000);assert.equal(r.state.motory.entries[0].nextCheckAt,now+4*3600000);
+});

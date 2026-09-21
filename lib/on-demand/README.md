@@ -1,6 +1,6 @@
 # On-demand search: private preview integration
 
-Status: implemented on the experiment branch, disabled by default, not deployed. This is a private preview service, not a completed public rollout. Existing `/api/search`, inventory loading and UI behavior remain unchanged. The front server imports these routes only when `DALELAH_ON_DEMAND_ENABLED=true`.
+Status: isolated Render preview deployed on the experiment branch; production integration remains disabled by default. This is a private preview service, not a completed public rollout. Existing `/api/search`, inventory loading and UI behavior remain unchanged. The front server imports these routes only when `DALELAH_ON_DEMAND_ENABLED=true`.
 
 ## Configuration
 
@@ -23,7 +23,7 @@ All endpoints require `Authorization: Bearer <preview token>` and return `Cache-
 - `DELETE /api/search/on-demand/:id`: cancels ongoing retrieval. Intent interpretation already in progress retains the existing engine's own bounded timeout; cancellation prevents subsequent source retrieval.
 - `GET /api/search/on-demand/metrics`: authenticated aggregate counts, per-source accepted/failure counts, active jobs, cache bytes and provider call/error totals. Raw queries, bearer tokens and provider errors are not exposed.
 
-Supported explicit filters: min/max year, min/max price, city and fuel type. Other UI filters fail explicitly rather than being silently ignored. Public UI integration is pending; the preview token must never be embedded in a shipped browser bundle. Existing UI search remains the fallback by using its unchanged endpoint.
+Supported explicit filters: min/max year, min/max price, city, fuel type, mileage, body type, source and trim. Unknown filters fail explicitly. The isolated preview serves the existing interface through protected browser sessions; public rollout is pending; the preview token must never be embedded in a shipped browser bundle. Existing UI search remains the fallback by using its unchanged endpoint.
 
 ## Operating bounds
 
@@ -54,3 +54,15 @@ The source scheduler's prior live pilot returned nine ads versus two in the base
 5. Start a limited rollout with the existing search endpoint available as fallback. Do not remove inventory or production sources as part of this preview.
 
 Rollback for the preview: set `DALELAH_ON_DEMAND_ENABLED=false` and restart/redeploy, or revert the integration commit. Unchanged standard endpoints continue to serve the existing application. This mechanism is documented and default-off installation is tested; no live Render rollback was executed.
+
+## Next-stage preview (21 September)
+
+The standalone preview now serves the existing Arabic/English interface, mapping its search/progress requests to on-demand retrieval. No production route is replaced. A password form at /preview/login accepts the existing preview access token from Render and exchanges it for a one-hour HttpOnly, Secure (production), SameSite=Strict session cookie. The token is never shipped in browser code. The preview has no inventory feed, selling backend or gallery enrichment backend; verified listing image URLs still display directly from their sources. It is a search preview, not a clone of every production feature.
+
+Changing searches cancels the prior known job. Completed elapsed timing is frozen. Missing AI interpretation fails explicitly even when a make is recognized. Browser-empty filter values are stripped before intent validation; all populated filters remain strict.
+
+Source scheduling uses bounded aggregate feedback per condition/make/body segment. At least three observations are required before a source score changes priority. Every configured source remains eligible after the four-second fallback delay. Statistics reset on restart and are not a trained model or evidence of speed improvement.
+
+Offline readiness study: 100 synthetic bilingual queries; 80 exact intent matches and 20 broad queries requiring configured AI. Zero unblocked mismatches after generic Arabic letter/number model normalization. See intent-readiness.json; this study makes no retrieval quality, recall or hosted-provider claims.
+
+Remaining release gates: existing provider credentials linked to this service, live hosted/hybrid benchmark with reviewed reference matches, browser visual QA, deployment-region latency and source-failure measurements, public access controls and monitoring. Use the preview access code from Render; do not put provider secrets into this form.

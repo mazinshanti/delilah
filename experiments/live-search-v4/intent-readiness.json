@@ -1,0 +1,872 @@
+{
+  "at": "2026-09-21T11:13:32.283Z",
+  "kind": "offline-intent-readiness",
+  "liveRetrieval": false,
+  "providerCalls": 0,
+  "total": 100,
+  "exactMatches": 80,
+  "requiresConfiguredAI": 20,
+  "unblockedMismatches": 0,
+  "runs": [
+    {
+      "id": "q1-ar",
+      "language": "ar",
+      "query": "تويوتا كورولا مستعملة تحت 80000 في الرياض",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q1-en",
+      "language": "en",
+      "query": "used Toyota Corolla under 80000 in Riyadh",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q2-ar",
+      "language": "ar",
+      "query": "تويوتا كورولا مستعملة تحت 45000 في جدة",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q2-en",
+      "language": "en",
+      "query": "used Toyota Corolla under 45000 in Jeddah",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q3-ar",
+      "language": "ar",
+      "query": "تويوتا كورولا جديدة تحت 100000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q3-en",
+      "language": "en",
+      "query": "new Toyota Corolla under 100000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q4-ar",
+      "language": "ar",
+      "query": "تويوتا كورولا مستعملة تحت 150000 في الدمام",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q4-en",
+      "language": "en",
+      "query": "used Toyota Corolla under 150000 in Dammam",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q5-ar",
+      "language": "ar",
+      "query": "تويوتا كورولا مستعملة تحت 5000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q5-en",
+      "language": "en",
+      "query": "used Toyota Corolla under 5000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q6-ar",
+      "language": "ar",
+      "query": "تويوتا كامري مستعملة تحت 80000 في الرياض",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q6-en",
+      "language": "en",
+      "query": "used Toyota Camry under 80000 in Riyadh",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q7-ar",
+      "language": "ar",
+      "query": "تويوتا كامري مستعملة تحت 45000 في جدة",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q7-en",
+      "language": "en",
+      "query": "used Toyota Camry under 45000 in Jeddah",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q8-ar",
+      "language": "ar",
+      "query": "تويوتا كامري جديدة تحت 100000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q8-en",
+      "language": "en",
+      "query": "new Toyota Camry under 100000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q9-ar",
+      "language": "ar",
+      "query": "تويوتا كامري مستعملة تحت 150000 في الدمام",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q9-en",
+      "language": "en",
+      "query": "used Toyota Camry under 150000 in Dammam",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q10-ar",
+      "language": "ar",
+      "query": "تويوتا كامري مستعملة تحت 5000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q10-en",
+      "language": "en",
+      "query": "used Toyota Camry under 5000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q11-ar",
+      "language": "ar",
+      "query": "هيونداي النترا مستعملة تحت 80000 في الرياض",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q11-en",
+      "language": "en",
+      "query": "used Hyundai Elantra under 80000 in Riyadh",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q12-ar",
+      "language": "ar",
+      "query": "هيونداي النترا مستعملة تحت 45000 في جدة",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q12-en",
+      "language": "en",
+      "query": "used Hyundai Elantra under 45000 in Jeddah",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q13-ar",
+      "language": "ar",
+      "query": "هيونداي النترا جديدة تحت 100000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q13-en",
+      "language": "en",
+      "query": "new Hyundai Elantra under 100000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q14-ar",
+      "language": "ar",
+      "query": "هيونداي النترا مستعملة تحت 150000 في الدمام",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q14-en",
+      "language": "en",
+      "query": "used Hyundai Elantra under 150000 in Dammam",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q15-ar",
+      "language": "ar",
+      "query": "هيونداي النترا مستعملة تحت 5000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q15-en",
+      "language": "en",
+      "query": "used Hyundai Elantra under 5000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q16-ar",
+      "language": "ar",
+      "query": "نيسان صني مستعملة تحت 80000 في الرياض",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q16-en",
+      "language": "en",
+      "query": "used Nissan Sunny under 80000 in Riyadh",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q17-ar",
+      "language": "ar",
+      "query": "نيسان صني مستعملة تحت 45000 في جدة",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q17-en",
+      "language": "en",
+      "query": "used Nissan Sunny under 45000 in Jeddah",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q18-ar",
+      "language": "ar",
+      "query": "نيسان صني جديدة تحت 100000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q18-en",
+      "language": "en",
+      "query": "new Nissan Sunny under 100000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q19-ar",
+      "language": "ar",
+      "query": "نيسان صني مستعملة تحت 150000 في الدمام",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q19-en",
+      "language": "en",
+      "query": "used Nissan Sunny under 150000 in Dammam",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q20-ar",
+      "language": "ar",
+      "query": "نيسان صني مستعملة تحت 5000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q20-en",
+      "language": "en",
+      "query": "used Nissan Sunny under 5000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q21-ar",
+      "language": "ar",
+      "query": "اودي كيو 8 مستعملة تحت 80000 في الرياض",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q21-en",
+      "language": "en",
+      "query": "used Audi Q8 under 80000 in Riyadh",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q22-ar",
+      "language": "ar",
+      "query": "اودي كيو 8 مستعملة تحت 45000 في جدة",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q22-en",
+      "language": "en",
+      "query": "used Audi Q8 under 45000 in Jeddah",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q23-ar",
+      "language": "ar",
+      "query": "اودي كيو 8 جديدة تحت 100000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q23-en",
+      "language": "en",
+      "query": "new Audi Q8 under 100000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q24-ar",
+      "language": "ar",
+      "query": "اودي كيو 8 مستعملة تحت 150000 في الدمام",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q24-en",
+      "language": "en",
+      "query": "used Audi Q8 under 150000 in Dammam",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q25-ar",
+      "language": "ar",
+      "query": "اودي كيو 8 مستعملة تحت 5000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q25-en",
+      "language": "en",
+      "query": "used Audi Q8 under 5000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q26-ar",
+      "language": "ar",
+      "query": "تويوتا فورتشنر مستعملة تحت 80000 في الرياض",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q26-en",
+      "language": "en",
+      "query": "used Toyota Fortuner under 80000 in Riyadh",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q27-ar",
+      "language": "ar",
+      "query": "تويوتا فورتشنر مستعملة تحت 45000 في جدة",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q27-en",
+      "language": "en",
+      "query": "used Toyota Fortuner under 45000 in Jeddah",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q28-ar",
+      "language": "ar",
+      "query": "تويوتا فورتشنر جديدة تحت 100000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q28-en",
+      "language": "en",
+      "query": "new Toyota Fortuner under 100000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q29-ar",
+      "language": "ar",
+      "query": "تويوتا فورتشنر مستعملة تحت 150000 في الدمام",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q29-en",
+      "language": "en",
+      "query": "used Toyota Fortuner under 150000 in Dammam",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q30-ar",
+      "language": "ar",
+      "query": "تويوتا فورتشنر مستعملة تحت 5000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q30-en",
+      "language": "en",
+      "query": "used Toyota Fortuner under 5000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q31-ar",
+      "language": "ar",
+      "query": "هوندا اكورد مستعملة تحت 80000 في الرياض",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q31-en",
+      "language": "en",
+      "query": "used Honda Accord under 80000 in Riyadh",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q32-ar",
+      "language": "ar",
+      "query": "هوندا اكورد مستعملة تحت 45000 في جدة",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q32-en",
+      "language": "en",
+      "query": "used Honda Accord under 45000 in Jeddah",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q33-ar",
+      "language": "ar",
+      "query": "هوندا اكورد جديدة تحت 100000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q33-en",
+      "language": "en",
+      "query": "new Honda Accord under 100000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q34-ar",
+      "language": "ar",
+      "query": "هوندا اكورد مستعملة تحت 150000 في الدمام",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q34-en",
+      "language": "en",
+      "query": "used Honda Accord under 150000 in Dammam",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q35-ar",
+      "language": "ar",
+      "query": "هوندا اكورد مستعملة تحت 5000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q35-en",
+      "language": "en",
+      "query": "used Honda Accord under 5000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q36-ar",
+      "language": "ar",
+      "query": "كيا سبورتاج مستعملة تحت 80000 في الرياض",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q36-en",
+      "language": "en",
+      "query": "used Kia Sportage under 80000 in Riyadh",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q37-ar",
+      "language": "ar",
+      "query": "كيا سبورتاج مستعملة تحت 45000 في جدة",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q37-en",
+      "language": "en",
+      "query": "used Kia Sportage under 45000 in Jeddah",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q38-ar",
+      "language": "ar",
+      "query": "كيا سبورتاج جديدة تحت 100000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q38-en",
+      "language": "en",
+      "query": "new Kia Sportage under 100000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q39-ar",
+      "language": "ar",
+      "query": "كيا سبورتاج مستعملة تحت 150000 في الدمام",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q39-en",
+      "language": "en",
+      "query": "used Kia Sportage under 150000 in Dammam",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q40-ar",
+      "language": "ar",
+      "query": "كيا سبورتاج مستعملة تحت 5000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q40-en",
+      "language": "en",
+      "query": "used Kia Sportage under 5000",
+      "requiresConfiguredAI": false,
+      "mode": "rules",
+      "mismatches": []
+    },
+    {
+      "id": "q41-ar",
+      "language": "ar",
+      "query": "سيارة يابانية دفع رباعي مستعملة تحت 150000 في الرياض",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    },
+    {
+      "id": "q41-en",
+      "language": "en",
+      "query": "used Japanese SUV under 150000 in Riyadh",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    },
+    {
+      "id": "q42-ar",
+      "language": "ar",
+      "query": "سيارة يابانية سيدان مستعملة تحت 150000 في الرياض",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    },
+    {
+      "id": "q42-en",
+      "language": "en",
+      "query": "used Japanese sedan under 150000 in Riyadh",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    },
+    {
+      "id": "q43-ar",
+      "language": "ar",
+      "query": "سيارة المانية دفع رباعي مستعملة تحت 150000 في الرياض",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    },
+    {
+      "id": "q43-en",
+      "language": "en",
+      "query": "used German SUV under 150000 in Riyadh",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    },
+    {
+      "id": "q44-ar",
+      "language": "ar",
+      "query": "سيارة المانية سيدان مستعملة تحت 150000 في الرياض",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    },
+    {
+      "id": "q44-en",
+      "language": "en",
+      "query": "used German sedan under 150000 in Riyadh",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    },
+    {
+      "id": "q45-ar",
+      "language": "ar",
+      "query": "سيارة كورية دفع رباعي مستعملة تحت 150000 في الرياض",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    },
+    {
+      "id": "q45-en",
+      "language": "en",
+      "query": "used Korean SUV under 150000 in Riyadh",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    },
+    {
+      "id": "q46-ar",
+      "language": "ar",
+      "query": "سيارة كورية سيدان مستعملة تحت 150000 في الرياض",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    },
+    {
+      "id": "q46-en",
+      "language": "en",
+      "query": "used Korean sedan under 150000 in Riyadh",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    },
+    {
+      "id": "q47-ar",
+      "language": "ar",
+      "query": "سيارة صينية دفع رباعي مستعملة تحت 150000 في الرياض",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    },
+    {
+      "id": "q47-en",
+      "language": "en",
+      "query": "used Chinese SUV under 150000 in Riyadh",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    },
+    {
+      "id": "q48-ar",
+      "language": "ar",
+      "query": "سيارة صينية سيدان مستعملة تحت 150000 في الرياض",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    },
+    {
+      "id": "q48-en",
+      "language": "en",
+      "query": "used Chinese sedan under 150000 in Riyadh",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    },
+    {
+      "id": "q49-ar",
+      "language": "ar",
+      "query": "سيارة امريكية دفع رباعي مستعملة تحت 150000 في الرياض",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    },
+    {
+      "id": "q49-en",
+      "language": "en",
+      "query": "used American SUV under 150000 in Riyadh",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    },
+    {
+      "id": "q50-ar",
+      "language": "ar",
+      "query": "سيارة امريكية سيدان مستعملة تحت 150000 في الرياض",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    },
+    {
+      "id": "q50-en",
+      "language": "en",
+      "query": "used American sedan under 150000 in Riyadh",
+      "requiresConfiguredAI": true,
+      "mode": "rules",
+      "mismatches": [
+        "originPreference",
+        "bodyType"
+      ]
+    }
+  ]
+}

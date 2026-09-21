@@ -1,6 +1,8 @@
 import {VEHICLE_CATALOG} from './vehicle-catalog-data.js';
 export {VEHICLE_CATALOG};
-export const catalogText=value=>String(value??'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).normalize('NFKD').toLowerCase().replace(/[\u0300-\u036f\u064b-\u065f\u0670]/g,'').replace(/[إأآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[^a-z0-9\u0600-\u06ff]+/g,' ').trim().replace(/\s+/g,' ');
+const letterNames={'كيو':'q','اكس':'x','إكس':'x','ار':'r','آر':'r','اس':'s','إس':'s','جي':'g','بي':'b','سي':'c','اي':'a','إي':'e'};
+const modelLetters=value=>value.replace(/(^|\s)(كيو|اكس|إكس|ار|آر|اس|إس|جي|بي|سي|اي|إي)\s*(\d{1,3})(?=\s|$)/g,(_,space,letter,n)=>space+letterNames[letter]+n);
+export const catalogText=value=>modelLetters(String(value??'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d))).normalize('NFKD').toLowerCase().replace(/[\u0300-\u036f\u064b-\u065f\u0670]/g,'').replace(/[إأآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[^a-z0-9\u0600-\u06ff]+/g,' ').trim().replace(/\s+/g,' ');
 const normalized=new Map();const cachedText=v=>{if(normalized.has(v))return normalized.get(v);const out=catalogText(v);if(normalized.size>12000)normalized.clear();normalized.set(v,out);return out;};
 const contains=(text,alias)=>` ${cachedText(text)} `.includes(` ${cachedText(alias)} `);
 const makeAliases=VEHICLE_CATALOG.makes.flatMap(make=>[...new Set([make.name,make.ar,...make.aliases].filter(Boolean))].map(alias=>({make,alias}))).sort((a,b)=>b.alias.length-a.alias.length);

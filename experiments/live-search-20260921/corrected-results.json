@@ -1,0 +1,995 @@
+{
+  "at": "2026-09-21T07:42:18.304Z",
+  "baseCommit": "07d4cfd19dd4bfaddc49198633a879b079099645",
+  "method": "live source experiment; production intent bridge; no independent AI/search-provider API credentials",
+  "cases": [
+    {
+      "id": "corolla-en",
+      "query": "Toyota Corolla under 45000 in Jeddah",
+      "condition": "used",
+      "status": "measured",
+      "intent": {
+        "query": "Toyota Corolla under 45000 in Jeddah",
+        "make": "Toyota",
+        "model": "Corolla",
+        "condition": "used",
+        "city": "Jeddah",
+        "bodyType": null,
+        "fuelType": null,
+        "transmission": null,
+        "trim": null,
+        "sellerType": null,
+        "originPreference": null,
+        "useCase": null,
+        "sortPreference": null,
+        "interpretation": null,
+        "year": null,
+        "minYear": null,
+        "maxYear": null,
+        "minPrice": null,
+        "maxPrice": 45000,
+        "excludedMakes": [],
+        "priorities": [],
+        "confidence": 1
+      },
+      "intentOrigin": "production-search-response; also triggers existing search",
+      "baselineFirstMs": 11174,
+      "baselineFirst": {
+        "count": 5,
+        "indexedCount": 0,
+        "complete": false,
+        "partial": false,
+        "intentMode": "rules",
+        "ai": {
+          "model": null,
+          "latencyMs": 0,
+          "cacheHit": false,
+          "fallbackReason": null
+        },
+        "sources": {
+          "OpenSooq": 5
+        },
+        "rows": [
+          {
+            "url": "https://sa.opensooq.com/en/search/285208456",
+            "title": "Toyota Corolla 2005",
+            "price": 15000,
+            "city": "Jeddah",
+            "condition": "used"
+          },
+          {
+            "url": "https://sa.opensooq.com/en/search/287354740",
+            "title": "Toyota Corolla 2009 xli",
+            "price": 18500,
+            "city": "Jeddah",
+            "condition": "used"
+          },
+          {
+            "url": "https://sa.opensooq.com/en/search/286600726",
+            "title": "Toyota Corolla 2025",
+            "price": 3000,
+            "city": "Jeddah",
+            "condition": "used"
+          },
+          {
+            "url": "https://sa.opensooq.com/en/search/285053340",
+            "title": "Toyota Corolla 2016 for Sale",
+            "price": 33000,
+            "city": "Jeddah",
+            "condition": "used"
+          },
+          {
+            "url": "https://sa.opensooq.com/en/search/284708876",
+            "title": "For Sale: 2012 Toyota Corolla - Manual Transmission Peace be upon you.",
+            "price": 18500,
+            "city": "Jeddah",
+            "condition": "used"
+          }
+        ]
+      },
+      "baselineLater": {
+        "count": 5,
+        "indexedCount": 0,
+        "complete": false,
+        "partial": false,
+        "intentMode": "rules",
+        "ai": {
+          "model": null,
+          "latencyMs": 0,
+          "cacheHit": false,
+          "fallbackReason": null
+        },
+        "sources": {
+          "OpenSooq": 5
+        },
+        "rows": [
+          {
+            "url": "https://sa.opensooq.com/en/search/285208456",
+            "title": "Toyota Corolla 2005",
+            "price": 15000,
+            "city": "Jeddah",
+            "condition": "used"
+          },
+          {
+            "url": "https://sa.opensooq.com/en/search/287354740",
+            "title": "Toyota Corolla 2009 xli",
+            "price": 18500,
+            "city": "Jeddah",
+            "condition": "used"
+          },
+          {
+            "url": "https://sa.opensooq.com/en/search/286600726",
+            "title": "Toyota Corolla 2025",
+            "price": 3000,
+            "city": "Jeddah",
+            "condition": "used"
+          },
+          {
+            "url": "https://sa.opensooq.com/en/search/285053340",
+            "title": "Toyota Corolla 2016 for Sale",
+            "price": 33000,
+            "city": "Jeddah",
+            "condition": "used"
+          },
+          {
+            "url": "https://sa.opensooq.com/en/search/284708876",
+            "title": "For Sale: 2012 Toyota Corolla - Manual Transmission Peace be upon you.",
+            "price": 18500,
+            "city": "Jeddah",
+            "condition": "used"
+          }
+        ]
+      },
+      "liveOnly": {
+        "count": 0,
+        "firstCandidateMs": 11239,
+        "totalMs": 35975,
+        "lanes": [
+          {
+            "source": "Haraj",
+            "query": "Toyota Corolla",
+            "url": "https://haraj.com.sa/search/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7/",
+            "candidates": 12,
+            "detailsChecked": 0,
+            "matches": [],
+            "detailErrors": [],
+            "ms": 11302
+          },
+          {
+            "source": "OpenSooq",
+            "query": "Toyota Corolla",
+            "url": "https://sa.opensooq.com/en/jeddah/cars/cars-for-sale/toyota/corolla",
+            "candidates": 8,
+            "detailsChecked": 2,
+            "matches": [],
+            "detailErrors": [
+              "exact-ad-evidence-missing",
+              "exact-ad-evidence-missing"
+            ],
+            "ms": 35963
+          }
+        ],
+        "matches": [],
+        "inventoryRead": false,
+        "inventoryWritten": false,
+        "imagesDownloaded": 0,
+        "coverageComplete": false
+      },
+      "memory": {
+        "rss": 65564672,
+        "heapTotal": 38080512,
+        "heapUsed": 19811304,
+        "external": 5740904,
+        "arrayBuffers": 1947413
+      }
+    },
+    {
+      "id": "suv-ar",
+      "query": "ابي جيب عائلي ياباني تحت 150 ألف في الرياض",
+      "condition": "used",
+      "status": "measured",
+      "intent": {
+        "query": "ابي جيب عائلي ياباني تحت 150 ألف في الرياض",
+        "make": null,
+        "model": null,
+        "condition": "used",
+        "city": "Riyadh",
+        "bodyType": "SUV",
+        "fuelType": null,
+        "transmission": null,
+        "trim": null,
+        "sellerType": null,
+        "originPreference": "Japanese",
+        "useCase": "family",
+        "sortPreference": null,
+        "interpretation": "بحث عن جيب عائلي ياباني، سعر أقل من 150 ألف، في الرياض",
+        "year": null,
+        "minYear": null,
+        "maxYear": null,
+        "minPrice": null,
+        "maxPrice": 150000,
+        "excludedMakes": [],
+        "priorities": [],
+        "confidence": 0.9
+      },
+      "intentOrigin": "production-search-response; also triggers existing search",
+      "baselineFirstMs": 12207,
+      "baselineFirst": {
+        "count": 220,
+        "indexedCount": 1719,
+        "complete": true,
+        "partial": false,
+        "intentMode": "ai",
+        "ai": {
+          "model": "gpt-4.1-mini",
+          "latencyMs": 3889,
+          "cacheHit": false,
+          "fallbackReason": null
+        },
+        "sources": {
+          "Syarah": 172,
+          "CarSwitch Saudi": 43,
+          "Haraj": 5
+        },
+        "rows": [
+          {
+            "url": "https://syarah.com/en/cardetail/toyota-rav4-used-315552",
+            "title": "Toyota RAV4 LE 2023",
+            "price": 82000,
+            "city": "Riyadh",
+            "condition": "used"
+          },
+          {
+            "url": "https://syarah.com/en/cardetail/nissan-xtrail-used-316782",
+            "title": "Nissan Xtrail S 5 Seats 2021 دبل",
+            "price": 51500,
+            "city": "Riyadh",
+            "condition": "used"
+          },
+          {
+            "url": "https://syarah.com/en/cardetail/nissan-xtrail-used-316566",
+            "title": "Nissan Xtrail S 7 Seats 2021",
+            "price": 49000,
+            "city": "Riyadh",
+            "condition": "used"
+          },
+          {
+            "url": "https://syarah.com/en/cardetail/nissan-xtrail-used-316303",
+            "title": "Nissan Xtrail S 7 Seats 2021",
+            "price": 50000,
+            "city": "Riyadh",
+            "condition": "used"
+          },
+          {
+            "url": "https://syarah.com/en/cardetail/nissan-xtrail-used-316054",
+            "title": "Nissan Xtrail S 5 Seats 2020 دبل",
+            "price": 49000,
+            "city": "Riyadh",
+            "condition": "used"
+          }
+        ]
+      },
+      "baselineLater": {
+        "count": 220,
+        "indexedCount": 1719,
+        "complete": true,
+        "partial": false,
+        "intentMode": "ai",
+        "ai": {
+          "model": "gpt-4.1-mini",
+          "latencyMs": 3889,
+          "cacheHit": false,
+          "fallbackReason": null
+        },
+        "sources": {
+          "Syarah": 172,
+          "CarSwitch Saudi": 43,
+          "Haraj": 5
+        },
+        "rows": [
+          {
+            "url": "https://syarah.com/en/cardetail/toyota-rav4-used-315552",
+            "title": "Toyota RAV4 LE 2023",
+            "price": 82000,
+            "city": "Riyadh",
+            "condition": "used"
+          },
+          {
+            "url": "https://syarah.com/en/cardetail/nissan-xtrail-used-316782",
+            "title": "Nissan Xtrail S 5 Seats 2021 دبل",
+            "price": 51500,
+            "city": "Riyadh",
+            "condition": "used"
+          },
+          {
+            "url": "https://syarah.com/en/cardetail/nissan-xtrail-used-316566",
+            "title": "Nissan Xtrail S 7 Seats 2021",
+            "price": 49000,
+            "city": "Riyadh",
+            "condition": "used"
+          },
+          {
+            "url": "https://syarah.com/en/cardetail/nissan-xtrail-used-316303",
+            "title": "Nissan Xtrail S 7 Seats 2021",
+            "price": 50000,
+            "city": "Riyadh",
+            "condition": "used"
+          },
+          {
+            "url": "https://syarah.com/en/cardetail/nissan-xtrail-used-316054",
+            "title": "Nissan Xtrail S 5 Seats 2020 دبل",
+            "price": 49000,
+            "city": "Riyadh",
+            "condition": "used"
+          }
+        ]
+      },
+      "liveOnly": {
+        "count": 1,
+        "firstCandidateMs": 10690,
+        "totalMs": 33286,
+        "lanes": [
+          {
+            "source": "Haraj",
+            "query": "Toyota",
+            "url": "https://haraj.com.sa/search/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7/",
+            "candidates": 12,
+            "detailsChecked": 0,
+            "matches": [],
+            "detailErrors": [],
+            "ms": 10826
+          },
+          {
+            "source": "OpenSooq",
+            "query": "Toyota",
+            "url": "https://sa.opensooq.com/en/al-riyadh/cars/cars-for-sale/toyota",
+            "candidates": 21,
+            "detailsChecked": 2,
+            "matches": [],
+            "detailErrors": [
+              "exact-ad-evidence-missing",
+              "exact-ad-evidence-missing"
+            ],
+            "ms": 32615
+          },
+          {
+            "source": "Haraj",
+            "query": "Nissan",
+            "url": "https://haraj.com.sa/search/%D9%86%D9%8A%D8%B3%D8%A7%D9%86/",
+            "candidates": 12,
+            "detailsChecked": 0,
+            "matches": [],
+            "detailErrors": [],
+            "ms": 10723
+          },
+          {
+            "source": "OpenSooq",
+            "query": "Nissan",
+            "url": "https://sa.opensooq.com/en/al-riyadh/cars/cars-for-sale/nissan",
+            "candidates": 28,
+            "detailsChecked": 2,
+            "matches": [],
+            "detailErrors": [
+              "exact-ad-evidence-missing",
+              "exact-ad-evidence-missing"
+            ],
+            "ms": 32837
+          },
+          {
+            "source": "Haraj",
+            "query": "Mazda",
+            "url": "https://haraj.com.sa/search/%D9%85%D8%A7%D8%B2%D8%AF%D8%A7/",
+            "candidates": 12,
+            "detailsChecked": 1,
+            "matches": [
+              {
+                "source": "Haraj",
+                "sourceType": "marketplace",
+                "seller": "Haraj",
+                "sourceStrict": true,
+                "title": "مازدا CX9 موديل 2019 فل كامل",
+                "snippet": "السعر /65000\n\n&lrm;الممشى /257 الف كيلو \n=========================\n&lrm;►◄الم واصفـــــــــــات►◄____________ :\n\nمكينه 2.5\n4 سلندر\nدفع امامي\nتشغيل بصمة\n** جنوط 18\nمثبت سرعة\nتكيف خلفي\nجلنط كهرباء\nشاشة\nكاميرا خلفيه\nمقاعد قماش\nحساسات\n\n&lrm;-وباقي المواصفات المعروفه\n&lrm;وايضا لدينا خدمة\n&lrm;;شحن لجميع مناطق المملكه بخصم خاص لدى مجموعه البسامي\n&lrm;ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ\n&lrm;;اوقات الدوام فترتين\n&lrm;;فتره صباحيه من 9:00الى12:00\n&lrm;;الفتره المسائيه من 3 الى9:00\n&lrm;  الرجاء التواصل على الارقام التالية\n&lrm;للتواصل\n0533367330\n0500996336",
+                "url": "https://haraj.com.sa/11189013208/%D9%85%D8%A7%D8%B2%D8%AF%D8%A7_CX9_%D9%85%D9%88%D8%AF%D9%8A%D9%84_2019_%D9%81%D9%84_%D9%83%D8%A7%D9%85%D9%84",
+                "year": 2025,
+                "price": 65000,
+                "mileage": null,
+                "city": "Riyadh",
+                "condition": "used",
+                "image": "https://thumbcdn.haraj.com.sa/1800x1270_F4ADB135-0FD0-4FC8-BF65-E4DA25F8B021.jpg-140x140.webp",
+                "displayImage": "https://thumbcdn.haraj.com.sa/1800x1270_F4ADB135-0FD0-4FC8-BF65-E4DA25F8B021.jpg-140x140.webp",
+                "imageVerified": true,
+                "priceVerified": true,
+                "priceSource": "haraj_search_card_formatted_price",
+                "priceEvidence": "65000",
+                "saleVerified": true,
+                "saleEvidence": [
+                  "haraj_direct_ad_url",
+                  "haraj_fast_search_page"
+                ],
+                "score": 86,
+                "discovery": "haraj_fast_search_page",
+                "fastSource": true,
+                "vehicle_classification": "VEHICLE_FOR_SALE",
+                "normalized_make": "MAZDA",
+                "normalized_model": "CX 9",
+                "currency": "SAR",
+                "body_type": null,
+                "fuel_type": null,
+                "id": "haraj:https-haraj-com-sa-11189013208-d9-85-d8-a7-d8-b2-d8-af-d8-a7-cx9-d9-85-d9-88-d8-af-d9-8a-d9-84-2019-d9-81-d9-84-d9-83-d8-a7-d9-85-d9-84",
+                "source_listing_id": "haraj:https-haraj-com-sa-11189013208-d9-85-d8-a7-d8-b2-d8-af-d8-a7-cx9-d9-85-d9-88-d8-af-d9-8a-d9-84-2019-d9-81-d9-84-d9-83-d8-a7-d9-85-d9-84",
+                "listing_id": "haraj:https-haraj-com-sa-11189013208-d9-85-d8-a7-d8-b2-d8-af-d8-a7-cx9-d9-85-d9-88-d8-af-d9-8a-d9-84-2019-d9-81-d9-84-d9-83-d8-a7-d9-85-d9-84",
+                "source_url": "https://haraj.com.sa/11189013208/%D9%85%D8%A7%D8%B2%D8%AF%D8%A7_CX9_%D9%85%D9%88%D8%AF%D9%8A%D9%84_2019_%D9%81%D9%84_%D9%83%D8%A7%D9%85%D9%84",
+                "mileage_km": null,
+                "price_sar": 65000,
+                "price_type": "cash",
+                "price_confidence": "high",
+                "source_price_raw": "65,000",
+                "seller_type": null,
+                "primary_image": "https://thumbcdn.haraj.com.sa/1800x1270_F4ADB135-0FD0-4FC8-BF65-E4DA25F8B021.jpg-140x140.webp",
+                "gallery_images": [
+                  "https://thumbcdn.haraj.com.sa/1800x1270_F4ADB135-0FD0-4FC8-BF65-E4DA25F8B021.jpg-140x140.webp"
+                ],
+                "description": "السعر /65000\n\n&lrm;الممشى /257 الف كيلو \n=========================\n&lrm;►◄الم واصفـــــــــــات►◄____________ :\n\nمكينه 2.5\n4 سلندر\nدفع امامي\nتشغيل بصمة\n** جنوط 18\nمثبت سرعة\nتكيف خلفي\nجلنط كهرباء\nشاشة\nكاميرا خلفيه\nمقاعد قماش\nحساسات\n\n&lrm;-وباقي المواصفات المعروفه\n&lrm;وايضا لدينا خدمة\n&lrm;;شحن لجميع مناطق المملكه بخصم خاص لدى مجموعه البسامي\n&lrm;ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ\n&lrm;;اوقات الدوام فترتين\n&lrm;;فتره صباحيه من 9:00الى12:00\n&lrm;;الفتره المسائيه من 3 الى9:00\n&lrm;  الرجاء التواصل على الارقام التالية\n&lrm;للتواصل\n0533367330\n0500996336",
+                "created_at": "2026-09-21T07:43:39.913Z",
+                "updated_at": "2026-09-21T07:43:39.913Z",
+                "inventoryId": "haraj:https-haraj-com-sa-11189013208-d9-85-d8-a7-d8-b2-d8-af-d8-a7-cx9-d9-85-d9-88-d8-af-d9-8a-d9-84-2019-d9-81-d9-84-d9-83-d8-a7-d9-85-d9-84",
+                "sourceName": "Haraj",
+                "sourceAttribution": "Haraj",
+                "originalUrl": "https://haraj.com.sa/11189013208/%D9%85%D8%A7%D8%B2%D8%AF%D8%A7_CX9_%D9%85%D9%88%D8%AF%D9%8A%D9%84_2019_%D9%81%D9%84_%D9%83%D8%A7%D9%85%D9%84",
+                "make": "Mazda",
+                "brand": "Mazda",
+                "model": "CX-9",
+                "trim": null,
+                "priceSar": 65000,
+                "mileageKm": null,
+                "images": [
+                  "https://thumbcdn.haraj.com.sa/1800x1270_F4ADB135-0FD0-4FC8-BF65-E4DA25F8B021.jpg-140x140.webp"
+                ],
+                "vehicle": {
+                  "vin": null,
+                  "make": "Mazda",
+                  "model": "CX-9",
+                  "trim": null,
+                  "year": 2025,
+                  "condition": "used",
+                  "bodyType": null,
+                  "transmission": null,
+                  "fuelType": null,
+                  "drivetrain": null,
+                  "engine": null,
+                  "exteriorColor": null,
+                  "mileageKm": null
+                },
+                "sellerDetails": {
+                  "id": null,
+                  "name": "Haraj",
+                  "type": null,
+                  "verified": false,
+                  "branch": null,
+                  "city": "Riyadh"
+                },
+                "commercial": {
+                  "priceSar": 65000,
+                  "vatIncluded": null,
+                  "negotiable": null,
+                  "financeAvailable": null,
+                  "monthlyPaymentSar": null
+                },
+                "trust": {
+                  "level": "raw",
+                  "sellerVerified": false,
+                  "inspectionStatus": null,
+                  "inspectionScore": null,
+                  "inspectionProvider": null,
+                  "inspectionDate": null,
+                  "historyStatus": null,
+                  "historyProvider": null,
+                  "warrantyMonths": null,
+                  "returnDays": null
+                },
+                "location": {
+                  "city": "Riyadh",
+                  "branch": null,
+                  "latitude": null,
+                  "longitude": null
+                },
+                "media": {
+                  "primaryImage": "https://thumbcdn.haraj.com.sa/1800x1270_F4ADB135-0FD0-4FC8-BF65-E4DA25F8B021.jpg-140x140.webp",
+                  "images": [
+                    "https://thumbcdn.haraj.com.sa/1800x1270_F4ADB135-0FD0-4FC8-BF65-E4DA25F8B021.jpg-140x140.webp"
+                  ]
+                },
+                "availability": "unknown",
+                "provenance": {
+                  "source": "Haraj",
+                  "sourceType": "marketplace",
+                  "sourceListingId": "haraj:https-haraj-com-sa-11189013208-d9-85-d8-a7-d8-b2-d8-af-d8-a7-cx9-d9-85-d9-88-d8-af-d9-8a-d9-84-2019-d9-81-d9-84-d9-83-d8-a7-d9-85-d9-84",
+                  "ingestionMethod": null,
+                  "originalUrl": "https://haraj.com.sa/11189013208/%D9%85%D8%A7%D8%B2%D8%AF%D8%A7_CX9_%D9%85%D9%88%D8%AF%D9%8A%D9%84_2019_%D9%81%D9%84_%D9%83%D8%A7%D9%85%D9%84",
+                  "evidence": []
+                },
+                "firstSeenAt": "2026-09-21T07:43:39.913Z",
+                "lastSeenAt": "2026-09-21T07:43:39.913Z",
+                "updatedAt": "2026-09-21T07:43:39.913Z",
+                "relevanceScore": 734,
+                "rankingSignals": [
+                  "price-fit",
+                  "resolved-body-type-fit",
+                  "brand-origin-fit"
+                ],
+                "intentScore": 3,
+                "unverifiedAttributes": [],
+                "resolvedBodyType": "SUV",
+                "bodyTypeEvidence": "catalog-model-mapping",
+                "detailChecked": true
+              }
+            ],
+            "detailErrors": [],
+            "ms": 33240
+          },
+          {
+            "source": "OpenSooq",
+            "query": "Mazda",
+            "url": "https://sa.opensooq.com/en/al-riyadh/cars/cars-for-sale/used",
+            "candidates": 29,
+            "detailsChecked": 0,
+            "matches": [],
+            "detailErrors": [],
+            "ms": 12508
+          }
+        ],
+        "matches": [
+          {
+            "source": "Haraj",
+            "sourceType": "marketplace",
+            "seller": "Haraj",
+            "sourceStrict": true,
+            "title": "مازدا CX9 موديل 2019 فل كامل",
+            "snippet": "السعر /65000\n\n&lrm;الممشى /257 الف كيلو \n=========================\n&lrm;►◄الم واصفـــــــــــات►◄____________ :\n\nمكينه 2.5\n4 سلندر\nدفع امامي\nتشغيل بصمة\n** جنوط 18\nمثبت سرعة\nتكيف خلفي\nجلنط كهرباء\nشاشة\nكاميرا خلفيه\nمقاعد قماش\nحساسات\n\n&lrm;-وباقي المواصفات المعروفه\n&lrm;وايضا لدينا خدمة\n&lrm;;شحن لجميع مناطق المملكه بخصم خاص لدى مجموعه البسامي\n&lrm;ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ\n&lrm;;اوقات الدوام فترتين\n&lrm;;فتره صباحيه من 9:00الى12:00\n&lrm;;الفتره المسائيه من 3 الى9:00\n&lrm;  الرجاء التواصل على الارقام التالية\n&lrm;للتواصل\n0533367330\n0500996336",
+            "url": "https://haraj.com.sa/11189013208/%D9%85%D8%A7%D8%B2%D8%AF%D8%A7_CX9_%D9%85%D9%88%D8%AF%D9%8A%D9%84_2019_%D9%81%D9%84_%D9%83%D8%A7%D9%85%D9%84",
+            "year": 2025,
+            "price": 65000,
+            "mileage": null,
+            "city": "Riyadh",
+            "condition": "used",
+            "image": "https://thumbcdn.haraj.com.sa/1800x1270_F4ADB135-0FD0-4FC8-BF65-E4DA25F8B021.jpg-140x140.webp",
+            "displayImage": "https://thumbcdn.haraj.com.sa/1800x1270_F4ADB135-0FD0-4FC8-BF65-E4DA25F8B021.jpg-140x140.webp",
+            "imageVerified": true,
+            "priceVerified": true,
+            "priceSource": "haraj_search_card_formatted_price",
+            "priceEvidence": "65000",
+            "saleVerified": true,
+            "saleEvidence": [
+              "haraj_direct_ad_url",
+              "haraj_fast_search_page"
+            ],
+            "score": 86,
+            "discovery": "haraj_fast_search_page",
+            "fastSource": true,
+            "vehicle_classification": "VEHICLE_FOR_SALE",
+            "normalized_make": "MAZDA",
+            "normalized_model": "CX 9",
+            "currency": "SAR",
+            "body_type": null,
+            "fuel_type": null,
+            "id": "haraj:https-haraj-com-sa-11189013208-d9-85-d8-a7-d8-b2-d8-af-d8-a7-cx9-d9-85-d9-88-d8-af-d9-8a-d9-84-2019-d9-81-d9-84-d9-83-d8-a7-d9-85-d9-84",
+            "source_listing_id": "haraj:https-haraj-com-sa-11189013208-d9-85-d8-a7-d8-b2-d8-af-d8-a7-cx9-d9-85-d9-88-d8-af-d9-8a-d9-84-2019-d9-81-d9-84-d9-83-d8-a7-d9-85-d9-84",
+            "listing_id": "haraj:https-haraj-com-sa-11189013208-d9-85-d8-a7-d8-b2-d8-af-d8-a7-cx9-d9-85-d9-88-d8-af-d9-8a-d9-84-2019-d9-81-d9-84-d9-83-d8-a7-d9-85-d9-84",
+            "source_url": "https://haraj.com.sa/11189013208/%D9%85%D8%A7%D8%B2%D8%AF%D8%A7_CX9_%D9%85%D9%88%D8%AF%D9%8A%D9%84_2019_%D9%81%D9%84_%D9%83%D8%A7%D9%85%D9%84",
+            "mileage_km": null,
+            "price_sar": 65000,
+            "price_type": "cash",
+            "price_confidence": "high",
+            "source_price_raw": "65,000",
+            "seller_type": null,
+            "primary_image": "https://thumbcdn.haraj.com.sa/1800x1270_F4ADB135-0FD0-4FC8-BF65-E4DA25F8B021.jpg-140x140.webp",
+            "gallery_images": [
+              "https://thumbcdn.haraj.com.sa/1800x1270_F4ADB135-0FD0-4FC8-BF65-E4DA25F8B021.jpg-140x140.webp"
+            ],
+            "description": "السعر /65000\n\n&lrm;الممشى /257 الف كيلو \n=========================\n&lrm;►◄الم واصفـــــــــــات►◄____________ :\n\nمكينه 2.5\n4 سلندر\nدفع امامي\nتشغيل بصمة\n** جنوط 18\nمثبت سرعة\nتكيف خلفي\nجلنط كهرباء\nشاشة\nكاميرا خلفيه\nمقاعد قماش\nحساسات\n\n&lrm;-وباقي المواصفات المعروفه\n&lrm;وايضا لدينا خدمة\n&lrm;;شحن لجميع مناطق المملكه بخصم خاص لدى مجموعه البسامي\n&lrm;ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ\n&lrm;;اوقات الدوام فترتين\n&lrm;;فتره صباحيه من 9:00الى12:00\n&lrm;;الفتره المسائيه من 3 الى9:00\n&lrm;  الرجاء التواصل على الارقام التالية\n&lrm;للتواصل\n0533367330\n0500996336",
+            "created_at": "2026-09-21T07:43:39.913Z",
+            "updated_at": "2026-09-21T07:43:39.913Z",
+            "inventoryId": "haraj:https-haraj-com-sa-11189013208-d9-85-d8-a7-d8-b2-d8-af-d8-a7-cx9-d9-85-d9-88-d8-af-d9-8a-d9-84-2019-d9-81-d9-84-d9-83-d8-a7-d9-85-d9-84",
+            "sourceName": "Haraj",
+            "sourceAttribution": "Haraj",
+            "originalUrl": "https://haraj.com.sa/11189013208/%D9%85%D8%A7%D8%B2%D8%AF%D8%A7_CX9_%D9%85%D9%88%D8%AF%D9%8A%D9%84_2019_%D9%81%D9%84_%D9%83%D8%A7%D9%85%D9%84",
+            "make": "Mazda",
+            "brand": "Mazda",
+            "model": "CX-9",
+            "trim": null,
+            "priceSar": 65000,
+            "mileageKm": null,
+            "images": [
+              "https://thumbcdn.haraj.com.sa/1800x1270_F4ADB135-0FD0-4FC8-BF65-E4DA25F8B021.jpg-140x140.webp"
+            ],
+            "vehicle": {
+              "vin": null,
+              "make": "Mazda",
+              "model": "CX-9",
+              "trim": null,
+              "year": 2025,
+              "condition": "used",
+              "bodyType": null,
+              "transmission": null,
+              "fuelType": null,
+              "drivetrain": null,
+              "engine": null,
+              "exteriorColor": null,
+              "mileageKm": null
+            },
+            "sellerDetails": {
+              "id": null,
+              "name": "Haraj",
+              "type": null,
+              "verified": false,
+              "branch": null,
+              "city": "Riyadh"
+            },
+            "commercial": {
+              "priceSar": 65000,
+              "vatIncluded": null,
+              "negotiable": null,
+              "financeAvailable": null,
+              "monthlyPaymentSar": null
+            },
+            "trust": {
+              "level": "raw",
+              "sellerVerified": false,
+              "inspectionStatus": null,
+              "inspectionScore": null,
+              "inspectionProvider": null,
+              "inspectionDate": null,
+              "historyStatus": null,
+              "historyProvider": null,
+              "warrantyMonths": null,
+              "returnDays": null
+            },
+            "location": {
+              "city": "Riyadh",
+              "branch": null,
+              "latitude": null,
+              "longitude": null
+            },
+            "media": {
+              "primaryImage": "https://thumbcdn.haraj.com.sa/1800x1270_F4ADB135-0FD0-4FC8-BF65-E4DA25F8B021.jpg-140x140.webp",
+              "images": [
+                "https://thumbcdn.haraj.com.sa/1800x1270_F4ADB135-0FD0-4FC8-BF65-E4DA25F8B021.jpg-140x140.webp"
+              ]
+            },
+            "availability": "unknown",
+            "provenance": {
+              "source": "Haraj",
+              "sourceType": "marketplace",
+              "sourceListingId": "haraj:https-haraj-com-sa-11189013208-d9-85-d8-a7-d8-b2-d8-af-d8-a7-cx9-d9-85-d9-88-d8-af-d9-8a-d9-84-2019-d9-81-d9-84-d9-83-d8-a7-d9-85-d9-84",
+              "ingestionMethod": null,
+              "originalUrl": "https://haraj.com.sa/11189013208/%D9%85%D8%A7%D8%B2%D8%AF%D8%A7_CX9_%D9%85%D9%88%D8%AF%D9%8A%D9%84_2019_%D9%81%D9%84_%D9%83%D8%A7%D9%85%D9%84",
+              "evidence": []
+            },
+            "firstSeenAt": "2026-09-21T07:43:39.913Z",
+            "lastSeenAt": "2026-09-21T07:43:39.913Z",
+            "updatedAt": "2026-09-21T07:43:39.913Z",
+            "relevanceScore": 734,
+            "rankingSignals": [
+              "price-fit",
+              "resolved-body-type-fit",
+              "brand-origin-fit"
+            ],
+            "intentScore": 3,
+            "unverifiedAttributes": [],
+            "resolvedBodyType": "SUV",
+            "bodyTypeEvidence": "catalog-model-mapping",
+            "detailChecked": true
+          }
+        ],
+        "inventoryRead": false,
+        "inventoryWritten": false,
+        "imagesDownloaded": 0,
+        "coverageComplete": false
+      },
+      "memory": {
+        "rss": 114569216,
+        "heapTotal": 108724224,
+        "heapUsed": 52674760,
+        "external": 7809263,
+        "arrayBuffers": 4013360
+      }
+    },
+    {
+      "id": "new-ar",
+      "query": "تويوتا كورولا جديدة تحت 100 ألف",
+      "condition": "new",
+      "status": "measured",
+      "intent": {
+        "query": "تويوتا كورولا جديدة تحت 100 ألف",
+        "make": "Toyota",
+        "model": "Corolla",
+        "condition": "new",
+        "city": null,
+        "bodyType": null,
+        "fuelType": null,
+        "transmission": null,
+        "trim": null,
+        "sellerType": null,
+        "originPreference": null,
+        "useCase": null,
+        "sortPreference": null,
+        "interpretation": null,
+        "year": null,
+        "minYear": null,
+        "maxYear": null,
+        "minPrice": null,
+        "maxPrice": 100000,
+        "excludedMakes": [],
+        "priorities": [],
+        "confidence": 1
+      },
+      "intentOrigin": "production-search-response; also triggers existing search",
+      "baselineFirstMs": 10889,
+      "baselineFirst": {
+        "count": 4,
+        "indexedCount": 0,
+        "complete": true,
+        "partial": false,
+        "intentMode": "rules",
+        "ai": {
+          "model": null,
+          "latencyMs": 0,
+          "cacheHit": false,
+          "fallbackReason": null
+        },
+        "sources": {
+          "Saleh Cars": 4
+        },
+        "rows": [
+          {
+            "url": "https://www.salehcars.com/en/cars/692d6d3f7763c76ddaf33a88/toyota-corolla-xli-2-0l-2026",
+            "title": "TOYOTA COROLLA XLI 2.0L 2026",
+            "price": 69900,
+            "city": null,
+            "condition": "new"
+          },
+          {
+            "url": "https://www.salehcars.com/en/cars/69b0a1b7845f71b9054ca65e/toyota-corolla-xli-1-5-turbo-2026",
+            "title": "TOYOTA COROLLA XLI 1.5 Turbo 2026",
+            "price": 66500,
+            "city": null,
+            "condition": "new"
+          },
+          {
+            "url": "https://www.salehcars.com/cars/692d6d3f7763c76ddaf33a88/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7-%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7-xli-2-0l-2026",
+            "title": "تويوتا كورولا XLI 2.0L 2026",
+            "price": 80385,
+            "city": null,
+            "condition": "new"
+          },
+          {
+            "url": "https://www.salehcars.com/cars/69b0a1b7845f71b9054ca65e/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7-%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7-xli-1-5-%D9%85%D8%B7%D9%88%D8%B1-2026",
+            "title": "تويوتا كورولا XLI 1.5 مطور 2026",
+            "price": 76475,
+            "city": null,
+            "condition": "new"
+          }
+        ]
+      },
+      "baselineLater": {
+        "count": 4,
+        "indexedCount": 0,
+        "complete": true,
+        "partial": false,
+        "intentMode": "rules",
+        "ai": {
+          "model": null,
+          "latencyMs": 0,
+          "cacheHit": false,
+          "fallbackReason": null
+        },
+        "sources": {
+          "Saleh Cars": 4
+        },
+        "rows": [
+          {
+            "url": "https://www.salehcars.com/en/cars/692d6d3f7763c76ddaf33a88/toyota-corolla-xli-2-0l-2026",
+            "title": "TOYOTA COROLLA XLI 2.0L 2026",
+            "price": 69900,
+            "city": null,
+            "condition": "new"
+          },
+          {
+            "url": "https://www.salehcars.com/en/cars/69b0a1b7845f71b9054ca65e/toyota-corolla-xli-1-5-turbo-2026",
+            "title": "TOYOTA COROLLA XLI 1.5 Turbo 2026",
+            "price": 66500,
+            "city": null,
+            "condition": "new"
+          },
+          {
+            "url": "https://www.salehcars.com/cars/692d6d3f7763c76ddaf33a88/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7-%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7-xli-2-0l-2026",
+            "title": "تويوتا كورولا XLI 2.0L 2026",
+            "price": 80385,
+            "city": null,
+            "condition": "new"
+          },
+          {
+            "url": "https://www.salehcars.com/cars/69b0a1b7845f71b9054ca65e/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7-%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7-xli-1-5-%D9%85%D8%B7%D9%88%D8%B1-2026",
+            "title": "تويوتا كورولا XLI 1.5 مطور 2026",
+            "price": 76475,
+            "city": null,
+            "condition": "new"
+          }
+        ]
+      },
+      "liveOnly": {
+        "count": 0,
+        "firstCandidateMs": 11884,
+        "totalMs": 13695,
+        "lanes": [
+          {
+            "source": "Haraj",
+            "query": "Toyota Corolla",
+            "url": "https://haraj.com.sa/search/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7/",
+            "candidates": 12,
+            "detailsChecked": 0,
+            "matches": [],
+            "detailErrors": [],
+            "ms": 11895
+          },
+          {
+            "source": "OpenSooq",
+            "query": "Toyota Corolla",
+            "url": "https://sa.opensooq.com/en/cars/cars-for-sale/toyota/corolla",
+            "candidates": 0,
+            "detailsChecked": 0,
+            "matches": [],
+            "detailErrors": [],
+            "ms": 13687
+          }
+        ],
+        "matches": [],
+        "inventoryRead": false,
+        "inventoryWritten": false,
+        "imagesDownloaded": 0,
+        "coverageComplete": false
+      },
+      "memory": {
+        "rss": 125517824,
+        "heapTotal": 112029696,
+        "heapUsed": 62157424,
+        "external": 9563119,
+        "arrayBuffers": 5767216
+      }
+    }
+  ],
+  "requests": [
+    {
+      "host": "www.dalelah.co",
+      "status": 200,
+      "ms": 11172,
+      "bytes": 21881
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 200,
+      "ms": 11215,
+      "bytes": 377964
+    },
+    {
+      "host": "sa.opensooq.com",
+      "status": 200,
+      "ms": 12424,
+      "bytes": 1292689
+    },
+    {
+      "host": "sa.opensooq.com",
+      "status": 200,
+      "ms": 12095,
+      "bytes": 851059
+    },
+    {
+      "host": "sa.opensooq.com",
+      "status": 200,
+      "ms": 11399,
+      "bytes": 856729
+    },
+    {
+      "host": "www.dalelah.co",
+      "status": 200,
+      "ms": 11317,
+      "bytes": 23823
+    },
+    {
+      "host": "www.dalelah.co",
+      "status": 200,
+      "ms": 12195,
+      "bytes": 1081180
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 200,
+      "ms": 10656,
+      "bytes": 398783
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 200,
+      "ms": 10752,
+      "bytes": 401012
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 200,
+      "ms": 10868,
+      "bytes": 330954
+    },
+    {
+      "host": "sa.opensooq.com",
+      "status": 200,
+      "ms": 12414,
+      "bytes": 947215
+    },
+    {
+      "host": "sa.opensooq.com",
+      "status": 200,
+      "ms": 12611,
+      "bytes": 1293197
+    },
+    {
+      "host": "sa.opensooq.com",
+      "status": 200,
+      "ms": 12912,
+      "bytes": 1338831
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 302,
+      "ms": 11079,
+      "bytes": 0
+    },
+    {
+      "host": "sa.opensooq.com",
+      "status": 200,
+      "ms": 10679,
+      "bytes": 871074
+    },
+    {
+      "host": "sa.opensooq.com",
+      "status": 200,
+      "ms": 10725,
+      "bytes": 872854
+    },
+    {
+      "host": "sa.opensooq.com",
+      "status": 200,
+      "ms": 8941,
+      "bytes": 871996
+    },
+    {
+      "host": "sa.opensooq.com",
+      "status": 200,
+      "ms": 9496,
+      "bytes": 872144
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 200,
+      "ms": 11264,
+      "bytes": 103749
+    },
+    {
+      "host": "www.dalelah.co",
+      "status": 200,
+      "ms": 10887,
+      "bytes": 32776
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 200,
+      "ms": 11869,
+      "bytes": 382302
+    },
+    {
+      "host": "sa.opensooq.com",
+      "status": 200,
+      "ms": 13681,
+      "bytes": 1194393
+    }
+  ]
+}

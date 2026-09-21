@@ -1,0 +1,530 @@
+{
+  "at": "2026-09-21T07:39:44.163Z",
+  "baseCommit": "07d4cfd19dd4bfaddc49198633a879b079099645",
+  "method": "live source experiment; production intent bridge; no independent AI/search-provider API credentials",
+  "cases": [
+    {
+      "id": "corolla-en",
+      "query": "Toyota Corolla under 45000 in Jeddah",
+      "condition": "used",
+      "status": "baseline-unavailable",
+      "error": "transport-error"
+    },
+    {
+      "id": "suv-ar",
+      "query": "ابي جيب عائلي ياباني تحت 150 ألف في الرياض",
+      "condition": "used",
+      "status": "measured",
+      "intent": {
+        "query": "ابي جيب عائلي ياباني تحت 150 ألف في الرياض",
+        "make": null,
+        "model": null,
+        "condition": "used",
+        "city": "Riyadh",
+        "bodyType": "SUV",
+        "fuelType": null,
+        "transmission": null,
+        "trim": null,
+        "sellerType": null,
+        "originPreference": "Japanese",
+        "useCase": "family",
+        "sortPreference": null,
+        "interpretation": "بحث عن جيب عائلي ياباني، سعر أقل من 150 ألف، في الرياض",
+        "year": null,
+        "minYear": null,
+        "maxYear": null,
+        "minPrice": null,
+        "maxPrice": 150000,
+        "excludedMakes": [],
+        "priorities": [],
+        "confidence": 0.9
+      },
+      "intentOrigin": "production-search-response; also triggers existing search",
+      "baselineFirstMs": 7856,
+      "baselineFirst": {
+        "count": 215,
+        "indexedCount": 1719,
+        "complete": false,
+        "partial": false,
+        "intentMode": "ai",
+        "ai": {
+          "model": "gpt-4.1-mini",
+          "latencyMs": 3889,
+          "cacheHit": false,
+          "fallbackReason": null
+        },
+        "sources": {
+          "Syarah": 172,
+          "CarSwitch Saudi": 43
+        },
+        "rows": [
+          {
+            "url": "https://syarah.com/en/cardetail/toyota-rav4-used-315552",
+            "title": "Toyota RAV4 LE 2023",
+            "price": 82000,
+            "city": "Riyadh",
+            "condition": "used"
+          },
+          {
+            "url": "https://syarah.com/en/cardetail/nissan-xtrail-used-316782",
+            "title": "Nissan Xtrail S 5 Seats 2021 دبل",
+            "price": 51500,
+            "city": "Riyadh",
+            "condition": "used"
+          },
+          {
+            "url": "https://syarah.com/en/cardetail/nissan-xtrail-used-316566",
+            "title": "Nissan Xtrail S 7 Seats 2021",
+            "price": 49000,
+            "city": "Riyadh",
+            "condition": "used"
+          },
+          {
+            "url": "https://syarah.com/en/cardetail/nissan-xtrail-used-316303",
+            "title": "Nissan Xtrail S 7 Seats 2021",
+            "price": 50000,
+            "city": "Riyadh",
+            "condition": "used"
+          },
+          {
+            "url": "https://syarah.com/en/cardetail/nissan-xtrail-used-316054",
+            "title": "Nissan Xtrail S 5 Seats 2020 دبل",
+            "price": 49000,
+            "city": "Riyadh",
+            "condition": "used"
+          }
+        ]
+      },
+      "baselineLater": {
+        "count": 220,
+        "indexedCount": 1719,
+        "complete": true,
+        "partial": false,
+        "intentMode": "ai",
+        "ai": {
+          "model": "gpt-4.1-mini",
+          "latencyMs": 3889,
+          "cacheHit": false,
+          "fallbackReason": null
+        },
+        "sources": {
+          "Syarah": 172,
+          "CarSwitch Saudi": 43,
+          "Haraj": 5
+        },
+        "rows": [
+          {
+            "url": "https://syarah.com/en/cardetail/toyota-rav4-used-315552",
+            "title": "Toyota RAV4 LE 2023",
+            "price": 82000,
+            "city": "Riyadh",
+            "condition": "used"
+          },
+          {
+            "url": "https://syarah.com/en/cardetail/nissan-xtrail-used-316782",
+            "title": "Nissan Xtrail S 5 Seats 2021 دبل",
+            "price": 51500,
+            "city": "Riyadh",
+            "condition": "used"
+          },
+          {
+            "url": "https://syarah.com/en/cardetail/nissan-xtrail-used-316566",
+            "title": "Nissan Xtrail S 7 Seats 2021",
+            "price": 49000,
+            "city": "Riyadh",
+            "condition": "used"
+          },
+          {
+            "url": "https://syarah.com/en/cardetail/nissan-xtrail-used-316303",
+            "title": "Nissan Xtrail S 7 Seats 2021",
+            "price": 50000,
+            "city": "Riyadh",
+            "condition": "used"
+          },
+          {
+            "url": "https://syarah.com/en/cardetail/nissan-xtrail-used-316054",
+            "title": "Nissan Xtrail S 5 Seats 2020 دبل",
+            "price": 49000,
+            "city": "Riyadh",
+            "condition": "used"
+          }
+        ]
+      },
+      "liveOnly": {
+        "count": 0,
+        "firstCandidateMs": 12186,
+        "totalMs": 47542,
+        "lanes": [
+          {
+            "source": "Haraj",
+            "query": "Toyota",
+            "url": "https://haraj.com.sa/search/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7/",
+            "candidates": 12,
+            "detailsChecked": 3,
+            "matches": [],
+            "detailErrors": [
+              "http-302",
+              "http-302",
+              "http-302"
+            ],
+            "ms": 47375
+          },
+          {
+            "source": "OpenSooq",
+            "query": "Toyota",
+            "url": "https://sa.opensooq.com/en/al-riyadh/cars/cars-for-sale/toyota",
+            "candidates": 0,
+            "matches": [],
+            "error": "transport-error",
+            "ms": 15056
+          },
+          {
+            "source": "Haraj",
+            "query": "Nissan",
+            "url": "https://haraj.com.sa/search/%D9%86%D9%8A%D8%B3%D8%A7%D9%86/",
+            "candidates": 12,
+            "detailsChecked": 3,
+            "matches": [],
+            "detailErrors": [
+              "http-302",
+              "http-302",
+              "http-302"
+            ],
+            "ms": 47348
+          },
+          {
+            "source": "OpenSooq",
+            "query": "Nissan",
+            "url": "https://sa.opensooq.com/en/al-riyadh/cars/cars-for-sale/nissan",
+            "candidates": 0,
+            "matches": [],
+            "error": "transport-error",
+            "ms": 15065
+          },
+          {
+            "source": "Haraj",
+            "query": "Mazda",
+            "url": "https://haraj.com.sa/search/%D9%85%D8%A7%D8%B2%D8%AF%D8%A7/",
+            "candidates": 12,
+            "detailsChecked": 3,
+            "matches": [],
+            "detailErrors": [
+              "http-302",
+              "http-302",
+              "http-302"
+            ],
+            "ms": 47494
+          },
+          {
+            "source": "OpenSooq",
+            "query": "Mazda",
+            "url": "https://sa.opensooq.com/en/al-riyadh/cars/cars-for-sale/used",
+            "candidates": 0,
+            "matches": [],
+            "error": "transport-error",
+            "ms": 15054
+          }
+        ],
+        "matches": [],
+        "inventoryRead": false,
+        "inventoryWritten": false,
+        "imagesDownloaded": 0,
+        "coverageComplete": false
+      },
+      "memory": {
+        "rss": 62652416,
+        "heapTotal": 27783168,
+        "heapUsed": 24088144,
+        "external": 4175924,
+        "arrayBuffers": 380061
+      }
+    },
+    {
+      "id": "new-ar",
+      "query": "تويوتا كورولا جديدة تحت 100 ألف",
+      "condition": "new",
+      "status": "measured",
+      "intent": {
+        "query": "تويوتا كورولا جديدة تحت 100 ألف",
+        "make": "Toyota",
+        "model": "Corolla",
+        "condition": "new",
+        "city": null,
+        "bodyType": null,
+        "fuelType": null,
+        "transmission": null,
+        "trim": null,
+        "sellerType": null,
+        "originPreference": null,
+        "useCase": null,
+        "sortPreference": null,
+        "interpretation": null,
+        "year": null,
+        "minYear": null,
+        "maxYear": null,
+        "minPrice": null,
+        "maxPrice": 100000,
+        "excludedMakes": [],
+        "priorities": [],
+        "confidence": 1
+      },
+      "intentOrigin": "production-search-response; also triggers existing search",
+      "baselineFirstMs": 12037,
+      "baselineFirst": {
+        "count": 2,
+        "indexedCount": 0,
+        "complete": false,
+        "partial": false,
+        "intentMode": "rules",
+        "ai": {
+          "model": null,
+          "latencyMs": 0,
+          "cacheHit": false,
+          "fallbackReason": null
+        },
+        "sources": {
+          "Saleh Cars": 2
+        },
+        "rows": [
+          {
+            "url": "https://www.salehcars.com/en/cars/692d6d3f7763c76ddaf33a88/toyota-corolla-xli-2-0l-2026",
+            "title": "TOYOTA COROLLA XLI 2.0L 2026",
+            "price": 69900,
+            "city": null,
+            "condition": "new"
+          },
+          {
+            "url": "https://www.salehcars.com/en/cars/69b0a1b7845f71b9054ca65e/toyota-corolla-xli-1-5-turbo-2026",
+            "title": "TOYOTA COROLLA XLI 1.5 Turbo 2026",
+            "price": 66500,
+            "city": null,
+            "condition": "new"
+          }
+        ]
+      },
+      "baselineLater": {
+        "count": 2,
+        "indexedCount": 0,
+        "complete": false,
+        "partial": false,
+        "intentMode": "rules",
+        "ai": {
+          "model": null,
+          "latencyMs": 0,
+          "cacheHit": false,
+          "fallbackReason": null
+        },
+        "sources": {
+          "Saleh Cars": 2
+        },
+        "rows": [
+          {
+            "url": "https://www.salehcars.com/en/cars/692d6d3f7763c76ddaf33a88/toyota-corolla-xli-2-0l-2026",
+            "title": "TOYOTA COROLLA XLI 2.0L 2026",
+            "price": 69900,
+            "city": null,
+            "condition": "new"
+          },
+          {
+            "url": "https://www.salehcars.com/en/cars/69b0a1b7845f71b9054ca65e/toyota-corolla-xli-1-5-turbo-2026",
+            "title": "TOYOTA COROLLA XLI 1.5 Turbo 2026",
+            "price": 66500,
+            "city": null,
+            "condition": "new"
+          }
+        ]
+      },
+      "liveOnly": {
+        "count": 0,
+        "firstCandidateMs": 13705,
+        "totalMs": 50286,
+        "lanes": [
+          {
+            "source": "Haraj",
+            "query": "Toyota Corolla",
+            "url": "https://haraj.com.sa/search/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7/",
+            "candidates": 12,
+            "detailsChecked": 3,
+            "matches": [],
+            "detailErrors": [
+              "http-302",
+              "http-302",
+              "http-302"
+            ],
+            "ms": 50285
+          },
+          {
+            "source": "OpenSooq",
+            "query": "Toyota Corolla",
+            "url": "https://sa.opensooq.com/en/cars/cars-for-sale/toyota/corolla",
+            "candidates": 0,
+            "detailsChecked": 0,
+            "matches": [],
+            "detailErrors": [],
+            "ms": 10924
+          }
+        ],
+        "matches": [],
+        "inventoryRead": false,
+        "inventoryWritten": false,
+        "imagesDownloaded": 0,
+        "coverageComplete": false
+      },
+      "memory": {
+        "rss": 65454080,
+        "heapTotal": 32428032,
+        "heapUsed": 22541536,
+        "external": 4308412,
+        "arrayBuffers": 512509
+      }
+    }
+  ],
+  "requests": [
+    {
+      "host": "www.dalelah.co",
+      "error": "transport-error",
+      "ms": 15054
+    },
+    {
+      "host": "www.dalelah.co",
+      "status": 200,
+      "ms": 7843,
+      "bytes": 1054724
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 200,
+      "ms": 12142,
+      "bytes": 389597
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 200,
+      "ms": 12252,
+      "bytes": 332008
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 200,
+      "ms": 12328,
+      "bytes": 389832
+    },
+    {
+      "host": "sa.opensooq.com",
+      "error": "transport-error",
+      "ms": 15054
+    },
+    {
+      "host": "sa.opensooq.com",
+      "error": "transport-error",
+      "ms": 15065
+    },
+    {
+      "host": "sa.opensooq.com",
+      "error": "transport-error",
+      "ms": 15053
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 302,
+      "ms": 11148,
+      "bytes": 0
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 302,
+      "ms": 11167,
+      "bytes": 0
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 302,
+      "ms": 11175,
+      "bytes": 0
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 302,
+      "ms": 11772,
+      "bytes": 0
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 302,
+      "ms": 12026,
+      "bytes": 0
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 302,
+      "ms": 12176,
+      "bytes": 0
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 302,
+      "ms": 11851,
+      "bytes": 0
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 302,
+      "ms": 12089,
+      "bytes": 0
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 302,
+      "ms": 12040,
+      "bytes": 0
+    },
+    {
+      "host": "www.dalelah.co",
+      "status": 200,
+      "ms": 14673,
+      "bytes": 1081180
+    },
+    {
+      "host": "www.dalelah.co",
+      "status": 200,
+      "ms": 12036,
+      "bytes": 15005
+    },
+    {
+      "host": "sa.opensooq.com",
+      "status": 200,
+      "ms": 10914,
+      "bytes": 1194374
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 200,
+      "ms": 13696,
+      "bytes": 377964
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 302,
+      "ms": 11994,
+      "bytes": 0
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 302,
+      "ms": 10280,
+      "bytes": 0
+    },
+    {
+      "host": "haraj.com.sa",
+      "status": 302,
+      "ms": 14305,
+      "bytes": 0
+    },
+    {
+      "host": "www.dalelah.co",
+      "status": 200,
+      "ms": 11435,
+      "bytes": 16978
+    }
+  ]
+}

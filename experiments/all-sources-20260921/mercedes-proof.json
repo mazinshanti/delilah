@@ -1,0 +1,32 @@
+{
+  "at": "2026-09-21T12:28:37.625Z",
+  "source": "Mercedes-Benz Saudi",
+  "accepted": 0,
+  "totalMs": 69076,
+  "firstResultMs": null,
+  "diagnostics": [
+    {
+      "stage": "web-discovery",
+      "status": "not-configured"
+    },
+    {
+      "stage": "discovery",
+      "source": "Mercedes-Benz Saudi",
+      "candidates": 24,
+      "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/"
+    },
+    {
+      "stage": "verify",
+      "source": "Mercedes-Benz Saudi",
+      "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/21715788-mercedes-benz-eqa-250",
+      "error": "transport-error"
+    },
+    {
+      "stage": "verify",
+      "source": "Mercedes-Benz Saudi",
+      "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/20834065-mercedes-benz-eqa-350",
+      "error": "transport-error"
+    }
+  ],
+  "listings": []
+}

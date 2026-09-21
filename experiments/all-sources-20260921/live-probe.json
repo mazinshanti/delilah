@@ -1,0 +1,198 @@
+{
+  "at": "2026-09-21T12:24:56.934Z",
+  "mode": "four-adapter-live-probe",
+  "runs": [
+    {
+      "source": "Mercedes-Benz Saudi",
+      "accepted": 0,
+      "firstResultMs": null,
+      "totalMs": 28868,
+      "diagnostics": [
+        {
+          "stage": "web-discovery",
+          "status": "not-configured"
+        },
+        {
+          "stage": "discovery",
+          "source": "Mercedes-Benz Saudi",
+          "candidates": 24,
+          "url": "https://www.mercedes-benz-mena.com/ksa/en/buy-used/"
+        }
+      ],
+      "requests": [
+        {
+          "host": "www.mercedes-benz-mena.com",
+          "status": 200,
+          "bytes": 1978,
+          "ms": 12489
+        },
+        {
+          "host": "www.mercedes-benz-mena.com",
+          "status": 200,
+          "bytes": 344477,
+          "ms": 15219
+        }
+      ]
+    },
+    {
+      "source": "OpenSooq",
+      "accepted": 0,
+      "firstResultMs": null,
+      "totalMs": 45010,
+      "diagnostics": [
+        {
+          "stage": "web-discovery",
+          "status": "not-configured"
+        },
+        {
+          "stage": "discovery",
+          "source": "OpenSooq",
+          "candidates": 12,
+          "url": "https://sa.opensooq.com/en/cars/cars-for-sale/toyota/corolla"
+        },
+        {
+          "stage": "verify",
+          "source": "OpenSooq",
+          "url": "https://sa.opensooq.com/en/search/287489648",
+          "error": "no-matching-exact-ad-evidence"
+        },
+        {
+          "stage": "verify",
+          "source": "OpenSooq",
+          "url": "https://sa.opensooq.com/en/search/287450402",
+          "error": "deadline"
+        },
+        {
+          "stage": "verify",
+          "source": "OpenSooq",
+          "url": "https://sa.opensooq.com/en/search/287354740",
+          "error": "deadline"
+        }
+      ],
+      "requests": [
+        {
+          "host": "sa.opensooq.com",
+          "status": 200,
+          "bytes": 8944,
+          "ms": 12191
+        },
+        {
+          "host": "sa.opensooq.com",
+          "status": 200,
+          "bytes": 1188017,
+          "ms": 10541
+        },
+        {
+          "host": "sa.opensooq.com",
+          "status": 200,
+          "bytes": 861168,
+          "ms": 10764
+        },
+        {
+          "host": "sa.opensooq.com",
+          "ms": 8036,
+          "error": "deadline"
+        }
+      ]
+    },
+    {
+      "source": "Kayishha",
+      "accepted": 0,
+      "firstResultMs": null,
+      "totalMs": 45004,
+      "diagnostics": [
+        {
+          "stage": "web-discovery",
+          "status": "not-configured"
+        },
+        {
+          "stage": "discovery",
+          "source": "Kayishha",
+          "url": "https://buy.kayishha.com/",
+          "candidates": 163
+        },
+        {
+          "stage": "verify",
+          "source": "Kayishha",
+          "url": "https://buy.kayishha.com/cars/details/dongfeng-mage-2026-90625",
+          "error": "no-matching-exact-ad-evidence"
+        },
+        {
+          "stage": "verify",
+          "source": "Kayishha",
+          "url": "https://buy.kayishha.com/cars/details/toyota-corolla-2024-92699",
+          "error": "deadline"
+        }
+      ],
+      "requests": [
+        {
+          "host": "buy.kayishha.com",
+          "status": 200,
+          "bytes": 372,
+          "ms": 12874
+        },
+        {
+          "host": "buy.kayishha.com",
+          "status": 200,
+          "bytes": 175777,
+          "ms": 10108
+        },
+        {
+          "host": "buy.kayishha.com",
+          "status": 200,
+          "bytes": 179903,
+          "ms": 17990
+        },
+        {
+          "host": "buy.kayishha.com",
+          "ms": 642,
+          "error": "deadline"
+        }
+      ]
+    },
+    {
+      "source": "Mstaml",
+      "accepted": 0,
+      "firstResultMs": null,
+      "totalMs": 37336,
+      "diagnostics": [
+        {
+          "stage": "web-discovery",
+          "status": "not-configured"
+        },
+        {
+          "stage": "discovery",
+          "source": "Mstaml",
+          "url": "https://www.mstaml.com/market/%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA?type=4",
+          "candidates": 4
+        },
+        {
+          "stage": "verify",
+          "source": "Mstaml",
+          "url": "https://www.mstaml.com/sa/product/%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D8%A9/%D8%A7%D9%84%D9%85%D9%86%D8%B7%D9%82%D8%A9-%D8%A7%D9%84%D8%B4%D8%B1%D9%82%D9%8A%D8%A9/%D8%A7%D9%84%D8%AF%D9%85%D8%A7%D9%85/%D8%A7%D9%88%D8%B1%D9%8A%D9%88%D9%86/2011/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7-%D8%A7%D9%88%D8%B1%D9%8A%D9%88%D9%86-2011-%D9%85%D8%B3%D8%AA%D8%B9%D9%85%D9%84%D8%A9-%D9%84%D9%84%D8%A8%D9%8A%D8%B9-%D9%81%D9%8A-%D8%A7%D9%84%D8%AF%D9%85%D8%A7%D9%85-%D8%A8%D8%B3%D8%B9%D8%B1-33-%D8%A3%D9%84%D9%81-%D8%B1%D9%8A%D8%A7%D9%84-%D8%B3%D8%B9%D9%88%D8%AF%D9%8A?brand=258&id=4785902&location=34&model=2011&type=4.41",
+          "error": "no-matching-exact-ad-evidence"
+        }
+      ],
+      "requests": [
+        {
+          "host": "www.mstaml.com",
+          "status": 200,
+          "bytes": 700,
+          "ms": 12502
+        },
+        {
+          "host": "www.mstaml.com",
+          "status": 200,
+          "bytes": 318707,
+          "ms": 11298
+        },
+        {
+          "host": "www.mstaml.com",
+          "status": 200,
+          "bytes": 347439,
+          "ms": 11306
+        }
+      ]
+    }
+  ]
+}

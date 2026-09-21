@@ -137,5 +137,5 @@ $('shareSearch').onclick=async()=>{try{if(navigator.share)await navigator.share(
 mobile.addEventListener('change',()=>{if($('filterDialog').open)closeFilters();placeFilters();});window.addEventListener('popstate',()=>{if(!location.hash)currentVehicle=null;renderVehicle();});window.addEventListener('hashchange',renderVehicle);
 localize();selectBrand('');hydrateFromUrl();
 fetch('/api/inventory/stats').then(r=>r.json()).then(d=>{for(const c of Object.keys(d.byCity||{}))if(c!=='Unknown')knownCities.add(c);for(const id of ['city','homeCity'])fillSelect(id,[...knownCities],'anyCity');}).catch(()=>{});
-fetch('/api/sources').then(r=>r.json()).then(d=>{for(const s of d.sources||[])if(s.status==='connected-live'||s.inventoryCount>0)knownSources.add(s.name);fillSelect('source',[...knownSources],'allSources');}).catch(()=>{});
+fetch('/api/sources').then(r=>r.json()).then(d=>{for(const s of d.sources||[])if(s.status==='connected-live'||s.inventoryCount>0||(onDemandPreview&&s.status==='adapter-ready'))knownSources.add(s.name);fillSelect('source',[...knownSources],'allSources');}).catch(()=>{});
 fetch('/api/sell/status').then(r=>r.ok?r.json():null).then(status=>{if(status?.available===false)document.querySelectorAll('[data-seller-entry]').forEach(el=>el.hidden=true);}).catch(()=>{});

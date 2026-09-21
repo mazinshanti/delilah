@@ -1,0 +1,2153 @@
+{
+  "at": "2026-09-21T08:43:55.083Z",
+  "productionChanged": false,
+  "inventoryLoaded": false,
+  "imagesDownloaded": 0,
+  "retrievalBudgetMs": 60000,
+  "detailBudget": 18,
+  "hostedDiscoveryConfigured": false,
+  "cases": [
+    {
+      "id": "corolla-en",
+      "query": "Toyota Corolla under 45000 in Jeddah",
+      "condition": "used",
+      "error": "baseline-transport-error"
+    },
+    {
+      "id": "suv-ar",
+      "query": "ابي جيب عائلي ياباني تحت 150 ألف في الرياض",
+      "condition": "used",
+      "intent": {
+        "query": "ابي جيب عائلي ياباني تحت 150 ألف في الرياض",
+        "make": null,
+        "model": null,
+        "condition": "used",
+        "city": "Riyadh",
+        "bodyType": "SUV",
+        "fuelType": null,
+        "transmission": null,
+        "trim": null,
+        "sellerType": null,
+        "originPreference": "Japanese",
+        "useCase": "family",
+        "sortPreference": null,
+        "interpretation": "بحث عن جيب عائلي ياباني مستعمل في الرياض بسعر أقل من 150 ألف ريال",
+        "year": null,
+        "minYear": null,
+        "maxYear": null,
+        "minPrice": null,
+        "maxPrice": 150000,
+        "excludedMakes": [],
+        "priorities": [],
+        "confidence": 0.95
+      },
+      "intentMode": "ai",
+      "intentOrigin": "current production response; returned inventory excluded from experiment",
+      "baseline": {
+        "firstMs": 10678,
+        "count": 215,
+        "complete": false,
+        "ai": {
+          "model": "gpt-4.1-mini",
+          "latencyMs": 3726,
+          "cacheHit": false,
+          "fallbackReason": null
+        }
+      },
+      "result": {
+        "matches": [
+          {
+            "source": "Syarah",
+            "url": "https://syarah.com/en/cardetail/toyota-fortuner-used-316679",
+            "title": "Used 2023 Toyota Fortuner VX White Color for sale - 316679 | Syarah",
+            "make": "Toyota",
+            "model": "Fortuner",
+            "year": 2023,
+            "condition": "used",
+            "city": "Riyadh",
+            "cityEvidence": "same-ad-source-search-card",
+            "price": 105500,
+            "priceVerified": true,
+            "mileage": 88702,
+            "resolvedBodyType": "SUV",
+            "bodyTypeEvidence": "catalog-model-mapping",
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-schema",
+            "rankingSignals": [
+              "price-fit",
+              "resolved-body-type-fit",
+              "brand-origin-fit"
+            ],
+            "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/316679/orignal-1789663197-281_cut.jpg?v=3"
+          },
+          {
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/fortuner/2020/831511",
+            "title": "تويوتا فورتشنر VX 2020 4.0",
+            "make": "Toyota",
+            "model": "Fortuner",
+            "year": 2020,
+            "condition": "used",
+            "city": "Riyadh",
+            "price": 88500,
+            "priceVerified": true,
+            "mileage": 91000,
+            "resolvedBodyType": "SUV",
+            "bodyTypeEvidence": "catalog-model-mapping",
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-schema",
+            "rankingSignals": [
+              "price-fit",
+              "resolved-body-type-fit",
+              "brand-origin-fit"
+            ],
+            "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/e2982148-282a-43d2-9dae-d335159efb97"
+          },
+          {
+            "source": "Syarah",
+            "url": "https://syarah.com/en/cardetail/toyota-fortuner-used-316989",
+            "title": "Used 2023 Toyota Fortuner GX2 White Color for sale - 316989 | Syarah",
+            "make": "Toyota",
+            "model": "Fortuner",
+            "year": 2023,
+            "condition": "used",
+            "city": "Riyadh",
+            "cityEvidence": "same-ad-source-search-card",
+            "price": 89500,
+            "priceVerified": true,
+            "mileage": 173079,
+            "resolvedBodyType": "SUV",
+            "bodyTypeEvidence": "catalog-model-mapping",
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-schema",
+            "rankingSignals": [
+              "price-fit",
+              "resolved-body-type-fit",
+              "brand-origin-fit"
+            ],
+            "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/316989/orignal-316989-1-1789538916.jpg?v=3"
+          },
+          {
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/fortuner/2023/840242",
+            "title": "تويوتا فورتشنر Diesel GX2 2023 2.4",
+            "make": "Toyota",
+            "model": "Fortuner",
+            "year": 2023,
+            "condition": "used",
+            "city": "Riyadh",
+            "price": 114750,
+            "priceVerified": true,
+            "mileage": 124608,
+            "resolvedBodyType": "SUV",
+            "bodyTypeEvidence": "catalog-model-mapping",
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-schema",
+            "rankingSignals": [
+              "price-fit",
+              "resolved-body-type-fit",
+              "brand-origin-fit"
+            ],
+            "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/5ef7fa39-5e8f-431e-851c-09f91529db2c"
+          },
+          {
+            "source": "Syarah",
+            "url": "https://syarah.com/en/cardetail/toyota-fortuner-used-316428",
+            "title": "Used 2024 Toyota Fortuner VX White Color for sale - 316428 | Syarah",
+            "make": "Toyota",
+            "model": "Fortuner",
+            "year": 2024,
+            "condition": "used",
+            "city": "Riyadh",
+            "cityEvidence": "same-ad-source-search-card",
+            "price": 108500,
+            "priceVerified": true,
+            "mileage": 54673,
+            "resolvedBodyType": "SUV",
+            "bodyTypeEvidence": "catalog-model-mapping",
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-schema",
+            "rankingSignals": [
+              "price-fit",
+              "resolved-body-type-fit",
+              "brand-origin-fit"
+            ],
+            "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/316428/orignal-1789673910-510_cut.jpg?v=3"
+          },
+          {
+            "source": "Syarah",
+            "url": "https://syarah.com/en/cardetail/toyota-fortuner-used-316203",
+            "title": "Used 2025 Toyota Fortuner GX White Color for sale - 316203 | Syarah",
+            "make": "Toyota",
+            "model": "Fortuner",
+            "year": 2025,
+            "condition": "used",
+            "city": "Riyadh",
+            "cityEvidence": "same-ad-source-search-card",
+            "price": 120900,
+            "priceVerified": true,
+            "mileage": 4584,
+            "resolvedBodyType": "SUV",
+            "bodyTypeEvidence": "catalog-model-mapping",
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-schema",
+            "rankingSignals": [
+              "price-fit",
+              "resolved-body-type-fit",
+              "brand-origin-fit"
+            ],
+            "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/316203/orignal-1789801842-578_cut.jpg?v=3"
+          }
+        ],
+        "discovered": 237,
+        "eligible": 148,
+        "detailsAttempted": 15,
+        "firstResultMs": 30896,
+        "totalMs": 60017,
+        "deadlineReached": true,
+        "partial": true,
+        "coverageComplete": false,
+        "cacheHit": false,
+        "diagnostics": [
+          {
+            "stage": "web-discovery",
+            "status": "not-configured"
+          },
+          {
+            "stage": "discovery",
+            "source": "Syarah",
+            "error": "http-410"
+          },
+          {
+            "stage": "discovery",
+            "source": "Syarah",
+            "candidates": 12,
+            "url": "https://syarah.com/en/autos/toyota/fortuner"
+          },
+          {
+            "stage": "discovery",
+            "source": "Haraj",
+            "candidates": 21,
+            "url": "https://haraj.com.sa/search/%D9%86%D9%8A%D8%B3%D8%A7%D9%86%20X-Trail/"
+          },
+          {
+            "stage": "discovery",
+            "source": "Haraj",
+            "candidates": 16,
+            "url": "https://haraj.com.sa/search/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D9%81%D9%88%D8%B1%D8%AA%D8%B4%D9%86%D8%B1/"
+          },
+          {
+            "stage": "discovery",
+            "source": "CarSwitch Saudi",
+            "candidates": 18,
+            "url": "https://ksa.carswitch.com/en/riyadh/used-cars/toyota/fortuner"
+          },
+          {
+            "stage": "discovery",
+            "source": "CarSwitch Saudi",
+            "candidates": 18,
+            "url": "https://ksa.carswitch.com/en/riyadh/used-cars/nissan/x-trail"
+          },
+          {
+            "stage": "discovery",
+            "source": "Syarah",
+            "error": "http-410"
+          },
+          {
+            "stage": "discovery",
+            "source": "Syarah",
+            "error": "http-410"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189015539/%D9%86%D9%8A%D8%B3%D8%A7%D9%86_%D8%A7%D9%83%D8%B3%D8%AA%D8%B1%D9%8A%D9%84_%D8%B3%D8%AA%D8%A7%D9%86%D8%AF%D8%B1_7_%D9%85%D9%82%D8%A7%D8%B9%D8%AF_%D8%AF%D8%A8%D9%84",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "discovery",
+            "source": "Haraj",
+            "candidates": 17,
+            "url": "https://haraj.com.sa/search/%D9%85%D8%A7%D8%B2%D8%AF%D8%A7%20CX-9/"
+          },
+          {
+            "stage": "discovery",
+            "source": "CarSwitch Saudi",
+            "candidates": 24,
+            "url": "https://ksa.carswitch.com/en/riyadh/used-cars/mazda/cx-9"
+          },
+          {
+            "stage": "discovery",
+            "source": "CarSwitch Saudi",
+            "candidates": 24,
+            "url": "https://ksa.carswitch.com/en/riyadh/used-cars/honda/cr-v"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189015097/%D9%86%D9%8A%D8%B3%D8%A7%D9%86_%D8%A7%D9%83%D8%B3_%D8%AA%D8%B1%D9%8A%D9%84_2026_%D8%A7%D8%B3",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "discovery",
+            "source": "Haraj",
+            "candidates": 18,
+            "url": "https://haraj.com.sa/search/%D9%87%D9%88%D9%86%D8%AF%D8%A7%20CR-V/"
+          },
+          {
+            "stage": "discovery",
+            "source": "CarSwitch Saudi",
+            "candidates": 24,
+            "url": "https://ksa.carswitch.com/en/riyadh/used-cars/mitsubishi/pajero"
+          },
+          {
+            "stage": "discovery",
+            "source": "Syarah",
+            "candidates": 3,
+            "url": "https://syarah.com/en/autos/mitsubishi/pajero"
+          },
+          {
+            "stage": "discovery",
+            "source": "Syarah",
+            "candidates": 9,
+            "url": "https://syarah.com/en/autos/lexus/rx"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189013731/%D9%86%D9%8A%D8%B3%D8%A7%D9%86_%D8%A7%D9%83%D8%B3%D8%AA%D8%B1%D9%8A%D9%84_5_%D9%85%D9%82%D8%A7%D8%B9%D8%AF_%D8%A8%D8%AF%D9%88%D9%86_%D8%AF%D8%A8%D9%84_2026_%D9%84%D8%AA%D9%85%D9%88%D9%8A%D9%84_%D8%A7%D9%84%D8%A8%D9%86%D9%88%D9%83_%D9%83%D8%A7%D8%B4",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "discovery",
+            "source": "Haraj",
+            "candidates": 14,
+            "url": "https://haraj.com.sa/search/%D9%85%D9%8A%D8%AA%D8%B3%D9%88%D8%A8%D9%8A%D8%B4%D9%8A%20Pajero/"
+          },
+          {
+            "stage": "discovery",
+            "source": "Haraj",
+            "candidates": 19,
+            "url": "https://haraj.com.sa/search/%D9%84%D9%83%D8%B2%D8%B3%20RX/"
+          },
+          {
+            "stage": "discovery",
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/en/riyadh/used-cars/lexus/rx",
+            "error": "transport-error"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189013478/%D9%86%D9%8A%D8%B3%D8%A7%D9%86_%D8%A7%D9%83%D8%B3%D8%AA%D8%B1%D9%8A%D9%84_7_%D8%B1%D8%A7%D9%83%D8%A8_%D8%A8%D8%AF%D9%88%D9%86_%D8%AF%D8%A8%D9%84_2026_%D8%A8%D9%82%D8%B3%D8%B7_%D8%B4%D9%87%D8%B1%D9%8A_1550_%D8%B1%D9%8A%D8%A7%D9%84",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189013226/%D9%86%D9%8A%D8%B3%D8%A7%D9%86_%D8%A7%D9%83%D8%B3%D8%AA%D8%B1%D9%8A%D9%84_s_%D8%A7%D8%B3%D8%AA%D8%A7%D9%86%D8%AF%D8%B1_7_%D8%B1%D8%A7%D9%83%D8%A8_%D8%AF%D8%A8%D9%84_%D9%88%D8%A8%D8%AF%D9%88%D9%86_%D8%B3%D8%B9%D9%88%D8%AF%D9%8A",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/fortuner/2018/853578",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/fortuner/2022/838822",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Syarah",
+            "url": "https://syarah.com/en/cardetail/toyota-fortuner-used-316173",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Syarah",
+            "url": "https://syarah.com/en/cardetail/toyota-fortuner-used-316093",
+            "error": "deadline"
+          },
+          {
+            "stage": "discovery",
+            "source": "SAMACO Automotive",
+            "url": "https://www.samaco.com.sa/stock/",
+            "error": "deadline"
+          },
+          {
+            "stage": "discovery",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en",
+            "error": "deadline"
+          },
+          {
+            "stage": "discovery",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/",
+            "error": "deadline"
+          },
+          {
+            "stage": "discovery",
+            "source": "ArabWheels Saudi",
+            "url": "https://www.arabwheels.sa/used-cars/search/-/",
+            "error": "deadline"
+          }
+        ]
+      },
+      "events": [
+        {
+          "count": 1
+        },
+        {
+          "count": 2
+        },
+        {
+          "count": 3
+        },
+        {
+          "count": 4
+        },
+        {
+          "count": 5
+        },
+        {
+          "count": 6
+        }
+      ],
+      "warm": {
+        "count": 6,
+        "cacheHit": true,
+        "ms": 1,
+        "requests": 0
+      },
+      "requests": [
+        {
+          "host": "syarah.com",
+          "status": 410,
+          "bytes": 4101,
+          "ms": 10196
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 363014,
+          "ms": 10399
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 405474,
+          "ms": 10746
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 376568,
+          "ms": 10847
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 910529,
+          "ms": 12428
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 905460,
+          "ms": 12581
+        },
+        {
+          "host": "syarah.com",
+          "status": 410,
+          "bytes": 4101,
+          "ms": 9495
+        },
+        {
+          "host": "syarah.com",
+          "status": 410,
+          "bytes": 4101,
+          "ms": 9699
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 98275,
+          "ms": 11163
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 350030,
+          "ms": 11398
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 973872,
+          "ms": 11430
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 965404,
+          "ms": 12178
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 242497,
+          "ms": 10202
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 242949,
+          "ms": 10242
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 106243,
+          "ms": 8203
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 341399,
+          "ms": 8360
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 958027,
+          "ms": 8160
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 882150,
+          "ms": 10202
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 224755,
+          "ms": 10044
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 272922,
+          "ms": 10075
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 128255,
+          "ms": 10107
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 308161,
+          "ms": 10365
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 308,
+          "bytes": 433306,
+          "ms": 8537
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 885452,
+          "ms": 9857
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 200,
+          "bytes": 24,
+          "ms": 8871
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 402981,
+          "ms": 9040
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 247242,
+          "ms": 11232
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 244204,
+          "ms": 10561
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "ms": 11504,
+          "error": "transport-error"
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 1437,
+          "ms": 7437
+        },
+        {
+          "host": "www.arabwheels.sa",
+          "status": 200,
+          "bytes": 1509,
+          "ms": 8318
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 119696,
+          "ms": 7488
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 111144,
+          "ms": 2521
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "ms": 16497,
+          "error": "deadline"
+        },
+        {
+          "host": "www.samaco.com.sa",
+          "ms": 7861,
+          "error": "deadline"
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "ms": 5200,
+          "error": "deadline"
+        },
+        {
+          "host": "cars.saudisale.com",
+          "ms": 1614,
+          "error": "deadline"
+        },
+        {
+          "host": "ksa.motory.com",
+          "ms": 341,
+          "error": "deadline"
+        },
+        {
+          "host": "syarah.com",
+          "ms": 205,
+          "error": "deadline"
+        }
+      ],
+      "cacheBytes": 83515
+    },
+    {
+      "id": "new-ar",
+      "query": "تويوتا كورولا جديدة تحت 100 ألف",
+      "condition": "new",
+      "intent": {
+        "query": "تويوتا كورولا جديدة تحت 100 ألف",
+        "make": "Toyota",
+        "model": "Corolla",
+        "condition": "new",
+        "city": null,
+        "bodyType": null,
+        "fuelType": null,
+        "transmission": null,
+        "trim": null,
+        "sellerType": null,
+        "originPreference": null,
+        "useCase": null,
+        "sortPreference": null,
+        "interpretation": null,
+        "year": null,
+        "minYear": null,
+        "maxYear": null,
+        "minPrice": null,
+        "maxPrice": 100000,
+        "excludedMakes": [],
+        "priorities": [],
+        "confidence": 1
+      },
+      "intentMode": "rules",
+      "intentOrigin": "current production response; returned inventory excluded from experiment",
+      "baseline": {
+        "firstMs": 9769,
+        "count": 2,
+        "complete": false,
+        "ai": {
+          "model": null,
+          "latencyMs": 0,
+          "cacheHit": false,
+          "fallbackReason": null
+        }
+      },
+      "result": {
+        "matches": [],
+        "discovered": 96,
+        "eligible": 67,
+        "detailsAttempted": 12,
+        "firstResultMs": null,
+        "totalMs": 60009,
+        "deadlineReached": true,
+        "partial": true,
+        "coverageComplete": false,
+        "cacheHit": false,
+        "diagnostics": [
+          {
+            "stage": "web-discovery",
+            "status": "not-configured"
+          },
+          {
+            "stage": "discovery",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en",
+            "candidates": 64
+          },
+          {
+            "stage": "discovery",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/toyota/corolla/",
+            "candidates": 20
+          },
+          {
+            "stage": "discovery",
+            "source": "Saleh Cars",
+            "candidates": 2,
+            "url": "https://www.salehcars.com/sitemap.xml"
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/710be5/2025-mercedes-benz-gt-43-amg",
+            "error": "http-202"
+          },
+          {
+            "stage": "discovery",
+            "source": "Syarah",
+            "candidates": 0,
+            "url": "https://syarah.com/en/autos/toyota/corolla?page=6"
+          },
+          {
+            "stage": "discovery",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/toyota/corolla/2026/",
+            "candidates": 10
+          },
+          {
+            "stage": "verify",
+            "source": "Saleh Cars",
+            "url": "https://www.salehcars.com/en/cars/692d6d3f7763c76ddaf33a88/toyota-corolla-xli-2-0l-2026",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/0GSpv3/2025-land-rover-range-rover-autobiography",
+            "error": "http-202"
+          },
+          {
+            "stage": "verify",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/riyadh-haraj/toyota/corolla/2026/279318/",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Saleh Cars",
+            "url": "https://www.salehcars.com/en/cars/69b0a1b7845f71b9054ca65e/toyota-corolla-xli-1-5-turbo-2026",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/12Ht4a/2023-nissan-patrol-platinum",
+            "error": "http-202"
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/cq8054/2026-exeed-vx-black-and-gold",
+            "error": "http-202"
+          },
+          {
+            "stage": "verify",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/riyadh-haraj/toyota/corolla/2026/276001/",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/b9977e/2021-cadillac-escalade-premium",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/riyadh-haraj/toyota/corolla/2025/280689/",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/jkDKiB/2024-mercedes-benz-gls-450",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/jeddah-haraj/toyota/corolla/2018/281150/",
+            "error": "deadline"
+          }
+        ]
+      },
+      "events": [],
+      "warm": null,
+      "requests": [
+        {
+          "host": "cars.saudisale.com",
+          "status": 200,
+          "bytes": 726104,
+          "ms": 4718
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 363374,
+          "ms": 8537
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 862650,
+          "ms": 8746
+        },
+        {
+          "host": "www.salehcars.com",
+          "status": 200,
+          "bytes": 251547,
+          "ms": 10769
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 202,
+          "bytes": 0,
+          "ms": 8025
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 281566,
+          "ms": 7942
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 712246,
+          "ms": 10560
+        },
+        {
+          "host": "www.salehcars.com",
+          "status": 200,
+          "bytes": 301456,
+          "ms": 9057
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 202,
+          "bytes": 0,
+          "ms": 9594
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 519013,
+          "ms": 10164
+        },
+        {
+          "host": "www.salehcars.com",
+          "status": 200,
+          "bytes": 289549,
+          "ms": 8842
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 202,
+          "bytes": 0,
+          "ms": 7532
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 202,
+          "bytes": 0,
+          "ms": 14411
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 527976,
+          "ms": 19861
+        },
+        {
+          "host": "cars.saudisale.com",
+          "ms": 9039,
+          "error": "deadline"
+        },
+        {
+          "host": "ksa.motory.com",
+          "ms": 5045,
+          "error": "deadline"
+        }
+      ],
+      "cacheBytes": 83515
+    },
+    {
+      "id": "camry-en",
+      "query": "Toyota Camry under 80000 in Riyadh",
+      "condition": "used",
+      "intent": {
+        "query": "Toyota Camry under 80000 in Riyadh",
+        "make": "Toyota",
+        "model": "Camry",
+        "condition": "used",
+        "city": "Riyadh",
+        "bodyType": null,
+        "fuelType": null,
+        "transmission": null,
+        "trim": null,
+        "sellerType": null,
+        "originPreference": null,
+        "useCase": null,
+        "sortPreference": null,
+        "interpretation": null,
+        "year": null,
+        "minYear": null,
+        "maxYear": null,
+        "minPrice": null,
+        "maxPrice": 80000,
+        "excludedMakes": [],
+        "priorities": [],
+        "confidence": 1
+      },
+      "intentMode": "rules",
+      "intentOrigin": "current production response; returned inventory excluded from experiment",
+      "baseline": {
+        "firstMs": 13560,
+        "count": 9,
+        "complete": false,
+        "ai": {
+          "model": null,
+          "latencyMs": 0,
+          "cacheHit": false,
+          "fallbackReason": null
+        }
+      },
+      "result": {
+        "matches": [
+          {
+            "source": "Syarah",
+            "url": "https://syarah.com/en/cardetail/toyota-camry-used-317114",
+            "title": "Used 2023 Toyota Camry GLE Silver Color for sale - 317114 | Syarah",
+            "make": "Toyota",
+            "model": "Camry",
+            "year": 2023,
+            "condition": "used",
+            "city": "Riyadh",
+            "cityEvidence": "same-ad-source-search-card",
+            "price": 65000,
+            "priceVerified": true,
+            "mileage": 285110,
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-schema",
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/317114/orignal-317114-1-1789629596.jpg?v=3"
+          },
+          {
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/camry/2023/802283",
+            "title": "تويوتا كامري LE Hybrid 2023 2.5",
+            "make": "Toyota",
+            "model": "Camry",
+            "year": 2023,
+            "condition": "used",
+            "city": "Riyadh",
+            "price": 77200,
+            "priceVerified": true,
+            "mileage": 150044,
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-schema",
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/575c4ae1-cf98-4240-9693-28fd9327fa73"
+          },
+          {
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189017222",
+            "title": "كامري 2019 فل كامل",
+            "make": "Toyota",
+            "model": "Camry",
+            "year": 2019,
+            "condition": "used",
+            "city": "Riyadh",
+            "cityEvidence": "source-search-card",
+            "price": 50000,
+            "priceVerified": true,
+            "priceEvidence": "الحد 50 الف",
+            "mileage": 330000,
+            "detailChecked": true,
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://mimg6cdn.haraj.com.sa/userfiles30/2026-09-21/1200x1600_E5729E95-F623-4539-BECD-C612D555154C.jpg"
+          },
+          {
+            "source": "Syarah",
+            "url": "https://syarah.com/en/cardetail/toyota-camry-used-317213",
+            "title": "Used 2022 Toyota Camry LE White Color for sale - 317213 | Syarah",
+            "make": "Toyota",
+            "model": "Camry",
+            "year": 2022,
+            "condition": "used",
+            "city": "Riyadh",
+            "cityEvidence": "same-ad-source-search-card",
+            "price": 76000,
+            "priceVerified": true,
+            "mileage": 145169,
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-schema",
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/317213/orignal-1789887973-705_cut.jpg?v=3"
+          },
+          {
+            "source": "Syarah",
+            "url": "https://syarah.com/en/cardetail/toyota-camry-used-315578",
+            "title": "Used 2022 Toyota Camry LE White Color for sale - 315578 | Syarah",
+            "make": "Toyota",
+            "model": "Camry",
+            "year": 2022,
+            "condition": "used",
+            "city": "Riyadh",
+            "cityEvidence": "same-ad-source-search-card",
+            "price": 75700,
+            "priceVerified": true,
+            "mileage": 111451,
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-schema",
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/315578/orignal-315578-1-1788626120.jpg?v=3"
+          }
+        ],
+        "discovered": 165,
+        "eligible": 82,
+        "detailsAttempted": 16,
+        "firstResultMs": 23249,
+        "totalMs": 60019,
+        "deadlineReached": true,
+        "partial": true,
+        "coverageComplete": false,
+        "cacheHit": false,
+        "diagnostics": [
+          {
+            "stage": "web-discovery",
+            "status": "not-configured"
+          },
+          {
+            "stage": "discovery",
+            "source": "Syarah",
+            "candidates": 12,
+            "url": "https://syarah.com/en/autos/toyota/camry"
+          },
+          {
+            "stage": "discovery",
+            "source": "Haraj",
+            "candidates": 16,
+            "url": "https://haraj.com.sa/search/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D9%83%D8%A7%D9%85%D8%B1%D9%8A/"
+          },
+          {
+            "stage": "discovery",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en",
+            "candidates": 64
+          },
+          {
+            "stage": "discovery",
+            "source": "CarSwitch Saudi",
+            "candidates": 18,
+            "url": "https://ksa.carswitch.com/en/riyadh/used-cars/toyota/camry"
+          },
+          {
+            "stage": "discovery",
+            "source": "ArabWheels Saudi",
+            "url": "https://www.arabwheels.sa/used-cars/search/-/",
+            "candidates": 25
+          },
+          {
+            "stage": "discovery",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/toyota/camry/",
+            "candidates": 20
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189016417/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7_%D9%83%D8%A7%D9%85%D8%B1%D9%8A_2016",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189014960/%D9%83%D8%A7%D9%85%D8%B1%D9%8A_2025_%D9%85%D9%85%D8%B4%D9%89_93_%D8%B3%D9%88%D9%85_74_%D8%A7%D9%84%D8%A8%D9%8A%D8%B9_%D9%82%D8%B1%D9%8A%D8%A8",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "discovery",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/toyota/camry/2026/",
+            "candidates": 10
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/710be5/2025-mercedes-benz-gt-43-amg",
+            "error": "http-202"
+          },
+          {
+            "stage": "verify",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/jeddah-haraj/toyota/camry/2025/281069/",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/0GSpv3/2025-land-rover-range-rover-autobiography",
+            "error": "http-202"
+          },
+          {
+            "stage": "verify",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/jeddah-haraj/toyota/camry/2023/280895/",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/12Ht4a/2023-nissan-patrol-platinum",
+            "error": "http-202"
+          },
+          {
+            "stage": "verify",
+            "source": "Syarah",
+            "url": "https://syarah.com/en/cardetail/toyota-camry-used-315638",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189014834/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7_%D9%83%D8%A7%D9%85%D8%B1%D9%8A_%D9%82%D8%B1%D8%A7%D9%86%D8%AF%D9%8A_%D9%85%D9%88%D8%AF%D9%8A%D9%84_2026_%D8%A3%D9%82%D9%84_%D8%A7%D9%84%D8%A3%D8%B3%D8%B9%D8%A7%D8%B1",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/jeddah-haraj/toyota/camry/2022/280894/",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/dammam-haraj/toyota/camry/2022/280893/",
+            "error": "deadline"
+          }
+        ]
+      },
+      "events": [
+        {
+          "count": 1
+        },
+        {
+          "count": 2
+        },
+        {
+          "count": 3
+        },
+        {
+          "count": 4
+        },
+        {
+          "count": 5
+        }
+      ],
+      "warm": {
+        "count": 5,
+        "cacheHit": true,
+        "ms": 1,
+        "requests": 0
+      },
+      "requests": [
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 365587,
+          "ms": 10878
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 328498,
+          "ms": 11389
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 200,
+          "bytes": 726105,
+          "ms": 11127
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 910020,
+          "ms": 14087
+        },
+        {
+          "host": "www.arabwheels.sa",
+          "status": 200,
+          "bytes": 438725,
+          "ms": 12969
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 894551,
+          "ms": 15074
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 247276,
+          "ms": 11841
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 235301,
+          "ms": 12348
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 97034,
+          "ms": 9825
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 93747,
+          "ms": 11727
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 704612,
+          "ms": 9741
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 202,
+          "bytes": 0,
+          "ms": 10979
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 894747,
+          "ms": 12419
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 514784,
+          "ms": 10392
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 202,
+          "bytes": 0,
+          "ms": 11561
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 512613,
+          "ms": 9708
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 202,
+          "bytes": 0,
+          "ms": 8623
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 93979,
+          "ms": 11224
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 243198,
+          "ms": 2280
+        },
+        {
+          "host": "syarah.com",
+          "ms": 10618,
+          "error": "deadline"
+        },
+        {
+          "host": "ksa.motory.com",
+          "ms": 9518,
+          "error": "deadline"
+        },
+        {
+          "host": "haraj.com.sa",
+          "ms": 787,
+          "error": "deadline"
+        }
+      ],
+      "cacheBytes": 145274
+    },
+    {
+      "id": "audi-en",
+      "query": "Audi Q8 under 300000",
+      "condition": "used",
+      "intent": {
+        "query": "Audi Q8 under 300000",
+        "make": "Audi",
+        "model": "Q8",
+        "condition": "used",
+        "city": null,
+        "bodyType": null,
+        "fuelType": null,
+        "transmission": null,
+        "trim": null,
+        "sellerType": null,
+        "originPreference": null,
+        "useCase": null,
+        "sortPreference": null,
+        "interpretation": null,
+        "year": null,
+        "minYear": null,
+        "maxYear": null,
+        "minPrice": null,
+        "maxPrice": 300000,
+        "excludedMakes": [],
+        "priorities": [],
+        "confidence": 1
+      },
+      "intentMode": "rules",
+      "intentOrigin": "current production response; returned inventory excluded from experiment",
+      "baseline": {
+        "firstMs": 11614,
+        "count": 4,
+        "complete": false,
+        "ai": {
+          "model": null,
+          "latencyMs": 0,
+          "cacheHit": false,
+          "fallbackReason": null
+        }
+      },
+      "result": {
+        "matches": [
+          {
+            "source": "Syarah",
+            "url": "https://syarah.com/en/cardetail/audi-q8-used-306539",
+            "title": "Used 2023 Audi Q8 55 TFSI quattro Black Color for sale - 306539 | Syarah",
+            "make": "Audi",
+            "model": "Q8",
+            "year": 2023,
+            "condition": "used",
+            "city": "Riyadh",
+            "cityEvidence": "same-ad-source-search-card",
+            "price": 201000,
+            "priceVerified": true,
+            "mileage": 111822,
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-schema",
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://cdn.syarah.com/photos-thumbs/online-v1/0x683/online/posts/306539/orignal-1783670153-575_cut.jpg?v=3"
+          },
+          {
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/jeddah-haraj/audi/q8/2022/263458",
+            "title": "Audi Q8 2022",
+            "make": "Audi",
+            "model": "Q8",
+            "year": 2022,
+            "condition": "used",
+            "city": null,
+            "price": 222500,
+            "priceVerified": true,
+            "mileage": null,
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-source-adapter",
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://s3.eu-central-1.amazonaws.com/v3-cfs.motory.com/vehicle-used/691x518/l-1746697306.629-681c7c5a99922.webp"
+          },
+          {
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/riyadh/used-car/audi/q8/2019/857324",
+            "title": "أودي Q8 55 TFSI 48V Mild Hybrid (MHEV) 2019 3.0",
+            "make": "Audi",
+            "model": "Q8",
+            "year": 2019,
+            "condition": "used",
+            "city": "Riyadh",
+            "price": 135750,
+            "priceVerified": true,
+            "mileage": 157102,
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-schema",
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/709e035a-3766-4a21-8e08-7b501f1f2f6f"
+          },
+          {
+            "source": "ArabWheels Saudi",
+            "url": "https://www.arabwheels.sa/used-cars/audi-q8-2023-for-sale-in-riyadh-9623",
+            "title": "أودي كيو ٨ 2023",
+            "make": "Audi",
+            "model": "Q8",
+            "year": 2023,
+            "condition": "used",
+            "city": "الرياض",
+            "price": 280000,
+            "priceVerified": true,
+            "mileage": 28000,
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-source-adapter",
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://cache3.arabwheels.sa/ad_pictures/1375/audi-q8-2023-137556.webp"
+          },
+          {
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/jeddah-haraj/audi/q8/2022/263457",
+            "title": "Audi Q8 2022",
+            "make": "Audi",
+            "model": "Q8",
+            "year": 2022,
+            "condition": "used",
+            "city": null,
+            "price": 222500,
+            "priceVerified": true,
+            "mileage": 85971,
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-source-adapter",
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://s3.eu-central-1.amazonaws.com/v3-cfs.motory.com/vehicle-used/691x518/l-1746697306.629-681c7c5a99922.webp"
+          },
+          {
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/riyadh/used-car/audi/q8/2020/811296",
+            "title": "أودي Q8 S-LINE 2020 3.0",
+            "make": "Audi",
+            "model": "Q8",
+            "year": 2020,
+            "condition": "used",
+            "city": "Riyadh",
+            "price": 136100,
+            "priceVerified": true,
+            "mileage": 159193,
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-schema",
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/fabc0532-1b78-4717-bf16-bf0c818d4b57"
+          },
+          {
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/jeddah/used-car/audi/q8/2022/841226",
+            "title": "أودي Q8 55TFSI quattro 2022 3.0",
+            "make": "Audi",
+            "model": "Q8",
+            "year": 2022,
+            "condition": "used",
+            "city": "Jeddah",
+            "price": 202000,
+            "priceVerified": true,
+            "mileage": 119483,
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-schema",
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/3f92197f-acd2-40bb-a0ac-8b2b3c16638e"
+          }
+        ],
+        "discovered": 147,
+        "eligible": 61,
+        "detailsAttempted": 17,
+        "firstResultMs": 25681,
+        "totalMs": 60005,
+        "deadlineReached": true,
+        "partial": true,
+        "coverageComplete": false,
+        "cacheHit": false,
+        "diagnostics": [
+          {
+            "stage": "web-discovery",
+            "status": "not-configured"
+          },
+          {
+            "stage": "discovery",
+            "source": "SAMACO Automotive",
+            "url": "https://www.samaco.com.sa/stock/",
+            "error": "deadline"
+          },
+          {
+            "stage": "discovery",
+            "source": "Syarah",
+            "candidates": 1,
+            "url": "https://syarah.com/en/autos/audi/q8"
+          },
+          {
+            "stage": "discovery",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/audi/q8/",
+            "candidates": 7
+          },
+          {
+            "stage": "discovery",
+            "source": "Haraj",
+            "candidates": 16,
+            "url": "https://haraj.com.sa/search/%D8%A3%D9%88%D8%AF%D9%8A%20Q8/"
+          },
+          {
+            "stage": "discovery",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en",
+            "candidates": 64
+          },
+          {
+            "stage": "discovery",
+            "source": "CarSwitch Saudi",
+            "candidates": 24,
+            "url": "https://ksa.carswitch.com/en/saudi/used-cars/audi/q8"
+          },
+          {
+            "stage": "discovery",
+            "source": "ArabWheels Saudi",
+            "url": "https://www.arabwheels.sa/used-cars/search/-/",
+            "candidates": 25
+          },
+          {
+            "stage": "discovery",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/audi/q8/2024/",
+            "candidates": 10
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11185099877/%D8%A7%D9%88%D8%AF%D9%8A_Q8",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/710be5/2025-mercedes-benz-gt-43-amg",
+            "error": "http-202"
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/0GSpv3/2025-land-rover-range-rover-autobiography",
+            "error": "http-202"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11185069510/Audi_Q8_2019",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11188889911/Audi_Q8_E_Tron_2024_Home_Charge_Included",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/12Ht4a/2023-nissan-patrol-platinum",
+            "error": "http-202"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11187741389/%D8%A7%D9%88%D8%AF%D9%8A_Q8_2019",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/jeddah-haraj/audi/q8/2022/252861/",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/cq8054/2026-exeed-vx-black-and-gold",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/al-khobar-haraj/audi/q8/2021/236222/",
+            "error": "deadline"
+          }
+        ]
+      },
+      "events": [
+        {
+          "count": 1
+        },
+        {
+          "count": 2
+        },
+        {
+          "count": 3
+        },
+        {
+          "count": 4
+        },
+        {
+          "count": 5
+        },
+        {
+          "count": 6
+        },
+        {
+          "count": 7
+        }
+      ],
+      "warm": {
+        "count": 7,
+        "cacheHit": true,
+        "ms": 0,
+        "requests": 0
+      },
+      "requests": [
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 179185,
+          "ms": 9753
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 568998,
+          "ms": 9501
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 359439,
+          "ms": 10775
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 200,
+          "bytes": 726103,
+          "ms": 11051
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 976074,
+          "ms": 12319
+        },
+        {
+          "host": "www.arabwheels.sa",
+          "status": 200,
+          "bytes": 438725,
+          "ms": 11629
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 617433,
+          "ms": 8807
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 87517,
+          "ms": 12167
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 228823,
+          "ms": 15894
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 202,
+          "bytes": 0,
+          "ms": 9310
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 482127,
+          "ms": 12568
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 884564,
+          "ms": 10301
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 478711,
+          "ms": 9319
+        },
+        {
+          "host": "www.arabwheels.sa",
+          "status": 200,
+          "bytes": 145417,
+          "ms": 10895
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 202,
+          "bytes": 0,
+          "ms": 8856
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 873855,
+          "ms": 14823
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 101199,
+          "ms": 8586
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 97056,
+          "ms": 8147
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 890312,
+          "ms": 8608
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 202,
+          "bytes": 0,
+          "ms": 11072
+        },
+        {
+          "host": "ksa.motory.com",
+          "ms": 5526,
+          "error": "deadline"
+        },
+        {
+          "host": "haraj.com.sa",
+          "ms": 1881,
+          "error": "deadline"
+        },
+        {
+          "host": "cars.saudisale.com",
+          "ms": 779,
+          "error": "deadline"
+        }
+      ],
+      "cacheBytes": 201427
+    },
+    {
+      "id": "elantra-new",
+      "query": "Hyundai Elantra new under 100000",
+      "condition": "new",
+      "intent": {
+        "query": "Hyundai Elantra new under 100000",
+        "make": "Hyundai",
+        "model": "Elantra",
+        "condition": "new",
+        "city": null,
+        "bodyType": null,
+        "fuelType": null,
+        "transmission": null,
+        "trim": null,
+        "sellerType": null,
+        "originPreference": null,
+        "useCase": null,
+        "sortPreference": null,
+        "interpretation": null,
+        "year": null,
+        "minYear": null,
+        "maxYear": null,
+        "minPrice": null,
+        "maxPrice": 100000,
+        "excludedMakes": [],
+        "priorities": [],
+        "confidence": 1
+      },
+      "intentMode": "rules",
+      "intentOrigin": "current production response; returned inventory excluded from experiment",
+      "baseline": {
+        "firstMs": 12529,
+        "count": 26,
+        "complete": false,
+        "ai": {
+          "model": null,
+          "latencyMs": 0,
+          "cacheHit": false,
+          "fallbackReason": null
+        }
+      },
+      "result": {
+        "matches": [
+          {
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/riyadh-haraj/hyundai/elantra/2025/273337",
+            "title": "Hyundai Elantra 2025",
+            "make": "Hyundai",
+            "model": "Elantra",
+            "year": 2025,
+            "condition": "new",
+            "city": null,
+            "price": 75325,
+            "priceVerified": true,
+            "mileage": 1,
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-source-adapter",
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://s3.eu-central-1.amazonaws.com/v3-cfs.motory.com/vehicle-used/691x518/l-1760791077.5029-68f38a257ac87.webp"
+          },
+          {
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/dammam-haraj/hyundai/elantra/2025/267527",
+            "title": "Hyundai Elantra 2025",
+            "make": "Hyundai",
+            "model": "Elantra",
+            "year": 2025,
+            "condition": "new",
+            "city": null,
+            "price": 78000,
+            "priceVerified": true,
+            "mileage": 1,
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-source-adapter",
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://s3.eu-central-1.amazonaws.com/v3-cfs.motory.com/vehicle-used/691x518/l-1754309030.799-6890a1a6c30f1.webp"
+          },
+          {
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/riyadh-haraj/hyundai/elantra/2025/272684",
+            "title": "Hyundai Elantra 2025",
+            "make": "Hyundai",
+            "model": "Elantra",
+            "year": 2025,
+            "condition": "new",
+            "city": null,
+            "price": 71300,
+            "priceVerified": true,
+            "mileage": 1,
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-source-adapter",
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://s3.eu-central-1.amazonaws.com/v3-cfs.motory.com/vehicle-used/691x518/l-1765026103.6996-69342937aacfb.webp"
+          }
+        ],
+        "discovered": 112,
+        "eligible": 76,
+        "detailsAttempted": 14,
+        "firstResultMs": 35755,
+        "totalMs": 60007,
+        "deadlineReached": true,
+        "partial": true,
+        "coverageComplete": false,
+        "cacheHit": false,
+        "diagnostics": [
+          {
+            "stage": "web-discovery",
+            "status": "not-configured"
+          },
+          {
+            "stage": "discovery",
+            "source": "Saleh Cars",
+            "candidates": 8,
+            "url": "https://www.salehcars.com/sitemap.xml"
+          },
+          {
+            "stage": "discovery",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/hyundai/elantra/",
+            "candidates": 20
+          },
+          {
+            "stage": "discovery",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en",
+            "candidates": 64
+          },
+          {
+            "stage": "verify",
+            "source": "Saleh Cars",
+            "url": "https://www.salehcars.com/en/cars/674d9e3935d30cee233760bc/hyundai-elantra-gls-smart-1-5l-2025",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Saleh Cars",
+            "url": "https://www.salehcars.com/en/cars/674d992b4692eae0ca3a2016/hyundai-elantra-gls-smart-2-0l-2025",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "discovery",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/hyundai/elantra/2026/",
+            "candidates": 20
+          },
+          {
+            "stage": "discovery",
+            "source": "Syarah",
+            "candidates": 0,
+            "url": "https://syarah.com/en/autos/hyundai/elantra?page=10"
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/710be5/2025-mercedes-benz-gt-43-amg",
+            "error": "http-202"
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/0GSpv3/2025-land-rover-range-rover-autobiography",
+            "error": "http-202"
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/12Ht4a/2023-nissan-patrol-platinum",
+            "error": "http-202"
+          },
+          {
+            "stage": "verify",
+            "source": "Saleh Cars",
+            "url": "https://www.salehcars.com/en/cars/6773e840e181cae63d8fcfcb/hyundai-elantra-gls-smart-plu--2-0l-2025",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Saleh Cars",
+            "url": "https://www.salehcars.com/en/cars/6773a52df68b08059e0f4823/hyundai-elantra-gls-smart-plu--1-5l-2025",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/jeddah-haraj/hyundai/elantra/2026/281009/",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/cq8054/2026-exeed-vx-black-and-gold",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/jeddah-haraj/hyundai/elantra/2023/281051/",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/b9977e/2021-cadillac-escalade-premium",
+            "error": "deadline"
+          }
+        ]
+      },
+      "events": [
+        {
+          "count": 1
+        },
+        {
+          "count": 2
+        },
+        {
+          "count": 3
+        }
+      ],
+      "warm": {
+        "count": 3,
+        "cacheHit": true,
+        "ms": 0,
+        "requests": 0
+      },
+      "requests": [
+        {
+          "host": "www.salehcars.com",
+          "status": 200,
+          "bytes": 251547,
+          "ms": 12569
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 865619,
+          "ms": 11870
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 200,
+          "bytes": 726103,
+          "ms": 11929
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 359527,
+          "ms": 14925
+        },
+        {
+          "host": "www.salehcars.com",
+          "status": 200,
+          "bytes": 312164,
+          "ms": 11380
+        },
+        {
+          "host": "www.salehcars.com",
+          "status": 200,
+          "bytes": 318074,
+          "ms": 11418
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 859722,
+          "ms": 10330
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 299373,
+          "ms": 10000
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 202,
+          "bytes": 0,
+          "ms": 8716
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 522414,
+          "ms": 10199
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 202,
+          "bytes": 0,
+          "ms": 12168
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 518266,
+          "ms": 10389
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 202,
+          "bytes": 0,
+          "ms": 8981
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 522715,
+          "ms": 9284
+        },
+        {
+          "host": "www.salehcars.com",
+          "status": 200,
+          "bytes": 309851,
+          "ms": 11243
+        },
+        {
+          "host": "www.salehcars.com",
+          "status": 200,
+          "bytes": 320211,
+          "ms": 11421
+        },
+        {
+          "host": "ksa.motory.com",
+          "ms": 1275,
+          "error": "deadline"
+        },
+        {
+          "host": "cars.saudisale.com",
+          "ms": 1266,
+          "error": "deadline"
+        }
+      ],
+      "cacheBytes": 224605
+    }
+  ]
+}

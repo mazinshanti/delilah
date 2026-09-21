@@ -1,0 +1,392 @@
+{
+  "at": "2026-09-21T08:48:17.050Z",
+  "productionChanged": false,
+  "inventoryLoaded": false,
+  "imagesDownloaded": 0,
+  "retrievalBudgetMs": 60000,
+  "detailBudget": 18,
+  "hostedDiscoveryConfigured": false,
+  "cases": [
+    {
+      "id": "corolla-en",
+      "query": "Toyota Corolla under 45000 in Jeddah",
+      "condition": "used",
+      "intent": {
+        "query": "Toyota Corolla under 45000 in Jeddah",
+        "make": "Toyota",
+        "model": "Corolla",
+        "condition": "used",
+        "city": "Jeddah",
+        "bodyType": null,
+        "fuelType": null,
+        "transmission": null,
+        "trim": null,
+        "sellerType": null,
+        "originPreference": null,
+        "useCase": null,
+        "sortPreference": null,
+        "interpretation": null,
+        "year": null,
+        "minYear": null,
+        "maxYear": null,
+        "minPrice": null,
+        "maxPrice": 45000,
+        "excludedMakes": [],
+        "priorities": [],
+        "confidence": 1
+      },
+      "intentMode": "rules",
+      "intentOrigin": "current production response; returned inventory excluded from experiment",
+      "baseline": {
+        "firstMs": 14300,
+        "count": 5,
+        "complete": false,
+        "ai": {
+          "model": null,
+          "latencyMs": 0,
+          "cacheHit": false,
+          "fallbackReason": null
+        }
+      },
+      "result": {
+        "matches": [
+          {
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2021/873180",
+            "title": "تويوتا كورولا GLi Executive 2021 1.5",
+            "make": "Toyota",
+            "model": "Corolla",
+            "year": 2021,
+            "condition": "used",
+            "city": "Jeddah",
+            "price": 45000,
+            "priceVerified": true,
+            "mileage": 246090,
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-schema",
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/ce305d53-f0eb-4c85-b948-2105827e73fb"
+          },
+          {
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2022/873160",
+            "title": "تويوتا كورولا XLI 2022 2.0",
+            "make": "Toyota",
+            "model": "Corolla",
+            "year": 2022,
+            "condition": "used",
+            "city": "Jeddah",
+            "price": 44125,
+            "priceVerified": true,
+            "mileage": 182000,
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-schema",
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/96f6c0d0-0d49-4f52-932a-b352447e258a"
+          },
+          {
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2018/844000",
+            "title": "تويوتا كورولا 2018 1.6",
+            "make": "Toyota",
+            "model": "Corolla",
+            "year": 2018,
+            "condition": "used",
+            "city": "Jeddah",
+            "price": 34000,
+            "priceVerified": true,
+            "mileage": 272777,
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-schema",
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/ccad28e0-09c2-4c33-9331-6b377d8dbfee"
+          }
+        ],
+        "discovered": 160,
+        "eligible": 41,
+        "detailsAttempted": 14,
+        "firstResultMs": 25674,
+        "totalMs": 60011,
+        "deadlineReached": true,
+        "partial": true,
+        "coverageComplete": false,
+        "cacheHit": false,
+        "diagnostics": [
+          {
+            "stage": "web-discovery",
+            "status": "not-configured"
+          },
+          {
+            "stage": "discovery",
+            "source": "Haraj",
+            "candidates": 14,
+            "url": "https://haraj.com.sa/search/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7/"
+          },
+          {
+            "stage": "discovery",
+            "source": "CarSwitch Saudi",
+            "candidates": 15,
+            "url": "https://ksa.carswitch.com/en/jeddah/used-cars/toyota/corolla"
+          },
+          {
+            "stage": "discovery",
+            "source": "Syarah",
+            "candidates": 12,
+            "url": "https://syarah.com/en/autos/toyota/corolla"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189014282/%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7_%D8%A7%D8%AA%D9%88%D9%85%D8%A7%D8%AA%D9%8A%D9%83_2009",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189016647/%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7_%D9%81%D9%84_%D9%83%D8%A7%D9%85%D9%84_%D8%B4%D8%A8%D9%87_%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "discovery",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/toyota/corolla/",
+            "candidates": 20
+          },
+          {
+            "stage": "discovery",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en",
+            "candidates": 64
+          },
+          {
+            "stage": "discovery",
+            "source": "ArabWheels Saudi",
+            "url": "https://www.arabwheels.sa/used-cars/search/-/",
+            "candidates": 25
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189014194/%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7_2010",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189016905/%D8%A8%D9%8A%D8%B9_%D8%B3%D9%8A%D8%A7%D8%B1%D9%87_%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7_2010",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/L4Fnn4/2019-harley-davidson-touring",
+            "error": "http-202"
+          },
+          {
+            "stage": "discovery",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/toyota/corolla/2026/",
+            "candidates": 10
+          },
+          {
+            "stage": "verify",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/riyadh-haraj/toyota/corolla/2026/279318/",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/Md53Nt/2022-yamaha-yfz-450r",
+            "error": "http-202"
+          },
+          {
+            "stage": "verify",
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2018/876958",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2015/828030",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/riyadh-haraj/toyota/corolla/2026/276001/",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/riyadh-haraj/toyota/corolla/2025/280689/",
+            "error": "deadline"
+          }
+        ]
+      },
+      "events": [
+        {
+          "count": 1
+        },
+        {
+          "count": 2
+        },
+        {
+          "count": 3
+        }
+      ],
+      "warm": {
+        "count": 3,
+        "cacheHit": true,
+        "ms": 1,
+        "requests": 0
+      },
+      "requests": [
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 1437,
+          "ms": 10195
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 200,
+          "bytes": 24,
+          "ms": 10358
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 323915,
+          "ms": 10842
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 872554,
+          "ms": 12009
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 363374,
+          "ms": 13654
+        },
+        {
+          "host": "www.arabwheels.sa",
+          "status": 200,
+          "bytes": 1509,
+          "ms": 17482
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 93358,
+          "ms": 10646
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 87656,
+          "ms": 10787
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 862530,
+          "ms": 12145
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 200,
+          "bytes": 726105,
+          "ms": 12489
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 894749,
+          "ms": 8159
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 895175,
+          "ms": 12279
+        },
+        {
+          "host": "www.arabwheels.sa",
+          "status": 200,
+          "bytes": 438725,
+          "ms": 11393
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 91832,
+          "ms": 10075
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 91930,
+          "ms": 11973
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 202,
+          "bytes": 0,
+          "ms": 15608
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 712168,
+          "ms": 18211
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 871090,
+          "ms": 9421
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 519019,
+          "ms": 9645
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 202,
+          "bytes": 0,
+          "ms": 10250
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "ms": 7881,
+          "error": "deadline"
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "ms": 5954,
+          "error": "deadline"
+        },
+        {
+          "host": "ksa.motory.com",
+          "ms": 5272,
+          "error": "deadline"
+        }
+      ],
+      "cacheBytes": 23859
+    }
+  ]
+}

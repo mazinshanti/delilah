@@ -1,0 +1,243 @@
+{
+  "at": "2026-09-21T08:48:30.777Z",
+  "productionChanged": false,
+  "inventoryLoaded": false,
+  "imagesDownloaded": 0,
+  "retrievalBudgetMs": 60000,
+  "detailBudget": 18,
+  "hostedDiscoveryConfigured": false,
+  "cases": [
+    {
+      "id": "new-ar",
+      "query": "تويوتا كورولا جديدة تحت 100 ألف",
+      "condition": "new",
+      "intent": {
+        "query": "تويوتا كورولا جديدة تحت 100 ألف",
+        "make": "Toyota",
+        "model": "Corolla",
+        "condition": "new",
+        "city": null,
+        "bodyType": null,
+        "fuelType": null,
+        "transmission": null,
+        "trim": null,
+        "sellerType": null,
+        "originPreference": null,
+        "useCase": null,
+        "sortPreference": null,
+        "interpretation": null,
+        "year": null,
+        "minYear": null,
+        "maxYear": null,
+        "minPrice": null,
+        "maxPrice": 100000,
+        "excludedMakes": [],
+        "priorities": [],
+        "confidence": 1
+      },
+      "intentMode": "rules",
+      "intentOrigin": "current production response; returned inventory excluded from experiment",
+      "baseline": {
+        "firstMs": 12497,
+        "count": 2,
+        "complete": true,
+        "ai": {
+          "model": null,
+          "latencyMs": 0,
+          "cacheHit": false,
+          "fallbackReason": null
+        }
+      },
+      "result": {
+        "matches": [],
+        "discovered": 96,
+        "eligible": 31,
+        "detailsAttempted": 8,
+        "firstResultMs": null,
+        "totalMs": 60011,
+        "deadlineReached": true,
+        "partial": true,
+        "coverageComplete": false,
+        "cacheHit": false,
+        "diagnostics": [
+          {
+            "stage": "web-discovery",
+            "status": "not-configured"
+          },
+          {
+            "stage": "discovery",
+            "source": "Saleh Cars",
+            "candidates": 2,
+            "url": "https://www.salehcars.com/sitemap.xml"
+          },
+          {
+            "stage": "discovery",
+            "source": "Syarah",
+            "candidates": 0,
+            "url": "https://syarah.com/en/autos/toyota/corolla?page=6"
+          },
+          {
+            "stage": "discovery",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en",
+            "candidates": 64
+          },
+          {
+            "stage": "verify",
+            "source": "Saleh Cars",
+            "url": "https://www.salehcars.com/en/cars/69b0a1b7845f71b9054ca65e/toyota-corolla-xli-1-5-turbo-2026",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Saleh Cars",
+            "url": "https://www.salehcars.com/en/cars/692d6d3f7763c76ddaf33a88/toyota-corolla-xli-2-0l-2026",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "discovery",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/toyota/corolla/",
+            "candidates": 20
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/L4Fnn4/2019-harley-davidson-touring",
+            "error": "http-202"
+          },
+          {
+            "stage": "discovery",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/toyota/corolla/2026/",
+            "candidates": 10
+          },
+          {
+            "stage": "verify",
+            "source": "Saudi Sale",
+            "url": "https://cars.saudisale.com/en/listings/Md53Nt/2022-yamaha-yfz-450r",
+            "error": "http-202"
+          },
+          {
+            "stage": "verify",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/riyadh-haraj/toyota/corolla/2026/279318/",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/riyadh-haraj/toyota/corolla/2026/276001/",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/riyadh-haraj/toyota/corolla/2025/280689/",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Motory",
+            "url": "https://ksa.motory.com/en/cars-for-sale/jeddah-haraj/toyota/corolla/2018/281150/",
+            "error": "deadline"
+          }
+        ]
+      },
+      "events": [],
+      "warm": null,
+      "requests": [
+        {
+          "host": "cars.saudisale.com",
+          "status": 200,
+          "bytes": 24,
+          "ms": 8900
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 363374,
+          "ms": 10638
+        },
+        {
+          "host": "www.salehcars.com",
+          "status": 200,
+          "bytes": 251547,
+          "ms": 10997
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 1437,
+          "ms": 12234
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 281566,
+          "ms": 8639
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 200,
+          "bytes": 726102,
+          "ms": 10314
+        },
+        {
+          "host": "www.salehcars.com",
+          "status": 200,
+          "bytes": 286618,
+          "ms": 9775
+        },
+        {
+          "host": "www.salehcars.com",
+          "status": 200,
+          "bytes": 300740,
+          "ms": 10085
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 862638,
+          "ms": 10464
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 202,
+          "bytes": 0,
+          "ms": 8657
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 712172,
+          "ms": 8420
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 202,
+          "bytes": 0,
+          "ms": 10846
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 519046,
+          "ms": 8379
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 527976,
+          "ms": 9997
+        },
+        {
+          "host": "ksa.motory.com",
+          "ms": 4869,
+          "error": "deadline"
+        }
+      ],
+      "cacheBytes": 0
+    }
+  ]
+}

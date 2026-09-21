@@ -1,0 +1,128 @@
+{
+  "at": "2026-09-21T08:22:12.525Z",
+  "productionChanged": false,
+  "inventoryLoaded": false,
+  "imagesDownloaded": 0,
+  "hostedDiscoveryConfigured": false,
+  "cases": [
+    {
+      "id": "new-ar",
+      "query": "تويوتا كورولا جديدة تحت 100 ألف",
+      "condition": "new",
+      "intent": {
+        "query": "تويوتا كورولا جديدة تحت 100 ألف",
+        "make": "Toyota",
+        "model": "Corolla",
+        "condition": "new",
+        "city": null,
+        "bodyType": null,
+        "fuelType": null,
+        "transmission": null,
+        "trim": null,
+        "sellerType": null,
+        "originPreference": null,
+        "useCase": null,
+        "sortPreference": null,
+        "interpretation": null,
+        "year": null,
+        "minYear": null,
+        "maxYear": null,
+        "minPrice": null,
+        "maxPrice": 100000,
+        "excludedMakes": [],
+        "priorities": [],
+        "confidence": 1
+      },
+      "intentMode": "rules",
+      "intentOrigin": "current production response; returned inventory excluded from experiment",
+      "baseline": {
+        "firstMs": 10122,
+        "count": 2,
+        "complete": true,
+        "ai": {
+          "model": null,
+          "latencyMs": 0,
+          "cacheHit": false,
+          "fallbackReason": null
+        }
+      },
+      "result": {
+        "matches": [],
+        "discovered": 2,
+        "eligible": 2,
+        "detailsAttempted": 2,
+        "firstResultMs": null,
+        "totalMs": 22112,
+        "deadlineReached": false,
+        "partial": true,
+        "coverageComplete": false,
+        "cacheHit": false,
+        "diagnostics": [
+          {
+            "stage": "web-discovery",
+            "status": "not-configured"
+          },
+          {
+            "stage": "discovery",
+            "source": "Saleh Cars",
+            "candidates": 2,
+            "url": "https://www.salehcars.com/sitemap.xml"
+          },
+          {
+            "stage": "discovery",
+            "source": "Syarah",
+            "candidates": 0,
+            "url": "https://syarah.com/en/autos/toyota/corolla?page=6"
+          },
+          {
+            "stage": "verify",
+            "source": "Saleh Cars",
+            "url": "https://www.salehcars.com/en/cars/692d6d3f7763c76ddaf33a88/toyota-corolla-xli-2-0l-2026",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Saleh Cars",
+            "url": "https://www.salehcars.com/en/cars/69b0a1b7845f71b9054ca65e/toyota-corolla-xli-1-5-turbo-2026",
+            "error": "no-matching-exact-ad-evidence"
+          }
+        ]
+      },
+      "events": [],
+      "warm": null,
+      "requests": [
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 363017,
+          "ms": 9827
+        },
+        {
+          "host": "www.salehcars.com",
+          "status": 200,
+          "bytes": 251547,
+          "ms": 12361
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 281566,
+          "ms": 11076
+        },
+        {
+          "host": "www.salehcars.com",
+          "status": 200,
+          "bytes": 302033,
+          "ms": 9487
+        },
+        {
+          "host": "www.salehcars.com",
+          "status": 200,
+          "bytes": 286661,
+          "ms": 9584
+        }
+      ],
+      "cacheBytes": 0
+    }
+  ]
+}

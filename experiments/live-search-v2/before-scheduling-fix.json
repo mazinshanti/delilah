@@ -1,0 +1,649 @@
+{
+  "at": "2026-09-21T08:16:18.284Z",
+  "productionChanged": false,
+  "inventoryLoaded": false,
+  "imagesDownloaded": 0,
+  "hostedDiscoveryConfigured": false,
+  "cases": [
+    {
+      "id": "corolla-en",
+      "query": "Toyota Corolla under 45000 in Jeddah",
+      "condition": "used",
+      "intent": {
+        "query": "Toyota Corolla under 45000 in Jeddah",
+        "make": "Toyota",
+        "model": "Corolla",
+        "condition": "used",
+        "city": "Jeddah",
+        "bodyType": null,
+        "fuelType": null,
+        "transmission": null,
+        "trim": null,
+        "sellerType": null,
+        "originPreference": null,
+        "useCase": null,
+        "sortPreference": null,
+        "interpretation": null,
+        "year": null,
+        "minYear": null,
+        "maxYear": null,
+        "minPrice": null,
+        "maxPrice": 45000,
+        "excludedMakes": [],
+        "priorities": [],
+        "confidence": 1
+      },
+      "intentMode": "rules",
+      "intentOrigin": "current production response; returned inventory excluded from experiment",
+      "baseline": {
+        "firstMs": 15613,
+        "count": 5,
+        "complete": false,
+        "ai": {
+          "model": null,
+          "latencyMs": 0,
+          "cacheHit": false,
+          "fallbackReason": null
+        }
+      },
+      "result": {
+        "matches": [
+          {
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2021/873180",
+            "title": "تويوتا كورولا GLi Executive 2021 1.5",
+            "make": "Toyota",
+            "model": "Corolla",
+            "year": 2021,
+            "condition": "used",
+            "city": "Jeddah",
+            "price": 45000,
+            "priceVerified": true,
+            "mileage": 246090,
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-schema",
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/ce305d53-f0eb-4c85-b948-2105827e73fb"
+          },
+          {
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2022/873160",
+            "title": "تويوتا كورولا XLI 2022 2.0",
+            "make": "Toyota",
+            "model": "Corolla",
+            "year": 2022,
+            "condition": "used",
+            "city": "Jeddah",
+            "price": 44125,
+            "priceVerified": true,
+            "mileage": 182000,
+            "detailChecked": true,
+            "evidenceLevel": "exact-ad-schema",
+            "rankingSignals": [
+              "price-fit"
+            ],
+            "image": "https://d1esl34bhh6pms.cloudfront.net/cars/used/images/original/96f6c0d0-0d49-4f52-932a-b352447e258a"
+          }
+        ],
+        "discovered": 42,
+        "eligible": 11,
+        "detailsAttempted": 8,
+        "firstResultMs": 42633,
+        "totalMs": 45010,
+        "deadlineReached": true,
+        "partial": true,
+        "coverageComplete": false,
+        "cacheHit": false,
+        "diagnostics": [
+          {
+            "stage": "web-discovery",
+            "status": "not-configured"
+          },
+          {
+            "stage": "discovery",
+            "source": "Syarah",
+            "candidates": 12,
+            "url": "https://syarah.com/en/autos/toyota/corolla"
+          },
+          {
+            "stage": "discovery",
+            "source": "Haraj",
+            "candidates": 15,
+            "url": "https://haraj.com.sa/search/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7/"
+          },
+          {
+            "stage": "discovery",
+            "source": "CarSwitch Saudi",
+            "candidates": 15,
+            "url": "https://ksa.carswitch.com/en/jeddah/used-cars/toyota/corolla"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189014282/%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7_%D8%A7%D8%AA%D9%88%D9%85%D8%A7%D8%AA%D9%8A%D9%83_2009",
+            "error": "transport-error"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189013040/%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7_2012_%D9%84%D9%84%D8%A8%D9%8A%D8%B9",
+            "error": "transport-error"
+          },
+          {
+            "stage": "verify",
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2018/844000",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2018/876958",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11188951366/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7_%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7_2015",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189014194/%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7_2010",
+            "error": "deadline"
+          }
+        ]
+      },
+      "events": [
+        {
+          "count": 1
+        },
+        {
+          "count": 2
+        }
+      ],
+      "warm": {
+        "count": 2,
+        "cacheHit": true,
+        "ms": 0,
+        "requests": 0
+      },
+      "requests": [
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 363017,
+          "ms": 11998
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 350659,
+          "ms": 12259
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 872554,
+          "ms": 14261
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 302,
+          "bytes": 0,
+          "ms": 11998
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 302,
+          "bytes": 0,
+          "ms": 12058
+        },
+        {
+          "host": "haraj.com.sa",
+          "ms": 7987,
+          "error": "transport-error"
+        },
+        {
+          "host": "haraj.com.sa",
+          "ms": 8058,
+          "error": "transport-error"
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 302,
+          "bytes": 0,
+          "ms": 4898
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 302,
+          "bytes": 0,
+          "ms": 5019
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 894749,
+          "ms": 10206
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 895175,
+          "ms": 10967
+        },
+        {
+          "host": "haraj.com.sa",
+          "ms": 7701,
+          "error": "deadline"
+        },
+        {
+          "host": "haraj.com.sa",
+          "ms": 7602,
+          "error": "deadline"
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "ms": 2372,
+          "error": "deadline"
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "ms": 1632,
+          "error": "deadline"
+        }
+      ],
+      "cacheBytes": 15566
+    },
+    {
+      "id": "suv-ar",
+      "query": "ابي جيب عائلي ياباني تحت 150 ألف في الرياض",
+      "condition": "used",
+      "intent": {
+        "query": "ابي جيب عائلي ياباني تحت 150 ألف في الرياض",
+        "make": null,
+        "model": null,
+        "condition": "used",
+        "city": "Riyadh",
+        "bodyType": "SUV",
+        "fuelType": null,
+        "transmission": null,
+        "trim": null,
+        "sellerType": null,
+        "originPreference": "Japanese",
+        "useCase": "family",
+        "sortPreference": null,
+        "interpretation": "بحث عن جيب عائلي ياباني في الرياض بسعر أقل من 150 ألف",
+        "year": null,
+        "minYear": null,
+        "maxYear": null,
+        "minPrice": null,
+        "maxPrice": 150000,
+        "excludedMakes": [],
+        "priorities": [],
+        "confidence": 0.95
+      },
+      "intentMode": "ai",
+      "intentOrigin": "current production response; returned inventory excluded from experiment",
+      "baseline": {
+        "firstMs": 16356,
+        "count": 215,
+        "complete": false,
+        "ai": {
+          "model": "gpt-4.1-mini",
+          "latencyMs": 3139,
+          "cacheHit": false,
+          "fallbackReason": null
+        }
+      },
+      "result": {
+        "matches": [],
+        "discovered": 124,
+        "eligible": 105,
+        "detailsAttempted": 7,
+        "firstResultMs": null,
+        "totalMs": 45005,
+        "deadlineReached": true,
+        "partial": true,
+        "coverageComplete": false,
+        "cacheHit": false,
+        "diagnostics": [
+          {
+            "stage": "web-discovery",
+            "status": "not-configured"
+          },
+          {
+            "stage": "discovery",
+            "source": "Syarah",
+            "error": "http-410"
+          },
+          {
+            "stage": "discovery",
+            "source": "Haraj",
+            "candidates": 14,
+            "url": "https://haraj.com.sa/search/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D9%81%D9%88%D8%B1%D8%AA%D8%B4%D9%86%D8%B1/"
+          },
+          {
+            "stage": "discovery",
+            "source": "Syarah",
+            "candidates": 12,
+            "url": "https://syarah.com/en/autos/toyota/fortuner"
+          },
+          {
+            "stage": "discovery",
+            "source": "Haraj",
+            "candidates": 21,
+            "url": "https://haraj.com.sa/search/%D9%86%D9%8A%D8%B3%D8%A7%D9%86%20X-Trail/"
+          },
+          {
+            "stage": "discovery",
+            "source": "CarSwitch Saudi",
+            "candidates": 18,
+            "url": "https://ksa.carswitch.com/en/riyadh/used-cars/toyota/fortuner"
+          },
+          {
+            "stage": "discovery",
+            "source": "CarSwitch Saudi",
+            "candidates": 18,
+            "url": "https://ksa.carswitch.com/en/riyadh/used-cars/nissan/x-trail"
+          },
+          {
+            "stage": "discovery",
+            "source": "Syarah",
+            "error": "http-410"
+          },
+          {
+            "stage": "discovery",
+            "source": "Haraj",
+            "candidates": 17,
+            "url": "https://haraj.com.sa/search/%D9%85%D8%A7%D8%B2%D8%AF%D8%A7%20CX-9/"
+          },
+          {
+            "stage": "discovery",
+            "source": "CarSwitch Saudi",
+            "candidates": 24,
+            "url": "https://ksa.carswitch.com/en/riyadh/used-cars/mazda/cx-9"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189014491/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7_%D9%81%D9%88%D8%B1%D8%AA%D8%B4%D9%86%D8%B1_GX2_%D8%AF%D8%A8%D9%84_%D8%A8%D9%86%D8%B2%D9%8A%D9%86_2026_%D9%83%D8%A7%D8%B4_%D9%88%D8%A7%D9%82%D8%B3%D8%A7%D8%B7",
+            "error": "transport-error"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189012571/%D8%B1%D8%B4_%D8%A8%D8%AF%D9%8A_%D9%81%D9%88%D8%B1%D8%AA%D8%B4%D9%86%D8%B1",
+            "error": "transport-error"
+          },
+          {
+            "stage": "verify",
+            "source": "Syarah",
+            "url": "https://syarah.com/en/cardetail/toyota-fortuner-used-316989",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189012039/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7_%D9%81%D9%88%D8%B1%D8%AA%D8%B4%D9%86%D8%B1_VX1_%D8%A8%D9%86%D8%B2%D9%8A%D9%86_2026_6_%D8%B3%D9%84%D9%86%D8%AF%D8%B1",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/fortuner/2020/831511",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "CarSwitch Saudi",
+            "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/fortuner/2023/840242",
+            "error": "deadline"
+          },
+          {
+            "stage": "verify",
+            "source": "Haraj",
+            "url": "https://haraj.com.sa/11189012232/%D9%81%D9%88%D8%B1%D8%AA%D8%B4%D9%86%D8%B1_2020_VX_6_%D8%B3%D9%84%D9%86%D8%AF%D8%B1",
+            "error": "deadline"
+          }
+        ]
+      },
+      "events": [],
+      "warm": null,
+      "requests": [
+        {
+          "host": "syarah.com",
+          "status": 410,
+          "bytes": 4101,
+          "ms": 9594
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 404346,
+          "ms": 9953
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 362640,
+          "ms": 9963
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 409786,
+          "ms": 10347
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 910529,
+          "ms": 13111
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 905460,
+          "ms": 13368
+        },
+        {
+          "host": "syarah.com",
+          "status": 410,
+          "bytes": 4101,
+          "ms": 11838
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 302,
+          "bytes": 0,
+          "ms": 11292
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 353817,
+          "ms": 11911
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 973872,
+          "ms": 13014
+        },
+        {
+          "host": "haraj.com.sa",
+          "ms": 8750,
+          "error": "transport-error"
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 302,
+          "bytes": 0,
+          "ms": 11782
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 302,
+          "bytes": 0,
+          "ms": 3402
+        },
+        {
+          "host": "haraj.com.sa",
+          "ms": 8260,
+          "error": "transport-error"
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 244863,
+          "ms": 13641
+        },
+        {
+          "host": "haraj.com.sa",
+          "ms": 11183,
+          "error": "deadline"
+        },
+        {
+          "host": "haraj.com.sa",
+          "ms": 3087,
+          "error": "deadline"
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "ms": 3073,
+          "error": "deadline"
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "ms": 919,
+          "error": "deadline"
+        }
+      ],
+      "cacheBytes": 15566
+    },
+    {
+      "id": "new-ar",
+      "query": "تويوتا كورولا جديدة تحت 100 ألف",
+      "condition": "new",
+      "intent": {
+        "query": "تويوتا كورولا جديدة تحت 100 ألف",
+        "make": "Toyota",
+        "model": "Corolla",
+        "condition": "new",
+        "city": null,
+        "bodyType": null,
+        "fuelType": null,
+        "transmission": null,
+        "trim": null,
+        "sellerType": null,
+        "originPreference": null,
+        "useCase": null,
+        "sortPreference": null,
+        "interpretation": null,
+        "year": null,
+        "minYear": null,
+        "maxYear": null,
+        "minPrice": null,
+        "maxPrice": 100000,
+        "excludedMakes": [],
+        "priorities": [],
+        "confidence": 1
+      },
+      "intentMode": "rules",
+      "intentOrigin": "current production response; returned inventory excluded from experiment",
+      "baseline": {
+        "firstMs": 14130,
+        "count": 2,
+        "complete": false,
+        "ai": {
+          "model": null,
+          "latencyMs": 0,
+          "cacheHit": false,
+          "fallbackReason": null
+        }
+      },
+      "result": {
+        "matches": [],
+        "discovered": 2,
+        "eligible": 2,
+        "detailsAttempted": 2,
+        "firstResultMs": null,
+        "totalMs": 23611,
+        "deadlineReached": false,
+        "partial": true,
+        "coverageComplete": false,
+        "cacheHit": false,
+        "diagnostics": [
+          {
+            "stage": "web-discovery",
+            "status": "not-configured"
+          },
+          {
+            "stage": "discovery",
+            "source": "Saleh Cars",
+            "candidates": 2,
+            "url": "https://www.salehcars.com/sitemap.xml"
+          },
+          {
+            "stage": "verify",
+            "source": "Saleh Cars",
+            "url": "https://www.salehcars.com/en/cars/692d6d3f7763c76ddaf33a88/toyota-corolla-xli-2-0l-2026",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "verify",
+            "source": "Saleh Cars",
+            "url": "https://www.salehcars.com/en/cars/69b0a1b7845f71b9054ca65e/toyota-corolla-xli-1-5-turbo-2026",
+            "error": "no-matching-exact-ad-evidence"
+          },
+          {
+            "stage": "discovery",
+            "source": "Syarah",
+            "candidates": 0,
+            "url": "https://syarah.com/en/filters?condition_id=1&make_id=4&model_id=9"
+          }
+        ]
+      },
+      "events": [],
+      "warm": null,
+      "requests": [
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 363017,
+          "ms": 11564
+        },
+        {
+          "host": "www.salehcars.com",
+          "status": 200,
+          "bytes": 251547,
+          "ms": 11904
+        },
+        {
+          "host": "www.salehcars.com",
+          "status": 200,
+          "bytes": 300783,
+          "ms": 9344
+        },
+        {
+          "host": "www.salehcars.com",
+          "status": 200,
+          "bytes": 287377,
+          "ms": 9403
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 60496,
+          "ms": 12022
+        }
+      ],
+      "cacheBytes": 15566
+    }
+  ]
+}

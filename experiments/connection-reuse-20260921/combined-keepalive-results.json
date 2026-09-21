@@ -1,0 +1,673 @@
+{
+  "at": "2026-09-21T14:10:11.654Z",
+  "mode": "scheduled-all-sources-no-result-cache",
+  "runs": [
+    {
+      "phase": "cold",
+      "budgetMs": 30000,
+      "firstResultMs": 13102,
+      "totalMs": 30005,
+      "accepted": 9,
+      "detailsAttempted": 12,
+      "listings": [
+        {
+          "url": "https://syarah.com/en/cardetail/toyota-corolla-used-317095",
+          "source": "Syarah",
+          "year": 2021,
+          "price": 39000,
+          "mileage": 170130,
+          "city": "Riyadh",
+          "condition": "used"
+        },
+        {
+          "url": "https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2022/873160",
+          "source": "CarSwitch Saudi",
+          "year": 2022,
+          "price": 44125,
+          "mileage": 182000,
+          "city": "Jeddah",
+          "condition": "used"
+        },
+        {
+          "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316454",
+          "source": "Syarah",
+          "year": 2023,
+          "price": 49500,
+          "mileage": 109798,
+          "city": "Riyadh",
+          "condition": "used"
+        },
+        {
+          "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2023/874464",
+          "source": "CarSwitch Saudi",
+          "year": 2023,
+          "price": 50000,
+          "mileage": 154653,
+          "city": "Riyadh",
+          "condition": "used"
+        },
+        {
+          "url": "https://syarah.com/en/cardetail/toyota-corolla-used-315698",
+          "source": "Syarah",
+          "year": 2024,
+          "price": 48600,
+          "mileage": 130907,
+          "city": "Riyadh",
+          "condition": "used"
+        },
+        {
+          "url": "https://ksa.carswitch.com/dammam/used-car/toyota/corolla/2015/866752",
+          "source": "CarSwitch Saudi",
+          "year": 2015,
+          "price": 41500,
+          "mileage": 106000,
+          "city": "Dammam",
+          "condition": "used"
+        },
+        {
+          "url": "https://syarah.com/en/cardetail/toyota-corolla-used-315547",
+          "source": "Syarah",
+          "year": 2024,
+          "price": 50000,
+          "mileage": 118569,
+          "city": "Riyadh",
+          "condition": "used"
+        },
+        {
+          "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2021/834075",
+          "source": "CarSwitch Saudi",
+          "year": 2021,
+          "price": 44000,
+          "mileage": 156613,
+          "city": "Riyadh",
+          "condition": "used"
+        },
+        {
+          "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2022/864159",
+          "source": "CarSwitch Saudi",
+          "year": 2022,
+          "price": 47500,
+          "mileage": 104000,
+          "city": "Riyadh",
+          "condition": "used"
+        }
+      ],
+      "diagnostics": [
+        {
+          "stage": "web-discovery",
+          "status": "not-configured"
+        },
+        {
+          "stage": "web-discovery",
+          "status": "not-configured"
+        },
+        {
+          "stage": "discovery",
+          "source": "Syarah",
+          "candidates": 12,
+          "url": "https://syarah.com/en/autos/toyota/corolla"
+        },
+        {
+          "stage": "discovery",
+          "source": "Mstaml",
+          "url": "https://www.mstaml.com/market/%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA?type=4",
+          "candidates": 3
+        },
+        {
+          "stage": "discovery",
+          "source": "ArabWheels Saudi",
+          "url": "https://www.arabwheels.sa/used-cars/search/-/",
+          "candidates": 25
+        },
+        {
+          "stage": "discovery",
+          "source": "Saudi Sale",
+          "url": "https://cars.saudisale.com/en",
+          "candidates": 63
+        },
+        {
+          "stage": "discovery",
+          "source": "CarSwitch Saudi",
+          "candidates": 24,
+          "url": "https://ksa.carswitch.com/en/saudi/used-cars/toyota/corolla"
+        },
+        {
+          "stage": "discovery",
+          "source": "Kayishha",
+          "url": "https://buy.kayishha.com/",
+          "candidates": 163
+        },
+        {
+          "stage": "verify",
+          "source": "Kayishha",
+          "url": "https://buy.kayishha.com/cars/details/toyota-corolla-2024-92699",
+          "error": "no-matching-exact-ad-evidence"
+        },
+        {
+          "stage": "discovery",
+          "source": "Motory",
+          "url": "https://ksa.motory.com/en/cars-for-sale/toyota/corolla/",
+          "candidates": 20
+        },
+        {
+          "stage": "discovery",
+          "source": "OpenSooq",
+          "candidates": 12,
+          "url": "https://sa.opensooq.com/en/cars/cars-for-sale/toyota/corolla"
+        },
+        {
+          "stage": "verify",
+          "source": "Kayishha",
+          "url": "https://buy.kayishha.com/cars/details/dongfeng-mage-2026-90625",
+          "error": "no-matching-exact-ad-evidence"
+        },
+        {
+          "stage": "discovery",
+          "source": "Motory",
+          "url": "https://ksa.motory.com/en/cars-for-sale/toyota/corolla/2026/",
+          "candidates": 10
+        },
+        {
+          "stage": "discovery",
+          "source": "Haraj",
+          "candidates": 12,
+          "url": "https://haraj.com.sa/search/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7/"
+        },
+        {
+          "stage": "verify",
+          "source": "Syarah",
+          "url": "https://syarah.com/en/cardetail/toyota-corolla-used-315704",
+          "error": "deadline"
+        }
+      ],
+      "transport": [
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 518798,
+          "ms": 9282
+        },
+        {
+          "host": "www.mstaml.com",
+          "status": 200,
+          "bytes": 700,
+          "ms": 9003
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 407110,
+          "ms": 66
+        },
+        {
+          "host": "www.arabwheels.sa",
+          "status": 200,
+          "bytes": 1509,
+          "ms": 9100
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 406682,
+          "ms": 87
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 200,
+          "bytes": 24,
+          "ms": 9838
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 406834,
+          "ms": 61
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 1437,
+          "ms": 14597
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 405046,
+          "ms": 88
+        },
+        {
+          "host": "www.mstaml.com",
+          "status": 200,
+          "bytes": 319952,
+          "ms": 1743
+        },
+        {
+          "host": "www.arabwheels.sa",
+          "status": 200,
+          "bytes": 438725,
+          "ms": 1152
+        },
+        {
+          "host": "buy.kayishha.com",
+          "status": 200,
+          "bytes": 372,
+          "ms": 8891
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 200,
+          "bytes": 723353,
+          "ms": 658
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 1031363,
+          "ms": 18983
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 897775,
+          "ms": 1363
+        },
+        {
+          "host": "buy.kayishha.com",
+          "status": 200,
+          "bytes": 175777,
+          "ms": 460
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 887581,
+          "ms": 766
+        },
+        {
+          "host": "sa.opensooq.com",
+          "status": 200,
+          "bytes": 8944,
+          "ms": 9247
+        },
+        {
+          "host": "buy.kayishha.com",
+          "status": 200,
+          "bytes": 179727,
+          "ms": 564
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 870619,
+          "ms": 707
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 922425,
+          "ms": 5192
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 884097,
+          "ms": 491
+        },
+        {
+          "host": "sa.opensooq.com",
+          "status": 200,
+          "bytes": 1188011,
+          "ms": 829
+        },
+        {
+          "host": "buy.kayishha.com",
+          "status": 200,
+          "bytes": 179903,
+          "ms": 646
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 891544,
+          "ms": 6982
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 770768,
+          "ms": 1858
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 381385,
+          "ms": 13492
+        },
+        {
+          "host": "syarah.com",
+          "ms": 16896,
+          "error": "deadline"
+        }
+      ]
+    },
+    {
+      "phase": "warm",
+      "budgetMs": 30000,
+      "firstResultMs": 249,
+      "totalMs": 10731,
+      "accepted": 11,
+      "detailsAttempted": 12,
+      "listings": [
+        {
+          "url": "https://syarah.com/en/cardetail/toyota-corolla-used-317095",
+          "source": "Syarah",
+          "year": 2021,
+          "price": 39000,
+          "mileage": 170130,
+          "city": "Riyadh",
+          "condition": "used"
+        },
+        {
+          "url": "https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2022/873160",
+          "source": "CarSwitch Saudi",
+          "year": 2022,
+          "price": 44125,
+          "mileage": 182000,
+          "city": "Jeddah",
+          "condition": "used"
+        },
+        {
+          "url": "https://syarah.com/en/cardetail/toyota-corolla-used-316454",
+          "source": "Syarah",
+          "year": 2023,
+          "price": 49500,
+          "mileage": 109798,
+          "city": "Riyadh",
+          "condition": "used"
+        },
+        {
+          "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2023/874464",
+          "source": "CarSwitch Saudi",
+          "year": 2023,
+          "price": 50000,
+          "mileage": 154653,
+          "city": "Riyadh",
+          "condition": "used"
+        },
+        {
+          "url": "https://syarah.com/en/cardetail/toyota-corolla-used-315704",
+          "source": "Syarah",
+          "year": 2024,
+          "price": 48000,
+          "mileage": 150815,
+          "city": "Riyadh",
+          "condition": "used"
+        },
+        {
+          "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2022/864159",
+          "source": "CarSwitch Saudi",
+          "year": 2022,
+          "price": 47500,
+          "mileage": 104000,
+          "city": "Riyadh",
+          "condition": "used"
+        },
+        {
+          "url": "https://syarah.com/en/cardetail/toyota-corolla-used-315698",
+          "source": "Syarah",
+          "year": 2024,
+          "price": 48600,
+          "mileage": 130907,
+          "city": "Riyadh",
+          "condition": "used"
+        },
+        {
+          "url": "https://ksa.carswitch.com/dammam/used-car/toyota/corolla/2015/866752",
+          "source": "CarSwitch Saudi",
+          "year": 2015,
+          "price": 41500,
+          "mileage": 106000,
+          "city": "Dammam",
+          "condition": "used"
+        },
+        {
+          "url": "https://syarah.com/en/cardetail/toyota-corolla-used-315547",
+          "source": "Syarah",
+          "year": 2024,
+          "price": 50000,
+          "mileage": 118569,
+          "city": "Riyadh",
+          "condition": "used"
+        },
+        {
+          "url": "https://ksa.carswitch.com/riyadh/used-car/toyota/corolla/2021/834075",
+          "source": "CarSwitch Saudi",
+          "year": 2021,
+          "price": 44000,
+          "mileage": 156613,
+          "city": "Riyadh",
+          "condition": "used"
+        },
+        {
+          "url": "https://ksa.carswitch.com/jeddah/used-car/toyota/corolla/2021/873180",
+          "source": "CarSwitch Saudi",
+          "year": 2021,
+          "price": 45000,
+          "mileage": 246090,
+          "city": "Jeddah",
+          "condition": "used"
+        }
+      ],
+      "diagnostics": [
+        {
+          "stage": "web-discovery",
+          "status": "not-configured"
+        },
+        {
+          "stage": "discovery",
+          "source": "Syarah",
+          "candidates": 12,
+          "url": "https://syarah.com/en/autos/toyota/corolla"
+        },
+        {
+          "stage": "discovery",
+          "source": "CarSwitch Saudi",
+          "candidates": 24,
+          "url": "https://ksa.carswitch.com/en/saudi/used-cars/toyota/corolla"
+        },
+        {
+          "stage": "web-discovery",
+          "status": "not-configured"
+        },
+        {
+          "stage": "discovery",
+          "source": "Motory",
+          "url": "https://ksa.motory.com/en/cars-for-sale/toyota/corolla/",
+          "candidates": 20
+        },
+        {
+          "stage": "discovery",
+          "source": "Haraj",
+          "candidates": 12,
+          "url": "https://haraj.com.sa/search/%D8%AA%D9%88%D9%8A%D9%88%D8%AA%D8%A7%20%D9%83%D9%88%D8%B1%D9%88%D9%84%D8%A7/"
+        },
+        {
+          "stage": "discovery",
+          "source": "Saudi Sale",
+          "url": "https://cars.saudisale.com/en",
+          "candidates": 63
+        },
+        {
+          "stage": "discovery",
+          "source": "Kayishha",
+          "url": "https://buy.kayishha.com/",
+          "candidates": 163
+        },
+        {
+          "stage": "discovery",
+          "source": "OpenSooq",
+          "candidates": 12,
+          "url": "https://sa.opensooq.com/en/cars/cars-for-sale/toyota/corolla"
+        },
+        {
+          "stage": "discovery",
+          "source": "ArabWheels Saudi",
+          "url": "https://www.arabwheels.sa/used-cars/search/-/",
+          "candidates": 25
+        },
+        {
+          "stage": "discovery",
+          "source": "Mstaml",
+          "url": "https://www.mstaml.com/market/%D8%B3%D9%8A%D8%A7%D8%B1%D8%A7%D8%AA?type=4",
+          "candidates": 3
+        },
+        {
+          "stage": "discovery",
+          "source": "Motory",
+          "url": "https://ksa.motory.com/en/cars-for-sale/toyota/corolla/2026/",
+          "candidates": 10
+        },
+        {
+          "stage": "verify",
+          "source": "Motory",
+          "url": "https://ksa.motory.com/en/cars-for-sale/riyadh-haraj/toyota/corolla/2026/279318/",
+          "error": "no-matching-exact-ad-evidence"
+        }
+      ],
+      "transport": [
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 518798,
+          "ms": 123
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 407110,
+          "ms": 111
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 406682,
+          "ms": 217
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 406832,
+          "ms": 200
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 1031363,
+          "ms": 494
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 406834,
+          "ms": 200
+        },
+        {
+          "host": "syarah.com",
+          "status": 200,
+          "bytes": 405046,
+          "ms": 209
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 897775,
+          "ms": 626
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 887581,
+          "ms": 470
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 891544,
+          "ms": 1455
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 870619,
+          "ms": 599
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 884097,
+          "ms": 792
+        },
+        {
+          "host": "ksa.carswitch.com",
+          "status": 200,
+          "bytes": 897349,
+          "ms": 1212
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 922419,
+          "ms": 2970
+        },
+        {
+          "host": "haraj.com.sa",
+          "status": 200,
+          "bytes": 381386,
+          "ms": 333
+        },
+        {
+          "host": "cars.saudisale.com",
+          "status": 200,
+          "bytes": 723352,
+          "ms": 561
+        },
+        {
+          "host": "buy.kayishha.com",
+          "status": 200,
+          "bytes": 175777,
+          "ms": 573
+        },
+        {
+          "host": "sa.opensooq.com",
+          "status": 200,
+          "bytes": 1188011,
+          "ms": 649
+        },
+        {
+          "host": "www.arabwheels.sa",
+          "status": 200,
+          "bytes": 438725,
+          "ms": 1256
+        },
+        {
+          "host": "www.mstaml.com",
+          "status": 200,
+          "bytes": 319952,
+          "ms": 1657
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 770793,
+          "ms": 2350
+        },
+        {
+          "host": "ksa.motory.com",
+          "status": 200,
+          "bytes": 579676,
+          "ms": 2084
+        }
+      ]
+    }
+  ]
+}

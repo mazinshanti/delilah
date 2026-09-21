@@ -1,0 +1,274 @@
+{
+  "at": "2026-09-21T14:07:06.120Z",
+  "mode": "isolated-source-live-search-no-result-cache",
+  "runs": [
+    {
+      "source": "OpenSooq",
+      "phase": "cold",
+      "budgetMs": 30000,
+      "firstResultMs": 15213,
+      "totalMs": 18774,
+      "accepted": 3,
+      "listings": [
+        {
+          "url": "https://sa.opensooq.com/en/search/287489648",
+          "year": 2008,
+          "price": 17000,
+          "mileage": 599999,
+          "city": "Riyadh",
+          "condition": "used"
+        },
+        {
+          "url": "https://sa.opensooq.com/en/search/287450402",
+          "year": 2018,
+          "price": 48000,
+          "mileage": 175000,
+          "city": "Jeddah",
+          "condition": "used"
+        },
+        {
+          "url": "https://sa.opensooq.com/en/search/287354740",
+          "year": 2009,
+          "price": 18500,
+          "mileage": 100000,
+          "city": "Jeddah",
+          "condition": "used"
+        }
+      ],
+      "diagnostics": [
+        {
+          "stage": "web-discovery",
+          "status": "not-configured"
+        },
+        {
+          "stage": "discovery",
+          "source": "OpenSooq",
+          "candidates": 12,
+          "url": "https://sa.opensooq.com/en/cars/cars-for-sale/toyota/corolla"
+        }
+      ],
+      "transport": [
+        {
+          "host": "sa.opensooq.com",
+          "status": 200,
+          "bytes": 8944,
+          "ms": 11409
+        },
+        {
+          "host": "sa.opensooq.com",
+          "status": 200,
+          "bytes": 1188017,
+          "ms": 969
+        },
+        {
+          "host": "sa.opensooq.com",
+          "status": 200,
+          "bytes": 858225,
+          "ms": 546
+        },
+        {
+          "host": "sa.opensooq.com",
+          "status": 200,
+          "bytes": 860185,
+          "ms": 798
+        },
+        {
+          "host": "sa.opensooq.com",
+          "status": 200,
+          "bytes": 853967,
+          "ms": 560
+        }
+      ]
+    },
+    {
+      "source": "OpenSooq",
+      "phase": "warm",
+      "budgetMs": 30000,
+      "firstResultMs": 3961,
+      "totalMs": 8788,
+      "accepted": 3,
+      "listings": [
+        {
+          "url": "https://sa.opensooq.com/en/search/287489648",
+          "year": 2008,
+          "price": 17000,
+          "mileage": 599999,
+          "city": "Riyadh",
+          "condition": "used"
+        },
+        {
+          "url": "https://sa.opensooq.com/en/search/287450402",
+          "year": 2018,
+          "price": 48000,
+          "mileage": 175000,
+          "city": "Jeddah",
+          "condition": "used"
+        },
+        {
+          "url": "https://sa.opensooq.com/en/search/287354740",
+          "year": 2009,
+          "price": 18500,
+          "mileage": 100000,
+          "city": "Jeddah",
+          "condition": "used"
+        }
+      ],
+      "diagnostics": [
+        {
+          "stage": "web-discovery",
+          "status": "not-configured"
+        },
+        {
+          "stage": "discovery",
+          "source": "OpenSooq",
+          "candidates": 12,
+          "url": "https://sa.opensooq.com/en/cars/cars-for-sale/toyota/corolla"
+        }
+      ],
+      "transport": [
+        {
+          "host": "sa.opensooq.com",
+          "status": 200,
+          "bytes": 1188017,
+          "ms": 1156
+        },
+        {
+          "host": "sa.opensooq.com",
+          "status": 200,
+          "bytes": 858229,
+          "ms": 577
+        },
+        {
+          "host": "sa.opensooq.com",
+          "status": 200,
+          "bytes": 860185,
+          "ms": 2079
+        },
+        {
+          "host": "sa.opensooq.com",
+          "status": 200,
+          "bytes": 853555,
+          "ms": 543
+        }
+      ]
+    },
+    {
+      "source": "Kayishha",
+      "phase": "cold",
+      "budgetMs": 30000,
+      "firstResultMs": 13740,
+      "totalMs": 15885,
+      "accepted": 1,
+      "listings": [
+        {
+          "url": "https://buy.kayishha.com/cars/details/toyota-corolla-2024-92699",
+          "year": 2024,
+          "price": null,
+          "mileage": 16000,
+          "city": null,
+          "condition": "used"
+        }
+      ],
+      "diagnostics": [
+        {
+          "stage": "web-discovery",
+          "status": "not-configured"
+        },
+        {
+          "stage": "discovery",
+          "source": "Kayishha",
+          "url": "https://buy.kayishha.com/",
+          "candidates": 163
+        },
+        {
+          "stage": "verify",
+          "source": "Kayishha",
+          "url": "https://buy.kayishha.com/cars/details/dongfeng-mage-2026-90625",
+          "error": "no-matching-exact-ad-evidence"
+        }
+      ],
+      "transport": [
+        {
+          "host": "buy.kayishha.com",
+          "status": 200,
+          "bytes": 372,
+          "ms": 9368
+        },
+        {
+          "host": "buy.kayishha.com",
+          "status": 200,
+          "bytes": 175777,
+          "ms": 638
+        },
+        {
+          "host": "buy.kayishha.com",
+          "status": 200,
+          "bytes": 179727,
+          "ms": 1416
+        },
+        {
+          "host": "buy.kayishha.com",
+          "status": 200,
+          "bytes": 179903,
+          "ms": 1052
+        }
+      ]
+    },
+    {
+      "source": "Kayishha",
+      "phase": "warm",
+      "budgetMs": 30000,
+      "firstResultMs": 3162,
+      "totalMs": 4665,
+      "accepted": 1,
+      "listings": [
+        {
+          "url": "https://buy.kayishha.com/cars/details/toyota-corolla-2024-92699",
+          "year": 2024,
+          "price": null,
+          "mileage": 16000,
+          "city": null,
+          "condition": "used"
+        }
+      ],
+      "diagnostics": [
+        {
+          "stage": "web-discovery",
+          "status": "not-configured"
+        },
+        {
+          "stage": "discovery",
+          "source": "Kayishha",
+          "url": "https://buy.kayishha.com/",
+          "candidates": 163
+        },
+        {
+          "stage": "verify",
+          "source": "Kayishha",
+          "url": "https://buy.kayishha.com/cars/details/dongfeng-mage-2026-90625",
+          "error": "no-matching-exact-ad-evidence"
+        }
+      ],
+      "transport": [
+        {
+          "host": "buy.kayishha.com",
+          "status": 200,
+          "bytes": 175777,
+          "ms": 439
+        },
+        {
+          "host": "buy.kayishha.com",
+          "status": 200,
+          "bytes": 179727,
+          "ms": 516
+        },
+        {
+          "host": "buy.kayishha.com",
+          "status": 200,
+          "bytes": 179903,
+          "ms": 404
+        }
+      ]
+    }
+  ]
+}

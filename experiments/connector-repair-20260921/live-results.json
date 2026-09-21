@@ -1,0 +1,84 @@
+{
+  "at": "2026-09-21T12:54:16.980Z",
+  "mode": "source-isolated-live-diagnostic",
+  "runs": [
+    {
+      "source": "OpenSooq",
+      "budgetMs": 75000,
+      "firstResultMs": 49621,
+      "totalMs": 75009,
+      "accepted": 2,
+      "listings": [
+        {
+          "url": "https://sa.opensooq.com/en/search/287489648",
+          "year": 2008,
+          "price": 17000,
+          "mileage": 599999,
+          "city": "Riyadh",
+          "condition": "used"
+        },
+        {
+          "url": "https://sa.opensooq.com/en/search/287450402",
+          "year": 2018,
+          "price": 48000,
+          "mileage": 175000,
+          "city": "Jeddah",
+          "condition": "used"
+        }
+      ],
+      "diagnostics": [
+        {
+          "stage": "web-discovery",
+          "status": "not-configured"
+        },
+        {
+          "stage": "discovery",
+          "source": "OpenSooq",
+          "candidates": 12,
+          "url": "https://sa.opensooq.com/en/cars/cars-for-sale/toyota/corolla"
+        },
+        {
+          "stage": "verify",
+          "source": "OpenSooq",
+          "url": "https://sa.opensooq.com/en/search/287354740",
+          "error": "deadline"
+        }
+      ]
+    },
+    {
+      "source": "Kayishha",
+      "budgetMs": 75000,
+      "firstResultMs": 47291,
+      "totalMs": 61396,
+      "accepted": 1,
+      "listings": [
+        {
+          "url": "https://buy.kayishha.com/cars/details/toyota-corolla-2024-92699",
+          "year": 2024,
+          "price": null,
+          "mileage": 16000,
+          "city": null,
+          "condition": "used"
+        }
+      ],
+      "diagnostics": [
+        {
+          "stage": "web-discovery",
+          "status": "not-configured"
+        },
+        {
+          "stage": "discovery",
+          "source": "Kayishha",
+          "url": "https://buy.kayishha.com/",
+          "candidates": 163
+        },
+        {
+          "stage": "verify",
+          "source": "Kayishha",
+          "url": "https://buy.kayishha.com/cars/details/dongfeng-mage-2026-90625",
+          "error": "no-matching-exact-ad-evidence"
+        }
+      ]
+    }
+  ]
+}

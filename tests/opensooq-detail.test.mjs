@@ -1,0 +1,10 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {parseOpenSooqDetail} from '../lib/opensooq-detail.js';import {SOURCE_REGISTRY} from '../lib/source-registry.js';
+const source=SOURCE_REGISTRY.find(s=>s.id==='opensooq'),url='https://sa.opensooq.com/en/search/287489648';
+const vehicle={'@type':'Vehicle',name:'Toyota Corolla 2008 XLI manual',url:url.replace('https:','http:'),offers:{url:url.replace('https:','http:'),availability:'https://schema.org/InStock',price:'17000',priceCurrency:'SAR'}};
+function html(v=vehicle){return `<link rel="canonical" href="${url}"><h1>Toyota Corolla 2008 XLI manual</h1><img src="https://cdn.test/condition.webp" alt="Used"><img src="https://cdn.test/kilometers.webp" alt="599,999 km"><ul><li><span>Body Type</span><a>Sedan</a></li><li><span>City</span><a>Al Riyadh</a></li><li><span>Sub Category</span><a>Cars For Sale</a></li><li><span>Listing Id</span><span>287489648</span></li></ul><script type="application/ld+json">${JSON.stringify(v)}</script>`;}
+test('exact detail supports source HTTP schema reference without fetching HTTP',()=>{const [c]=parseOpenSooqDetail(html(),url,source);assert.equal(c.url,url);assert.equal(c.price,17000);assert.equal(c.mileage,599999);assert.equal(c.city,'Riyadh');assert.equal(c.condition,'used');});
+test('reject sold, mismatched IDs, missing condition and foreign price',()=>{
+ for(const s of [html({...vehicle,offers:{...vehicle.offers,availability:'https://schema.org/SoldOut'}}),html().replace('<span>287489648</span>','<span>123456789</span>'),html().replace('alt="Used"','alt="Unknown"'),html().replace('rel="canonical"','rel="other"')])assert.equal(parseOpenSooqDetail(s,url,source).length,0);
+ assert.equal(parseOpenSooqDetail(html({...vehicle,offers:{...vehicle.offers,priceCurrency:'AED'}}),url,source)[0].price,null);
+});
+test('unrelated recommendation data cannot supply condition or mileage',()=>{const s=html().replace('alt="Used"','alt="Unknown"')+'<img src="https://cdn.test/condition.webp" alt="Used">';assert.equal(parseOpenSooqDetail(s,url,source).length,0);});

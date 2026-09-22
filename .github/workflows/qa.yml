@@ -2,7 +2,7 @@ name: Dalelah 1.5 QA
 
 on:
   push:
-    branches: [release/inventory-retention-20260922, main, dalelah-release-candidate, dalelah-brand-relevance-hotfix, dalelah-brand-relevance-outer-hotfix, haraj-coverage-expansion-20260919]
+    branches: [growth/sources-20260922, release/inventory-retention-20260922, main, dalelah-release-candidate, dalelah-brand-relevance-hotfix, dalelah-brand-relevance-outer-hotfix, haraj-coverage-expansion-20260919]
   workflow_dispatch:
 
 concurrency:

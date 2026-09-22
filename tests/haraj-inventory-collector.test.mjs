@@ -130,3 +130,17 @@ test('unfinished Haraj detail work resumes before new discovery; fresh accepted 
  calls.length=0;const second=await collectHarajInventory({queries:['Toyota'],maxDetails:1,get,sleep:async()=>{},previousListings:first.listings,pendingCandidates:first.diagnostics.pendingCandidates});
  assert.equal(second.listings.length,1);assert.equal(second.diagnostics.pages,0);assert.equal(second.diagnostics.pendingCandidates.length,1);assert.ok(!calls.some(u=>u.includes('/search/')));assert.ok(!calls.includes('https://haraj.com.sa/11188891001/'));
 });
+test('old Haraj records are rechecked even when absent from discovery; only confirmed disappearance removes them',async()=>{
+ const previous={...candidate,source:'Haraj',lastSeenAt:'2020-01-01T00:00:00Z'};
+ for(const outcome of ['sold','HTTP 404','HTTP 410','HTTP 503']){
+  const result=await collectHarajInventory({previousListings:[previous],queries:['Toyota'],maxDetails:1,sleep:async()=>{},get:async u=>{
+   if(u.endsWith('robots.txt'))return 'User-agent: *\nAllow: /';if(u.includes('/search/'))return '';
+   if(outcome==='sold')return html('سيارة مستعملة للبيع تم البيع');throw Error(outcome);
+  }});
+  assert.equal(result.diagnostics.detailAttempts,1);assert.equal(result.removedUrls.length,outcome==='HTTP 503'?0:1);
+ }
+});
+test('negative sold statements do not remove an active ad',()=>{
+ assert.ok(harajDetailRecord(candidate,html('سيارة مستعملة للبيع الممشى 50000 كم لم يتم البيع')));
+ assert.ok(harajDetailRecord(candidate,html('Used car for sale 50000 km, not sold')));
+});

@@ -8,7 +8,7 @@ test('indexed candidate selection preserves exact strict-filter results in Arabi
   const expected=strictDirectListings(idx.fresh(),body).map(c=>c.url);assert.deepEqual(idx.search(body).map(c=>c.url),expected);assert.deepEqual(idx.search(body).map(c=>c.url),expected);
  }
 });
-test('cached results expire with evidence and are invalidated when the snapshot changes',()=>{
+test('cached results remain visible when aging and invalidate on snapshot change',()=>{
  const realNow=Date.now;let now=realNow();Date.now=()=>now;
- try{const idx=new InventoryIndex({maxAgeMs:10000});idx.replace({listings:[car(123456,{lastSeenAt:new Date(now-9900).toISOString()})]});const body={query:'Toyota Corolla',condition:'used'};assert.equal(idx.search(body).length,1);now+=200;assert.equal(idx.search(body).length,0);idx.replace({listings:[car(123457,{lastSeenAt:new Date(now).toISOString()})]});assert.equal(idx.search(body)[0].url.endsWith('123457'),true);idx.replace({listings:[]});assert.equal(idx.search(body).length,0);}finally{Date.now=realNow;}
+ try{const idx=new InventoryIndex({maxAgeMs:10000});idx.replace({listings:[car(123456,{lastSeenAt:new Date(now-9900).toISOString()})]});const body={query:'Toyota Corolla',condition:'used'};assert.equal(idx.search(body).length,1);now+=200;assert.equal(idx.search(body).length,1);assert.equal(idx.search(body)[0].refreshDue,true);assert.equal(idx.fresh().length,0);idx.replace({listings:[car(123457,{lastSeenAt:new Date(now).toISOString()})]});assert.equal(idx.search(body)[0].url.endsWith('123457'),true);idx.replace({listings:[]});assert.equal(idx.search(body).length,0);}finally{Date.now=realNow;}
 });

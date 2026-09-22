@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {classifyVehicle,vehicleIdentity} from '../lib/vehicle-classification.js';
 import {strictDirectListings} from '../lib/direct-search.js';
+import {isVehicleSaleListing} from '../lib/listing-quality.js';
 import {catalogIntent} from '../public/catalog.js';
 const car=(overrides={})=>({title:'Toyota Camry 2022',make:'Toyota',model:'Camry',year:2022,price:70000,mileage:80000,url:'https://example.com/listing/1',source:'test',...overrides});
 const negatives=[['PUBG account with Bugatti skin','NON_AUTOMOTIVE'],['gaming account Lamborghini','NON_AUTOMOTIVE'],['دجاج لامبورغيني','NON_AUTOMOTIVE'],['سيارات ريموت اطفال','NON_AUTOMOTIVE'],['toy model car','NON_AUTOMOTIVE'],['clothing Mercedes','NON_AUTOMOTIVE'],['engine for sale','VEHICLE_PART'],['gearbox for sale','VEHICLE_PART'],['rim for sale','VEHICLE_PART'],['tyre for sale','VEHICLE_PART'],['مكينة للبيع','VEHICLE_PART'],['spare parts','VEHICLE_PART'],['accessory','VEHICLE_ACCESSORY'],['wanted Toyota Camry','WANTED_VEHICLE'],['for rent Toyota Camry','NON_AUTOMOTIVE'],['repair service','NON_AUTOMOTIVE']];
@@ -52,4 +53,10 @@ test('standalone luxury sedan demand description is not a wanted ad; real reques
  for(const extra of ['\nمطلوب كامري','\nابحث عن سيارة','\nwant to buy Toyota'])assert.equal(classifyVehicle(car({description:description+extra})).classification,'WANTED_VEHICLE');
  for(const description of ['سيدان مطلوبة','سيارة مطلوبة للشراء','مطلوب سيارة فاخرة','ابحث عن سيدان فاخرة مطلوبة'])assert.equal(classifyVehicle(car({description})).classification,'WANTED_VEHICLE');
  assert.equal(classifyVehicle(car({title:'مطلوب Toyota Camry',description})).classification,'WANTED_VEHICLE');
+});
+
+test('a complete Prado with a repaired engine is not an engine sale',()=>{
+ const row=car({make:'Toyota',model:'Prado',year:2005,title:'تويوتا برادو VX 2005 V6 – مكينة موضبة حديثًا'});
+ assert.equal(isVehicleSaleListing(row),true);
+ for(const title of ['مكينة تويوتا برادو 2005 للبيع','تويوتا برادو 2005 مكينة للبيع','قطع غيار تويوتا برادو 2005','تويوتا برادو 2005 للإيجار'])assert.equal(isVehicleSaleListing({...row,title}),false,title);
 });

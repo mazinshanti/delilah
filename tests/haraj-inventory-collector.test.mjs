@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {collectHarajInventory,harajDetailRecord,harajDiscoveryQueries,fetchHarajInventoryHtml,mergeHarajSnapshot} from '../lib/haraj-inventory-collector.js';
+import {strictDirectListings} from '../lib/direct-search.js';
 import {parseHarajFastPage} from '../lib/haraj-fast-source.js';
 const url='https://haraj.com.sa/11188891344/toyota';
 const candidate={url,title:'تويوتا كامري 2020',city:'Riyadh',condition:'used',price:20000};
@@ -14,6 +15,9 @@ const structured=(changes={})=>{
 test('exact structured Haraj car fields recover a sparse title without guessing year or condition',()=>{
  const r=harajDetailRecord(candidate,html(' ',{name:'Toyota Corolla'})+structured());
  assert.equal(r.year,2013);assert.equal(r.condition,'used');assert.equal(r.model,'Corolla');assert.equal(r.price,null);assert.equal(r.mileage,null);
+ assert.equal(r.yearVerified,true);
+ assert.equal(strictDirectListings([r],{query:'Toyota Corolla 2013',condition:'used'}).length,1);
+ assert.equal(strictDirectListings([r],{query:'Toyota Corolla 2014',condition:'used'}).length,0);
 });
 test('foreign ad, different title, non-car and non-sale structured fields cannot rescue sparse metadata',()=>{
  for(const patch of [{URL:'99999999999/other'},{URL:'https://evil.test/11188891344/'},{title:'Toyota Camry'},{carInfo:{model:2013,condition:'USED',carOrRelated:'PART',sellOrWaiver:'SELL'}},{carInfo:{model:2013,condition:'USED',carOrRelated:'CAR',sellOrWaiver:'WANTED'}}])assert.equal(harajDetailRecord(candidate,html(' ',{name:'Toyota Corolla'})+structured(patch)),null);

@@ -1,0 +1,319 @@
+{
+  "checkedAt": "2026-09-22T10:03:47.323Z",
+  "baseline": 5323,
+  "netNew": 604,
+  "snapshotAt": "2026-09-22T10:03:43.745Z",
+  "target": 50000,
+  "rawRows": 5927,
+  "validVehicleRows": 5927,
+  "freshRows": 5229,
+  "staleRows": 698,
+  "deduplicatedFreshListings": 5229,
+  "searchableListings": 5927,
+  "refreshDueListings": 698,
+  "confirmedInactiveListings": 0,
+  "remainingToTarget": 44771,
+  "targetReached": false,
+  "physicalVehicleUniquenessGuaranteed": false,
+  "bySource": {
+    "Mercedes-Benz Saudi": {
+      "stored": 24,
+      "fresh": 0,
+      "stale": 24
+    },
+    "CarSwitch Saudi": {
+      "stored": 1479,
+      "fresh": 1153,
+      "stale": 326
+    },
+    "Syarah": {
+      "stored": 3600,
+      "fresh": 3253,
+      "stale": 347
+    },
+    "Saudi Sale": {
+      "stored": 1,
+      "fresh": 0,
+      "stale": 1
+    },
+    "Mstaml": {
+      "stored": 89,
+      "fresh": 89,
+      "stale": 0
+    },
+    "Motory": {
+      "stored": 122,
+      "fresh": 122,
+      "stale": 0
+    },
+    "SAMACO Automotive": {
+      "stored": 21,
+      "fresh": 21,
+      "stale": 0
+    },
+    "ArabWheels Saudi": {
+      "stored": 276,
+      "fresh": 276,
+      "stale": 0
+    },
+    "Kayishha": {
+      "stored": 220,
+      "fresh": 220,
+      "stale": 0
+    },
+    "Haraj": {
+      "stored": 95,
+      "fresh": 95,
+      "stale": 0
+    }
+  },
+  "refreshQueues": [
+    {
+      "sourceId": "mstaml",
+      "known": 167,
+      "due": 0,
+      "failedLastCheck": 0,
+      "paused": false
+    },
+    {
+      "sourceId": "motory",
+      "known": 148,
+      "due": 12,
+      "failedLastCheck": 0,
+      "paused": false
+    },
+    {
+      "sourceId": "arabwheels",
+      "known": 459,
+      "due": 5,
+      "failedLastCheck": 0,
+      "paused": false
+    },
+    {
+      "sourceId": "kayishha",
+      "known": 333,
+      "due": 47,
+      "failedLastCheck": 0,
+      "paused": false
+    },
+    {
+      "sourceId": "samaco",
+      "known": 24,
+      "due": 0,
+      "failedLastCheck": 0,
+      "paused": false
+    }
+  ],
+  "goal": 10000,
+  "gapTo10000": 4771,
+  "diagnostics": [
+    {
+      "source": "Syarah",
+      "nextPage": 216,
+      "continuationExhausted": false,
+      "pages": 215,
+      "successfulPages": 215,
+      "completedAt": "2026-09-21T14:40:37.008Z",
+      "records": 2578,
+      "duplicateCards": 2,
+      "errors": [],
+      "durationMs": 360009
+    },
+    {
+      "source": "Syarah",
+      "nextPage": 275,
+      "continuationExhausted": false,
+      "pages": 61,
+      "successfulPages": 61,
+      "completedAt": "2026-09-22T09:01:51.366Z",
+      "records": 712,
+      "duplicateCards": 0,
+      "errors": [
+        {
+          "page": 275,
+          "error": "no-parseable-records-or-source-blocked"
+        }
+      ],
+      "durationMs": 128295
+    },
+    {
+      "source": "Mstaml",
+      "pages": 0,
+      "successfulPages": 0,
+      "sitemaps": 0,
+      "successfulSitemaps": 0,
+      "discovered": 0,
+      "detailAttempts": 0,
+      "detailSuccess": 0,
+      "records": 0,
+      "rejectedReasons": {},
+      "errors": [
+        {
+          "error": "The operation was aborted due to timeout"
+        }
+      ],
+      "coverageComplete": false,
+      "knownUrls": 167,
+      "pending": 0,
+      "due": 0,
+      "frontierOverflow": 0,
+      "pendingSitemaps": 3833,
+      "completedAt": "2026-09-22T09:57:25.295Z",
+      "durationMs": 20040,
+      "budgetExhausted": false,
+      "discoveryExhausted": false
+    },
+    {
+      "source": "Motory",
+      "pages": 0,
+      "successfulPages": 0,
+      "sitemaps": 0,
+      "successfulSitemaps": 0,
+      "discovered": 0,
+      "detailAttempts": 0,
+      "detailSuccess": 0,
+      "records": 0,
+      "rejectedReasons": {},
+      "errors": [
+        {
+          "error": "The operation was aborted due to timeout"
+        }
+      ],
+      "coverageComplete": false,
+      "knownUrls": 148,
+      "pending": 12,
+      "due": 12,
+      "frontierOverflow": 0,
+      "pendingSitemaps": 0,
+      "completedAt": "2026-09-22T09:57:25.319Z",
+      "durationMs": 20024,
+      "budgetExhausted": false,
+      "discoveryExhausted": false
+    },
+    {
+      "source": "ArabWheels Saudi",
+      "pages": 13,
+      "successfulPages": 13,
+      "sitemaps": 0,
+      "successfulSitemaps": 0,
+      "discovered": 92,
+      "detailAttempts": 110,
+      "detailSuccess": 109,
+      "records": 69,
+      "rejectedReasons": {
+        "vehicle-boundary": 17,
+        "unresolved-identity": 23,
+        "collection-budget": 1
+      },
+      "errors": [],
+      "coverageComplete": false,
+      "knownUrls": 459,
+      "pending": 5,
+      "due": 5,
+      "frontierOverflow": 0,
+      "pendingSitemaps": 0,
+      "completedAt": "2026-09-22T10:00:21.425Z",
+      "durationMs": 196118,
+      "budgetExhausted": true,
+      "discoveryExhausted": false
+    },
+    {
+      "source": "SAMACO Automotive",
+      "pages": 0,
+      "successfulPages": 0,
+      "sitemaps": 0,
+      "successfulSitemaps": 0,
+      "discovered": 0,
+      "detailAttempts": 0,
+      "detailSuccess": 0,
+      "records": 0,
+      "rejectedReasons": {},
+      "errors": [
+        {
+          "error": "The operation was aborted due to timeout"
+        }
+      ],
+      "coverageComplete": false,
+      "knownUrls": 24,
+      "pending": 0,
+      "due": 0,
+      "frontierOverflow": 0,
+      "pendingSitemaps": 0,
+      "completedAt": "2026-09-22T09:57:25.334Z",
+      "durationMs": 20013,
+      "budgetExhausted": false,
+      "discoveryExhausted": false
+    },
+    {
+      "source": "Kayishha",
+      "pages": 1,
+      "successfulPages": 1,
+      "sitemaps": 0,
+      "successfulSitemaps": 0,
+      "discovered": 6,
+      "detailAttempts": 48,
+      "detailSuccess": 46,
+      "records": 43,
+      "rejectedReasons": {
+        "unresolved-identity": 3,
+        "collection-budget": 2
+      },
+      "errors": [],
+      "coverageComplete": false,
+      "knownUrls": 333,
+      "pending": 47,
+      "due": 47,
+      "frontierOverflow": 0,
+      "pendingSitemaps": 0,
+      "completedAt": "2026-09-22T10:03:28.514Z",
+      "durationMs": 90707,
+      "budgetExhausted": true,
+      "discoveryExhausted": true
+    },
+    {
+      "source": "CarSwitch Saudi",
+      "nextPage": 53,
+      "continuationExhausted": false,
+      "pages": 27,
+      "successfulPages": 26,
+      "completedAt": "2026-09-22T09:59:03.221Z",
+      "records": 624,
+      "duplicateCards": 0,
+      "errors": [
+        {
+          "page": 53,
+          "error": "http-202"
+        }
+      ],
+      "durationMs": 95666
+    },
+    {
+      "source": "Haraj",
+      "pages": 30,
+      "successfulPages": 30,
+      "discovered": 445,
+      "detailAttempts": 154,
+      "detailSuccess": 154,
+      "records": 95,
+      "rejected": 349,
+      "rejectedReasons": {
+        "missing_title_year": 17,
+        "unknown_condition": 15,
+        "vehicle_boundary": 24,
+        "outside_existing_index_year_range": 2,
+        "sold": 1
+      },
+      "duplicateCards": 11,
+      "errors": [],
+      "queryPool": 1645,
+      "cursor": 0,
+      "nextCursor": 30,
+      "coverageComplete": false,
+      "pending": 1,
+      "completedAt": "2026-09-22T10:01:51.447Z",
+      "durationMs": 241070,
+      "budgetExhausted": true,
+      "acceptanceRate": 0.21348314606741572
+    }
+  ]
+}

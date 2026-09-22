@@ -56,8 +56,8 @@ test('exact brand, unknown model, year range and condition fail closed',()=>{
  assert.equal(strictDirectListings(rows,{query:'Bentley'}).length,1);
  assert.equal(strictDirectListings(rows,{query:'Toyota',filters:{minYear:2014,maxYear:2015}}).length,1);
 });
-test('expired records are excluded and pagination is stable',()=>{
- const index=new InventoryIndex();index.replace({listings:[{...car,lastSeenAt:'2000-01-01'},car]});assert.equal(index.search({query:'Toyota'}).length,1);
+test('old records remain searchable and pagination is stable',()=>{
+ const index=new InventoryIndex();index.replace({listings:[{...car,price:36000,url:raw.url+'old',originalUrl:raw.url+'old',source_url:raw.url+'old',lastSeenAt:'2000-01-01'},car]});assert.equal(index.search({query:'Toyota'}).length,2);
  const rows=Array.from({length:55},(_,i)=>({...car,url:raw.url+i,price:i+1}));
  const p=paginateInventory(rows,{page:2,pageSize:24,sort:'price-desc'});assert.equal(p.listings.length,24);assert.equal(p.listings[0].price,31);assert.equal(p.pagination.total,55);
 });

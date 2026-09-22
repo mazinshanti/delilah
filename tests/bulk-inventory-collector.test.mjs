@@ -12,3 +12,8 @@ test('source failures retain the continuation cursor and never bypass access con
 test('a source ignoring pagination stops at repeated inventory instead of creating fake growth',async()=>{
  let calls=0;const r=await collectBulkInventory({source,parse,wait,maxPages:500,get:async url=>url.endsWith('robots.txt')?'User-agent: *\nAllow: /':(calls++,JSON.stringify([{url:'https://syarah.com/en/cardetail/car-1'}]))});assert.equal(calls,2);assert.equal(r.state.nextPage,1);assert.equal(r.diagnostics.records,1);
 });
+test('an unparseable page preserves its cursor and does not claim inventory exhaustion',async()=>{
+ const source={id:'example',name:'Example',url:'https://example.com',path:'/cars'};
+ const result=await collectBulkInventory({source,state:{nextPage:275},wait:async()=>{},get:async u=>u.endsWith('robots.txt')?'User-agent: *\nAllow: /':new URL(u).searchParams.has('page')?'empty':'first',parse:h=>h==='first'?[{url:'https://example.com/car/1'}]:[]});
+ assert.equal(result.state.nextPage,275);assert.equal(result.diagnostics.continuationExhausted,false);assert.equal(result.diagnostics.errors[0].page,275);
+});

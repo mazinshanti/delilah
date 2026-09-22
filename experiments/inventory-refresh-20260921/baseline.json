@@ -1,0 +1,97 @@
+{
+  "checkedAt": "2026-09-21T11:55:02.793Z",
+  "snapshotAt": "2026-09-20T14:03:29.292Z",
+  "target": 50000,
+  "rawRows": 3521,
+  "validVehicleRows": 3521,
+  "freshRows": 3046,
+  "staleRows": 475,
+  "deduplicatedFreshListings": 3046,
+  "remainingToTarget": 46954,
+  "targetReached": false,
+  "physicalVehicleUniquenessGuaranteed": false,
+  "bySource": {
+    "Mercedes-Benz Saudi": {
+      "stored": 24,
+      "fresh": 24,
+      "stale": 0
+    },
+    "CarSwitch Saudi": {
+      "stored": 845,
+      "fresh": 576,
+      "stale": 269
+    },
+    "Syarah": {
+      "stored": 2607,
+      "fresh": 2402,
+      "stale": 205
+    },
+    "Saudi Sale": {
+      "stored": 1,
+      "fresh": 0,
+      "stale": 1
+    },
+    "Mstaml": {
+      "stored": 1,
+      "fresh": 1,
+      "stale": 0
+    },
+    "Motory": {
+      "stored": 14,
+      "fresh": 14,
+      "stale": 0
+    },
+    "SAMACO Automotive": {
+      "stored": 13,
+      "fresh": 13,
+      "stale": 0
+    },
+    "ArabWheels Saudi": {
+      "stored": 9,
+      "fresh": 9,
+      "stale": 0
+    },
+    "Kayishha": {
+      "stored": 7,
+      "fresh": 7,
+      "stale": 0
+    }
+  },
+  "refreshQueues": [
+    {
+      "sourceId": "mstaml",
+      "known": 7,
+      "due": 6,
+      "failedLastCheck": 0,
+      "paused": false
+    },
+    {
+      "sourceId": "motory",
+      "known": 1437,
+      "due": 1423,
+      "failedLastCheck": 0,
+      "paused": false
+    },
+    {
+      "sourceId": "arabwheels",
+      "known": 9,
+      "due": 0,
+      "failedLastCheck": 0,
+      "paused": false
+    },
+    {
+      "sourceId": "kayishha",
+      "known": 199,
+      "due": 192,
+      "failedLastCheck": 0,
+      "paused": false
+    },
+    {
+      "sourceId": "samaco",
+      "known": 13,
+      "due": 0,
+      "failedLastCheck": 0,
+      "paused": false
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "at": "2026-09-21T11:56:21.677Z",
+  "kind": "bounded-live-refresh-probe",
+  "productionChanged": false,
+  "accepted": 0,
+  "removed": 0,
+  "diagnostics": [
+    {
+      "source": "Motory",
+      "pages": 1,
+      "successfulPages": 0,
+      "sitemaps": 0,
+      "successfulSitemaps": 0,
+      "discovered": 0,
+      "detailAttempts": 0,
+      "detailSuccess": 0,
+      "records": 0,
+      "rejectedReasons": {},
+      "errors": [
+        {
+          "stage": "discovery",
+          "url": "https://ksa.motory.com/en/cars-for-sale/",
+          "error": "collection-budget"
+        }
+      ],
+      "coverageComplete": false,
+      "knownUrls": 0,
+      "pending": 0,
+      "due": 0,
+      "frontierOverflow": 0,
+      "pendingUrls": [],
+      "pendingPages": [
+        "https://ksa.motory.com/en/cars-for-sale/"
+      ],
+      "pendingSitemaps": 2,
+      "completedAt": "2026-09-21T11:56:18.735Z",
+      "durationMs": 15906,
+      "budgetExhausted": true,
+      "discoveryExhausted": false
+    },
+    {
+      "source": "ArabWheels Saudi",
+      "pages": 0,
+      "successfulPages": 0,
+      "sitemaps": 0,
+      "successfulSitemaps": 0,
+      "discovered": 0,
+      "detailAttempts": 0,
+      "detailSuccess": 0,
+      "records": 0,
+      "rejectedReasons": {},
+      "errors": [],
+      "coverageComplete": false,
+      "knownUrls": 0,
+      "pending": 0,
+      "due": 0,
+      "frontierOverflow": 0,
+      "pendingUrls": [],
+      "pendingPages": [
+        "https://www.arabwheels.sa/used-cars/search/-/"
+      ],
+      "pendingSitemaps": 0,
+      "completedAt": "2026-09-21T11:56:21.677Z",
+      "durationMs": 18847,
+      "budgetExhausted": true,
+      "discoveryExhausted": false
+    }
+  ]
+}

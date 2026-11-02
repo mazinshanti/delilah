@@ -94,7 +94,7 @@ function renderCards(rows){
 function paintChips(){const f=appliedFilters,keys={minPrice:'minPrice',maxPrice:'maxPrice',minYear:'minYear',maxYear:'maxYear',maxMileage:'maxMileage',city:'city',seller:'source',trim:'trim',fuelType:'fuel',category:'bodyType'};$('activeFilters').innerHTML=searchStarted?Object.entries(f).filter(([,v])=>v).map(([k,v])=>`<button data-remove="${k}" aria-label="${esc(t('remove')+' '+t(keys[k]))}">${t(keys[k])}: ${esc(label(v))} ×</button>`).join(''):'';$('activeFilters').querySelectorAll('button').forEach(b=>b.onclick=()=>{const k=b.dataset.remove;$(k==='seller'?'source':k==='fuelType'?'category':k==='category'?'bodyType':k).value='';if(k==='city')$('homeCity').value='';if(k==='maxPrice')$('budget').value='';run(lastQuery);});}
 function renderSourceLinks(){
  const host=$('sourceSearchLinks');
- const sources=externalSearchLinks(lastResponse.directCoreSources||[]);
+ const sources=externalSearchLinks(lastResponse.externalSearchOptions||lastResponse.directCoreSources||[]);
  host.hidden=!searchStarted||sources.length===0;
  if(host.hidden){host.textContent='';return;}
  const ar=language==='ar';

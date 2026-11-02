@@ -33,8 +33,9 @@ jobs:
         continue-on-error: true
         timeout-minutes: 3
         env:
-          DALELAH_BENCHMARK_QUERIES: Toyota Corolla;Nissan Patrol
+          DALELAH_BENCHMARK_QUERIES: Toyota Corolla;Toyota Camry;Nissan Patrol;Jeep Wrangler
           DALELAH_BENCHMARK_TIMEOUT_MS: '20000'
+          DALELAH_BENCHMARK_POLLS: '6'
         run: node scripts/live-model-coverage-benchmark.mjs
       - name: Current web UI
         run: node --test tests/ui-v15.test.mjs

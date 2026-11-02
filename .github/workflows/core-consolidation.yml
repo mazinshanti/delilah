@@ -33,6 +33,10 @@ jobs:
         run: node --test tests/fast-arabic-inventory.test.mjs
       - name: Actual inventory snapshot Arabic latency
         run: node scripts/benchmark-fast-arabic-index.mjs
+      - name: Streaming inventory accuracy
+        run: node --test tests/inventory-streaming.test.mjs
+      - name: Frontend 512MB memory budget
+        run: node --max-old-space-size=384 scripts/check-front-start-memory.mjs
       - name: Current web UI
         run: node --test tests/ui-v15.test.mjs
 

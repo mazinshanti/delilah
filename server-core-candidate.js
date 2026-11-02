@@ -1,6 +1,6 @@
 import {waitForSearchProgress} from './lib/search-progress-wait.js';
 import {naturalSearch} from './public/natural-search.js';
-import {createIntentEngine,intentSearchBody,applyIntentConstraints,needsAI} from './lib/ai-search-intent.js';
+import {createIntentEngine,intentSearchBody,applyIntentConstraints,needsAI,ORIGINS} from './lib/ai-search-intent.js';
 import express from 'express';
 import {installValuationRoutes} from './lib/valuation-routes.js';
 import {installSellerRoutes} from './lib/seller-routes.js';
@@ -290,7 +290,14 @@ function startJob(body={},meta={}){
   const job={id:`dc.${randomUUID()}`,key,body,originalQuery:meta.originalQuery||body.query,queryCorrections:meta.corrections||[],createdAt:Date.now(),directData:null,fullData:null,fullPromise:null,fullDone:false,upstreamId:null,error:null,firstResultMs:null,deepZeroRetry:false,priceEnrichmentPromise:null,priceEnrichmentComplete:false,priceEnriched:0,priceAttempted:0,priceEnrichmentError:null,syarahPriceEnrichmentPromise:null,syarahPriceEnrichmentComplete:false,syarahPriceEnriched:0,syarahPriceAttempted:0,syarahPriceEnrichmentError:null,syarahPriceSeen:new Set()};
   jobs.set(job.id,job);inFlight.set(key,job);
   job.intentResult=meta.intentResult;
-  job.indexedListings=inventoryIndex.search(body);
+  // For fully understood, source-independent SUV searches, narrow normalized
+  // inventory first instead of reclassifying the entire Saudi snapshot.
+  job.indexedListings=meta.intentResult?.deterministicSemantic
+    ? inventoryIndex.searchTrustedOriginBody(body,{
+        makes:ORIGINS[meta.intentResult.intent.originPreference]||[],
+        bodyType:meta.intentResult.intent.bodyType
+      })
+    : inventoryIndex.search(body);
   job.directPromise=(isBroad(body)?browseLiveSources(body):searchDirectFirst(body,{timeoutMs:DIRECT_BUDGET_MS}))
     .then(data=>{
       job.directData=data;

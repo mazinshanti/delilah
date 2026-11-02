@@ -27,6 +27,23 @@ jobs:
         run: npm run test:relevance
       - name: Marketplace foundation
         run: npm run test:marketplace
+      - name: Incremental inventory snapshot safety
+        run: node --test tests/inventory-snapshot-merge.test.mjs tests/inventory-snapshot-cli.test.mjs
+      - name: Source collection CLI syntax
+        run: node --check scripts/collect-source-model.mjs && node --check scripts/merge-inventory-snapshot.mjs
+      - name: Arabic AI intent and timeout safety
+        run: node --test tests/ai-search-intent.test.mjs tests/arabic-ai-timeout-regression.test.mjs
+      - name: Inventory and source coverage regression
+        run: node --test tests/inventory-recall-search-intent.test.mjs tests/model-search-coverage.test.mjs tests/saudi-source-registry.test.mjs
+      - name: Benchmark script syntax
+        run: node --check scripts/market-search-performance-benchmark.mjs
+      - name: Live multi-model performance and data quality (diagnostic)
+        continue-on-error: true
+        timeout-minutes: 8
+        env:
+          DALELAH_BENCHMARK_TIMEOUT_MS: '20000'
+          DALELAH_BENCHMARK_POLLS: '3'
+        run: node scripts/market-search-performance-benchmark.mjs
       - name: Current web UI
         run: node --test tests/ui-v15.test.mjs
 

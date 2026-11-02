@@ -22,8 +22,8 @@ test('repeated source listing URLs across pages are merged',()=>{
 
 test('model results exclude a different model even if the make is the same',()=>{
  const cars=[
- {url:'https://example.com/listing/1',source:'Test',title:'Toyota Corolla 2022',make:'Toyota',model:'Corolla',year:2022,condition:'used'},
- {url:'https://example.com/listing/2',source:'Test',title:'Toyota Camry 2022',make:'Toyota',model:'Camry',year:2022,condition:'used'}
+ {url:'https://example.com/listing/1',source:'Test',sourceCategory:'cars for sale',title:'Toyota Corolla 2022',make:'Toyota',model:'Corolla',year:2022,condition:'used'},
+ {url:'https://example.com/listing/2',source:'Test',sourceCategory:'cars for sale',title:'Toyota Camry 2022',make:'Toyota',model:'Camry',year:2022,condition:'used'}
  ];
  const result=strictDirectListings(cars,{query:'Toyota Corolla',condition:'all'});
  assert.equal(result.length,1);

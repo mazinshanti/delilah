@@ -69,3 +69,17 @@ test('incorrect units and unrealistic budgets are rejected',()=>{
  assert.equal(trustedArabicFamilySuvIntent('أبي جيب عائلي ياباني تحت ١٥٠ وصيانته رخيصة'),null);
  assert.equal(trustedArabicFamilySuvIntent('أبي جيب عائلي ياباني تحت ٠ ألف وصيانته رخيصة'),null);
 });
+
+test('missing or unverified price never satisfies the spending ceiling',()=>{
+ const result=rulesIntent(query);
+ const body=intentSearchBody({query,condition:'used',filters:{}},result);
+ const samples=[
+  car('Toyota','Fortuner',null,'null-price'),
+  car('Toyota','Fortuner',0,'zero-price'),
+  car('Toyota','Fortuner',90000,'unverified-price'),
+  car('Toyota','Fortuner',110000,'real-price')
+ ];
+ samples[2].priceVerified=false;
+ const out=applyIntentConstraints(strictDirectListings(samples,body),result.intent);
+ assert.deepEqual(out.map(c=>c.url),['https://example.com/real-price']);
+});

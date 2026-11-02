@@ -30,6 +30,7 @@ test('accepts individual valid dealer listings and preserves original attributio
 
 test('cannot fabricate marketplace-wide access through a dealer manifest',()=>{
  assert.throws(()=>prepareAuthorizedDealerFeed([car('a')],{...manifest,authorizedDomains:['haraj.com.sa']}),/platform/);
+ assert.throws(()=>prepareAuthorizedDealerFeed([car('a')],{...manifest,source:'Haraj dealer'}),/platform-name/);
  assert.throws(()=>prepareAuthorizedDealerFeed([car('a')],{...manifest,authorization:{...manifest.authorization,displayApproved:false}}),/permission/);
  assert.throws(()=>prepareAuthorizedDealerFeed([car('a')],{...manifest,authorization:{...manifest.authorization,validUntil:'2025-01-01'}}),/expired/);
 });

@@ -6,6 +6,7 @@ const base=String(process.env.DALELAH_BENCHMARK_URL||'https://www.dalelah.co').r
 const queries=String(process.env.DALELAH_BENCHMARK_QUERIES||'Toyota Corolla;Nissan Patrol')
   .split(';').map(x=>x.trim()).filter(Boolean).slice(0,4);
 const requestTimeout=Number(process.env.DALELAH_BENCHMARK_TIMEOUT_MS||25000);
+const maxPolls=Math.max(0,Math.min(10,Number(process.env.DALELAH_BENCHMARK_POLLS||2)));
 
 async function read(path,options={}){
  const response=await fetch(base+path,{...options,signal:AbortSignal.timeout(requestTimeout)});
@@ -35,7 +36,7 @@ try{
    }
   };
   collect(data.listings);
-  for(let attempt=0;attempt<2&&data.searchId&&data.complete!==true;attempt++){
+  for(let attempt=0;attempt<maxPolls&&data.searchId&&data.complete!==true;attempt++){
    await new Promise(resolve=>setTimeout(resolve,1200));
    try{data=await read('/api/search/progress/'+encodeURIComponent(data.searchId));collect(data.listings)}
    catch(err){errors.push(err.message);break;}

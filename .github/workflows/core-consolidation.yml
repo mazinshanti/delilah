@@ -44,6 +44,12 @@ jobs:
           DALELAH_BENCHMARK_TIMEOUT_MS: '20000'
           DALELAH_BENCHMARK_POLLS: '3'
         run: node scripts/market-search-performance-benchmark.mjs
+      - name: Post-release Arabic search smoke (diagnostic)
+        continue-on-error: true
+        timeout-minutes: 3
+        env:
+          DALELAH_EXPECTED_GIT_SHA: '08d153a8f6273dbba60946c23372e3b828565f41'
+        run: node scripts/smoke-live-arabic-release.mjs
       - name: Current web UI
         run: node --test tests/ui-v15.test.mjs
 

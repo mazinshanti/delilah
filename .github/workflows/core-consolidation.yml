@@ -33,14 +33,15 @@ jobs:
         run: node --check scripts/collect-source-model.mjs && node --check scripts/merge-inventory-snapshot.mjs
       - name: Inventory and source coverage regression
         run: node --test tests/inventory-recall-search-intent.test.mjs tests/model-search-coverage.test.mjs tests/saudi-source-registry.test.mjs
-      - name: Live model smoke (non-blocking; limited queries)
+      - name: Benchmark script syntax
+        run: node --check scripts/market-search-performance-benchmark.mjs
+      - name: Live multi-model performance and data quality (diagnostic)
         continue-on-error: true
-        timeout-minutes: 3
+        timeout-minutes: 8
         env:
-          DALELAH_BENCHMARK_QUERIES: Toyota Corolla;Toyota Camry;Nissan Patrol;Jeep Wrangler
           DALELAH_BENCHMARK_TIMEOUT_MS: '20000'
-          DALELAH_BENCHMARK_POLLS: '6'
-        run: node scripts/live-model-coverage-benchmark.mjs
+          DALELAH_BENCHMARK_POLLS: '3'
+        run: node scripts/market-search-performance-benchmark.mjs
       - name: Current web UI
         run: node --test tests/ui-v15.test.mjs
 

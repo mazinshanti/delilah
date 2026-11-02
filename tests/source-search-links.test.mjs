@@ -32,7 +32,7 @@ test('UI offers original market continuation without claiming comprehensive sear
  const ui=await readFile(new URL('../public/market-ui.js',import.meta.url),'utf8');
  const html=await readFile(new URL('../public/index.html',import.meta.url),'utf8');
  assert.match(html,/id="sourceSearchLinks"/);
- assert.match(ui,/externalSearchLinks\(lastResponse\.directCoreSources/);
+ assert.match(ui,/externalSearchLinks\(lastResponse\.externalSearchOptions/);
  assert.match(ui,/Not seeing every car\?/);
  assert.match(ui,/noopener noreferrer/);
 });

@@ -45,6 +45,9 @@ jobs:
         run: node --max-old-space-size=384 scripts/check-front-start-memory.mjs
       - name: Listing age and honest freshness labels
         run: node --test tests/listing-freshness-transparency.test.mjs
+      - name: Live freshness release smoke
+        timeout-minutes: 3
+        run: node scripts/smoke-live-freshness.mjs
       - name: Current web UI
         run: node --test tests/ui-v15.test.mjs
 

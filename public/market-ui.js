@@ -102,7 +102,13 @@ function render(){
 }
 function paintStatus(d={},scanning=false){lastResponse=d;busy=scanning;render();}
 async function json(url,options={},controller=activeController){const r=await fetch(url,{...options,signal:controller?AbortSignal.any([controller.signal,AbortSignal.timeout(20000)]):AbortSignal.timeout(20000)});const d=await r.json();if(!r.ok)throw new Error(d.error||'Search unavailable');return d;}
-async function pollSearch(id,seq){const started=Date.now();let latest={};while(Date.now()-started<95000&&seq===runSeq){await sleep(1500);if(seq!==runSeq)return latest;try{const d=await json(`/api/search/progress/${encodeURIComponent(id)}`);if(seq!==runSeq)return latest;latest=d;mergeListings(d.listings||[]);const done=d.complete===true||d.marketScanComplete===true;paintStatus(d,!done);if(done)return d;}catch(e){if(activeController.signal.aborted)return latest;latest={...latest,partial:true};}}return {...latest,partial:true};}
+async function pollSearch(id,seq){const started=Date.now();let latest={};while(Date.now()-started<95000&&seq===runSeq){await sleep(1500);if(seq!==runSeq)return latest;try{const d=await json(`/api/search/progress/${encodeURIComponent(id)}`);if(seq!==runSeq)return latest;latest=d;mergeListings(d.listings||[]);const done=d.complete===true||d.marketScanComplete===true;paintStatus(d,!done);if(done)return d;}catch(e){
+  if(activeController.signal.aborted)return latest;
+  latest={...latest,partial:true,scanStatus:'partial'};
+  // An expired in-memory search job must not spin for 95 seconds or erase
+  // the real listings already displayed from the initial API response.
+  if(/search expired|not.found/i.test(String(e?.message||'')))return latest;
+ }}return {...latest,partial:true};}
 async function run(override,options={}){
  const query=String(override??buildQuery());const parsed=naturalSearch(query),f={...filters()};if(parsed.condition)setCondition(parsed.condition,false);if(!validRanges(f)){$('sub').textContent=t('invalidRange');$('announcement').textContent=t('invalidRange');return;}
  lastQuery=query;appliedFilters={...f};activeController?.abort();activeController=new AbortController();const seq=++runSeq;busy=true;searchStarted=true;visible=36;listings=[];lastResponse={};render();const params=searchParams(query,condition,f);if(options.updateUrl!==false)history.replaceState(null,'',`/?${params}${location.hash}`);updateSearchMetadata();if(!location.hash&&!options.noScroll)$('discover').scrollIntoView({behavior:'smooth',block:'start'});

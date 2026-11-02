@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {parseHarajFastPage} from '../lib/haraj-fast-source.js';
+import {parseHarajFastPage,fetchHarajModelBreadth,harajModelQueryVariants} from '../lib/haraj-fast-source.js';
 
 const base='https://haraj.com.sa/search/test/';
 
@@ -47,4 +47,39 @@ test('can retain more than the default 24 Haraj results for a named model',()=>{
   assert.equal(capped.length,24);
   assert.equal(expanded.length,36);
   assert.equal(new Set(expanded.map(x=>x.url)).size,36);
+});
+
+test('model breadth creates a canonical and a model-only Arabic query',()=>{
+  assert.deepEqual(harajModelQueryVariants('Jeep Wrangler 2021'),['جيب رانجلر 2021','رانجلر 2021']);
+  assert.equal(harajModelQueryVariants('Toyota Corolla').length,2);
+});
+
+test('model breadth deduplicates two bounded source-query variants',async()=>{
+  const original=globalThis.fetch,calls=[];
+  globalThis.fetch=async url=>{
+    calls.push(String(url));
+    const second=decodeURIComponent(String(url)).includes('/search/كورولا/');
+    const html=second
+      ? card('11188360501','تويوتا كورولا 2013','الرياض 25,000')+card('11188360502','كورولا 2014','الرياض 28,000')
+      : card('11188360501','تويوتا كورولا 2013','الرياض 25,000');
+    return {ok:true,url:String(url),text:async()=>html};
+  };
+  try {
+    const result=await fetchHarajModelBreadth({query:'Toyota Corolla',delayMs:0,timeout:1200});
+    assert.equal(result.queriesAttempted,2);
+    assert.equal(result.queriesSucceeded,2);
+    assert.equal(result.listings.length,2);
+    assert.equal(calls.length,2);
+  } finally {globalThis.fetch=original;}
+});
+
+test('model breadth stops after source denies access',async()=>{
+  const original=globalThis.fetch,calls=[];
+  globalThis.fetch=async url=>{calls.push(String(url));return {ok:false,status:429};};
+  try {
+    const result=await fetchHarajModelBreadth({query:'Toyota Corolla',delayMs:0,timeout:1200});
+    assert.equal(result.queriesAttempted,1);
+    assert.equal(calls.length,1);
+    assert.match(result.error,/429/);
+  } finally {globalThis.fetch=original;}
 });

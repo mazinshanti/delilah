@@ -27,6 +27,8 @@ jobs:
         run: npm run test:relevance
       - name: Marketplace foundation
         run: npm run test:marketplace
+      - name: Incremental inventory snapshot safety
+        run: node --test tests/inventory-snapshot-merge.test.mjs
       - name: Inventory and source coverage regression
         run: node --test tests/inventory-recall-search-intent.test.mjs tests/model-search-coverage.test.mjs tests/saudi-source-registry.test.mjs
       - name: Live model smoke (non-blocking; limited queries)

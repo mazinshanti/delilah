@@ -243,7 +243,11 @@ function publicJob(job){
    if(process.env.NODE_ENV==='development')out.intentDebug={originalQuery:job.originalQuery,normalizedIntent:r.intent,intentMode:r.intentMode,catalogMatch:catalogIntent(job.body.query),resultCount:listings.length,sourcesUsed:Object.keys(counts(listings))};
   }
   if(job.body.pageSize||job.body.page){const paged=paginateInventory(listings,job.body);out.listings=paged.listings;out.pagination=paged.pagination;}
-  if(!out.answer)out.answer=listings.length?`${listings.length} matching listings found.`:'Dalelah is scanning the Saudi market…';
+  if(interpretationUnavailable){
+    out.answer='AI interpretation is temporarily unavailable. Results are withheld because not every search requirement could be verified. Try again or simplify the request; this does not mean there are no matching cars in Saudi Arabia.';
+  }else if(!out.answer){
+    out.answer=listings.length?`${listings.length} matching listings found.`:'Dalelah is scanning the Saudi market…';
+  }
   return out;
 }
 

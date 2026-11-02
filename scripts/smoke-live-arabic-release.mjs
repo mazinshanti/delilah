@@ -39,13 +39,22 @@ if(!ready) {
     car.priceVerified!==true ||
     !(Number(car.price)>0&&Number(car.price)<=150000)
   );
-  const status=(listings.length&&invalid.length===0&&data.aiProviderAttempted===false&&!data.interpretationUnavailable)?'pass':'fail';
+  let progress={attempted:false,ok:null};
+  if(data.searchId){
+   await delay(1200);
+   try{
+    const follow=await req('/api/search/progress/'+encodeURIComponent(data.searchId),{},12000);
+    progress={attempted:true,ok:true,responseMs:follow.ms,listingUrls:Array.isArray(follow.data.listings)?follow.data.listings.length:0,
+      complete:follow.data.complete===true||follow.data.marketScanComplete===true};
+   }catch(e){progress={attempted:true,ok:false,error:String(e?.message||e)};}
+  }
+  const status=(listings.length&&invalid.length===0&&data.aiProviderAttempted===false&&!data.interpretationUnavailable&&progress.ok!==false)?'pass':'fail';
   console.log('ARABIC_RELEASE_SMOKE '+JSON.stringify({
     status,observed,firstResponseMs:ms,listingUrls:listings.length,
     invalidHardConstraints:invalid.length,aiProviderAttempted:data.aiProviderAttempted,
     interpretationUnavailable:data.interpretationUnavailable,
     scanStatus:data.scanStatus||null,hasProgressId:Boolean(data.searchId),
-    meetsFiveSecondGoal:ms<5000
+    meetsFiveSecondGoal:ms<5000,progress
   }));
   if(status!=='pass'||ms>=5000)process.exitCode=1;
  }catch(error){

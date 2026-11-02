@@ -29,6 +29,8 @@ jobs:
         run: npm run test:marketplace
       - name: Arabic AI timeout and price safety
         run: node --test tests/ai-search-intent.test.mjs tests/arabic-ai-timeout-regression.test.mjs
+      - name: Fast Arabic structured inventory search
+        run: node --test tests/fast-arabic-inventory.test.mjs
       - name: Current web UI
         run: node --test tests/ui-v15.test.mjs
 

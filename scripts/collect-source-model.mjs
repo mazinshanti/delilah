@@ -1,5 +1,5 @@
 import {writeFile} from 'node:fs/promises';
-import {fetchHarajFast} from '../lib/haraj-fast-source.js';
+import {fetchHarajModelBreadth} from '../lib/haraj-fast-source.js';
 import {fetchOpenSooqUsed} from '../lib/opensooq-source.js';
 import {fetchSalehFast} from '../lib/saleh-fast-source.js';
 import {detectRequestedModel} from '../lib/search-model-relevance.js';
@@ -17,7 +17,7 @@ const started=Date.now();
 let result;
 if(source==='Haraj') {
   // One bounded public search request using the existing adapter.
-  result=await fetchHarajFast({query,timeout:6500,limit:120});
+  result=await fetchHarajModelBreadth({query,timeout:6500,limit:120,delayMs:800});
 } else if(source==='OpenSooq') {
   // Native model URL, a bounded three-page scan, existing source policy.
   result=await fetchOpenSooqUsed({query,pages:3,nativeQuery:true});
@@ -37,7 +37,7 @@ if(!byUrl.size && errors.length)throw new Error('source-unavailable: '+errors.jo
 const data={
  source,scannedAt:new Date().toISOString(),query,
  complete:false, // A bounded source scan cannot prove all the market was covered.
- pagesAttempted:result.pagesAttempted||1,
+ pagesAttempted:result.pagesAttempted||result.queriesAttempted||1,
  errors,listings:[...byUrl.values()]
 };
 await writeFile(output,JSON.stringify(data,null,2),{flag:'wx'});

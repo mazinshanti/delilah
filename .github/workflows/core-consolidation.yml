@@ -36,7 +36,7 @@ jobs:
       - name: Production Arabic intent smoke
         timeout-minutes: 3
         env:
-          DALELAH_EXPECTED_GIT_SHA: '08d153a8f6273dbba60946c23372e3b828565f41'
+          DALELAH_EXPECTED_GIT_SHA: '2ca31093d54437811a875b8666ef105bc52bda9c'
         run: node scripts/smoke-live-arabic-release.mjs
       - name: Current web UI
         run: node --test tests/ui-v15.test.mjs

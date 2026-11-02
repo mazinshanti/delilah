@@ -32,3 +32,15 @@ Phase E: automated relevance tests and source/cost monitoring.
 
 ## Current gap
 On 2026-11-02, the direct fast lane uses Haraj/OpenSooq for used inventory and Saleh Cars for new inventory. Other source paths may exist elsewhere. Draft PR #17 fixes all-condition retrieval, but does not itself expand the Saudi-wide index or prove new unique inventory.
+## Incremental snapshot collection (development only)
+The front runtime already loads `data/market-inventory.json.gz`. A replacement index is **not** required for the first expansion phase.
+
+An operator can collect one named-model sample through an existing supported source adapter, after verifying its access terms:
+```sh
+node scripts/collect-source-model.mjs --source "Haraj" --query "Toyota Corolla" --output haraj-corolla-batch.json
+node scripts/merge-inventory-snapshot.mjs --snapshot data/market-inventory.json.gz --input haraj-corolla-batch.json --output next-market-inventory.json.gz
+```
+
+The collector is intentionally limited: a Haraj sample uses at most two sequential Arabic search variants; OpenSooq scans at most three pages; Saleh Cars uses the existing adapter. It stops Haraj variants upon HTTP 403/429 and does not bypass authentication or access controls. **These scripts do not authorize fetching or commercial reuse of third-party content.** Confirm source access/terms before execution.
+
+The merge is conservative: it verifies sale listings, preserves unvisited source records, deduplicates URLs, removes unverified stale prices, and writes a new compressed file rather than overwriting the original snapshot. Keep the original for rollback. Verify the generated snapshot and its source metrics before deploying. Snapshot counts represent listing URLs, not necessarily unique physical vehicles. Deletion and source-level completeness require separate verified removal checks.

@@ -1,4 +1,5 @@
 import {searchProgressState} from './search-progress.js';
+import {listingObservation} from './listing-observation.js';
 import {naturalSearch} from './natural-search.js';
 import {needsAI} from './search-route.js';
 import {catalogIntent,catalogLabel} from './catalog.js';
@@ -50,7 +51,15 @@ function mergeListings(next=[]){const map=new Map(listings.filter(x=>x?.url).map
 function listingTitle(c){if(c.brand&&c.model)return [label(c.brand),label(c.model),c.trim].filter(Boolean).join(' ');return c.title||[c.year,c.make,c.model].filter(Boolean).join(' ')||t('details');}
 function priceHtml(c){return c.price>0?`${num(c.price)}<span class="currency">${t('currency')}</span>`:t('priceUnknown');}
 function detailsHref(c){const query=lastQuery&&lastQuery!=='__all_cars__'?lastQuery:[c.brand||c.make,c.model,c.year].filter(Boolean).join(' ')||c.title||'__all_cars__';return `/?${searchParams(query,c.condition||condition,searchStarted?appliedFilters:{})}#vehicle=${encodeURIComponent(c.url)}`;}
-function checkedLabel(c){const at=c.lastCheckedAt||c.lastDetailAt||c.lastSeenAt;if(!Number.isFinite(Date.parse(at)))return '';const date=new Date(at).toLocaleString(language==='ar'?'ar-SA':'en-GB',{dateStyle:'short',timeStyle:'short'});return `<p class="source-note">${language==='ar'?'آخر تحقق:':'Last checked:'} ${esc(date)}${c.refreshDue?(language==='ar'?' · يحتاج تحديثًا':' · Refresh due'):''}</p>`;}
+function checkedLabel(c){
+ const observed=listingObservation(c),ar=language==='ar';
+ if(observed.status==='unknown')
+  return `<p class="source-note">${ar?'تاريخ رصد الإعلان غير معروف؛ تحقق من توفره وسعره لدى المصدر.':'Listing observation date unknown; confirm availability and price at the source.'}</p>`;
+ const date=new Date(observed.observedAt).toLocaleDateString(ar?'ar-SA':'en-GB',{dateStyle:'medium'});
+ return `<p class="source-note">${ar?'آخر رصد للإعلان:':'Last observed:'} ${esc(date)}${observed.status==='stale'?
+  (ar?' · لم يُراجع مؤخرًا؛ قد يكون السعر أو التوفر تغيّر.':' · Not recently checked; price and availability may have changed.'):
+  (ar?' · تأكد من استمرار توفره لدى المصدر.':' · Confirm current availability at the source.')}</p>`;
+}
 function cardState(c){return JSON.stringify([language,c.url,c.title,listingTitle(c),galleryImages(c)[0]||null,c.price??null,c.year??null,c.mileage??null,c.city??null,c.condition??null,c.source??null,c.seller??null,c.lastCheckedAt,c.lastSeenAt,c.refreshDue,detailsHref(c)]);}
 function card(c){const title=listingTitle(c),img=galleryImages(c)[0],source=label(c.source)||t('unknown'),seller=label(c.seller),conditionLabel=c.condition==='new'||c.condition==='used'?t(c.condition):label(c.condition);const facts=c.condition==='new'?[c.year,label(c.city),conditionLabel].filter(Boolean):[c.year||t('unknown'),c.mileage!=null?`${num(c.mileage)} ${t('km')}`:t('unknown'),label(c.city)||t('unknown'),conditionLabel||t('unknown')];return `<article class="card" data-card-state="${esc(cardState(c))}"><a class="card-link" href="${esc(detailsHref(c))}" data-vehicle="${esc(c.url)}" aria-label="${esc(title)}"><div class="photo">${img?`<img src="${esc(img)}" alt="${esc(c.title||title)}" loading="lazy" decoding="async" referrerpolicy="no-referrer">`:placeholder()}</div><div class="card-body"><div class="card-price">${priceHtml(c)}</div><h3 class="card-title" dir="auto">${esc(title)}</h3><div class="facts">${facts.map(x=>`<span>${esc(x)}</span>`).join('')}</div>${checkedLabel(c)}<div class="seller-line"><span><b>${t('source')}:</b> ${esc(source)}${seller&&seller!==source?' · '+esc(seller):''}</span>${arrow}</div></div></a></article>`;}
 function wireImages(root){root.querySelectorAll('img:not([data-error-wired])').forEach(img=>{img.dataset.errorWired='true';img.addEventListener('error',()=>{const parent=img.closest('.photo,.gallery-main');if(parent)parent.innerHTML=placeholder();else img.closest('button')?.remove();},{once:true});});}
@@ -95,6 +104,7 @@ function render(){
  renderSearchProgress();
  const all=searchStarted?listings:homeListings,loading=searchStarted?busy:homeLoading;$('grid').setAttribute('aria-busy',String(loading));$('homeContent').hidden=searchStarted;$('valuationEntry').hidden=searchStarted;document.querySelector('.hero').hidden=searchStarted;document.querySelector('.benefitStrip').hidden=searchStarted;document.querySelector('.heroStage').classList.toggle('search-mode',searchStarted);$('resultEyebrow').hidden=searchStarted;$('resultTitle').textContent=t(searchStarted?'results':'selectedCars');$('sort').hidden=!searchStarted;$('shareSearch').hidden=!searchStarted;$('mobileFilters').hidden=!searchStarted;$('browseGo').hidden=searchStarted;$('ask').querySelector('span').textContent=t(busy?'searching':'search');
  $('sub').textContent=searchStarted?`${num(all.length)} ${t('matches')}${busy?' · '+t('scanning'):lastResponse.partial?' · '+t('partial'):''}${appliedFilters.category?' '+t('bodyHint'):''}`:homeError?t('unavailable'):'';
+ if(searchStarted&&all.some(car=>listingObservation(car).status!=='recent'))$('sub').textContent+=language==='ar'?' · بعض الإعلانات لم يُتحقق من حداثتها':' · Some listings need a freshness check';
  if(searchStarted&&lastResponse.intentMode==='ai')$('sub').textContent+=' · '+(language==='ar'?'فهمنا بحثك':'AI understood your search');
  if(searchStarted&&lastResponse.interpretationUnavailable)$('sub').textContent=language==='ar'?'تعذّر فهم الوصف الآن. جرّب الماركة والموديل والسنة أو الفلاتر.':'Could not interpret that description. Try a make, model and year, or use the filters.';
  const rows=orderedListings(all,$('sort').value).slice(0,searchStarted?visible:6);if(rows.length){renderCards(rows);}else if(loading){$('grid').innerHTML=Array.from({length:searchStarted?4:3},()=>'<div class="skeleton" aria-hidden="true"></div>').join('');}else{$('grid').innerHTML=`<div class="empty"><h3>${t(homeError&&!searchStarted?'unavailable':searchStarted?'empty':'initialEmpty')}</h3><p>${searchStarted?esc(lastQuery)+' — '+t('emptyText'):t('heroSub')}</p><button class="secondary" id="retry">${t(homeError?'retry':'reset')}</button></div>`;$('retry').onclick=()=>{if(!searchStarted)loadHome();else resetFilters();};}

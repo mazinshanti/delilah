@@ -1,4 +1,5 @@
 import {searchProgressState} from './search-progress.js';
+import {externalSearchLinks} from './source-search-links.js';
 import {listingObservation} from './listing-observation.js';
 import {naturalSearch} from './natural-search.js';
 import {needsAI} from './search-route.js';
@@ -91,6 +92,17 @@ function renderCards(rows){
  wireImages(host);
 }
 function paintChips(){const f=appliedFilters,keys={minPrice:'minPrice',maxPrice:'maxPrice',minYear:'minYear',maxYear:'maxYear',maxMileage:'maxMileage',city:'city',seller:'source',trim:'trim',fuelType:'fuel',category:'bodyType'};$('activeFilters').innerHTML=searchStarted?Object.entries(f).filter(([,v])=>v).map(([k,v])=>`<button data-remove="${k}" aria-label="${esc(t('remove')+' '+t(keys[k]))}">${t(keys[k])}: ${esc(label(v))} ×</button>`).join(''):'';$('activeFilters').querySelectorAll('button').forEach(b=>b.onclick=()=>{const k=b.dataset.remove;$(k==='seller'?'source':k==='fuelType'?'category':k==='category'?'bodyType':k).value='';if(k==='city')$('homeCity').value='';if(k==='maxPrice')$('budget').value='';run(lastQuery);});}
+function renderSourceLinks(){
+ const host=$('sourceSearchLinks');
+ const sources=externalSearchLinks(lastResponse.externalSearchOptions||lastResponse.directCoreSources||[]);
+ host.hidden=!searchStarted||sources.length===0;
+ if(host.hidden){host.textContent='';return;}
+ const ar=language==='ar';
+ const message=ar?'لم تلقَ كل السيارات؟ تصفّح نتائج إضافية في المصدر مباشرة:':'Not seeing every car? Explore additional listings directly at the source:';
+ host.innerHTML='<span>'+esc(message)+'</span> '+sources.map(s=>
+  '<a href="'+esc(s.url)+'" target="_blank" rel="noopener noreferrer">'+esc(label(s.name))+'</a>'
+ ).join(' · ');
+}
 function renderSearchProgress(){
  const state=searchProgressState({started:searchStarted,busy,response:lastResponse,count:listings.length,language});
  $('searchProgress').hidden=state.hidden;
@@ -102,6 +114,7 @@ function renderSearchProgress(){
 }
 function render(){
  renderSearchProgress();
+ renderSourceLinks();
  const all=searchStarted?listings:homeListings,loading=searchStarted?busy:homeLoading;$('grid').setAttribute('aria-busy',String(loading));$('homeContent').hidden=searchStarted;$('valuationEntry').hidden=searchStarted;document.querySelector('.hero').hidden=searchStarted;document.querySelector('.benefitStrip').hidden=searchStarted;document.querySelector('.heroStage').classList.toggle('search-mode',searchStarted);$('resultEyebrow').hidden=searchStarted;$('resultTitle').textContent=t(searchStarted?'results':'selectedCars');$('sort').hidden=!searchStarted;$('shareSearch').hidden=!searchStarted;$('mobileFilters').hidden=!searchStarted;$('browseGo').hidden=searchStarted;$('ask').querySelector('span').textContent=t(busy?'searching':'search');
  $('sub').textContent=searchStarted?`${num(all.length)} ${t('matches')}${busy?' · '+t('scanning'):lastResponse.partial?' · '+t('partial'):''}${appliedFilters.category?' '+t('bodyHint'):''}`:homeError?t('unavailable'):'';
  if(searchStarted&&all.some(car=>listingObservation(car).status!=='recent'))$('sub').textContent+=language==='ar'?' · بعض الإعلانات لم يُتحقق من حداثتها':' · Some listings need a freshness check';

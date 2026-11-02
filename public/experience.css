@@ -39,3 +39,9 @@
 @keyframes search-sweep{to{background-position:200% 0}}
 @media(prefers-reduced-motion:reduce){.search-progress progress:indeterminate{animation:none}}
 .search-progress progress[hidden]{display:none}
+
+/* Users may continue searching at an original source when Dalelah's index
+   cannot guarantee nationwide completeness. Plain links, not paid placements. */
+.source-search-links{font-size:12px;line-height:1.7;color:var(--muted);margin:8px 0 18px}
+.source-search-links[hidden]{display:none}
+.source-search-links a{color:var(--accent);text-underline-offset:3px;margin-inline:4px}

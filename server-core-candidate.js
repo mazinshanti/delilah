@@ -7,6 +7,7 @@ import {installSellerRoutes} from './lib/seller-routes.js';
 import {VEHICLE_CATALOG,catalogIntent} from './public/catalog.js';
 import {discoverListingGallery} from './lib/listing-gallery.js';
 import {browseLiveSources} from './lib/browse-sources.js';
+import {originalMarketSearchTargets} from './lib/source-search-targets.js';
 import {extractMileage} from './lib/vehicle-mileage.js';
 import {randomUUID} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
@@ -250,6 +251,7 @@ function publicJob(job){
   out.scanStatus=out.partial?'partial':complete?'complete':'scanning';
   out.indexedCount=job.indexedListings?.length||0;
   out.snapshotAt=inventoryIndex.generatedAt;
+  out.externalSearchOptions=originalMarketSearchTargets(job.body);
   out.freshnessSummary={...freshnessSummary,scope:'returned-listing-urls',freshnessIsAvailabilityProof:false};
   out.sourceErrors=[...(scanTimedOut?['scan-deadline-reached']:[]),...(direct.errors||[]),...(job.error?['deep-search-unavailable']:[])];
   out.interpretationUnavailable=interpretationUnavailable;

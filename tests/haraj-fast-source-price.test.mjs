@@ -36,3 +36,15 @@ test('maxPrice uses verified Haraj price',()=>{
   assert.equal(under.length,1);
   assert.equal(over.length,0);
 });
+
+
+test('can retain more than the default 24 Haraj results for a named model',()=>{
+  const html=Array.from({length:36},(_,i)=>card(
+    String(11188360100+i),'تويوتا كورولا 2013','الرياض 24,998'
+  )).join('');
+  const capped=parseHarajFastPage(html,base,{query:'Toyota Corolla 2013',filters:{}});
+  const expanded=parseHarajFastPage(html,base,{query:'Toyota Corolla 2013',filters:{},limit:120});
+  assert.equal(capped.length,24);
+  assert.equal(expanded.length,36);
+  assert.equal(new Set(expanded.map(x=>x.url)).size,36);
+});

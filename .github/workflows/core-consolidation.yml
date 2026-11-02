@@ -29,6 +29,13 @@ jobs:
         run: npm run test:marketplace
       - name: Inventory and source coverage regression
         run: node --test tests/inventory-recall-search-intent.test.mjs tests/model-search-coverage.test.mjs tests/saudi-source-registry.test.mjs
+      - name: Live model smoke (non-blocking; limited queries)
+        continue-on-error: true
+        timeout-minutes: 3
+        env:
+          DALELAH_BENCHMARK_QUERIES: Toyota Corolla;Nissan Patrol
+          DALELAH_BENCHMARK_TIMEOUT_MS: '20000'
+        run: node scripts/live-model-coverage-benchmark.mjs
       - name: Current web UI
         run: node --test tests/ui-v15.test.mjs
 

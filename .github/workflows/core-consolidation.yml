@@ -27,6 +27,8 @@ jobs:
         run: npm run test:relevance
       - name: Marketplace foundation
         run: npm run test:marketplace
+      - name: Inventory and source coverage regression
+        run: node --test tests/inventory-recall-search-intent.test.mjs tests/model-search-coverage.test.mjs tests/saudi-source-registry.test.mjs
       - name: Current web UI
         run: node --test tests/ui-v15.test.mjs
 

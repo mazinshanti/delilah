@@ -33,6 +33,12 @@ jobs:
         run: node --test tests/fast-arabic-inventory.test.mjs
       - name: Actual inventory snapshot Arabic latency
         run: node scripts/benchmark-fast-arabic-index.mjs
+      - name: Authorized dealer feed ingestion safety
+        run: node --test tests/authorized-dealer-feed.test.mjs
+      - name: Authorized feed importer syntax
+        run: node --check lib/authorized-feed.js && node --check scripts/import-authorized-dealer-feed.mjs
+      - name: Market source freshness and coverage reporting
+        run: node --test tests/inventory-coverage.test.mjs
       - name: Streaming inventory accuracy
         run: node --test tests/inventory-streaming.test.mjs
       - name: Frontend 512MB memory budget

@@ -51,11 +51,27 @@ test('unknown new price clears a previously verified asking price',()=>{
   const {snapshot}=mergeInventorySnapshot({listings:[old]}, {source:'Haraj',scannedAt:t,listings:[next]});
   assert.equal(snapshot.listings[0].price,null);
   assert.equal(snapshot.listings[0].priceVerified,false);
+  assert.equal(snapshot.listings[0].priceSource,null);
 });
+
 
 test('an empty partial scan cannot delete existing inventory',()=>{
   const base={listings:[listing('Haraj','one')]};
   const {report,snapshot}=mergeInventorySnapshot(base,{source:'Haraj',scannedAt:t,listings:[]});
   assert.equal(report.total,1);
   assert.equal(snapshot.listings.length,1);
+});
+
+test('retains verified gallery images through a lightweight listing refresh',()=>{
+  const img='https://images.example.com/corolla.jpg';
+  const previous=listing('Haraj','gallery','Corolla',{image:img,images:[img]});
+  const next=listing('Haraj','gallery','Corolla',{image:null,images:[]});
+  const {snapshot}=mergeInventorySnapshot({listings:[previous]},{
+    source:'Haraj',scannedAt:t,listings:[next]
+  });
+  const row=snapshot.listings[0];
+  assert.equal(row.image,img);
+  assert.equal(row.primary_image,img);
+  assert.deepEqual(row.gallery_images,[img]);
+  assert.equal(row.media.primaryImage,img);
 });

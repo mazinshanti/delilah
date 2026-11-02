@@ -23,6 +23,7 @@ import {filterVehicleSaleListings} from './lib/listing-quality.js';
 import {canonicalizeVehicleQuery} from './lib/search-relevance.js';
 import {InventoryIndex,paginateInventory,deduplicateVehicles} from './lib/inventory-index.js';
 import {publicSourceRegistry} from './lib/source-registry.js';
+import {inventoryCoverageSummary} from './lib/inventory-coverage.js';
 import {installApiGuard,validateFilters} from './lib/api-guard.js';
 
 const externalPort=Number(process.env.PORT||3000);
@@ -48,6 +49,16 @@ void prewarmSalehInventory();
 installValuationRoutes(app,{inventoryIndex});
 app.get('/api/sources',(_req,res)=>{const stats=inventoryIndex.stats();res.json({generatedAt:stats.generatedAt,sources:publicSourceRegistry(stats.bySource,stats.diagnostics,stats.generatedAt)});});
 app.get('/api/inventory/stats',(_req,res)=>res.json(inventoryIndex.stats()));
+let lastCoverageAt=0,lastCoverage=null;
+app.get('/api/inventory/coverage',(_req,res)=>{
+ const now=Date.now();
+ if(!lastCoverage||now-lastCoverageAt>=60000){
+  lastCoverage=inventoryCoverageSummary(inventoryIndex.records,{generatedAt:inventoryIndex.generatedAt,now,maxAgeMs:inventoryIndex.maxAgeMs});
+  lastCoverageAt=now;
+ }
+ res.setHeader('Cache-Control','public, max-age=30');
+ return res.json(lastCoverage);
+});
 app.get('/api/inventory',(req,res)=>{
   if(req.query.condition!=null&&!['new','used','all'].includes(req.query.condition))return res.status(400).json({error:'invalid-condition'});
   const filters={};for(const k of ['minYear','maxYear','minPrice','maxPrice','maxMileage','city','seller','category','fuelType','trim'])if(req.query[k]!=null)filters[k]=req.query[k];

@@ -24,6 +24,7 @@ import {canonicalizeVehicleQuery} from './lib/search-relevance.js';
 import {InventoryIndex,paginateInventory,deduplicateVehicles} from './lib/inventory-index.js';
 import {publicSourceRegistry} from './lib/source-registry.js';
 import {inventoryCoverageSummary} from './lib/inventory-coverage.js';
+import {listingFreshness} from './lib/listing-lifecycle.js';
 import {installApiGuard,validateFilters} from './lib/api-guard.js';
 
 const externalPort=Number(process.env.PORT||3000);
@@ -232,6 +233,11 @@ function publicJob(job){
   // If semantic interpretation fails, do not silently discard unknown requirements.
   const interpretationUnavailable=Boolean(job.intentResult?.fallbackReason&&!job.intentResult.safeFallback);
   if(interpretationUnavailable)listings=[];
+  const freshnessSummary={recent:0,stale:0,unknown:0};
+  for(const car of listings){
+    const status=listingFreshness(car,inventoryIndex.maxAgeMs).observationStatus;
+    freshnessSummary[status]++;
+  }
   const fullComplete=Boolean(job.fullData&&(full.complete===true||full.marketScanComplete===true));
   const pricePending=Boolean(job.priceEnrichmentPromise&&!job.priceEnrichmentComplete);
   const syarahPricePending=Boolean(job.syarahPriceEnrichmentPromise&&!job.syarahPriceEnrichmentComplete);
@@ -244,6 +250,7 @@ function publicJob(job){
   out.scanStatus=out.partial?'partial':complete?'complete':'scanning';
   out.indexedCount=job.indexedListings?.length||0;
   out.snapshotAt=inventoryIndex.generatedAt;
+  out.freshnessSummary={...freshnessSummary,scope:'returned-listing-urls',freshnessIsAvailabilityProof:false};
   out.sourceErrors=[...(scanTimedOut?['scan-deadline-reached']:[]),...(direct.errors||[]),...(job.error?['deep-search-unavailable']:[])];
   out.interpretationUnavailable=interpretationUnavailable;
   out.aiRequired=needsAI(job.originalQuery);

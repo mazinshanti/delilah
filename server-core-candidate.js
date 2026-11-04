@@ -315,7 +315,7 @@ function startJob(body={},meta={}){
   job.intentResult=meta.intentResult;
   // For fully understood, source-independent SUV searches, narrow normalized
   // inventory first instead of reclassifying the entire Saudi snapshot.
-  const recentlyObserved=liveVehicleBuffer.search(body);
+  const recentlyObserved=applyIntentConstraints(liveVehicleBuffer.search(body),meta.intentResult?.intent);
   job.recentBufferReused=recentlyObserved.length;
   const historical=meta.intentResult?.deterministicSemantic
     ? inventoryIndex.searchTrustedOriginBody(body,{

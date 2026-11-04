@@ -2,6 +2,7 @@ import {waitForSearchProgress} from './lib/search-progress-wait.js';
 import {searchCompletionState} from './lib/search-completion-state.js';
 import {LiveVehicleBuffer} from './lib/live-vehicle-buffer.js';
 import {mixIndexedAndObserved} from './lib/mix-indexed-observed.js';
+import {memoizedSearchResponse,expirePublicResponseMemo} from './lib/search-response-memo.js';
 import {naturalSearch} from './public/natural-search.js';
 import {createIntentEngine,intentSearchBody,applyIntentConstraints,needsAI,ORIGINS} from './lib/ai-search-intent.js';
 import express from 'express';
@@ -139,6 +140,7 @@ function validateSearchBody(body={}){
 
 function pruneJobs(now=Date.now(),force=false){
   for(const[id,job]of jobs){
+    expirePublicResponseMemo(job,now);
     if(now-job.createdAt>JOB_TTL){
       jobs.delete(id);
       if(inFlight.get(job.key)===job)inFlight.delete(job.key);
@@ -230,7 +232,7 @@ function kickSyarahPriceEnrichment(job){
   return job.syarahPriceEnrichmentPromise;
 }
 
-function publicJob(job){
+function computePublicJob(job){
   const direct=job.directData||{};
   const full=job.fullData||{};
   let listings=deduplicateVehicles(strictMerged(mergeDirectListings(job.indexedListings,direct.listings,full.listings),job.body));
@@ -273,6 +275,10 @@ function publicJob(job){
     out.answer=listings.length?`${listings.length} matching listings found.`:'Dalelah is scanning the Saudi market…';
   }
   return out;
+}
+
+function publicJob(job){
+  return memoizedSearchResponse(job,()=>computePublicJob(job));
 }
 
 async function fetchFullSearch(job){

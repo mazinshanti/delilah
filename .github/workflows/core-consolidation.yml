@@ -49,6 +49,9 @@ jobs:
         run: node --test tests/source-search-links.test.mjs
       - name: On-demand live results and freshness-first regression
         run: node --test tests/live-source-completion.test.mjs tests/live-vehicle-buffer.test.mjs
+      - name: Live on-demand freshness engine smoke
+        timeout-minutes: 4
+        run: node scripts/smoke-live-freshness-engine.mjs
       - name: Current web UI
         run: node --test tests/ui-v15.test.mjs
 

@@ -51,6 +51,8 @@ jobs:
         run: node --test tests/live-source-completion.test.mjs tests/live-vehicle-buffer.test.mjs
       - name: Zero-copy fast indexed results with live merge
         run: node --test tests/mix-indexed-observed.test.mjs
+      - name: Stable progressive search response memo
+        run: node --test tests/search-response-memo.test.mjs
       - name: Current web UI
         run: node --test tests/ui-v15.test.mjs
 

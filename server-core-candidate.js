@@ -1,4 +1,6 @@
 import {waitForSearchProgress} from './lib/search-progress-wait.js';
+import {searchCompletionState} from './lib/search-completion-state.js';
+import {LiveVehicleBuffer} from './lib/live-vehicle-buffer.js';
 import {naturalSearch} from './public/natural-search.js';
 import {createIntentEngine,intentSearchBody,applyIntentConstraints,needsAI,ORIGINS} from './lib/ai-search-intent.js';
 import express from 'express';
@@ -42,6 +44,7 @@ installApiGuard(app);
 installSellerRoutes(app);
 app.use(express.json({limit:'32kb'}));
 const inventoryIndex=new InventoryIndex();
+const liveVehicleBuffer=new LiveVehicleBuffer();
 const intentEngine=createIntentEngine();
 app.get('/api/search/ai-status',(_req,res)=>{const {stats,...status}=intentEngine.status();res.json(status);});
 if(process.env.NODE_ENV==='development')app.get('/api/search/ai-metrics',(_req,res)=>res.json(intentEngine.status()));
@@ -239,16 +242,16 @@ function publicJob(job){
     const status=listingFreshness(car,inventoryIndex.maxAgeMs).observationStatus;
     freshnessSummary[status]++;
   }
-  const fullComplete=Boolean(job.fullData&&(full.complete===true||full.marketScanComplete===true));
-  const pricePending=Boolean(job.priceEnrichmentPromise&&!job.priceEnrichmentComplete);
-  const syarahPricePending=Boolean(job.syarahPriceEnrichmentPromise&&!job.syarahPriceEnrichmentComplete);
-  const scanTimedOut=!fullComplete&&Date.now()-job.createdAt>90_000;
-  const complete=(fullComplete&&!pricePending&&!syarahPricePending)||scanTimedOut||Boolean(job.error&&job.fullDone);
+  const {complete,scanTimedOut,liveDiscoveryPending,pricePending,syarahPricePending}=searchCompletionState(job);
   const base=job.fullData||job.directData||{};
   const out={...base,listings,counts:counts(listings),complete,marketScanComplete:complete,directCoreLane:true,directCoreFirstResultMs:job.firstResultMs??null,directCoreDurationMs:direct.durationMs??null,directCoreSources:direct.sources||[],directCoreErrors:direct.errors||[],deepScanStarted:Boolean(job.fullPromise),deepScanMode:'remote-legacy-fallback',deepZeroRetry:Boolean(job.deepZeroRetry),exactBrandQualityGate:true,queryCorrections:job.queryCorrections,understanding:{...(base.understanding||{}),query:job.originalQuery,normalizedQuery:job.body.query,typoCorrections:job.queryCorrections},harajPriceMatrix:true,harajDetailPriceEnrichment:true,harajPriceEnrichmentPending:pricePending,harajPriceEnrichmentComplete:Boolean(job.priceEnrichmentComplete),harajDetailPricesEnriched:job.priceEnriched||0,harajDetailPricesAttempted:job.priceAttempted||0,harajPriceEnrichmentError:job.priceEnrichmentError||null,syarahPriceMatrix:true,syarahDetailPriceEnrichment:true,syarahPriceEnrichmentPending:syarahPricePending,syarahPriceEnrichmentComplete:Boolean(job.syarahPriceEnrichmentComplete),syarahDetailPricesEnriched:job.syarahPriceEnriched||0,syarahDetailPricesAttempted:job.syarahPriceAttempted||0,syarahPriceEnrichmentError:job.syarahPriceEnrichmentError||null};
   if(!complete)out.searchId=job.id;else delete out.searchId;
   out.partial=Boolean(scanTimedOut||job.error||(direct.errors||[]).length);
   out.scanStatus=out.partial?'partial':complete?'complete':'scanning';
+  out.liveDiscoveryPending=liveDiscoveryPending;
+  out.recentLiveBufferReused=job.recentBufferReused||0;
+  out.liveBufferStats=liveVehicleBuffer.stats();
+  out.resultCache={type:'ephemeral-in-memory',ttlSeconds:Math.floor(JOB_TTL/1000),storesSourceImages:false,snapshotUpdated:false};
   out.indexedCount=job.indexedListings?.length||0;
   out.snapshotAt=inventoryIndex.generatedAt;
   out.externalSearchOptions=originalMarketSearchTargets(job.body);
@@ -307,26 +310,30 @@ function startJob(body={},meta={}){
   if(jobs.size>=MAX_ACTIVE_JOBS)pruneJobs(Date.now(),true);
   const key=keyFor(body),existing=inFlight.get(key);
   if(existing&&Date.now()-existing.createdAt<COALESCE_TTL)return existing;
-  const job={id:`dc.${randomUUID()}`,key,body,originalQuery:meta.originalQuery||body.query,queryCorrections:meta.corrections||[],createdAt:Date.now(),directData:null,fullData:null,fullPromise:null,fullDone:false,upstreamId:null,error:null,firstResultMs:null,deepZeroRetry:false,priceEnrichmentPromise:null,priceEnrichmentComplete:false,priceEnriched:0,priceAttempted:0,priceEnrichmentError:null,syarahPriceEnrichmentPromise:null,syarahPriceEnrichmentComplete:false,syarahPriceEnriched:0,syarahPriceAttempted:0,syarahPriceEnrichmentError:null,syarahPriceSeen:new Set()};
+  const job={id:`dc.${randomUUID()}`,key,body,originalQuery:meta.originalQuery||body.query,queryCorrections:meta.corrections||[],createdAt:Date.now(),recentBufferReused:0,directData:null,directDone:false,fullData:null,fullPromise:null,fullDone:false,upstreamId:null,error:null,firstResultMs:null,deepZeroRetry:false,priceEnrichmentPromise:null,priceEnrichmentComplete:false,priceEnriched:0,priceAttempted:0,priceEnrichmentError:null,syarahPriceEnrichmentPromise:null,syarahPriceEnrichmentComplete:false,syarahPriceEnriched:0,syarahPriceAttempted:0,syarahPriceEnrichmentError:null,syarahPriceSeen:new Set()};
   jobs.set(job.id,job);inFlight.set(key,job);
   job.intentResult=meta.intentResult;
   // For fully understood, source-independent SUV searches, narrow normalized
   // inventory first instead of reclassifying the entire Saudi snapshot.
-  job.indexedListings=meta.intentResult?.deterministicSemantic
+  const recentlyObserved=applyIntentConstraints(liveVehicleBuffer.search(body),meta.intentResult?.intent);
+  job.recentBufferReused=recentlyObserved.length;
+  const historical=meta.intentResult?.deterministicSemantic
     ? inventoryIndex.searchTrustedOriginBody(body,{
         makes:ORIGINS[meta.intentResult.intent.originPreference]||[],
         bodyType:meta.intentResult.intent.bodyType
       })
     : inventoryIndex.search(body);
+  job.indexedListings=mergeDirectListings(historical,recentlyObserved);
   job.directPromise=(isBroad(body)?browseLiveSources(body):searchDirectFirst(body,{timeoutMs:DIRECT_BUDGET_MS}))
     .then(data=>{
       job.directData=data;
+      liveVehicleBuffer.ingest(data?.listings||[]);
       if(data?.listings?.length&&!job.firstResultMs)job.firstResultMs=Date.now()-job.createdAt;
       kickPriceEnrichment(job);
       return data;
     })
     .catch(error=>{job.directData={listings:[],counts:{},sources:[],errors:[error?.message||String(error)],durationMs:Date.now()-job.createdAt};job.priceEnrichmentComplete=true;return job.directData;})
-    .finally(()=>{kickFull(job);});
+    .finally(()=>{job.directDone=true;kickFull(job);});
   const timer=setTimeout(()=>kickFull(job),FULL_HEAD_START_MS);timer.unref?.();
   return job;
 }
@@ -401,5 +408,5 @@ app.use((req,res,next)=>{
 app.use(proxy);
 app.use((error,req,res,next)=>{if(res.headersSent)return next(error);res.status(error.status===413?413:400).json({error:error.status===413?'request-too-large':'invalid-request'});});
 
-setInterval(()=>pruneJobs(),60_000).unref?.();
+setInterval(()=>{pruneJobs();liveVehicleBuffer.prune();},60_000).unref?.();
 app.listen(externalPort,'0.0.0.0',()=>console.log(`Dalelah direct-core candidate on 0.0.0.0:${externalPort}; deep scan ${legacyBase}`));

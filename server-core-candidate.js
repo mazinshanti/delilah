@@ -323,7 +323,9 @@ function startJob(body={},meta={}){
         bodyType:meta.intentResult.intent.bodyType
       })
     : inventoryIndex.search(body);
-  job.indexedListings=mergeDirectListings(historical,recentlyObserved);
+  // Preserve the already-ranked fast indexed rows when no live cache exists.
+  // Re-merging hundreds of semantic SUV records needlessly reprocesses images.
+  job.indexedListings=recentlyObserved.length?mergeDirectListings(historical,recentlyObserved):historical;
   job.directPromise=(isBroad(body)?browseLiveSources(body):searchDirectFirst(body,{timeoutMs:DIRECT_BUDGET_MS}))
     .then(data=>{
       job.directData=data;

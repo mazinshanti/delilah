@@ -55,6 +55,8 @@ jobs:
         run: node --test tests/search-response-memo.test.mjs
       - name: Verified indexed first-response fast path
         run: node --test tests/indexed-response-fast-path.test.mjs
+      - name: Fresh-only source sightings and UI regressions
+        run: node --test tests/recent-source-results.test.mjs
       - name: Current web UI
         run: node --test tests/ui-v15.test.mjs
 

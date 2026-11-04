@@ -5,6 +5,8 @@ import {observeSourceSearchListings,mergeObservationFields,favorNewerVerifiedDat
 import {mergeDirectListings} from '../lib/direct-search.js';
 import {orderedListings} from '../public/experience-model.js';
 import {listingObservation} from '../public/listing-observation.js';
+import {normalizeInventoryListing} from '../lib/inventory-normalizer.js';
+import {relevanceScore} from '../lib/result-ranking.js';
 
 const now=Date.now();
 const seen=new Date(now-120_000).toISOString();
@@ -84,4 +86,20 @@ test('relevance sorts fresh live pages ahead of cheaper stale snapshot matches',
   price:null,priceVerified:false,relevanceScore:90})],'Haraj',seen)[0];
  assert.deepEqual(orderedListings([stale,fresh],'relevance').map(c=>c.url),[fresh.url,stale.url]);
  assert.deepEqual(orderedListings([stale,fresh],'price-asc').map(c=>c.url),[stale.url,fresh.url]);
+});
+
+test('normalization cannot silently turn unknown source observation into a current date',()=>{
+ const raw=sample('11111111115',{lastSeenAt:undefined,lastDetailAt:undefined,sourceObservedAt:undefined});
+ const normalized=normalizeInventoryListing(raw);
+ assert.equal(normalized.lastSeenAt,null);
+ assert.equal(listingObservation(normalized).status,'unknown');
+ const seenAgain=normalizeInventoryListing({...raw,lastSeenAt:oldSeen});
+ assert.equal(seenAgain.lastSeenAt,oldSeen);
+ assert.equal(listingObservation(seenAgain).status,'stale');
+});
+test('listing rank cannot treat a synthetic updatedAt timestamp as source freshness',()=>{
+ const a=sample('11111111116',{lastSeenAt:null,updatedAt:new Date().toISOString(),updated_at:new Date().toISOString()});
+ const b={...a,updatedAt:'2020-01-01T00:00:00Z',updated_at:'2020-01-01T00:00:00Z'};
+ assert.equal(relevanceScore(a,{query:'Toyota Camry',condition:'used'}),
+   relevanceScore(b,{query:'Toyota Camry',condition:'used'}));
 });

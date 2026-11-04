@@ -1,5 +1,6 @@
 import {waitForSearchProgress} from './lib/search-progress-wait.js';
 import {searchCompletionState} from './lib/search-completion-state.js';
+import {LiveVehicleBuffer} from './lib/live-vehicle-buffer.js';
 import {naturalSearch} from './public/natural-search.js';
 import {createIntentEngine,intentSearchBody,applyIntentConstraints,needsAI,ORIGINS} from './lib/ai-search-intent.js';
 import express from 'express';
@@ -43,6 +44,7 @@ installApiGuard(app);
 installSellerRoutes(app);
 app.use(express.json({limit:'32kb'}));
 const inventoryIndex=new InventoryIndex();
+const liveVehicleBuffer=new LiveVehicleBuffer();
 const intentEngine=createIntentEngine();
 app.get('/api/search/ai-status',(_req,res)=>{const {stats,...status}=intentEngine.status();res.json(status);});
 if(process.env.NODE_ENV==='development')app.get('/api/search/ai-metrics',(_req,res)=>res.json(intentEngine.status()));
@@ -247,6 +249,8 @@ function publicJob(job){
   out.partial=Boolean(scanTimedOut||job.error||(direct.errors||[]).length);
   out.scanStatus=out.partial?'partial':complete?'complete':'scanning';
   out.liveDiscoveryPending=liveDiscoveryPending;
+  out.recentLiveBufferReused=job.recentBufferReused||0;
+  out.liveBufferStats=liveVehicleBuffer.stats();
   out.resultCache={type:'ephemeral-in-memory',ttlSeconds:Math.floor(JOB_TTL/1000),storesSourceImages:false,snapshotUpdated:false};
   out.indexedCount=job.indexedListings?.length||0;
   out.snapshotAt=inventoryIndex.generatedAt;
@@ -306,20 +310,24 @@ function startJob(body={},meta={}){
   if(jobs.size>=MAX_ACTIVE_JOBS)pruneJobs(Date.now(),true);
   const key=keyFor(body),existing=inFlight.get(key);
   if(existing&&Date.now()-existing.createdAt<COALESCE_TTL)return existing;
-  const job={id:`dc.${randomUUID()}`,key,body,originalQuery:meta.originalQuery||body.query,queryCorrections:meta.corrections||[],createdAt:Date.now(),directData:null,directDone:false,fullData:null,fullPromise:null,fullDone:false,upstreamId:null,error:null,firstResultMs:null,deepZeroRetry:false,priceEnrichmentPromise:null,priceEnrichmentComplete:false,priceEnriched:0,priceAttempted:0,priceEnrichmentError:null,syarahPriceEnrichmentPromise:null,syarahPriceEnrichmentComplete:false,syarahPriceEnriched:0,syarahPriceAttempted:0,syarahPriceEnrichmentError:null,syarahPriceSeen:new Set()};
+  const job={id:`dc.${randomUUID()}`,key,body,originalQuery:meta.originalQuery||body.query,queryCorrections:meta.corrections||[],createdAt:Date.now(),recentBufferReused:0,directData:null,directDone:false,fullData:null,fullPromise:null,fullDone:false,upstreamId:null,error:null,firstResultMs:null,deepZeroRetry:false,priceEnrichmentPromise:null,priceEnrichmentComplete:false,priceEnriched:0,priceAttempted:0,priceEnrichmentError:null,syarahPriceEnrichmentPromise:null,syarahPriceEnrichmentComplete:false,syarahPriceEnriched:0,syarahPriceAttempted:0,syarahPriceEnrichmentError:null,syarahPriceSeen:new Set()};
   jobs.set(job.id,job);inFlight.set(key,job);
   job.intentResult=meta.intentResult;
   // For fully understood, source-independent SUV searches, narrow normalized
   // inventory first instead of reclassifying the entire Saudi snapshot.
-  job.indexedListings=meta.intentResult?.deterministicSemantic
+  const recentlyObserved=liveVehicleBuffer.search(body);
+  job.recentBufferReused=recentlyObserved.length;
+  const historical=meta.intentResult?.deterministicSemantic
     ? inventoryIndex.searchTrustedOriginBody(body,{
         makes:ORIGINS[meta.intentResult.intent.originPreference]||[],
         bodyType:meta.intentResult.intent.bodyType
       })
     : inventoryIndex.search(body);
+  job.indexedListings=mergeDirectListings(historical,recentlyObserved);
   job.directPromise=(isBroad(body)?browseLiveSources(body):searchDirectFirst(body,{timeoutMs:DIRECT_BUDGET_MS}))
     .then(data=>{
       job.directData=data;
+      liveVehicleBuffer.ingest(data?.listings||[]);
       if(data?.listings?.length&&!job.firstResultMs)job.firstResultMs=Date.now()-job.createdAt;
       kickPriceEnrichment(job);
       return data;
@@ -400,5 +408,5 @@ app.use((req,res,next)=>{
 app.use(proxy);
 app.use((error,req,res,next)=>{if(res.headersSent)return next(error);res.status(error.status===413?413:400).json({error:error.status===413?'request-too-large':'invalid-request'});});
 
-setInterval(()=>pruneJobs(),60_000).unref?.();
+setInterval(()=>{pruneJobs();liveVehicleBuffer.prune();},60_000).unref?.();
 app.listen(externalPort,'0.0.0.0',()=>console.log(`Dalelah direct-core candidate on 0.0.0.0:${externalPort}; deep scan ${legacyBase}`));

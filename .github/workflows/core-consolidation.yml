@@ -51,6 +51,9 @@ jobs:
         run: node --test tests/live-source-completion.test.mjs tests/live-vehicle-buffer.test.mjs
       - name: Zero-copy fast indexed results with live merge
         run: node --test tests/mix-indexed-observed.test.mjs
+      - name: Final live engine and Arabic speed benchmark
+        timeout-minutes: 4
+        run: node scripts/smoke-live-freshness-engine.mjs
       - name: Current web UI
         run: node --test tests/ui-v15.test.mjs
 

@@ -45,3 +45,6 @@
 .source-search-links{font-size:12px;line-height:1.7;color:var(--muted);margin:8px 0 18px}
 .source-search-links[hidden]{display:none}
 .source-search-links a{color:var(--accent);text-underline-offset:3px;margin-inline:4px}
+
+.fresh-only-toggle{display:inline-flex;align-items:center;gap:6px;font-size:12px;line-height:1.4;white-space:nowrap;color:var(--muted);cursor:pointer}
+.fresh-only-toggle input{accent-color:var(--accent);width:16px;height:16px;cursor:pointer}

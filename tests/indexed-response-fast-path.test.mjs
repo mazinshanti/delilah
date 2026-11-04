@@ -27,7 +27,7 @@ test('already verified filtered index rows are served by identity before source 
  assert.equal(output,indexed);
  assert.equal(merges,0);
  assert.equal(output.length,1);
- const final=applyIntentConstraints(output,{originPreference:'Japanese',bodyType:'SUV',maxPrice:150000,condition:'used'});
+ const final=applyIntentConstraints(output,{originPreference:'Japanese',bodyType:'SUV',maxPrice:150000,condition:'used',excludedMakes:[],query:'Japanese SUV'});
  assert.equal(final.length,1);
  assert.equal(final[0].priceVerified,true);
  assert.ok(final[0].price>0&&final[0].price<=150000);

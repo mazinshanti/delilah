@@ -53,6 +53,9 @@ jobs:
         run: node --test tests/mix-indexed-observed.test.mjs
       - name: Stable progressive search response memo
         run: node --test tests/search-response-memo.test.mjs
+      - name: Production progressive response cache smoke
+        timeout-minutes: 4
+        run: node scripts/smoke-final-response-cache.mjs
       - name: Current web UI
         run: node --test tests/ui-v15.test.mjs
 

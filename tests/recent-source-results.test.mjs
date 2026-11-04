@@ -11,7 +11,7 @@ const live=(extra={})=>({source:'Haraj',url:'https://haraj.com.sa/11188360059',
 
 test('recently observed mode accepts explicit, recent source sightings',()=>{
  assert.equal(isRecentlyObservedAtSource(live(),now),true);
- assert.equal(isRecentlyObservedAtSource(live({source:'OpenSooq'}),now),true);
+ assert.equal(isRecentlyObservedAtSource(live({source:'OpenSooq',url:'https://sa.opensooq.com/en/search/123456789'}),now),true);
  assert.equal(filterRecentlyObservedSourceResults([live()],now).length,1);
 });
 test('old snapshot metadata never becomes live merely because it has a lastSeenAt',()=>{

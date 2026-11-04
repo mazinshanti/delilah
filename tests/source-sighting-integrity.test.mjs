@@ -43,7 +43,7 @@ test('only genuinely listed URLs receive source-observation stamps',()=>{
  assert.equal(rows[0].sourceObservedAt,at);
  assert.equal(rows[0].lastSeenAt,at);
  assert.equal(rows[1].sourceObservedAt,null);
- assert.equal(rows[1].lastSeenAt,older===rows[1].lastSeenAt?older:rows[1].lastSeenAt);
+ assert.equal(rows[1].lastSeenAt,older);
 });
 test('temporary buffer cannot cache or expose fake source observations',()=>{
  const buffer=new LiveVehicleBuffer({clock:()=>now,ttlMs:600000,maxListings:2});
@@ -57,10 +57,10 @@ test('temporary buffer cannot cache or expose fake source observations',()=>{
  assert.equal(hits[0].url,'https://haraj.com.sa/11188361001');
 });
 test('spoofed observation cannot override older snapshot provenance or price',()=>{
- const old=listing({sourceObservedAt:null,sourceObservationEvidence:null,lastSeenAt:older});
- const bad=listing({source:'Haraj',url:'https://haraj.com.sa.evil.example/11188361001',price:1});
+ const old=listing({sourceObservedAt:null,sourceObservationEvidence:null,lastSeenAt:at});
+ const bad=listing({source:'Haraj',url:'https://haraj.com.sa.evil.example/11188361001',sourceObservedAt:at,lastSeenAt:older,price:1});
  const merged=mergeObservationFields(old,bad,now);
  assert.equal(merged.sourceObservedAt,null);
  assert.equal(merged.lastSeenAt,at);
- assert.equal(favorNewerVerifiedData(old,bad,now),'next');
+ assert.equal(favorNewerVerifiedData(old,bad,now),'old');
 });

@@ -31,6 +31,7 @@ import {InventoryIndex,paginateInventory,deduplicateVehicles} from './lib/invent
 import {publicSourceRegistry} from './lib/source-registry.js';
 import {inventoryCoverageSummary} from './lib/inventory-coverage.js';
 import {listingFreshness} from './lib/listing-lifecycle.js';
+import {filterRecentlyObservedSourceResults} from './lib/recent-source-results.js';
 import {installApiGuard,validateFilters} from './lib/api-guard.js';
 
 const externalPort=Number(process.env.PORT||3000);
@@ -128,7 +129,7 @@ app.get('/api/listing/gallery',async(req,res)=>{
 const inFlight=new Map();
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const norm=value=>String(value??'').toLowerCase().replace(/[^a-z0-9\u0600-\u06ff]+/g,' ').replace(/\s+/g,' ').trim();
-const keyFor=body=>JSON.stringify({q:norm(body?.query||''),c:body?.condition==='new'?'new':'used',f:body?.filters||{},page:body.page,pageSize:body.pageSize,sort:body.sort,intent:body._intentKey});
+const keyFor=body=>JSON.stringify({q:norm(body?.query||''),c:body?.condition==='new'?'new':'used',f:body?.filters||{},freshOnly:body.freshOnly===true,page:body.page,pageSize:body.pageSize,sort:body.sort,intent:body._intentKey});
 
 function validateSearchBody(body={}){
   if(!body||typeof body!=='object'||Array.isArray(body))return 'invalid-search-body';
@@ -136,6 +137,7 @@ function validateSearchBody(body={}){
   if(body.query.length>MAX_QUERY_LENGTH)return 'query-too-long';
   if(body.filters!=null&&(typeof body.filters!=='object'||Array.isArray(body.filters)))return 'filters-must-be-an-object';
   if(body.condition!=null&&!['used','new'].includes(body.condition))return 'invalid-condition';
+  if(body.freshOnly!=null&&typeof body.freshOnly!=='boolean')return 'invalid-fresh-only';
   return validateFilters(body.filters||{});
 }
 
@@ -239,6 +241,7 @@ function computePublicJob(job){
   let listings=initialOrMergedResults(job,direct.listings,full.listings,
     (indexed,live,deep)=>deduplicateVehicles(strictMerged(mergeDirectListings(indexed,live,deep),job.body)));
   listings=applyIntentConstraints(listings,job.intentResult?.intent);
+  if(job.body.freshOnly===true)listings=filterRecentlyObservedSourceResults(listings);
   // If semantic interpretation fails, do not silently discard unknown requirements.
   const interpretationUnavailable=Boolean(job.intentResult?.fallbackReason&&!job.intentResult.safeFallback);
   if(interpretationUnavailable)listings=[];
@@ -256,6 +259,8 @@ function computePublicJob(job){
   out.liveDiscoveryPending=liveDiscoveryPending;
   out.recentLiveBufferReused=job.recentBufferReused||0;
   out.liveBufferStats=liveVehicleBuffer.stats();
+  out.freshOnly=job.body.freshOnly===true;
+  out.freshOnlyDefinition='Observed in a source search response within the last ten minutes; not proof of availability';
   out.resultCache={type:'ephemeral-in-memory',ttlSeconds:Math.floor(JOB_TTL/1000),storesSourceImages:false,snapshotUpdated:false};
   out.indexedCount=job.indexedListings?.length||0;
   out.snapshotAt=inventoryIndex.generatedAt;
@@ -326,7 +331,7 @@ function startJob(body={},meta={}){
   // inventory first instead of reclassifying the entire Saudi snapshot.
   const recentlyObserved=applyIntentConstraints(liveVehicleBuffer.search(body),meta.intentResult?.intent);
   job.recentBufferReused=recentlyObserved.length;
-  const historical=meta.intentResult?.deterministicSemantic
+  const historical=body.freshOnly===true?[]:meta.intentResult?.deterministicSemantic
     ? inventoryIndex.searchTrustedOriginBody(body,{
         makes:ORIGINS[meta.intentResult.intent.originPreference]||[],
         bodyType:meta.intentResult.intent.bodyType
@@ -372,6 +377,7 @@ app.post('/api/search',async(req,res)=>{
   if(validationError)return res.status(400).json({error:validationError});
   const intentResult=await intentEngine.understand(incoming.query);
   const body=intentSearchBody(incoming,intentResult),normalized=canonicalizeVehicleQuery(body.query);
+   body.freshOnly=incoming.freshOnly===true;
   body.query=normalized.query;body._intentKey=JSON.stringify({mode:intentResult.intentMode,intent:intentResult.intent,fallback:intentResult.fallbackReason});
   const parsedError=validateSearchBody(body);if(parsedError)return res.status(400).json({error:parsedError});
   const started=Date.now(),job=startJob(body,{originalQuery:incoming.query,corrections:normalized.corrections,intentResult});

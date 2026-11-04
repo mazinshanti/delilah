@@ -57,6 +57,9 @@ jobs:
         run: node --test tests/indexed-response-fast-path.test.mjs
       - name: Fresh-only source sightings and UI regressions
         run: node --test tests/recent-source-results.test.mjs
+      - name: Production fresh-only search smoke
+        timeout-minutes: 3
+        run: node scripts/smoke-recent-source-release.mjs
       - name: Current web UI
         run: node --test tests/ui-v15.test.mjs
 

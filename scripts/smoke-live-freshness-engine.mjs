@@ -3,7 +3,7 @@ import {resolveBodyType} from '../lib/vehicle-body-type.js';
 import {ORIGINS} from '../lib/ai-search-intent.js';
 
 const base='https://www.dalelah.co';
-const expected='a059d66e8129f739a552bfa02237187dcc356d6f';
+const expected='6057af32abfdb6c14a920c8cff81585f8d08eb77';
 const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 async function api(path,opts={},timeout=15000){
  const started=performance.now(),response=await fetch(base+path,{...opts,signal:AbortSignal.timeout(timeout)});

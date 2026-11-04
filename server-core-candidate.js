@@ -1,6 +1,7 @@
 import {waitForSearchProgress} from './lib/search-progress-wait.js';
 import {searchCompletionState} from './lib/search-completion-state.js';
 import {LiveVehicleBuffer} from './lib/live-vehicle-buffer.js';
+import {mixIndexedAndObserved} from './lib/mix-indexed-observed.js';
 import {naturalSearch} from './public/natural-search.js';
 import {createIntentEngine,intentSearchBody,applyIntentConstraints,needsAI,ORIGINS} from './lib/ai-search-intent.js';
 import express from 'express';
@@ -325,7 +326,7 @@ function startJob(body={},meta={}){
     : inventoryIndex.search(body);
   // Preserve the already-ranked fast indexed rows when no live cache exists.
   // Re-merging hundreds of semantic SUV records needlessly reprocesses images.
-  job.indexedListings=recentlyObserved.length?mergeDirectListings(historical,recentlyObserved):historical;
+  job.indexedListings=mixIndexedAndObserved(historical,recentlyObserved);
   job.directPromise=(isBroad(body)?browseLiveSources(body):searchDirectFirst(body,{timeoutMs:DIRECT_BUDGET_MS}))
     .then(data=>{
       job.directData=data;

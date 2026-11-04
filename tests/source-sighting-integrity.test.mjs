@@ -38,7 +38,7 @@ test('rejects unsupported or spoofed source even when timestamp looks fresh',()=
 });
 test('only genuinely listed URLs receive source-observation stamps',()=>{
  const valid=listing({sourceObservedAt:null,sourceObservationEvidence:null,lastSeenAt:older});
- const bad=listing({url:'https://haraj.com.sa.evil.example/11188361002',sourceObservedAt:null,sourceObservationEvidence:null});
+ const bad=listing({url:'https://haraj.com.sa.evil.example/11188361002',sourceObservedAt:null,sourceObservationEvidence:null,lastSeenAt:older});
  const rows=observeSourceSearchListings([valid,bad], 'Haraj',at);
  assert.equal(rows[0].sourceObservedAt,at);
  assert.equal(rows[0].lastSeenAt,at);

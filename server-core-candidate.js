@@ -3,6 +3,7 @@ import {searchCompletionState} from './lib/search-completion-state.js';
 import {LiveVehicleBuffer} from './lib/live-vehicle-buffer.js';
 import {mixIndexedAndObserved} from './lib/mix-indexed-observed.js';
 import {memoizedSearchResponse,expirePublicResponseMemo} from './lib/search-response-memo.js';
+import {initialOrMergedResults} from './lib/indexed-response-fast-path.js';
 import {naturalSearch} from './public/natural-search.js';
 import {createIntentEngine,intentSearchBody,applyIntentConstraints,needsAI,ORIGINS} from './lib/ai-search-intent.js';
 import express from 'express';
@@ -235,7 +236,8 @@ function kickSyarahPriceEnrichment(job){
 function computePublicJob(job){
   const direct=job.directData||{};
   const full=job.fullData||{};
-  let listings=deduplicateVehicles(strictMerged(mergeDirectListings(job.indexedListings,direct.listings,full.listings),job.body));
+  let listings=initialOrMergedResults(job,direct.listings,full.listings,
+    (indexed,live,deep)=>deduplicateVehicles(strictMerged(mergeDirectListings(indexed,live,deep),job.body)));
   listings=applyIntentConstraints(listings,job.intentResult?.intent);
   // If semantic interpretation fails, do not silently discard unknown requirements.
   const interpretationUnavailable=Boolean(job.intentResult?.fallbackReason&&!job.intentResult.safeFallback);

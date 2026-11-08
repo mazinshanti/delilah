@@ -28,12 +28,13 @@ jobs:
           done
           cat /tmp/dalelah-load.log
           exit 1
-      - name: 30k requests (bounded concurrency 20)
+      - name: 30k staged requests (1,500 virtual visitor identities)
         env:
           LOAD_TEST_BASE_URL: http://127.0.0.1:31777
           LOAD_TEST_REQUESTS: '30000'
-          LOAD_TEST_CONCURRENCY: '20'
-          LOAD_TEST_MAX_DURATION_MS: '300000'
+          LOAD_TEST_CONCURRENCY: '32'
+          LOAD_TEST_CLIENTS: '1500'
+          LOAD_TEST_MAX_DURATION_MS: '180000'
         run: node scripts/load-test-30k.mjs
       - name: Upload benchmark report
         if: always()

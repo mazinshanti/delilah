@@ -20,7 +20,7 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - name: Start isolated Dalelah application
         run: |
-          DALELAH_AI_SEARCH_ENABLED=false DALELAH_LEGACY_BASE_URL=http://127.0.0.1:1 PORT=31777 node server-entry.js > /tmp/dalelah-load.log 2>&1 &
+          NODE_OPTIONS=--max-old-space-size=384 DALELAH_AI_SEARCH_ENABLED=false DALELAH_LEGACY_BASE_URL=http://127.0.0.1:1 PORT=31777 node server-entry.js > /tmp/dalelah-load.log 2>&1 &
           echo $! > /tmp/dalelah-load.pid
           for attempt in $(seq 1 90); do
             if curl -sf http://127.0.0.1:31777/healthz > /dev/null; then exit 0; fi
@@ -36,6 +36,11 @@ jobs:
           LOAD_TEST_CLIENTS: '1500'
           LOAD_TEST_MAX_DURATION_MS: '180000'
         run: node scripts/load-test-30k.mjs
+      - name: Capture process memory under load
+        if: always()
+        run: |
+          ps -o pid,rss,vsz,etime,command -p $(cat /tmp/dalelah-load.pid) || true
+          cat /proc/$(cat /tmp/dalelah-load.pid)/status | grep -E 'VmPeak|VmSize|VmHWM|VmRSS' || true
       - name: Upload benchmark report
         if: always()
         uses: actions/upload-artifact@v4

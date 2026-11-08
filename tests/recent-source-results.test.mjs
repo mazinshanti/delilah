@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {isRecentlyObservedAtSource,filterRecentlyObservedSourceResults} from '../lib/recent-source-results.js';
+import {isRecentlyObservedAtSource,filterRecentlyObservedSourceResults,filterObservedDuringSearch} from '../lib/recent-source-results.js';
 
 const now=Date.parse('2026-11-04T10:00:00Z');
 const live=(extra={})=>({source:'Haraj',url:'https://haraj.com.sa/11188360059',
@@ -34,9 +34,19 @@ test('API and UI offer fresh-only search without cached historical inventory pre
  const ui=await readFile(new URL('../public/market-ui.js',import.meta.url),'utf8');
  const html=await readFile(new URL('../public/index.html',import.meta.url),'utf8');
  assert.match(front,/body\.freshOnly===true\?\[\]/);
- assert.match(front,/filterRecentlyObservedSourceResults\(listings\)/);
+ assert.match(front,/filterObservedDuringSearch\(listings,job\.createdAt\)/);
+ assert.match(front,/body\.freshOnly=incoming\.freshOnly!==false/);
+ assert.match(front,/if\(body\.freshOnly!==true&&existing/);
  assert.match(front,/invalid-fresh-only/);
  assert.match(ui,/needsAI\(query\)\|\|\$\('freshOnly'\)\.checked/);
  assert.match(ui,/freshOnly:\$\('freshOnly'\)\.checked/);
- assert.match(html,/id="freshOnly"/);
+ assert.match(html,/id="freshOnly" checked/);
+});
+
+test('each new search requires a source observation since that request started',()=>{
+ const started=Date.parse('2026-11-04T09:59:00Z');
+ const current=live({sourceObservedAt:'2026-11-04T09:59:30Z'});
+ assert.deepEqual(filterObservedDuringSearch([live(),current],started,now),[current]);
+ assert.deepEqual(filterObservedDuringSearch([live({sourceObservedAt:'2026-11-04T09:59:30Z',sourceObservationEvidence:null})],started,now),[]);
+ assert.deepEqual(filterObservedDuringSearch([current],Date.parse('2026-11-04T09:59:45Z'),now),[]);
 });

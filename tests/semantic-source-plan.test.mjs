@@ -36,7 +36,7 @@ test('semantic planner diversifies brands and respects exclusion, model and cond
  assert.deepEqual(planSemanticSourceQueries(records,{condition:'new',make:'Toyota'},{maxQueries:12}),[]);
 });
 
-test('planner refuses to seed exact budget or vehicle claims from unverified records',()=>{
+test('planner uses historical models as leads, never excludes them by stale price or year',()=>{
  const records=[
   listing('Toyota','RAV4','SUV',90000,{priceVerified:false}),
   listing('Toyota','RAV4','SUV',190000),
@@ -44,5 +44,5 @@ test('planner refuses to seed exact budget or vehicle claims from unverified rec
   listing('Toyota','RAV4','SUV',80000,{condition:'used'})
  ];
  assert.deepEqual(planSemanticSourceQueries(records,{bodyType:'SUV',condition:'used',maxPrice:100000}),['Toyota RAV4']);
- assert.deepEqual(planSemanticSourceQueries(records.slice(0,3),{bodyType:'SUV',condition:'used',maxPrice:100000}),[]);
+ assert.deepEqual(planSemanticSourceQueries(records.slice(0,3),{bodyType:'SUV',condition:'used',maxPrice:100000,year:2026}),['Toyota RAV4']);
 });

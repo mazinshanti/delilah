@@ -1,0 +1,46 @@
+name: Dalelah 30k Isolated Load Test
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/load-test-30k.mjs'
+      - '.github/workflows/load-test-30k.yml'
+  workflow_dispatch:
+
+jobs:
+  isolated-30k:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci --no-audit --no-fund
+      - name: Start isolated Dalelah application
+        run: |
+          DALELAH_AI_SEARCH_ENABLED=false DALELAH_LEGACY_BASE_URL=http://127.0.0.1:1 PORT=31777 node server-entry.js > /tmp/dalelah-load.log 2>&1 &
+          echo $! > /tmp/dalelah-load.pid
+          for attempt in $(seq 1 90); do
+            if curl -sf http://127.0.0.1:31777/healthz > /dev/null; then exit 0; fi
+            sleep 2
+          done
+          cat /tmp/dalelah-load.log
+          exit 1
+      - name: 30k requests (bounded concurrency 20)
+        env:
+          LOAD_TEST_BASE_URL: http://127.0.0.1:31777
+          LOAD_TEST_REQUESTS: '30000'
+          LOAD_TEST_CONCURRENCY: '20'
+          LOAD_TEST_MAX_DURATION_MS: '300000'
+        run: node scripts/load-test-30k.mjs
+      - name: Upload benchmark report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dalelah-30k-isolated-load-report
+          path: |
+            load-test-report.json
+            /tmp/dalelah-load.log
+          if-no-files-found: ignore

@@ -21,6 +21,8 @@ jobs:
         run: npm run check
       - name: Direct core
         run: npm run test:direct-core
+      - name: AI semantic live source plan
+        run: node --test tests/semantic-source-plan.test.mjs
       - name: Existing exact-year
         run: npm run test:exact-year
       - name: Existing relevance

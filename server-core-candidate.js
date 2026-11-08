@@ -12,6 +12,7 @@ import {installSellerRoutes} from './lib/seller-routes.js';
 import {VEHICLE_CATALOG,catalogIntent} from './public/catalog.js';
 import {discoverListingGallery} from './lib/listing-gallery.js';
 import {browseLiveSources} from './lib/browse-sources.js';
+import {planSemanticSourceQueries} from './lib/semantic-source-plan.js';
 import {originalMarketSearchTargets} from './lib/source-search-targets.js';
 import {extractMileage} from './lib/vehicle-mileage.js';
 import {randomUUID} from 'node:crypto';
@@ -258,6 +259,7 @@ function computePublicJob(job){
   out.scanStatus=out.partial?'partial':complete?'complete':'scanning';
   out.liveDiscoveryPending=liveDiscoveryPending;
   out.recentLiveBufferReused=job.recentBufferReused||0;
+  out.semanticMarketQueryPlan=job.semanticQueryPlan||null;
   out.liveBufferStats=liveVehicleBuffer.stats();
   out.freshOnly=job.body.freshOnly===true;
   out.freshOnlyDefinition='Observed on a supported source search page during this search request; not proof that the car remains available';
@@ -340,7 +342,17 @@ function startJob(body={},meta={}){
   // Preserve the already-ranked fast indexed rows when no live cache exists.
   // Re-merging hundreds of semantic SUV records needlessly reprocesses images.
   job.indexedListings=mixIndexedAndObserved(historical,recentlyObserved);
-  job.directPromise=(isBroad(body)?browseLiveSources(body):searchDirectFirst(body,{timeoutMs:DIRECT_BUDGET_MS}))
+  const intent=meta.intentResult?.intent||{};
+  const semanticBroad=isBroad(body)&&Boolean(intent.bodyType||intent.originPreference||intent.excludedMakes?.length||intent.make);
+  const semanticQueries=semanticBroad?planSemanticSourceQueries(inventoryIndex.records,intent,{condition:body.condition,maxQueries:12}):undefined;
+  job.semanticQueryPlan=semanticQueries||null;
+  // Show newly sighted listings progressively while the next model probes run.
+  // Indexed records only guide source selection, never fresh-only visibility.
+  const sourceOptions={queries:semanticQueries,onBatch:data=>{
+    job.directData={...data,queryPlan:semanticQueries||null};
+    if(data.listings?.length&&!job.firstResultMs)job.firstResultMs=Date.now()-job.createdAt;
+  }};
+  job.directPromise=(isBroad(body)?browseLiveSources(body,sourceOptions):searchDirectFirst(body,{timeoutMs:DIRECT_BUDGET_MS}))
     .then(data=>{
       job.directData=data;
       liveVehicleBuffer.ingest(data?.listings||[]);

@@ -343,7 +343,7 @@ function startJob(body={},meta={}){
   // Re-merging hundreds of semantic SUV records needlessly reprocesses images.
   job.indexedListings=mixIndexedAndObserved(historical,recentlyObserved);
   const intent=meta.intentResult?.intent||{};
-  const semanticBroad=isBroad(body)&&Boolean(intent.bodyType||intent.originPreference||intent.excludedMakes?.length||intent.useCase||intent.make);
+  const semanticBroad=isBroad(body)&&Boolean(intent.bodyType||intent.originPreference||intent.excludedMakes?.length||intent.make);
   const semanticQueries=semanticBroad?planSemanticSourceQueries(inventoryIndex.records,intent,{condition:body.condition,maxQueries:12}):undefined;
   job.semanticQueryPlan=semanticQueries||null;
   // Show newly sighted listings progressively while the next model probes run.

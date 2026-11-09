@@ -19,6 +19,8 @@ jobs:
           node-version: 22
       - name: Install visual frontend dependencies
         run: npm install --no-audit --no-fund
+      - name: Guard visual app runtime entry and API isolation
+        run: npm test
       - name: Build React preview
         run: npm run build
       - name: Verify standalone preview artifacts

@@ -26,3 +26,16 @@ test('only Builder preview is allowed to be framed by visual editor',()=>{
  assert.match(server,/frame-ancestors 'none'/);
  assert.ok(server.indexOf("req.path==='/builder-preview'")<server.indexOf('express.static(publicDir'));
 });
+
+test('full Builder visual preview serves the original homepage without opening production framing',()=>{
+ assert.match(server,/app\.get\('\/builder-full-preview'/);
+ assert.match(server,/indexTemplate\.replace\(/);
+ assert.match(server,/noindex,nofollow/);
+ assert.match(server,/X-Robots-Tag','noindex, nofollow'/);
+ assert.match(server,/req\.path==='\/builder-full-preview'/);
+ assert.match(server,/res\.removeHeader\('X-Frame-Options'\)/);
+ assert.match(server,/frame-ancestors 'none'/);
+ assert.match(index,/id="searchForm"/);
+ assert.match(index,/id="brands"/);
+ assert.match(index,/id="results"/);
+});

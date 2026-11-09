@@ -116,6 +116,27 @@ app.get(/^\/cars\/(?:used|new)\/[a-z0-9-]+(?:\/[a-z0-9-]+)?(?:\/\d{4})?\/?$/, (r
   res.setHeader('Cache-Control','public, max-age=300');
   return res.type('html').send(renderLanding(pathname,page));
 });
+// Builder's editor loads only the preview page in an iframe. Keep the rest
+// of Dalelah protected against framing; allow Builder CDN on the homepage only.
+app.use((req,res,next)=>{
+  if(req.path==='/'||req.path==='/builder-preview'){
+    res.setHeader('Content-Security-Policy',[
+      "default-src 'self'",
+      "img-src 'self' https: data:",
+      "script-src 'self' 'unsafe-inline' https://cdn.builder.io",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.builder.io",
+      "font-src 'self' https://fonts.gstatic.com",
+      "connect-src 'self' https://cdn.builder.io https://*.builder.io",
+      req.path==='/builder-preview'
+        ?"frame-ancestors https://builder.io https://*.builder.io"
+        :"frame-ancestors 'none'",
+      "base-uri 'self'",
+      "form-action 'self'"
+    ].join('; '));
+    if(req.path==='/builder-preview')res.removeHeader('X-Frame-Options');
+  }
+  next();
+});
 app.use(express.static(publicDir,{extensions:['html'],maxAge:'1h',setHeaders(res,path){
   if(/\.(?:html|js|css)$/.test(path))res.setHeader('Cache-Control','no-cache');
 }}));

@@ -1,0 +1,25 @@
+name: Dalelah React Visual Frontend
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'visual-frontend/**'
+      - '.github/workflows/visual-frontend.yml'
+  workflow_dispatch:
+jobs:
+  build-preview:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: visual-frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install visual frontend dependencies
+        run: npm install --no-audit --no-fund
+      - name: Build React preview
+        run: npm run build
+      - name: Verify standalone preview artifacts
+        run: test -f dist/index.html && ls -lh dist/assets/

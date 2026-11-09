@@ -1,4 +1,5 @@
 import React from 'react';
+import {createRoot} from 'react-dom/client';
 import {Header,Hero,SearchPanel,BenefitStrip,BrandGrid,Results,Footer} from './components.jsx';
 import {makes,demoCars} from './demo-data.js';
 import './style.css';

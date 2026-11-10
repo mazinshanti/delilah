@@ -13,15 +13,13 @@ export function Hero({eyebrow='السوق السعودي. بحث واحد.',head
 export function SearchPanel({searchLabel='ابحث في السوق',placeholder='مثال: أبي جيب عائلي تحت 120 ألف في الرياض',onSearch=()=>{}}){
  const [query,setQuery]=React.useState(''),[condition,setCondition]=React.useState('used');
  return <section className="search-panel frame" id="search" aria-label="بحث السيارات">
-   <div className="tab-row"><button type="button" className={condition==='used'?'selected':''} onClick={()=>setCondition('used')}>مستعملة</button><button type="button" className={condition==='new'?'selected':''} onClick={()=>setCondition('new')}>جديدة</button><span>خيارات حقيقية، من مصادر متعددة</span></div>
+   <div className="tab-row"><button type="button" className={condition==='used'?'selected':''} onClick={()=>setCondition('used')}>مستعملة</button><button type="button" className={condition==='new'?'selected':''} onClick={()=>setCondition('new')}>جديدة</button><span>خيارات حقيقية، من السوق</span></div>
    <form onSubmit={event=>{event.preventDefault();onSearch({query,condition});}}><label className="sr-only" htmlFor="visual-query">صف السيارة</label><input id="visual-query" value={query} onChange={e=>setQuery(e.target.value)} placeholder={placeholder}/><button type="submit">{searchLabel}</button></form>
-   <p className="hint">معاينة تصميم فقط — لا تُجري بحثاً حياً أو اتصالاً بمصادر السيارات</p>
  </section>;
 }
 export function BenefitStrip({items=[
  {title:'سيارات حقيقية',description:'من مصادر موثوقة',icon:'🚘'},
  {title:'تواريخ رصد الإعلانات',description:'تحقق من السعر والتوفر لدى المصدر',icon:'◷'},
- {title:'كل مدن المملكة',description:'من الشمال إلى الجنوب',icon:'⌖'},
  {title:'بحث ذكي',description:'يوفر عليك الوقت',icon:'✦'}
 ]}){
  return <section className="benefit-strip frame" aria-label="مزايا دليلة">{items.map((item,i)=><div className="benefit" key={i}><span aria-hidden="true">{item.icon}</span><div><strong>{item.title}</strong><small>{item.description}</small></div></div>)}</section>;

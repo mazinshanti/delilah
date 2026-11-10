@@ -80,3 +80,11 @@ test('traffic and conversion surfaces are present', () => {
   assert.match(html, /href="\/sell"/);
   assert.match(html, /id="shareSearch"/);
 });
+
+test('recently observed listings filter starts off and only activates by user choice',()=>{
+ assert.match(html,/<input type="checkbox" id="freshOnly" autocomplete="off">/);
+ assert.doesNotMatch(html,/<input[^>]*id="freshOnly"[^>]*\schecked(?:\s|>)/);
+ assert.match(ui,/\$\('freshOnly'\)\.checked=false/);
+ assert.match(ui,/freshOnly:\$\('freshOnly'\)\.checked/);
+ assert.match(ui,/\$\('freshOnly'\)\.onchange=/);
+});

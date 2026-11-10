@@ -40,7 +40,9 @@ test('API and UI offer fresh-only search without cached historical inventory pre
  assert.match(front,/invalid-fresh-only/);
  assert.match(ui,/needsAI\(query\)\|\|\$\('freshOnly'\)\.checked/);
  assert.match(ui,/freshOnly:\$\('freshOnly'\)\.checked/);
- assert.match(html,/id="freshOnly" checked/);
+ assert.match(html,/id="freshOnly" autocomplete="off"/);
+ assert.doesNotMatch(html,/id="freshOnly" checked/);
+ assert.match(ui,/\$\('freshOnly'\)\.checked=false/);
 });
 
 test('each new search requires a source observation since that request started',()=>{
